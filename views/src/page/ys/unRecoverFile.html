@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>上传数据补传</title>
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../js/layui/css/layui.css" />
+    <link href="../../css/public.css?v1.01" rel="stylesheet" />
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script charset="utf-8" src="../../js/common/plugin.js"></script>
+</head>
+<style>
+    .white-bg {
+        background: white;
+    }
+
+    .iframe-h {
+        height: 100%;
+    }
+
+    .content-wrap {
+        padding: 10px;
+    }
+
+    .hide {
+        display: none;
+    }
+
+    .layui-form-pane .layui-form-label {
+        width: 150px;
+    }
+
+    .layui-form-pane .layui-input-block {
+        margin-left: 150px;
+    }
+
+    .eleTree.pType {
+        height: auto;
+        width: 100%;
+        display: none;
+        position: absolute;
+        top: 100%;
+        background-color: #fff;
+        z-index: 895;
+        border: 1px solid #ccc;
+    }
+
+    .layui-none {
+        border-bottom: 1px solid rgb(228, 219, 219);
+    }
+
+    h3 {
+        font-weight: 900;
+        margin-top: 20px;
+    }
+</style>
+
+<body>
+
+    <script id="yaOper" type="text/html">
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="done">已自行补传</a>
+    </script>
+
+
+    <div class="userLayer" style="height: 100%;">
+        <div style="padding: 15px 10px;height: 100%;">
+            <div style="height: 100%;">
+                <div class="layui-row layui-col-space10">
+                    <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+                        <!-- layui tree-->
+                        <div class="layui-card">
+                            <div class="layui-card-header layui-card-header-custom">
+                                <span><i></i>企业层级</span>
+                                <div style="position: absolute;right: 5px;top: -2px;">
+                                    <p style="display: inline-block;font-size: 12px;vertical-align: center">包含下级</p>
+                                    <form class="layui-form" action="" style="display: inline-block;"
+                                        id="isIncludeChild">
+                                        <input type="checkbox" name="isIncludeChild" title="含下级企业"
+                                            lay-filter='isIncludeChild' lay-skin="switch">
+                                    </form>
+                                </div>
+
+                            </div>
+                            <div class="layui-card-body">
+
+                                <div class="layuiTree eleTree ele4" id="leftTree" lay-filter="leftTree"
+                                    style="overflow-y: auto;margin-top: 10px"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
+                        <b class="columnToggle hide"><i class="fa fa-toggle-left"></i></b>
+                        <!-- 表一 -->
+                        <div class="layui-card">
+                            <div class="layui-card-header layui-card-header-custom">
+                                <span>
+                                    <i></i>未上传文件开展校验恢复的会议资料文件列表（当前待校验恢复总共<b class="total1">0</b>条，已恢复 <b
+                                        class="ready1">0</b> 条。）
+                                </span>
+                            </div>
+                            <div class="layui-card-body layui-col-space10">
+                                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                                    <table id="table1_1" lay-filter="table1_1"></table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 表二 -->
+                        <div class="layui-card">
+                            <div class="layui-card-header layui-card-header-custom">
+                                <span>
+                                    <i></i>未上传文件开展校验恢复的会议议题审议【相关附件】文件列表（当前待校验恢复总共<b class="total2">0</b>条，已恢复 <b
+                                        class="ready2">0</b> 条。）
+                                </span>
+                            </div>
+                            <div class="layui-card-body layui-col-space10">
+                                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                                    <table id="table2_1" lay-filter="table2_1"></table>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- 表三 -->
+                        <div class="layui-card">
+                            <div class="layui-card-header layui-card-header-custom">
+                                <span>
+                                    <i></i>未上传文件开展校验恢复的议案资料文件列表（当前待校验恢复总共<b class="total3">0</b>条，已恢复 <b
+                                        class="ready3">0</b> 条。）
+                                </span>
+                            </div>
+                            <div class="layui-card-body layui-col-space10">
+                                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                                    <table id="table3_1" lay-filter="table3_1"></table>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- 表四 -->
+                        <div class="layui-card">
+                            <div class="layui-card-header layui-card-header-custom">
+                                <span>
+                                    <i></i>未上传文件开展校验恢复的议案（前置审核）文件列表（当前待校验恢复总共<b class="total4">0</b>条，已恢复 <b
+                                        class="ready4">0</b> 条。）
+                                </span>
+                            </div>
+                            <div class="layui-card-body layui-col-space10">
+                                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                                    <table id="table4_1" lay-filter="table4_1"></table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 表五 -->
+                        <div class="layui-card">
+                            <div class="layui-card-header layui-card-header-custom">
+                                <span>
+                                    <i></i>未上传文件开展校验恢复的制度资料文件列表（当前待校验恢复总共<b class="total5">0</b>条，已恢复 <b
+                                        class="ready5">0</b> 条。）
+                                </span>
+                            </div>
+                            <div class="layui-card-body layui-col-space10">
+                                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                                    <table id="table5_1" lay-filter="table5_1"></table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+</body>
+<script src="./../../js/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).use(['eleTree', 'layer', 'table', 'form', 'laytpl', 'common', 'element', 'laydate', 'upload'], function (exports) {
+        var table = layui.table;
+        var form = layui.form;
+        var tree = layui.eleTree;
+        var common = layui.common;
+        var element = layui.element;
+        var laydate = layui.laydate;
+        var util = layui.util;
+        var upload = layui.upload;
+        var baseUrl = '../../../';
+        element.init();
+        common.themeSet();
+        var sysEnterpriseTreeUrl = "meetingmgr/tiolExecution/getCountOfSubordinateReportExecutionVo?treeType=enterpriseTree";
+
+        var seId = '';
+        var isIncludeChild = false;
+        var param = { 'seId': seId, 'isIncludeChild': isIncludeChild };
+        common.columnToggle();
+
+        var eventHandle = {
+            treeInit: function () {
+                formatTree();
+                common.fetchGet(sysEnterpriseTreeUrl, function (res) {
+                    if (res.list[0].name && res.list[0].name != '中国有色') {
+                        $('.columnToggle').click();
+                        eventHandle.tableInit();
+                        return false;
+                    }
+                    //树信息的导入
+                    if (res.success && res.list) {
+                        eleTreeId = tree.render({
+                            elem: '#leftTree',
+                            data: res.list,
+                            checkOnClickNode: true,
+                            highlightCurrent: true,    // 是否高亮当前选中节点，默认值是 false。
+                            expandOnClickNode: true,    // 是否在点击节点的时候展开或者收缩节点， 默认值为 true，如果为 false，则只有点箭头图标的时候才会展开或者收缩节点。
+                            showCheckbox: false,
+                            lazy: true,
+                            load: function (data, callback) {
+                                eventHandle.treeReload(data, callback);
+                            }
+                        });
+
+                        tree.on("nodeClick(leftTree)", function (obj) {
+                            obj.node.select();
+                            var curTreeNode = obj.data.currentData;
+                            seId = curTreeNode.seId
+                            param.seId = curTreeNode.seId
+                            eventHandle.tableInit();
+                        });
+                        $('#leftTree').find('.eleTree-node-content-label').eq(0).trigger('click');
+                    } else {
+                        //不存在数据时的显示
+                    }
+                }, function () { });
+            },
+            treeReload: function (data, callback) {
+                common.fetchGet(sysEnterpriseTreeUrl + '&id=' + data.id + '&extendAttr=' + data.extendAttr, function (res) {
+                    if (res.success && res.list) {
+                        callback(res.list)
+                    }
+                }, function () {
+                    callback([])
+                });
+            },
+            table1Init: function () {
+                table.render(common.tableInitParams({
+                    elem: '#table1_1',
+                    height: 450,
+                    url: baseUrl + 'meetingmgr/tiolMeeting/selectUncheckMeetingFilePage',
+                    where: param,
+                    data: [{}],
+                    method: 'post',
+                    page: false,
+                    defaultToolbar: [],
+                    cols: [
+                        [
+                            { type: "numbers", title: "序号", width: 60, },
+                            { field: 'meetingName', title: '会议名称' },
+                            { field: 'meetingTime', title: '会议日期' },
+                            { field: 'fiOriginalName', title: '文件名' },
+                            { field: 'fiFileTypeName', title: '文件类型' },
+                            {
+                                field: 'ggCreateDatetime', width: 200, align: 'center', title: '创建日期'
+                                , templet: function (rowData) {
+                                    return util.toDateString(rowData.ggCreateDatetime, 'yyyy-MM-dd');
+                                }
+                            },
+                            {
+                                field: '', title: '操作', align: "center", width: 150, fixed: 'right', templet: "#yaOper"
+                            }
+                        ]
+                    ],
+                    done: function (data) {
+                        
+                        $('.total1').text(data.data.length);
+                        common.fetchPost('meetingmgr/tiolMeeting/selectCheckFileCount', { "seId": seId, "busType": "TIOL_MEETING" }, function (res) {
+                            debugger
+                            $('.ready1').text(res.object.checkCount || 0);
+                        })
+                    }
+                }));
+
+
+
+
+
+                table.on('tool(table1_1)', function (obj) {
+                    var data = obj.data;
+                    switch (obj.event) {
+                        case 'edit'://编辑
+                            var editLayer = layer.open({
+                                title: [data.meetingTypeName + '会议'],
+                                type: 2,
+                                content: baseUrl + '/src/page/ys/hygl/meetingAdd.html?flowStatusId=' + data.flowStatusId + '&formOperType=' + 'edit' + '&dataObj=' + data.meetingId + '&meetingId=' + data.meetingId + '&meetingTypeName=' + encodeURIComponent(data.meetingTypeName) + '&meetingTypeId=' + data.meetingTypeId + '&meetingTypeCode=' + data.meetingTypeCode,
+                                maxmin: true,
+                                end: function () {
+                                    table.reload("table1_1");
+                                }
+                            });
+                            layer.full(editLayer);
+                            break;
+                        case 'done'://已自行补传
+                            common.fetchPost('meetingmgr/tiolMeeting/alreadyUpliadMeetingFile', { 'meetingId': data.meetingId, 'fiFileType': data.fiFileType, 'fiOriginalName': data.fiOriginalName }, function (res) {
+                                if (res.success) {
+                                    if (res.object == '0') {
+                                        layer.alert('当前信息未自行补传，请使用本条数据的【编辑】按钮完成补传！');
+                                    }
+                                    if (res.object == '1') {
+                                        common.fetchPost('meetingmgr/tiolMeeting/alreadyUpliadFile', { 'fiId': data.fiId }, function (res2) {
+                                            if (res2.success) {
+                                                layer.alert('标识成功');
+                                                table.reload("table1_1");
+                                            } else {
+                                                layer.alert('标识失败：' + res2.resultMessage);
+                                            }
+                                        })
+                                    }
+                                    if (res.object == '2') {
+                                        layer.confirm('该会议中同一附件类型下，已上传文件，但不存在同名文件，确定将其标识为已自行上传？', function () {
+                                            var layerLoader = common.layerLoader;
+                                            common.fetchPost('meetingmgr/tiolMeeting/alreadyUpliadFile', { 'fiId': data.fiId }, function (res2) {
+                                                layer.close(layerLoader);
+                                                if (res2.success) {
+                                                    layer.alert('标识成功');
+                                                    table.reload("table1_1");
+                                                } else {
+                                                    layer.alert('标识失败：' + res2.resultMessage);
+                                                }
+                                            }, function (err) {
+                                                    layer.close(layerLoader);
+                                                    layer.alert('标识失败：' + err.resultMessage);
+                                                })
+                                        });
+                                    }
+                                } else {
+                                    layer.alert(res.resultMessage);
+                                }
+
+                            }, function () { });
+                            break;
+                    }
+                });
+
+
+
+
+
+
+
+            },
+            table2Init: function () {
+
+                table.render(common.tableInitParams({
+                    elem: '#table2_1',
+                    height: 450,
+                    url: baseUrl + 'meetingmgr/tiolMeeting/selectUncheckSubjectFilePage',
+                    data: [{}],
+                    method: 'post',
+                    where: param,
+                    page: false,
+                    defaultToolbar: [],
+                    cols: [
+                        [
+                            { type: "numbers", title: "序号", width: 60, },
+                            { field: 'meetingName', title: '会议名称' },
+                            { field: 'meetingTime', title: '会议日期' },
+                            { field: 'motionName', title: '议案名称' },
+                            {
+                                field: '', title: '议案创建日期', templet: function (rowData) {
+                                    return util.toDateString(rowData.ggCreateDatetime);
+                                }
+                            },
+                            { field: 'fiOriginalName', title: '文件名' },
+                            { field: 'fiUploadTime', title: '文件上传日期' },
+                            {
+                                field: '', title: '操作', align: "center", width: 150, fixed: 'right', templet: "#yaOper"
+                            }
+                        ]
+                    ],
+                    done: function (data) {
+
+                        $('.total2').text(data.data.length);
+                        common.fetchPost('meetingmgr/tiolMeeting/selectCheckFileCount', { "seId": seId, "busType": "TIOL_SUBJECT" }, function (res) {
+                            $('.ready2').text(res.object.checkCount || 0);
+                        })
+                    }
+                }));
+
+
+
+
+                table.on('tool(table2_1)', function (obj) {
+                    var data = obj.data;
+                    switch (obj.event) {
+                        case 'edit'://编辑
+                            var editLayer = layer.open({
+                                title: ['编辑'],
+                                type: 2,
+                                content: baseUrl + '/src/page/ys/yagl/yaDraftBoxEdit.html?motionId=' + data.motionId +
+                                    '&meetingTypeId=' + data.meetingTypeId + '&statusType=' + data.statusType +
+                                    '&meetingTypeName=' + data.meetingTypeName + '&meetingTypeCode=' + data.meetingTypeCode +
+                                    '&meetingId=' + data.meetingId,
+                                maxmin: true,
+                                offset: 't',
+                                end: function () {
+                                    table.reload("table2_1");
+                                }
+                            });
+                            layer.full(editLayer);
+                            break;
+                        case 'done'://已自行补传
+                            common.fetchPost('meetingmgr/tiolMeeting/alreadyUpliadSubjectFile', { 'motionId': data.motionId, 'fiFileType': data.fiFileType, 'fiOriginalName': data.fiOriginalName }, function (res) {
+                                if (res.success) {
+                                    if (res.object == '0') {
+                                        layer.alert('当前信息未自行补传，请使用本条数据的【编辑】按钮完成补传！');
+                                    }
+                                    if (res.object == '1') {
+                                        common.fetchPost('meetingmgr/tiolMeeting/alreadyUpliadFile', { 'fiId': data.fiId }, function (res2) {
+                                            if (res2.success) {
+                                                layer.alert('标识成功');
+                                                table.reload("table2_1");
+                                            } else {
+                                                layer.alert('标识失败：'+res2.resultMessage);
+                                            }
+                                        })
+                                    }
+                                    if (res.object == '2') {
+                                        layer.confirm('该议案中同一附件类型下，已上传文件，但不存在同名文件，是否标识为已自行上传？', function () {
+                                            var layerLoader = common.layerLoader;
+                                            common.fetchPost('meetingmgr/tiolMeeting/alreadyUpliadFile', { 'fiId': data.fiId }, function (res2) {
+                                                layer.close(layerLoader);
+                                                if (res2.success) {
+                                                    layer.alert('标识成功');
+                                                    table.reload("table2_1");
+                                                } else {
+                                                    layer.alert('标识失败：'+res2.resultMessage);
+                                                }
+                                            }, function (err) {
+                                                layer.close(layerLoader);
+                                                layer.alert('标识失败：' + err.resultMessage);
+                                            })
+                                        });
+                                    }
+                                } else {
+                                    layer.alert(res.resultMessage);
+                                }
+
+                            }, function () { });
+                            break;
+                    }
+                });
+
+
+
+            },
+            table3Init: function () {
+
+                table.render(common.tableInitParams({
+                    elem: '#table3_1',
+                    height: 450,
+                    url: baseUrl + 'meetingmgr/tiolMeeting/selectUncheckMotionFilePage',
+                    data: [{}],
+                    method: 'post',
+                    where: param,
+                    page: false,
+                    defaultToolbar: [],
+                    cols: [
+                        [
+                            { type: "numbers", title: "序号", width: 60, },
+                            { field: 'meetingName', title: '会议名称' },
+                            { field: 'meetingTime', title: '会议日期' },
+                            { field: 'motionName', title: '议案名称' },
+                            {
+                                field: '', title: '议案创建日期', templet: function (rowData) {
+                                    return util.toDateString(rowData.ggCreateDatetime);
+                                }
+                            },
+                            { field: 'fiOriginalName', title: '文件名' },
+                            { field: 'fiUploadTime', title: '文件上传日期' },
+                            {
+                                field: '', title: '操作', align: "center", width: 150, fixed: 'right', templet: "#yaOper"
+                            }
+                        ]
+                    ],
+                    done: function (data) {
+
+                        $('.total3').text(data.data.length);
+                        common.fetchPost('meetingmgr/tiolMeeting/selectCheckFileCount', { "seId": seId, "busType": "MOTION" }, function (res) {
+                            $('.ready3').text(res.object.checkCount || 0);
+                        })
+                    }
+                }));
+
+
+
+                table.on('tool(table3_1)', function (obj) {
+                    var data = obj.data;
+                    switch (obj.event) {
+                        case 'edit'://编辑
+                            var editLayer = layer.open({
+                                title: ['编辑'],
+                                type: 2,
+                                content: baseUrl + '/src/page/ys/yagl/yaDraftBoxEdit.html?motionId=' + data.motionId +
+                                    '&meetingTypeId=' + data.meetingTypeId + '&statusType=' + data.statusType +
+                                    '&meetingTypeName=' + data.meetingTypeName + '&meetingTypeCode=' + data.meetingTypeCode +
+                                    '&meetingId=' + data.meetingId,
+                                maxmin: true,
+                                offset: 't',
+                                end: function () {
+                                    table.reload("table3_1");
+                                }
+                            });
+                            layer.full(editLayer);
+                            break;
+
+                        case 'done'://已自行补传
+                            common.fetchPost('meetingmgr/tiolMeeting/alreadyUpliadMotionFile', { 'motionId': data.motionId, 'fiFileType': data.fiFileType, 'fiOriginalName': data.fiOriginalName }, function (res) {
+                                if (res.success) {
+                                    if (res.object == '0') {
+                                        layer.alert('当前信息未自行补传，请使用本条数据的【编辑】按钮完成补传！');
+                                    }
+                                    if (res.object == '1') {
+                                        common.fetchPost('meetingmgr/tiolMeeting/alreadyUpliadFile', { 'fiId': data.fiId }, function (res2) {
+                                            if (res2.success) {
+                                                layer.alert('标识成功');
+                                                table.reload("table3_1");
+                                            } else {
+                                                layer.alert('标识失败：'+res2.resultMessage);
+                                            }
+                                        })
+                                    }
+                                    if (res.object == '2') {
+                                        layer.confirm('该议案中同一附件类型下，已上传文件，但不存在同名文件，是否标识为已自行上传？', function () {
+                                            var layerLoader = common.layerLoader;
+                                            common.fetchPost('meetingmgr/tiolMeeting/alreadyUpliadFile', { 'fiId': data.fiId }, function (res2) {
+                                                layer.close(layerLoader);
+                                                if (res2.success) {
+                                                    layer.alert('标识成功');
+                                                    table.reload("table3_1");
+                                                } else {
+                                                    layer.alert('标识失败：'+res2.resultMessage);
+                                                }
+                                            }, function (err) {
+                                                layer.close(layerLoader);
+                                                layer.alert('标识失败：' + err.resultMessage);
+                                            })
+                                        });
+                                    }
+                                } else {
+                                    layer.alert(res.resultMessage);
+                                }
+
+                            }, function () { });
+                            break;
+                    }
+                });
+
+            },
+            table4Init: function () {
+
+                table.render(common.tableInitParams({
+                    elem: '#table4_1',
+                    height: 450,
+                    url: baseUrl + 'meetingmgr/tiolMeeting/selectUncheckMotionAuditFilePage',
+                    data: [{}],
+                    method: 'post',
+                    where: param,
+                    page: false,
+                    defaultToolbar: [],
+                    cols: [
+                        [
+                            { type: "numbers", title: "序号", width: 60, },
+                            { field: 'meetingName', title: '会议名称' },
+                            { field: 'meetingTime', title: '会议日期' },
+                            { field: 'motionName', title: '议案名称' },
+                            {
+                                field: '', title: '议案创建日期', templet: function (rowData) {
+                                    return util.toDateString(rowData.ggCreateDatetime);
+                                }
+                            },
+                            { field: 'fiOriginalName', title: '文件名' },
+                            { field: 'auditTypeName', title: '文件类型' },
+                            { field: 'fiUploadTime', title: '文件上传日期' },
+                            {
+                                field: '', title: '操作', align: "center", width: 150, fixed: 'right', templet: "#yaOper"
+                            }
+                        ]
+                    ],
+                    done: function (data) {
+
+                        $('.total4').text(data.data.length);
+                        common.fetchPost('meetingmgr/tiolMeeting/selectCheckFileCount', { "seId": seId, "busType": "MOTION_AUDIT" }, function (res) {
+                            $('.ready4').text(res.object.checkCount || 0);
+                        })
+                    }
+                }));
+
+
+                table.on('tool(table4_1)', function (obj) {
+                    var data = obj.data;
+                    switch (obj.event) {
+                        case 'edit'://编辑
+                            var editLayer = layer.open({
+                                title: ['编辑'],
+                                type: 2,
+                                content: baseUrl + '/src/page/ys/yagl/yaDraftBoxEdit.html?motionId=' + data.motionId +
+                                    '&meetingTypeId=' + data.meetingTypeId + '&statusType=' + data.statusType +
+                                    '&meetingTypeName=' + data.meetingTypeName + '&meetingTypeCode=' + data.meetingTypeCode +
+                                    '&meetingId=' + data.meetingId,
+                                maxmin: true,
+                                offset: 't',
+                                end: function () {
+                                    table.reload("table4_1");
+                                }
+                            });
+                            layer.full(editLayer);
+                            break;
+                        case 'done'://已自行补传
+                            common.fetchPost('meetingmgr/tiolMeeting/alreadyUpliadMotionAuditFile', { 'motionId': data.motionId, 'fiFileType': data.fiFileType, 'fiOriginalName': data.fiOriginalName }, function (res) {
+                                if (res.success) {
+                                    if (res.object == '0') {
+                                        layer.alert('当前信息未自行补传，请使用本条数据的【编辑】按钮完成补传！');
+                                    }
+                                    if (res.object == '1') {
+                                        common.fetchPost('meetingmgr/tiolMeeting/alreadyUpliadFile', { 'fiId': data.fiId }, function (res2) {
+                                            if (res2.success) {
+                                                layer.alert('标识成功');
+                                                table.reload("table4_1");
+                                            } else {
+                                                layer.alert('标识失败：'+res2.resultMessage);
+                                            }
+                                        })
+                                    }
+                                    if (res.object == '2') {
+                                        layer.confirm('该议案中同一附件类型下，已上传文件，但不存在同名文件，是否标识为已自行上传？', function () {
+                                            var layerLoader = common.layerLoader;
+                                            common.fetchPost('meetingmgr/tiolMeeting/alreadyUpliadFile', { 'fiId': data.fiId }, function (res2) {
+                                                layer.close(layerLoader);
+                                                if (res2.success) {
+                                                    layer.alert('标识成功');
+                                                    table.reload("table4_1");
+                                                } else {
+                                                    layer.alert('标识失败：'+res2.resultMessage);
+                                                }
+                                            }, function (err) {
+                                                layer.close(layerLoader);
+                                                layer.alert('标识失败：' + err.resultMessage);
+                                            })
+                                        });
+                                    }
+                                } else {
+                                    layer.alert(res.resultMessage);
+                                }
+
+                            }, function () { });
+                            break;
+                    }
+                });
+
+            },
+            table5Init: function () {
+
+                table.render(common.tableInitParams({
+                    elem: '#table5_1',
+                    height: 450,
+                    url: baseUrl + 'meetingmgr/tiolMeeting/selectUncheckRegulationFilePage',
+                    data: [{}],
+                    method: 'post',
+                    where: param,
+                    page: false,
+                    defaultToolbar: [],
+                    cols: [
+                        [
+                            { type: "numbers", title: "序号", width: 60, },
+                            { field: 'regulationName', title: '制度名称' },
+                            { field: 'regulationTypeName', title: '制度类别' },
+                            { field: 'markNumber', title: '发文文号' },
+                            {
+                                field: '', title: '实施日期', templet: function (rowData) {
+                                    return util.toDateString(rowData.implementDate, 'yyyy-MM-dd');
+                                }
+                            },
+                            { field: 'fiOriginalName', title: '文件名' },
+                            { field: 'fiFileTypeName', title: '文件类型' },
+                            { field: 'fiUploadTime', title: '文件上传日期' },
+                            {
+                                field: '', title: '操作', align: "center", width: 150, fixed: 'right', templet: "#yaOper"
+                            }
+                        ]
+                    ],
+                    done: function (data) {
+
+                        $('.total5').text(data.data.length);
+                        common.fetchPost('meetingmgr/tiolMeeting/selectCheckFileCount', { "seId": seId, "busType": "TIOL_REGULATION" }, function (res) {
+                            $('.ready5').text(res.object.checkCount || 0);
+                        })
+                    }
+                }));
+
+
+
+                table.on('tool(table5_1)', function (obj) {
+                    var data = obj.data;
+                    switch (obj.event) {
+                        case 'edit'://编辑
+                            var editLayer = layer.open({
+                                title: ['编辑制度'],
+                                type: 2,
+                                content: baseUrl + 'src/page/ys/zdgl/ruleAdd.html?regulationId=' + data.regulationId,
+                                maxmin: true,
+                                end: function () {
+                                    table.reload("table1");
+                                }
+                            });
+                            layer.full(editLayer);
+                            break;
+                        case 'done'://已自行补传
+                            common.fetchPost('meetingmgr/tiolMeeting/alreadyUpliadRegulationFile', { 'regulationId': data.regulationId, 'fiFileType': data.fiFileType, 'fiOriginalName': data.fiOriginalName }, function (res) {
+                                if (res.success) {
+                                    if (res.object == '0') {
+                                        layer.alert('当前信息未自行补传，请使用本条数据的【编辑】按钮完成补传！');
+                                    }
+                                    if (res.object == '1') {
+                                        common.fetchPost('meetingmgr/tiolMeeting/alreadyUpliadFile', { 'fiId': data.fiId }, function (res2) {
+                                            if (res2.success) {
+                                                layer.alert('标识成功');
+                                                table.reload("table1");
+                                            } else {
+                                                layer.alert('标识失败：' + err.resultMessage);
+                                            }
+                                        })
+                                    }
+                                    if (res.object == '2') {
+                                        layer.confirm('该制度中同一附件类型下，已上传文件，但不存在同名文件，是否标识为已自行上传？', function () {
+                                            var layerLoader = common.layerLoader;
+                                            common.fetchPost('meetingmgr/tiolMeeting/alreadyUpliadFile', { 'fiId': data.fiId }, function (res2) {
+                                                layer.close(layerLoader);
+                                                if (res2.success) {
+                                                    layer.alert('标识成功');
+                                                    table.reload("table1");
+                                                } else {
+                                                    layer.alert('标识失败：' + err.resultMessage);
+                                                }
+                                            }, function (err) {
+                                                layer.close(layerLoader);
+                                                layer.alert('标识失败：' + err.resultMessage);
+                                            })
+                                        });
+                                    }
+                                } else {
+                                    layer.alert(res.resultMessage);
+                                }
+
+                            }, function () { });
+                            break;
+                    }
+                });
+
+            },
+            tableInit: function () {
+                eventHandle.table1Init();
+                eventHandle.table2Init();
+                eventHandle.table3Init();
+                eventHandle.table4Init();
+                eventHandle.table5Init();
+            }
+
+
+
+        };
+
+
+        form.on('switch(isIncludeChild)', function (data) {
+            param.isIncludeChild = data.elem.checked
+            eventHandle.tableInit();
+        })
+
+        eventHandle.treeInit();
+        // eventHandle.tableInit();
+
+
+        function formatTree() {
+            var cacluHeight = $(document).height() - $("#mainMenuTab").height() - $(".layui-card-header").height() - 80;
+            $("#leftTree").css({
+                "height": cacluHeight + "px",
+                "overflow-y": "auto"
+            });
+        }
+
+
+
+    });
+</script>
+<!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+
+</html>

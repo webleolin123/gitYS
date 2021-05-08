@@ -1,0 +1,124 @@
+<HTML>
+<HEAD>
+<META content="text/html; charset=utf-8" http-equiv=Content-Type>
+<title>插入或修改图片</title>
+<script type="text/javascript" src="dialog.js"></script>
+
+<script type="text/javascript">
+function funSubmit(aForm){
+	if (sAction=='Modify'){
+		oControl.src=aForm.d_fromurl.value;
+		oControl.alt=aForm.d_alt.value;
+		oControl.border=aForm.d_border.value;
+		oControl.align=aForm.d_align.value;
+	}else{
+		var sHTML='<img '+
+			'src="'+aForm.d_fromurl.value+'" '+
+			'alt="'+aForm.d_alt.value+'" '+
+			'align="'+aForm.d_align.value+'" '+
+			'border="'+aForm.d_border.value+'" '+
+			'>';
+		WE_Range.pasteHTML(sHTML); 
+	}
+	closeDialog();
+	return false;
+}
+
+var sAction='';
+var oControl=null;
+function init(){
+	if (WE_SelType == "Control") {
+		if (WE_Range(0).tagName == "IMG"){
+			oControl=WE_Range(0);
+			sAction='Modify';
+			jsfw.$('d_fromurl').value = WE_Range(0).getAttribute("src",2);
+			jsfw.$('d_alt').value = WE_Range(0).getAttribute("alt",2);
+			jsfw.$('d_align').value = WE_Range(0).getAttribute("align",2);
+			jsfw.$('d_border').value = oControl.border;//WE_Range(0).getAttribute("border",2);
+		}
+	}
+}
+
+var timPre;
+function setPreview(){
+	clearTimeout(timPre);
+	timPre = setTimeout(function(){
+		jsfw.$('imgPre').src=jsfw.$('d_fromurl').value;
+		jsfw.$('imgPre').style.display='';
+	},800);
+}
+</script>
+
+</HEAD>
+
+<body onload="init()" scroll="no" class="jsfw_WebEdit_Dialog">
+<center>
+<table height="16" width="100%" border="0" cellpadding="0" cellspacing="0"><tr><td></td></tr></table>
+<form onsubmit="return funSubmit(this);">
+<TABLE border="0" cellpadding="0" cellspacing="0">
+	<TR>
+		<TD>
+			<FIELDSET>
+				<LEGEND>图片来源</LEGEND>
+				<TABLE border="0" cellpadding="0" cellspacing="6">
+					<TR>
+						<TD align="right" width="54">图片地址:</TD>
+						<TD><INPUT class="text file" id="d_fromurl" style="WIDTH: 233px" size="30" value="http://" name="d_fromurl" onchange="setPreview();" onkeyup="setPreview()" onpaste="setPreview()"></TD>
+					</TR>
+				</TABLE>
+			</FIELDSET>
+			<br>
+			<FIELDSET>
+				<LEGEND>图片属性</LEGEND>
+				<TABLE border="0" cellpadding="0" cellspacing="5">
+					<TR>
+						<TD align="right" width="54">说明文字:</TD>
+						<TD colspan="3"><INPUT class="text file" id="d_alt" style="WIDTH: 233px" size="30" name="d_alt"></TD>
+					</TR>
+					<TR>
+						<TD align="right" width="54">对齐方式:</TD>
+						<TD width="40px">
+							<select id="d_align" size="1">
+								<option value='' selected>默认</option>
+								<option value='left'>居左</option>
+								<option value='right'>居右</option>
+								<option value='top'>顶部</option>
+								<option value='middle'>中部</option>
+								<option value='bottom'>底部</option>
+								<option value='absmiddle'>绝对居中</option>
+								<option value='absbottom'>绝对底部</option>
+								<option value='baseline'>基线</option>
+								<option value='texttop'>文本顶部</option>
+							</select>
+						</TD>
+						<TD align="right">边框粗细:</TD>
+						<TD>							
+							<select id="d_border" size="1">
+								<option value='0' selected>0</option>
+								<option value='1'>1</option>
+								<option value='2'>2</option>
+								<option value='3'>3</option>
+								<option value='4'>4</option>
+								<option value='5'>5</option>
+							</select>
+						</TD>
+					</TR>
+				</TABLE>
+			</FIELDSET>
+		</TD>
+	</TR>
+	<TR>
+		<TD height="30"></TD>
+	</TR>
+	<TR>
+		<TD align="right">
+			<INPUT class="button" id="Ok" type="submit" value="  确定  ">
+			<INPUT class="button" onclick="closeDialog()" type="button" value="  取消  ">
+		</TD>
+	</TR>
+</TABLE>
+</form>
+<img id="imgPre" style="position:absolute;left:10px;bottom:5px;display:none;" height="60">
+</center>
+</BODY>
+</HTML>

@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html  class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>生成/查看-报送统计详情</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../../js/layui/css/layui.css"/>
+    <link href="../../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../../js/lib/jquery.1.12.3.js"></script>
+    <style>
+        .hytitle{
+            font-size: 14px;
+        }
+        .hylabel{
+            border: 1px solid transparent!important;
+            background: transparent!important;
+        }
+        .hyinput{
+            border: 1px solid transparent!important;
+            border-bottom-color: red!important;
+        }
+
+        .layui-unselect {
+            border-color: #f56c6c;
+            border-top-style: none;
+            border-right-style: none;
+            border-left-style: none;
+        }
+        .layui-form-select .layui-edge{
+            border-top-color: #f56c6c;
+        }
+        body{
+            background:#f8f8f8;
+        }
+        .load-btn,.check-btn,.right-btn{
+            position: absolute;
+            top:0;
+            right:0;
+            border-radius: 3px;
+        }
+        .right70{
+            right:70px;
+        }
+        .relative{
+            position: relative;
+        }
+        .padRt64{
+            padding-right: 64px;
+        }
+        li{
+            cursor: pointer;
+        }
+        .zsBga{
+            color:purple;
+            vertical-align: 1px;
+            opacity: 0.5;
+        }
+        .eleTree.ele5,
+        .eleTree.ele6{
+            height: auto;
+            width: 100%;
+            display: none;
+            position: absolute;
+            top:100%;
+            background-color: #fff;
+            z-index: 100;
+            border: 1px solid #ccc;
+        }
+        /* 去除弹窗侧面张开按钮 */
+        a.layui-layer-ico.layui-layer-max{
+            display: none;
+        }
+        a.layui-layer-ico.layui-layer-max.layui-layer-maxmin{
+            display:inline-block!important;
+        }
+    </style>
+    <style>
+        .layui-card-header-custom{
+            border-bottom: 1px dashed #e6e6e6;
+        }
+    </style>
+
+</head>
+<body class="iframe-h">
+
+<div class="content-wrap">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+            <!-- 报送统计 -->
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom">
+                    <span><i></i>报送统计</span>
+                </div>
+                <div class="layui-card-body">
+                    <form class="layui-form layui-form-pane">
+                        <div class="layui-row layui-col-space15">
+                            <div class="layui-col-md6">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label hylabel"><b class="red">*</b>企业名称</label>
+                                    <div class="layui-input-block">
+                                        <input autocomplete="off" class="layui-input hyinput" name="seName"
+                                               placeholder="请输入" type="text" value="" readonly
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md6">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label hylabel"><b class="red">*</b>企业编码</label>
+                                    <div class="layui-input-block">
+                                        <input autocomplete="off" class="layui-input hyinput" name="seComcode"
+                                               placeholder="" type="text" readonly
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md6">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label hylabel"><b class="red">*</b>"三重一大"决策事项</label>
+                                    <div class="layui-input-block">
+                                        <input type="radio" name="seIshaveDecItem" title="不存在" value="0">
+                                        <input type="radio" name="seIshaveDecItem" title="存在" value="1">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md6">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label hylabel"><b class="red">*</b>"三重一大"决策权</label>
+                                    <div class="layui-input-block">
+                                        <input type="radio" name="seIshaveDecPower" title="无" value="0">
+                                        <input type="radio" name="seIshaveDecPower" title="有" value="1">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md6">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label hylabel"><b class="red">*</b>经营活动情况</label>
+                                    <div class="layui-input-block">
+                                        <select name="seBusinessActivities" id="seBusinessActivities">
+                                            <option value="">请选择</option>
+                                            <option value="M01">实际开展经营活动</option>
+                                            <option value="M02">未实际开展经营活动</option>
+                                            <option value="M03">计划股权转让</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md6">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label hylabel"><b class="red">*</b>境外企业特殊要求</label>
+                                    <div class="layui-input-block">
+                                        <select name="seOverseasSpeReq" id="seOverseasSpeReq">
+                                            <option value="">请选择</option>
+                                            <option value="C01">境外环境具备报送条件</option>
+                                            <option value="C02">不具备</option>
+                                            <option value="C03">驻在地法律法规有特殊规定</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md6">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label hylabel"><b class="red">*</b>法人治理结构</label>
+                                    <div class="layui-input-block">
+                                        <select name="seCorporateGov" id="seCorporateGov">
+                                            <option value="">请选择</option>
+                                            <option value="S01">已规范法人决策主体</option>
+                                            <option value="S02">未规范法人决策主体</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md12">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label hylabel"><b class="red">*</b>统计数据</label>
+                                    <div class="layui-input-block">
+                                        <table class="layui-table ">
+                                            <thead>
+                                                <th>序号</th>
+                                                <th>统计名称</th>
+                                                <th>数值</th>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td>决策制度数</td>
+                                                    <td id="td_regulation_count">0</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>2</td>
+                                                    <td>事项清单数</td>
+                                                    <td id="td_item_list_count">0</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>3</td>
+                                                    <td>决策会议数</td>
+                                                    <td id="td_meeting_count">0</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>4</td>
+                                                    <td>审议议题数</td>
+                                                    <td id="td_subject_count">0</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>5</td>
+                                                    <td>决策异常数</td>
+                                                    <td id="td_exception_count">0</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>6</td>
+                                                    <td>整改率</td>
+                                                    <td id="td_rate">0%</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>7</td>
+                                                    <td>议案执行数</td>
+                                                    <td id="td_execution_count">0</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md6">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label hylabel"><b class="red">*</b>生成人员</label>
+                                    <div class="layui-input-block">
+                                        <input autocomplete="off" class="layui-input hyinput" name="ggCreateUser"
+                                                placeholder="请输入" type="text" value="" readonly
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md6">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label hylabel"><b class="red">*</b>生成时间</label>
+                                    <div class="layui-input-block">
+                                        <input autocomplete="off" class="layui-input hyinput" name="ggCreateDatetime"
+                                                placeholder="请输入" type="text" value="" readonly
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="./../../../js/layui/layui.js"></script>
+<script>
+
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).use(['eleTree','layer','table','form','laytpl','common','element','laydate','upload'],function () {
+        var table=layui.table;
+        var form=layui.form;
+        var tree=layui.eleTree;
+        var common=layui.common;
+        var element = layui.element;
+        var laydate = layui.laydate;
+        var upload = layui.upload;
+        element.init();
+        var baseUrl='../../../../';
+        common.themeSet();
+
+        var statisticId = common.getQueryVariable('statisticId');
+        var layerLoader = common.layerLoader();
+        common.fetchGet('meetingmgr/reportingStatistic/getTiolReportingStatisticById?statisticId='+statisticId, function(res){
+            layer.close(layerLoader);
+            if (res.success) {
+                var data = res.object;
+                $('input[name=seName]').val(data.seName);
+                $('input[name=seComcode]').val(data.seComcode);
+                $('input[name=ggCreateUser]').val(data.ggCreateUser);
+                $('input[name=ggCreateDatetime]').val(common.dateFormat(data.ggCreateDatetime));
+
+                $("input[name=seIshaveDecItem][value="+data.seIshaveDecItem+"]").prop("checked", true);
+                $("input[name=seIshaveDecPower][value="+data.seIshaveDecPower+"]").prop("checked", true);
+                form.render("radio");
+
+                $('select[name=seBusinessActivities]').val(data.seBusinessActivities);
+                $('select[name=seOverseasSpeReq]').val(data.seOverseasSpeReq);
+                $('select[name=seCorporateGov]').val(data.seCorporateGov);
+                form.render("select");
+
+                $('#td_regulation_count').html(data.trsRegulationCount);
+                $('#td_item_list_count').html(data.trsItemListCount);
+                $('#td_meeting_count').html(data.trsMeetingCount);
+                $('#td_subject_count').html(data.trsSubjectCount);
+                $('#td_exception_count').html(data.trsExceptionCount);
+                $('#td_rate').html(data.tail.trsRectificationRateStr);
+                $('#td_execution_count').html(data.trsExecutionCount);
+
+            } else {
+                layer.alert(res.resultMessage);
+            }
+        }, function (res) {
+            layer.close(layerLoader);
+        });
+
+
+        //按钮权限
+        common.buttonLimit($("#currentMenuSmId",window.parent.document).val(),function (res) {
+            //输入所有可操作的按钮集合
+            var list=res['list']?res['list']:[];
+
+        });
+    });
+
+</script>
+
+<!--[if lt IE 9]>
+
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>上报审核新增</title>
+    <meta content="webkit" name="renderer" />
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../../js/layui/css/layui.css" />
+    <link href="../../../css/public.css?v1.01" rel="stylesheet" />
+    <link href="../../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <script src="../../../js/lib/jquery.1.12.3.js"></script>
+    <script charset="utf-8" src="../../../js/common/plugin.js"></script>
+</head>
+<body class="iframe-h" style="background-color:white">
+    <div class="auditLayer">
+        <div style="padding: 15px 20px">
+            <div class="layui-form layui-form-pane">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"><b class="red">*</b>审核模式</label>
+                        <div class="layui-input-block">
+                            <select name="auditRuleMode" id="auditRuleMode">
+                                <option value=""></option>
+                                <option value="0">不审核</option>
+                                <option value="1">一键审核</option>
+                                <!--        <option value="2">流程引擎</option> -->
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-col-space15">
+                    <div style="overflow-x: hidden;">
+                        <label class="layui-form-label" style="width: 100%;"><b class="red">*</b>企业名称</label>
+                        <div class="left_menu_tree"
+                            style="padding:0px 0px 0px 6px;width: 95%;height:300px;overflow-y: auto;">
+                            <ul class="eleTree ele4" id="leftTree" lay-filter="leftTree" style="overflow:hidden"></ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" style="text-align:center;margin-left:0px;padding-top:10px;">
+                        <button class="layui-btn" id="saveAuditRules"> <i class="layui-icon">&#x1005;</i>保存</button>
+                        <button class="layui-btn layui-btn-primary" id="closeAuditRules"><i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./../../../js/layui/layui.js"></script>
+    <script>
+        layui.config({
+            base: '../../../../src/js/',
+            version: new Date().getTime()
+        }).use(['eleTree', 'layer', 'table', 'form', 'laytpl', 'common', 'element'], function () {
+            var table = layui.table;
+            var form = layui.form;
+            var tree = layui.eleTree;
+            var common = layui.common;
+            var element = layui.element;
+            element.init();
+            var baseUrl = '../../../../';
+            common.themeSet();
+            var leftTree;
+            var getTiolAuditRuleByMode = baseUrl + "reportmgr/tiolAuditRule/getTiolAuditRuleByMode?auditRuleMode="
+            var auditRuleMode = common.getQueryVariable("auditRuleMode");
+            var oldAuditRuleMode = auditRuleMode ? auditRuleMode : "";
+            var auditSeIdList = new Array();
+            var oldAuditSeIds;
+            if (auditRuleMode) {
+                common.fetchGet(getTiolAuditRuleByMode + oldAuditRuleMode, function (res) {
+                    if (res.success) {
+                        auditSeIdList = res.list;
+                        oldAuditSeIds = auditSeIdList.toString();
+                    } else {
+                        layer.msg("获取企业层级默认选中节点失败!");
+                    }
+                }, function (res) {
+                    layer.msg("获取企业层级默认选中节点失败!");
+                });
+            }
+            var eventHandler = {
+                //菜单按钮树初始化
+                leftTreeInit: function () {
+                    leftTree = tree.render({
+                        elem: '#leftTree',
+                        url: baseUrl + 'sysmgr/sysEnterprise/selectSysEnterpriseTree?isAll=true',
+                        done: function (data) {
+                            $('#leftTree .eleTree-node-content-icon').each(function () {
+                                $(this).click();
+                            });
+                        },
+                        checkStrictly: true,
+                        showCheckbox: true,
+                        expandOnClickNode: false,
+                        checkOnClickNode: false,
+                        defaultCheckedKeys: auditSeIdList,
+                        lazy: true,
+                        load: function (data, callback) {
+                            common.fetchGet(baseUrl + 'sysmgr/sysEnterprise/selectSysEnterpriseTree?id=' + data.id, function (res) {
+                                if (res.success && res.list) {
+                                    callback(res.list);
+                                    leftTree.setChecked(auditSeIdList);
+                                }
+                            }, function () {
+                                callback([])
+                            });
+                        },
+                        response: {                 // 对于后台数据重新定义名字
+                            dataName: "list"
+                        },
+                        request: {                  // 对后台返回的数据格式重新定义
+                            disabled: "nocheck",
+                        }
+                    });
+                    tree.on("nodeChecked(leftTree)", function (d) {
+                        var value = d.data.currentData.id;
+                        if (d.isChecked) {
+                            auditSeIdList.push(value);
+                        } else {
+                            var index = auditSeIdList.indexOf(value)
+                            auditSeIdList.splice(index, 1);
+                        }
+                    })
+                }
+            }
+            $("#saveAuditRules").on("click", function () {
+                var auditSeIds = '';
+                auditSeIdList.forEach(element => {
+                    auditSeIds += (auditSeIds.length > 0 ? "," : "") + element;
+                });
+                auditRuleMode=$("#auditRuleMode").val();
+                if (auditRuleMode.length == 0 || auditSeIds.length == 0) {
+                    layer.msg("请选择审核模式和审核单位后再提交");
+                    return false;
+                }
+                var params = {
+                    auditRuleMode: auditRuleMode,
+                    oldAuditRuleMode: oldAuditRuleMode,
+                    auditSeIds: auditSeIds,
+                    oldAuditSeIds: oldAuditSeIds
+                };
+                var loadingIndex = layer.load(1, { shade: [0.1, '#fff'] });
+                
+                common.fetchPost('reportmgr/tiolAuditRule/saveTiolAuditRules', params, function (data) {
+                    layer.close(loadingIndex); 
+                    if (data.success) {
+                        layer.msg('保存成功');
+                        parent.layer.close(parent.layer.index);
+                    }
+                    else {
+                        layer.msg(data.resultMessage);
+                    }
+                }, function () {
+                    layer.close(loadingIndex);
+                    layer.msg('保存失败');//失败后提示
+                });
+            });
+            $("#closeAuditRules").on("click", function () {
+                parent.layer.close(parent.layer.index);
+            });
+            $("[name='auditRuleMode']").val(oldAuditRuleMode);
+            eventHandler.leftTreeInit();
+            form.render();
+            common.buttonLimit();
+        });
+    </script>
+</body>
+
+</html>

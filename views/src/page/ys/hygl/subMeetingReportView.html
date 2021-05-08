@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>会议报送详情</title>
+    <meta content="webkit" name="renderer" />
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../../js/layui/css/layui.css" />
+    <link href="../../../css/public.css?v1.01" rel="stylesheet" />
+    <link href="../../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <script src="../../../js/lib/jquery.1.12.3.js"></script>
+    <script src="../../../js/common/plugin.js"></script>
+    <style>
+        .shqkTab {
+            display: inline-block;
+            border: 1px solid gray;
+            background: #ffff;
+            padding: 0 5px;
+            margin: 0 5px;
+            height: 26px;
+            line-height: 26px;
+            color: black;
+            opacity: 0.3;
+        }
+
+        .isYsh {
+            opacity: 1;
+        }
+
+        a.layui-layer-ico.layui-layer-max {
+            display: none;
+        }
+
+        a.layui-layer-ico.layui-layer-max.layui-layer-maxmin {
+            display: inline-block !important;
+        }
+
+        #superSeName {
+            line-height: 38px;
+        }
+    </style>
+</head>
+
+<body class="iframe-h">
+    <div class="content-wrap">
+        <div class="layui-row layui-col-space10">
+            <div class="layui-col-md12">
+                <div class="moduleBox">
+                    <div class="mainTitle">
+                        <span style="display: block" id="meetingName"></span>
+                        <span style="font-size: 14px;display:block;text-align: center">报送单位：<span id="commitSeName">
+                            </span><b>-</b> 提交时间： <span id="commitDatetime"><b>-</b></span>
+                    </div>
+                    <div class="layui-row layui-col-space10">
+                        <div class="layui-col-md12">
+                            <form action="" class="layui-form form-theme3">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label"><b class="red">*</b>报送上级单位</label>
+                                    <div class="layui-input-block" id="superSeName"> </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="layui-col-md12">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label"><b class="red">*</b>议案清单</label>
+                                <div class="layui-input-block">
+
+                                    <table id="table-subject" lay-filter="table-subject"></table>
+                                    <script type="text/html" id="radioTemplet">
+                                    <input type="radio" name="{{d.subjectId}}" value="0" title="无" lay-filter="lockDemo" {{ d.approvalFlag == 0 ? 'checked' : '' }}>
+                                    <input type="radio" name="{{d.subjectId}}" value="1" title="审批" lay-filter="lockDemo" {{ d.approvalFlag == 1 ? 'checked' : '' }}>
+                                    <input type="radio" name="{{d.subjectId}}" value="2" title="备案" lay-filter="lockDemo" {{ d.approvalFlag == 2 ? 'checked' : '' }}>
+                                </script>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-md12">
+                            <div class="layui-btn-container" style="text-align: center">
+                                <!-- <button id="meetingCheck" class="layui-btn">检查</button> -->
+                                <button id="meetingReport" class="layui-btn layui-btn-warm"> <i class="icon iconfont icon-button-sc-1"></i> 报送</button>
+                                <button id="closePage" class="layui-btn"><i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./../../../js/layui/layui.js"></script>
+    <script>
+
+        layui.config({
+            base: '../../../../src/js/',
+            version: new Date().getTime()
+        }).use(['layer', 'table', 'form', 'laytpl', 'common', 'element', 'laydate'], function () {
+            var table = layui.table;
+            var form = layui.form;
+            var common = layui.common;
+            var element = layui.element;
+            var laydate = layui.laydate;
+            element.init();
+            var baseUrl = '../../../../';
+            common.themeSet();
+
+            common.toggleArea($('.toggle-btn'), $('.toggle-area'));
+
+            common.buttonLimit();
+            var meetingName = common.getQueryVariable('meetingName');
+            var meetingId = common.getQueryVariable('meetingId');
+            var commitSeName = common.getQueryVariable('commitSeName');
+            var commitDatetime = common.getQueryVariable('commitDatetime');
+            var seId = common.getQueryVariable('seId');
+            var flowStatusId = common.getQueryVariable('flowStatusId');
+            $("#meetingName").html(meetingName);
+            $("#commitSeName").html(commitSeName);
+            $("#commitDatetime").html(commitDatetime);
+            common.fetchPost('meetingmgr/tiolMeeting/getNextAuditEnterpriseInfo', {}, function (result) {
+                if (result.success) {
+                    $("#superSeName").html(result.object.seName);
+                } else {
+                    layer.msg(result.resultMessage);
+                }
+            });
+            var seType = common.getQueryVariable('seType');//1集团，其他表示下级
+            var tableCols = [];
+            if (seType == '1') {
+                //集团
+                tableCols = [
+                    [
+                        { type: 'checkbox' },
+                        { "type": "numbers", "title": "序号" },
+                        { field: 'subjectName', title: '议案名称' },
+                        { field: 'motionTypeName', title: '议案别名', width: 180 },
+                        { field: 'soName', title: '提出部门', width: 180 },
+                        { field: 'passFlagName', title: '审议结果', width: 120 },
+                        { field: 'radio', title: '报国资委', width: 200, templet: '#radioTemplet' },
+                        {
+                            field: 'abnormalities', title: '异常情况', width: 120, templet: function (rowData) {
+                                if (rowData.abnormalities != null && abnormalities != "") {
+                                    return '<span class="green">是</span>';
+                                } else {
+                                    return '<span class="red">否</span>';
+                                }
+                            }
+                        },
+                        {
+                            field: '', title: '操作', templet: function () {
+                                return '<a class="layui-btn layui-btn-xs" lay-event="view">查看</a>'
+                            }, width: 80, fixed: 'right'
+                        }
+                    ]
+                ];
+
+            } else {
+                //二级以及以下
+                tableCols = [
+                    [
+                        { type: 'checkbox' },
+                        { "type": "numbers", "title": "序号" },
+                        { field: 'subjectName', title: '议案名称' },
+                        { field: 'motionTypeName', title: '议案别名', width: 180 },
+                        { field: 'soName', title: '提出部门', width: 180 },
+                        { field: 'passFlagName', title: '审议结果', width: 120 },
+                        //{field: 'wtmiVersion', title: '异常情况',width:120, sort: true},
+                        {
+                            field: '', title: '操作', templet: function () {
+                                return '<a class="layui-btn layui-btn-xs" lay-event="view">查看</a>'
+                            }, width: 80, fixed: 'right'
+                        },
+                    ]
+                ]
+            }
+
+            table.render(common.tableInitParams({
+                elem: '#table-subject',
+                url: baseUrl + 'meetingmgr/tiolSubject/selectReportMotionSubjectPage',
+                // data:[{}],
+                where: { "meetingId": meetingId },
+                method: 'post',
+                height: 'full-280',
+                cols: tableCols,
+                page: false,
+                done: function () {
+                    common.buttonLimit();
+                    $('.layui-icon-ok').eq(0).click()
+                }
+            }));
+
+            table.on('tool(table-subject)', function (obj) {
+                var data = obj.data;
+                var addLayer
+                switch (obj.event) {
+                    case "view":
+                        addLayer = layer.open({
+                            title: ['议题详情'],
+                            type: 2,
+                            content: baseUrl + '/src/page/ys/yagl/yaListReportedView.html?motionId=' + data.subjectId,
+                            maxmin: true,
+                            area: ['100%', '95%'],
+                            btn: ['<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭'],
+                            btnAlign: 'c',
+                            yes: function () {
+                                layer.close(addLayer);
+                                return false;
+                            },
+                        })
+                        break;
+                }
+            })
+
+            //检查按钮事件
+            $('#meetingCheck').off().on('click', function () {
+                var checkList = table.checkStatus('table-subject').data;
+                //todo 集团和 下级上报的区分
+
+                layer.confirm('确定检查?', { icon: 3, title: '提示', offset: '150px' }, function (index) {
+                    var layerLoader = common.layerLoader();
+                    common.fetchPost('xxx', {}, function (res) {
+
+                        layer.close(layerLoader);
+
+                        if (res.success) {
+                            layer.close(index_add);
+                            table.reload('table-subject', {
+                                where: { "meetingId": meetingId }
+                            });
+                        } else {
+                            layer.alert(res.resultMessage);
+                            layer.close(index);
+                        }
+                    }, function (res) {
+                        layer.alert(res.resultMessage);
+                        layer.close(index);
+                        layer.close(layerLoader);
+                    });
+                });
+
+
+            });
+            // 监听单选按钮
+            form.on('radio(lockDemo)', function (data) {
+                var layerLoader = common.layerLoader();
+                common.fetchPost('meetingmgr/tiolSubject/updateSubjectApprovalFlag', {
+                    "subjectId": data.elem['name'],
+                    "approvalFlag": data.value
+                }, function (res) {
+                    layer.close(layerLoader);
+                    if (res.success) {
+                        layer.close(index_add);
+                    } else {
+                        layer.alert(res.resultMessage);
+                    }
+                }, function (res) {
+                    layer.alert(res.resultMessage);
+                    layer.close(layerLoader);
+                });
+            })
+            //报送按钮事件
+            $('#meetingReport').off().on('click', function () {
+                // console.log($('[name=lock_1]').val());
+                var checkList = table.checkStatus('table-subject').data;
+                var subjectIdArr = [];
+                if (checkList.length > 0) {
+                    for (var i = 0; i < checkList.length; i++) {
+                        subjectIdArr.push(checkList[0].subjectId);
+                    }
+                } else {
+                    layer.alert('当前无"三重一大"标识为"是"的议案,无法将本次会议进行报送');
+                    return;
+                }
+                //todo 集团和 下级上报的区分
+                layer.confirm('确定报送?', { icon: 3, title: '提示', offset: '150px' }, function (index) {
+                    var layerLoader = common.layerLoader();
+                    common.fetchPost('meetingmgr/tiolMeeting/reportMeetingInfo', {
+                        "seId": seId,
+                        "meetingId": meetingId,
+                        "subjectIds": subjectIdArr.join(","),
+                        "flowStatusId": flowStatusId
+                    }, function (res) {
+                        layer.close(layerLoader);
+                        layer.close(index);
+                        if (res.success) {
+                            layer.alert('上报成功')
+                            table.reload('table-subject', {
+                                where: { "meetingId": meetingId }
+                            })
+                            setTimeout(function () {
+                                parent.$('.newIframeFixedDom', parent.document).prev().prev().click();
+                            }, 2000)
+                        } else {
+                            layer.alert(res.resultMessage);
+                        }
+                    }, function (res) {
+                        layer.close(index);
+                        layer.close(layerLoader);
+                        layer.alert(res.resultMessage);
+
+                    });
+                });
+
+            });
+            //关闭按钮事件
+            $('#closePage').off().on('click', function () {
+
+                layer.confirm('确认关闭?', { icon: 3, title: '提示', offset: '150px' }, function (index) {
+
+                    //刷新上一页
+                    parent.$('.newIframeFixedDom', parent.document).prev().prev().click();
+
+
+                    /*    //直接关闭
+                        parent.$('#menuContent #refresh', parent.document).click();
+                        parent.$('.newIframeFixedDom', parent.document).remove();
+                        parent.$('.newIframeFixed', parent.document).remove();
+                        //触发按钮事件
+                        $($(top.window.document).find('#menuContent').find('.iframe')[0].contentWindow.document).find('#refresh').click();*/
+
+
+                });
+
+            });
+
+        });
+
+    </script>
+
+    <!--[if lt IE 9]>
+<script src="../../../js/lib/html5.min.js"></script>
+<script src="../../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+
+</html>

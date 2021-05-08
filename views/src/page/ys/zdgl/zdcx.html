@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+
+<head>
+    <meta charset="UTF-8">
+    <title>统计查询- 制度查询</title>
+    <meta content="webkit" name="renderer" />
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../../js/layui/css/layui.css" />
+    <link href="../../../css/public.css?v1.01" rel="stylesheet" />
+    <link href="../../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <script src="../../../js/lib/jquery.1.12.3.js"></script>
+    <style>
+        .eleTree.ele5,
+        .eleTree.ele6 {
+            height: 300px;
+            width: 100%;
+            display: none;
+            position: absolute;
+            top: 100%;
+            background-color: #fff;
+            z-index: 10000;
+            border: 1px solid #ccc;
+        }
+
+        .shqkTab {
+            display: inline-block;
+            border: 1px solid gray;
+            background: #ffff;
+            padding: 0 5px;
+            margin: 0 5px;
+            height: 26px;
+            line-height: 26px;
+            color: black;
+            opacity: 0.3;
+        }
+
+        .isYsh {
+            opacity: 1;
+        }
+
+        a.layui-layer-ico.layui-layer-max {
+            display: none;
+        }
+
+        a.layui-layer-ico.layui-layer-max.layui-layer-maxmin {
+            display: inline-block !important;
+        }
+        th>div{
+            text-align: center;
+        }
+        .padding-10{
+            padding-left: 0%;
+            padding-right: 0%;
+        }
+    </style>
+</head>
+
+<body class="iframe-h">
+
+    <div class="content-wrap">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs12">
+                <div class="layui-card">
+                    <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+                        <ul class="layui-tab-title">
+                            <li class="layui-this">制度列表</li>
+                            <li>制度数据</li>
+                        </ul>
+                        <div class="layui-tab-content" style="padding: 10px 0 0 0;margin-bottom: 12px;">
+                            <div class="layui-tab-item layui-show">
+                                <form action="" class="layui-form layui-form-pane">
+                                    <div class="layui-row layui-col-space10">
+                                        <div class="layui-col-xs8">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">制度名称</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="regulationName" placeholder="请输入"
+                                                        autocomplete="off" class="layui-input">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        
+                                        <div class="toggle-area layui-col-space10">
+
+                                            <div class="layui-col-xs4">
+                                                <div class="layui-form-item">
+                                                    <label class="layui-form-label">制度类型</label>
+                                                    <div class="layui-input-block">
+                                                        <select name="trtId" id="trtName">
+                                                            <option value="">请选择</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="layui-col-xs4">
+                                                <div class="layui-form-item">
+                                                    <label class="layui-form-label">统计口径</label>
+                                                    <div class="layui-input-block">
+                                                        <select name="" id="">
+                                                            <option value="">请选择</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="layui-col-xs4">
+                                                <div class="layui-form-item">
+                                                    <label class="layui-form-label">企业名称</label>
+                                                    <div class="layui-input-block">
+                                                        <input type="text" class="layui-input"
+                                                             readonly="readonly" placeholder="单击选择">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="layui-col-xs4">
+                                                <div class="layui-form-item">
+                                                    <label class="layui-form-label">包含下级</label>
+                                                    <div class="layui-input-block">
+                                                        <select name="" id="">
+                                                            <option value="">请选择</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="layui-col-xs4">
+                                                <div class="layui-form-item">
+                                                    <label class="layui-form-label">提交日期</label>
+                                                    <div class="layui-input-block">
+                                                        <input type="text" class="layui-input" name=""
+                                                            placeholder="请选择时间范围" readonly="readonly">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="layui-col-xs4">
+                                                <div class="layui-form-item">
+                                                    <label class="layui-form-label">实施日期</label>
+                                                    <div class="layui-input-block">
+                                                        <input type="text" class="layui-input" name=""
+                                                            placeholder="请选择时间范围" readonly="readonly">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                       
+                                        <div class="" style="text-align: center; right: 0;bottom: 0;">
+                                            <div class="layui-input-inline" style="padding-left: 20px">
+                                                <button class="layui-btn  " lay-filter="formSearch" lay-submit=""
+                                                    name="searchSubmit"><i class="fa fa-search"></i>查询
+                                                </button>
+                                                <button class="layui-btn layui-btn-primary  " lay-filter="reset" name="reset"
+                                                    type="reset"><i class="fa fa-eraser"></i>重置
+                                                </button>
+                                                <a class="toggle-btn">
+                                                    <span>展开</span><i class="fa fa-angle-up"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div class="padding-10">
+                                    <table id="table1"></table>
+                                </div>
+                            </div>
+                            <div class="layui-tab-item">
+                                <form action="" class="layui-form layui-form-pane">
+                                    <div class="layui-row layui-col-space10">
+                                        
+                                        <div class="layui-col-xs4">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">企业名称</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" class="layui-input"
+                                                         readonly="readonly" placeholder="单击选择">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-col-xs4">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">包含下级</label>
+                                                <div class="layui-input-block">
+                                                    <select name="" id="">
+                                                        <option value="">请选择</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="toggle-area layui-col-space10">
+
+                                            <div class="layui-col-xs4">
+                                                <div class="layui-form-item">
+                                                    <label class="layui-form-label">制度类型</label>
+                                                    <div class="layui-input-block">
+                                                        <select name="trtId" id="trtName">
+                                                            <option value="">请选择</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="layui-col-xs4">
+                                                <div class="layui-form-item">
+                                                    <label class="layui-form-label">统计口径</label>
+                                                    <div class="layui-input-block">
+                                                        <select name="" id="">
+                                                            <option value="">请选择</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="layui-col-xs4">
+                                                <div class="layui-form-item">
+                                                    <label class="layui-form-label">提交日期</label>
+                                                    <div class="layui-input-block">
+                                                        <input type="text" class="layui-input" name=""
+                                                            placeholder="请选择时间范围" readonly="readonly">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="layui-col-xs4">
+                                                <div class="layui-form-item">
+                                                    <label class="layui-form-label">实施日期</label>
+                                                    <div class="layui-input-block">
+                                                        <input type="text" class="layui-input" name=""
+                                                            placeholder="请选择时间范围" readonly="readonly">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                       
+                                        <div class="" style="text-align: center; right: 0;bottom: 0;">
+                                            <div class="layui-input-inline" style="padding-left: 20px">
+                                                <button class="layui-btn  " lay-filter="formSearch" lay-submit=""
+                                                    name="searchSubmit"><i class="fa fa-search"></i>查询
+                                                </button>
+                                                <button class="layui-btn layui-btn-primary  " lay-filter="reset" name="reset"
+                                                    type="reset"><i class="fa fa-eraser"></i>重置
+                                                </button>
+                                                <a class="toggle-btn">
+                                                    <span>展开</span><i class="fa fa-angle-up"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div class="padding-10">
+                                    <table id="table2"></table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./../../../js/layui/layui.js"></script>
+    <script>
+
+        layui.config({
+            base: '../../../../src/js/',
+            version: new Date().getTime()
+        }).use(['layer', 'table', 'form', 'laytpl', 'common', 'element', 'laydate', 'eleTree'], function () {
+            var table = layui.table;
+            var form = layui.form;
+            var common = layui.common;
+            var element = layui.element;
+            var laydate = layui.laydate;
+            var tree = layui.eleTree;
+            // var util = layui.util;
+            element.init();
+            var baseUrl = '../../../../';
+
+            common.themeSet();
+            common.toggleArea($('.toggle-btn'), $('.toggle-area'));
+
+            var paras = {}
+
+
+            eventHandle = {
+                
+                tableInit: function () {
+                    // 制度列表
+                    table.render(common.tableInitParams({
+                        elem: '#table1',
+                        // url: baseUrl + 'rulemgr/regulation/draftList',
+                        // method:'post',
+                        data:[],
+                        height: 'full-180',
+                        page:true,
+                        defaultToolbar: [],
+                        cols: [
+                            [
+                                { type: 'numbers', title: '序号', width: 50 },
+                                { field: '', title: '企业名称',minWidth:230 },
+                                { field: 'regulationName', title: '制度名称',minWidth:180 },
+                                { field: 'trtName', title: '制度类型' },
+                                { field: 'formulateDept', title: '制定部门',align:"left", minWidth:300 },
+                                { field: 'formulateDept', title: '发问号',align:"left", minWidth:300 },
+                                {
+                                    field: '',width: 200,align:'center', title: '实施日期'
+                                    , templet: function (rowData) {
+                                        return util.toDateString(rowData.ggCreateDatetime, 'yyyy-MM-dd');
+                                    }
+                                },
+                                { field: '', title: '操作', width: 100,align:'center', toolbar: '#tableOper', fixed: 'right',align:'center' }
+                            ]
+                        ],
+                        where: paras,
+                        done: function () {
+                            //按钮权限
+                            common.buttonLimit();
+                        }
+                    }));
+                    // 制度数据
+                    table.render(common.tableInitParams({
+                        elem: '#table2',
+                        // url: baseUrl + 'rulemgr/regulation/draftList',
+                        // method:'post',
+                        data:[],
+                        height: 'full-180',
+                        page:true,
+                        defaultToolbar: [],
+                        cols: [
+                            [
+                                { type: 'numbers', title: '序号', width: 50 },
+                                { field: '', title: '企业名称',minWidth:230 },
+                                { field: '', title: '总数',minWidth:180 },
+                                { field: '', title: '公司章程' },
+                                { field: '', title: '议事规则' },
+                                { field: '', title: '实施方法' },
+                                { field: '', title: '授权管理方法' },
+                                { field: '', title: '其他' }
+                            ]
+                        ],
+                        where: paras,
+                        done: function () {
+                            //按钮权限
+                            common.buttonLimit();
+                        }
+                    }));
+                },
+                formSearch: function () {
+                    form.on('submit(formSearch)', function (obj) {
+                        var obj = obj.field;
+                        //表格重载
+                        table.reload('table1', {
+                            method: 'post',
+                            contentType: 'application/json',
+                            page: {
+                                curr: 1
+                            },
+                            where: obj,
+
+                        });
+                        return false;
+                    });
+                },
+                eventListen: function () {
+                    laydate.render({
+                        elem: 'input[name=ggCreateDatetime]',
+                        type: 'date',
+                        range: true
+                        , trigger: 'click'
+                    });
+
+
+                    //制度列表 table 监听事件
+                    table.on('tool(table1)', function (obj) {
+                        var data = obj.data;
+                        switch (obj.event) {
+                            // case 'edit'://编辑
+                            //     var editLayer = layer.open({
+                            //         title: ['编辑制度'],
+                            //         type: 2,
+                            //         content: baseUrl + 'src/page/ys/zdgl/ruleAdd.html?regulationId=' + data.regulationId,
+                            //         maxmin: true,
+                            //         end:function(){
+                            //             table.reload("table1");
+                            //         }
+                            //     });
+                            //     layer.full(editLayer);
+                            //     break;
+                        }
+                    });
+
+                    //查询
+                }
+            }
+            eventHandle.tableInit();
+            eventHandle.formSearch();
+            eventHandle.eventListen();
+
+
+
+
+            //制度列表 table
+
+            //制度列表 table 监听事件
+
+
+            common.columnSide();
+            // common.dataAccessReloadModule({
+            //     table: ['table1']
+            // });
+        });
+
+    </script>
+
+    <!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+
+</html>

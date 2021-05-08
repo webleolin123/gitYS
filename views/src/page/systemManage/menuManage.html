@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh" xml:lang="zh" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>菜单管理</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../js/layui/css/layui.css"/>
+    <link href="../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script charset="utf-8" src="../../js/common/plugin.js"></script>
+</head>
+<!--添加按钮中的弹框-->
+<div class="menuLayer hide">
+    <div style="padding: 15px 20px;overflow-y:auto;overflow-x:hidden">
+        <form class="layui-form layui-form-pane" name="menuLayer">
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="smName" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>编码</label>
+                <div class="layui-input-block">
+                    <input type="text" name="smCode" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>排序</label>
+                <div class="layui-input-block">
+                    <input type="number" name="ggSort" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item" style="position: relative">
+                <label class="layui-form-label">图标</label>
+                <div class="layui-input-block">
+                    <input type="text" name="smIcon" id="icon123" placeholder="请点击选择" autocomplete="off" class="layui-input" style="padding-right: 50px;">
+                    <span class="icon-btn" id="icon-choose">
+                        <i class="layui-icon layui-icon-more"></i>
+                    </span>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>类型</label>
+                <div class="layui-input-block">
+                    <select name="smType"  id="smType" lay-verify="required">
+                        <option value="">请选择</option>
+                        <option value="system">系统</option>
+                        <option value="business">业务</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>链接类型</label>
+                <div class="layui-input-block">
+                    <select name="smLinkType"  id="smLinkType" lay-verify="required">
+                        <option value="">请选择</option>
+                        <option value="1">外部链接</option>
+                        <option value="0">默认</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>地址</label>
+                <div class="layui-input-block">
+                    <input type="text" name="smUrl" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width:100%">备注</label>
+                <div class="layui-input-block" style="margin-left:0;left:0">
+                    <textarea name="smRemark"class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item adapt">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formAdd" permission-btn="saveSysMenuBtnInfo"> <i class="layui-icon">&#x1005;</i>保存</button>
+                    <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                </div>
+            </div>
+        </form>
+        <div id="menuEditLayer" style="margin-top: 10px;">
+            <div>
+                <table id="table2" lay-filter="table2"></table>
+                <script type="text/html" id="tableToolBar2">
+                    <div class="layui-btn-container">
+                        <button class="layui-btn layui-btn-sm" lay-event="menuBtn-add" permission-btn="addSysMenuButton">
+                            <i class="layui-icon">&#xe608;</i> 新增
+                        </button>
+                        <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="menuBtn-delete" permission-btn="deleteSysMenuButton">
+                            <i class="layui-icon">&#xe640;</i> 删除
+                        </button>
+                    </div>
+                </script>
+                <script type="text/html" id="tableOper2">
+                    <a class="layui-btn layui-btn-xs" lay-event="menuBtn-edit" permission-btn="editmenuBtn">编辑</a>
+                    <!-- <a class="layui-btn layui-btn-xs" lay-event="menuBtn-delete" permission-btn="singleDelmenuBtn">删除</a> -->
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+<!--按钮信息中的弹框-->
+<div class="menuBtnLayer hide">
+    <div style="padding: 15px 20px;height:500px;overflow-y:auto;overflow-x:hidden">
+        <form class="layui-form layui-form-pane" name="menuBtnLayer">
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="smbName" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>编码</label>
+                <div class="layui-input-block">
+                    <input type="text" name="smbCode" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>排序</label>
+                <div class="layui-input-block">
+                    <input type="number" name="ggSort" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">类型</label>
+                <div class="layui-input-block">
+                    <select name="smbType"  required id="smbType">
+                        <option value="">请选择</option>
+                        <option value="system">系统</option>
+                        <option value="business">业务</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">地址</label>
+                <div class="layui-input-block">
+                    <input type="text" name="smbUrl" required placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item adapt">
+                <div class="layui-input-block">
+                    <button title="提交" class="layui-btn" lay-submit
+                        lay-filter="saveSysMenuBtnInfo"
+                        authCode="saveSysMenuBtnInfo"
+                        permission-btn="saveSysMenuButton">
+                        <i class="layui-icon">&#xe605;</i>提交
+                    </button>
+                    <button title="重置" type="reset"
+                        class="layui-btn layui-btn-primary">
+                        <i class="layui-icon">&#xe666;</i>重置
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!--迁移节点 弹框-->
+<div class="moveNodeLayer hide">
+    <div style="padding: 15px 20px;">
+        <form class="layui-form layui-form-pane" name="moveNodeLayer">
+            <!--
+            <div class="layui-form-item">
+                    <label class="layui-form-label" style="width:130px;">选择父节点</label>
+                    <div class="layui-input-block" style="margin-left:130px;">
+                        <select name="fNode"  id="fNode">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+            </div>
+            -->
+            <div class="layui-form-item">
+                    <label class="layui-form-label" style="width:130px;">选择父节点</label>
+                    <div class="layui-input-block" style="margin-left:130px;">
+                        <input type="text" name="tcbm" id="tcbm" required="" lay-verify="required" placeholder="请选择" readonly="" autocomplete="off" class="layui-input hyinput">
+                        <input type="hidden" name="pid" id="pid">
+                        <div class="eleTree ele5" lay-filter="data5"></div>
+                    </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width:100%">备注：当前已勾选节点</label>
+                <div class="layui-input-block" style="margin-left:0;left:0">
+                    <textarea name="gNode" placeholder="请输入" class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item adapt">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formAdd" permission-btn="saveSysMenuBtnInfo"> <i class="layui-icon">&#x1005;</i>保存</button>
+                    <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<body class="iframe-h">
+<div class="content-wrap">
+    <div class="layui-row layui-col-space10">
+        <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+            <!-- layui tree-->
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>系统菜单树</span><div class="columnSide"><i class="fa fa-toggle-left"></i></div></div>
+                <div class="layui-card-body">
+                    <div class="layuiTree eleTree ele4" id="leftTree"  lay-filter="leftTree"></div>
+                    <!--<ul id="leftTree" class="layuiTree"></ul>-->
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>菜单列表</span></div>
+                <div class="layui-card-body">
+                    <form action="" class="layui-form layui-form-pane">
+                        <div class="layui-row layui-col-space10">
+                            <div class="layui-col-xs4">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">名称</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="smName" placeholder="请输入名称" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-xs4">
+                                <div class="layui-form-item">
+                                        <label class="layui-form-label">地址</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="smUrl" placeholder="请输入名称" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                            </div>
+                            <div class="toggle-area layui-col-space10">
+                                <div class="layui-col-xs4">
+                                    <div class="layui-form-item">
+                                            <label class="layui-form-label">类型</label>
+                                            <div class="layui-input-block">
+                                                <select name="smType">
+                                                    <option value="">请选择</option>
+                                                    <option value="system">系统</option>
+                                                    <option value="business">业务</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                </div>
+                            </div>
+                            <div class="toggle-area layui-col-space10">
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">状态</label>
+                                        <div class="layui-input-block">
+                                            <select name="ggEnStatus">
+                                                <option value="">请选择</option>
+                                                <option value="0">禁用</option>
+                                                <option value="1">启用</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="formSearch-btnArea">
+                                <button class="layui-btn" lay-submit lay-filter="formSearch" permission-btn="searchRootSysMenu"><i class="fa fa-search"></i>查询</button>
+                                <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                                <a class="toggle-btn">
+                                    <span>展开</span>
+                                    <i class="fa fa-angle-up"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="layui-card">
+                <div class="layui-card-body" style="padding-top: 0">
+                    <table id="table1" lay-filter="table1"></table>
+                    <script type="text/html" id="tableToolBar">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-sm" lay-event="add1" permission-btn="addRootSysMenu">
+                                <i class="layui-icon">&#xe608;</i> 新增一级节点
+                            </button>
+                            <button class="layui-btn layui-btn-sm" lay-event="add2" permission-btn="addNotSysMenu">
+                                <i class="layui-icon">&#xe608;</i> 新增二级节点
+                            </button>
+                            <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete" permission-btn="deleteSysMenu">
+                                <i class="layui-icon">&#xe640;</i> 删除
+                            </button>
+                            <button class="layui-btn layui-btn-sm" lay-event="move" permission-btn="moveSysMenu">
+                                <i class="layui-icon">&#xe662;</i> 移至其他节点
+                            </button>
+                            <button class="layui-btn layui-btn-sm" lay-event="start" currentMenuSmId="editmenus" permission-btn="">
+                                <i class="layui-icon ">&#x1005;</i> 启用
+                            </button>
+                            <button class="layui-btn layui-btn-sm layui-btn-warm" lay-event="forbid" currentMenuSmId="editmenus" permission-btn="">
+                                <i class="layui-icon ">&#x1007;</i> 禁用
+                            </button>
+                        </div>
+                    </script>
+
+                    <script type="text/html" id="tableOper">
+                        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                        <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="singleDel" permission-btn="deleteSysMenu">删除</a>
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="./../../js/layui/layui.js"></script>
+<script>
+
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).extend({}).use(['eleTree', 'layer', 'table', 'form', 'laytpl', 'common', 'element'], function () {
+        var table=layui.table;
+        var form=layui.form;
+        var tree=layui.eleTree;
+        var common=layui.common;
+        var element = layui.element;
+        element.init();
+        var baseUrl='../../../';
+        common.themeSet();
+        common.toggleArea($('.toggle-btn'),$('.toggle-area'));
+
+        // var currentMenuSmId=$("#currentMenuSmId",window.parent.document).val();
+
+        var eleTreeId;
+        var currentTableId=null;//用于保存当前table的ID
+        var currentPid=null;//用于保存当前table的ID
+        table.render(common.tableInitParams({
+            elem: '#table1',
+            url: baseUrl+'sysmgr/menu/selectSysMenuPage',
+            method:'post',
+            toolbar:'#tableToolBar',
+            cols: [
+                [
+                    {type:'checkbox'},
+                    {type: 'numbers', title: '排序'},
+                    {field: 'smName', title: '名称',sort:true},
+                    {field: 'smIcon', title: '图标', sort:true},
+                    {field: 'smUrl', title: '地址', sort:true},
+                    {field: 'smType', title: '类型', sort:true,templet:function (rowData) {
+                            return (rowData['smType']==='business')?'业务':'系统';
+                    }},
+                    {field: '5', title: '状态', sort: true,
+                            templet:function (rowData) {
+                                if (rowData.ggEnStatus == 0) {
+                                    return '<span class="layui-badge" style="background-color:#f56c6c">禁用</span>';
+                                } else {
+                                    return '<span class="layui-badge" style="background-color:#66c33a">启用</span>';
+                                }
+                            }
+                    },
+                    {field: '', title: '操作', width: 150, toolbar:'#tableOper',fixed: 'right'},
+                ]
+            ],
+            done: function () {
+                common.buttonLimit();
+            }
+        }));
+
+        var eventHandle={
+            treeInit:function () {
+                common.fetchGet('sysmgr/menu/selectSysMenuTree',function (res) {
+                    //树信息的导入
+                    if(res.success && res.list){
+                        eleTreeId=tree.render({
+                            elem: '#leftTree',
+                            data: res.list,
+                            checkOnClickNode: true,
+                            highlightCurrent: true,
+                            showCheckbox: false,
+                            lazy: true,
+                            done:function(data){
+
+                            },
+                            load: function(data,callback) {
+                                common.fetchGet('sysmgr/menu/selectSysMenuTree'+'?id='+data.id,function (res) {
+                                    if(res.success && res.list){
+                                        callback(res.list)
+                                    }
+                                },function () {
+                                    callback([])
+                                });
+                            }
+                        });
+                        tree.on("nodeClick(leftTree)",function(obj) {
+                            //表格重载
+                            currentTableId=obj.data.currentData.id;
+                            currentPid=obj.data.currentData.pid;
+                            table.reload('table1',{
+                                page:{
+                                    curr:1
+                                },
+                                where:{
+                                    smPidOrSmId:obj.data.currentData.id,
+                                    likeSmName:''
+                                }
+                            });
+                        });
+                    }else{
+                        //不存在数据时的显示
+
+                    }
+
+                },function () {});
+            },
+            treeReload:function () {
+                common.fetchGet('sysmgr/menu/selectSysMenuTree',function (res) {
+                    //树信息的导入
+                    if(res.success && res.list){
+                        eleTreeId.reload({data:res.list});
+                    }else{
+                        //不存在数据时的显示
+                    }
+                },function () {});
+            },
+            tableReload:function (params) {
+                table.reload('table1',{
+                    url: baseUrl+'sysmgr/menu/selectSysMenuPage',
+                    method:'post',
+                    contentType:'application/json',
+                    page:{
+                        curr:1
+                    },
+
+                    where:{
+                        smPidOrSmId:params,
+                    }
+
+                });
+            },
+            dictInit:function(elem,url,selVal,selText, selectedVal){
+                var option = {
+                        elem: elem,
+                        url: url,
+                        method: 'get',
+                        responseList: 'list',
+                        optionText: selText,
+                        optionValue: selVal,
+                        isExpend: true,
+                        success: function(obj) {
+                            $(elem).val(selectedVal);
+                            form.render("select");
+                        }
+                    }
+                this.selectDataSet(option);
+            },
+            selectDataSet:function(obj){
+                var defaultParams={
+                elem: '',
+                url:'',
+                method: 'get',
+                responseList:'list',
+                optionText:'',
+                optionValue:'',
+                loadData:false,
+                isSearch:false,
+                isExpend:false,//是否支持扩展 自定义添加选项
+                loadSuccess:function(){},
+                where:null,
+                form:'',
+                success:function () {
+
+                },
+                fail:function () {
+
+                },
+                changeInit:false,
+                changeParams:{
+                    elem: '',
+                    url:'',
+                    method: 'get',
+                    responseList:'list',
+                    optionText:'',
+                    optionValue:'',
+                    changeInit:false,
+                    changeParams:{
+                        elem: '',
+                        url:'',
+                        method: 'get',
+                        responseList:'list',
+                        optionText:'',
+                        optionValue: ''
+                    }
+                }
+            };
+
+             var param=$.extend({},defaultParams,obj);
+                common.fetch(param.url,param.method,param.where,function (res) {
+                //导入表格数据
+                if(!param.isSearch){
+                    if(!param.isExpend){
+                        var options='<option value="">请选择</option>';
+
+                    }
+                    else{
+                        var options='<option value="">请选择</option><option value="-1">根节点</option>';
+                    }
+                }else{
+                    var options='<option value="">直接选择或查询选择</option>';
+                }
+                if(res && res[param.responseList]){
+                    for (var i=0;i<res[param.responseList].length;i++){
+                        options+='<option value="'+res[param.responseList][i][param.optionValue]+'">'+res[param.responseList][i][param.optionText]+'</option>';
+                    }
+                }
+                param.elem.html(options);
+
+                param.success(res);
+
+                param.elem.off().on('change',function () {
+                    if(!! param.changeInit){
+                        var param1=param.changeParams;
+
+                        common.fetch(param1.url,param1.method,param1.where,function (res) {
+                            //导入表格数据
+                            var options='<option value="">请选择</option>';
+                            if(res && res[param.responseList]){
+                                for (var i=0;i<res[param1.responseList].length;i++){
+                                    options+='<option value="'+res[param1.responseList][i][param1.optionValue]+'">'+res[param1.responseList][i][param1.optionText]+'</option>';
+                                }
+                            }
+                            param1.elem.html(options);
+
+                            param1.success(res);
+                            param1.elem.off().on('change',function () {
+                                if(!! param1.changeInit){
+                                    var param2=param1.changeParams;
+
+                                    common.fetch(param2.url,param2.method,param2.where,function (res) {
+                                        //导入表格数据
+                                        var options='<option value="">请选择</option>';
+                                        if(res && res[param2.responseList]){
+                                            for (var i=0;i<res[param2.responseList].length;i++){
+                                                options+='<option value="'+res[param2.responseList][i][param2.optionValue]+'">'+res[param2.responseList][i][param2.optionText]+'</option>';
+                                            }
+                                        }
+                                        param2.elem.html(options);
+
+                                        param2.success(res);
+
+                                    },param.fail);
+                                }
+                            });
+
+                        },param.fail);
+
+                    }
+                });
+
+            },param.fail);
+            },
+            iconPicker:function(){
+                common.iconLayerSelect('input[name="smIcon"]')
+            },
+            reloadMenu2Redis:function(){
+                common.fetchGet('sysmgr/menu/initMenuAndButtonAuthByUrl2Redis',function (res) {},function (ero) {});
+            }
+        };
+
+        //初始化树
+        eventHandle.treeInit();
+
+        //table监听事件
+        table.on('toolbar(table1)',function (obj) {
+
+            var checkStatus = table.checkStatus(obj.config.id);
+            // var data = obj.data;
+            var data = obj.config;
+            switch(obj.event){
+                case 'add1':
+                    //点击添加按钮
+                    var mainMenu = layer.open({
+                        offset: '10px',
+                        title:'新增一级菜单信息',
+                        maxmin: false,
+                        type: 1,//页面层
+                        area: ['580px','90%'],//高度自适应
+                        zIndex:998,
+                        id: 'addFirstMenu', //防止重复弹出
+                        content: $('.menuLayer').html(),//加载该区域的html
+                        success:function(obj) {
+                            form.render();
+                            $(obj.selector).find('#menuEditLayer').hide();
+                            //选择图标
+                            $(obj.selector).find("#icon-choose").on('click',function(){
+                                eventHandle.iconPicker();//调用icon选择封装组件
+                            });
+                            form.on('submit(formAdd)', function (obj) {
+                                var params = {
+                                    ggSort: obj.field.ggSort,
+                                    smCode: obj.field.smCode,
+                                    smIcon: obj.field.smIcon,
+                                    smId: '',
+                                    smLinkType: obj.field.smLinkType,
+                                    smName: obj.field.smName,
+                                    smPid: '',
+                                    smPidAll:'',
+                                    smType: obj.field.smType,
+                                    smUrl: obj.field.smUrl,
+                                    smRemark: obj.field.smRemark,
+                                };
+                                var layerLoader =common.layerLoader();
+                                common.fetchPost('sysmgr/menu/saveSysMenu', params, function (data) {
+                                    layer.close(layerLoader);
+                                    //表格重载
+                                    if(data.success){
+                                        eventHandle.treeReload();
+                                        table.reload('table1', {
+                                            url: baseUrl + 'sysmgr/menu/selectSysMenuPage',
+                                            method: 'post',
+                                            contentType: 'application/json',
+                                            page: {
+                                                curr: 1
+                                            },
+                                            where:{
+                                                likeSmName:'',
+                                                smPidOrSmId:currentTableId
+                                            },
+
+                                        });
+                                        layer.close(mainMenu);
+                                        layer.alert("成功添加一级菜单信息。", {
+                                            icon: 6
+                                        });
+                                    }else{
+										if("error_smcode_exists"==data.resultMessage){
+											layer.msg("编码已存在");
+										}else{
+											layer.msg(data.resultMessage);
+										}
+
+                                    }
+
+                                }, function () {
+                                    layer.close(layerLoader);
+                                    layer.msg('添加失败');//失败后提示
+                                    // layer.close(layer.index);
+                                });
+                                return false;
+                            });
+                        }
+                    });
+                    break;
+                case 'add2':
+                    //点击添加按钮
+
+                    //判断是否选中节点
+
+                    var subMenu = layer.open({
+                        offset: '10px',
+                        title:'新增二级菜单信息',
+                        maxmin: false,
+                        type: 1,//页面层
+                        area: ['580px','90%'],//高度自适应
+                        shadeClose: false,
+                        content: $('.menuLayer').html(),//加载该区域的html
+                        // btn:['<i class="fa fa-check-circle"></i>确定','<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>取消'],
+                        success:function(obj){
+                            $(obj.selector).find('#menuEditLayer').hide();
+                            //选择图标
+                            $(obj.selector).find("#icon-choose").on('click',function(){
+                                eventHandle.iconPicker();//调用icon选择封装组件
+                            });
+                            form.render();
+                            form.on('submit(formAdd)', function (obj) {
+                                var params = {
+                                    ggSort: obj.field.ggSort,
+                                    smCode: obj.field.smCode,
+                                    smIcon: obj.field.smIcon,
+                                    smId: '',
+                                    smLinkType: obj.field.smLinkType,
+                                    smName: obj.field.smName,
+                                    smPid: currentTableId,
+                                    smPidAll: currentPid?currentPid:('-1,'+currentTableId),
+                                    smType: obj.field.smType,
+                                    smUrl: obj.field.smUrl,
+                                    smRemark: obj.field.smRemark,
+                                };
+                                var layerLoader =common.layerLoader();
+                                common.fetchPost('sysmgr/menu/saveSysMenu', params, function (data) {
+                                    layer.close(layerLoader);
+                                    if(data.success){
+                                        eventHandle.treeReload();
+                                        //表格重载
+                                        table.reload('table1', {
+                                            url: baseUrl + 'sysmgr/menu/selectSysMenuPage',
+                                            method: 'post',
+                                            contentType: 'application/json',
+                                            page: {
+                                                curr: 1
+                                            },
+                                            where:{
+                                                likeSmName:'',
+                                                smPidOrSmId:currentTableId
+                                            },
+
+                                        });
+                                        layer.close(subMenu);
+                                    }else{
+                                        layer.msg(data.resultMessage);
+                                    }
+                                }, function () {
+                                    layer.close(layerLoader);
+                                    layer.msg('添加失败');//失败后提示
+                                });
+                                return false;
+                            });
+                        }
+
+                    });
+                    break;
+                case 'delete':
+                    //点击删除按钮
+                    if(checkStatus.data.length>0){
+                        layer.confirm('确定删除选中项?', {icon: 3, title:'提示',offset: '150px'}, function(index){
+                            var smIdArr=[];
+                            for(var i=0;i<checkStatus.data.length;i++){
+                                smIdArr.push(checkStatus.data[i]['smId'])
+                            }
+                            var layerLoader =common.layerLoader();
+                            common.fetchDelete('sysmgr/menu/deleteSysMenuByIds?smIds='+smIdArr.join(','),function (res) {
+                                layer.close(layerLoader);
+                                //成功之后刷新tree 以及表格
+                                if(res.success){
+                                    eventHandle.treeReload();
+                                    eventHandle.tableReload(currentTableId);
+                                    eventHandle.reloadMenu2Redis();//异步重新加载菜单与权限关系至Redis。
+                                    layer.msg('删除菜单成功');
+                                }else{
+                                    layer.alert(res.resultMessage);
+                                }
+                            },function () {
+                                layer.close(layerLoader);
+                            });
+
+                            layer.close(index);
+                        });
+                    }else{
+                        layer.msg('请选择删除列')
+                    }
+                    break;
+                case 'move':
+                    if(checkStatus.data.length>0){
+                        var smIdArr=[];
+                        var smNameArr=[];
+                        for(var i=0;i<checkStatus.data.length;i++){
+                            if(checkStatus.data[i]['smPid']=='-1'){
+                                layer.msg('请注意,勾选记录包含一级节点: <'+checkStatus.data[i]['smName']+'> ');
+                                // layer.confirm('确定删除选中列?', {icon: 3, title:'提示',offset: '150px'}, function(index){}
+                                // return false
+
+                            }
+                            // else{
+                                smIdArr.push(checkStatus.data[i]['smId'])
+                                smNameArr.push(checkStatus.data[i]['smName'])
+                            // }
+                        }
+
+                        //获取树菜单
+                        var treeData;
+                        common.fetch('sysmgr/menu/selectAllSysMenuTree', 'Get', null, function (res) {
+                            if(res.success){
+                                treeData = res.list;
+                            }
+                        }, function() {},false);
+
+
+                        //点击移动按钮
+                        var index_move = layer.open({
+                            offset: '10px',
+                            title:'迁移当前节点到其他一级节点',
+                            maxmin: false,
+                            type: 1,//页面层
+                            area: ['580px'],//高度自适应
+                            shadeClose: false,
+                            content: $('.moveNodeLayer').html(),//加载该区域的html
+                            success: function (obj) {
+                                /*
+                                $(obj.selector).find('textarea[name=gNode]').val(smNameArr.join(','));
+                                eventHandle.dictInit($(obj.selector).find('#fNode'),
+                                    'sysmgr/menu/selectSysMenuTree','id','name');
+                                */
+                                $("[name='tcbm']").on("click",function (e) {
+                                    e.stopPropagation();
+                                    var el5;
+                                    el5=tree.render({
+                                        elem: '.ele5',
+                                        data: treeData,
+                                        defaultExpandAll: true,
+                                        expandOnClickNode: false,
+                                        highlightCurrent: true
+                                    });
+
+                                    $(".ele5").toggle();
+                                    tree.on("nodeClick(data5)",function(d) {
+                                        $("[name='tcbm']").val(d.data.parentData.data.id!=d.data.currentData.id?(d.data.parentData.data.name+'-'+d.data.currentData.name):d.data.currentData.name);
+                                        $("[name='pid']").val(d.data.currentData.id);
+                                        $(".ele5").hide();
+                                    });
+                                    $(document).on("click",function() {
+                                        $(".ele5").hide();
+                                        $(".ele6").hide();
+                                    });
+                                });
+                                form.on('submit(formAdd)', function (obj) {
+                                    var params = {
+                                        smIds: smIdArr.join(','),
+                                        //smPid: obj.field.fNode
+                                        smPid: obj.field.pid
+                                    };
+                                    var layerLoader =common.layerLoader();
+									if(params.smIds == params.smPid){
+										layer.close(layerLoader);
+										layer.close(index_move);
+										return false;
+									}
+                                    common.fetchPost('sysmgr/menu/modifyMenuTree', params, function (res) {
+                                        layer.alert(res.resultMessage);
+                                        layer.close(layerLoader);
+                                        if(res.success){
+                                            layer.close(index_move);
+                                            //表格重载
+                                            eventHandle.treeReload();
+                                            table.reload('table1', {
+                                                url: baseUrl + 'sysmgr/menu/selectSysMenuPage',
+                                                method: 'post',
+                                                contentType: 'application/json',
+                                                page: {
+                                                    curr: 1
+                                                },
+                                                where:{
+                                                    likeSmName:'',
+                                                    smPidOrSmId:currentTableId
+                                                },
+
+                                            });
+                                        }
+                                    }, function () {
+                                        layer.close(layerLoader);
+                                        layer.msg('添加失败');//失败后提示
+                                        // layer.close(layer.index);
+                                    });
+                                    return false;
+                                });
+                            }
+                        });
+                        }
+                        else{
+                            layer.msg('请选择要迁移的记录')
+                        }
+                        break;
+
+                    case 'start':
+                            //点击启用按钮
+                            if(checkStatus.data.length>0){
+								var isOk=true;
+								for(var i=0;i<checkStatus.data.length;i++){
+									if (checkStatus.data[i]['ggEnStatus']=='1'){
+										isOk=false;
+										break;
+									}
+								}
+								if(isOk){
+									layer.confirm('确定启用选中数据?', {icon: 3, title:'提示',offset: '150px'}, function(index){
+										var idsArray = [];
+										for(var j = 0,len = checkStatus.data.length; j < len; j++){
+											idsArray.push(checkStatus.data[j].smId);
+										}
+										var loadingIndex = layer.load(1, {shade: [0.1, '#fff']});
+										common.fetchPut(baseUrl+"sysmgr/menu/saveEnableSysMenuByIds?smIds="+idsArray.join(","),null, function (res) {
+											layer.close(loadingIndex);
+											if(res.success){
+												eventHandle.tableReload();
+												layer.close(index);
+												layer.msg('启用菜单成功');
+											}
+											else{
+												layer.alert(res.resultMessage);
+											}
+										});
+									});
+								}else{
+									layer.msg('存在选项已经启用,不可再次启用');
+								}
+
+                            }else{
+                                layer.msg('请选择启用数据');
+                            }
+                            break;
+                        case 'forbid':
+                            //点击禁用按钮
+                            if(checkStatus.data.length>0){
+								var isOk=true;
+								for(var i=0;i<checkStatus.data.length;i++){
+									if (checkStatus.data[i]['ggEnStatus']=='0'){
+										isOk=false;
+										break;
+									}
+								}
+								if(isOk){
+									layer.confirm('确定禁用选中数据?', {icon: 3, title:'提示',offset: '150px'}, function(index){
+										var idsArray = [];
+										for(var j = 0,len = checkStatus.data.length; j < len; j++){
+											idsArray.push(checkStatus.data[j].smId);
+										}
+										var loadingIndex = layer.load(1, {shade: [0.1,'#fff']});
+										console.debug(idsArray.join(","));
+										common.fetchPut(baseUrl+"sysmgr/menu/saveDisableSysMenuByIds?smIds="+idsArray.join(","),null, function (res) {
+											layer.close(loadingIndex);
+											if(res.success){
+												eventHandle.tableReload();
+												layer.close(index);
+												layer.msg('禁用菜单成功');
+											}
+											else{
+												layer.alert(res.resultMessage);
+											}
+										});
+									});
+								}
+								else{
+									layer.msg('存在选项已经禁用,不可再次禁用');
+								}
+                            }else{
+                                layer.msg('请选择禁用数据')
+                            }
+                            break;
+            }
+        });
+
+        table.on('tool(table1)', function(obj){
+            var data = obj.data;
+            var menuSmId = data.smId;
+            switch(obj.event){
+                case 'singleDel':
+                    var selectId = obj.data.smId;
+                    layer.confirm('确定删除?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                        var layerLoader = common.layerLoader();
+                        common.fetchDelete("sysmgr/menu/deleteSysMenuByIds?smIds="+selectId,function (res) {
+                            layer.close(layerLoader);
+                            if(res.success){
+                                eventHandle.treeReload();
+                                eventHandle.tableReload(currentTableId);
+                                eventHandle.reloadMenu2Redis();//异步重新加载菜单与权限关系至Redis。
+                                layer.msg('删除成功' , {
+                                    time: 4000, //20s后自动关闭
+                                });
+                            }else{
+                                layer.alert(res.resultMessage);
+                            }
+                        }, function () {
+                            layer.close(layerLoader);
+                        });
+                        layer.close(index);
+                    });
+                    break;
+                case 'edit'://编辑
+                    //原始数据导入
+                    var index_edit=layer.open({
+                        offset: '10px',
+                        title:'编辑菜单信息',
+                        maxmin: false,
+                        type: 1,//页面层
+                        area: ['900px','600px'],//高度自适应
+                        // area: ['580px'],//高度自适应
+                        shadeClose: false,
+                        content: $('.menuLayer').html(),//加载该区域的html
+                        success:function (obj) {
+                            $(obj.selector).find('#menuEditLayer').show();
+                            //初始化表格
+                            form.render();
+                            $(obj.selector).find('input[name=smName]').val(data.smName);
+                            $(obj.selector).find('input[name=smIcon]').val(data.smIcon);
+                            $(obj.selector).find('input[name=ggSort]').val(data.ggSort);
+                            $(obj.selector).find('input[name=smUrl]').val(data.smUrl);
+                            $(obj.selector).find('textarea[name=smRemark]').val(data.smRemark);
+                            $(obj.selector).find('input[name=smCode]').val(data.smCode);
+                            // $(obj.selector).find('input[name=smCode]').attr('disabled','disabled');
+                            // $(obj.selector).find('input[name=smCode]').attr('title','只读');
+                            $(obj.selector).find('#smLinkType').val(data.smLinkType);
+                            $(obj.selector).find('#smType').val(data.smType);
+                            form.render('select');
+                            //选择图标
+                            $(obj.selector).find("#icon-choose").on('click',function(){
+                                eventHandle.iconPicker();//调用icon选择封装组件
+                            })
+
+                            form.on('submit(formAdd)', function (obj) {
+                                var params = {
+                                    ggSort: obj.field.ggSort,
+                                    smCode: obj.field.smCode,
+                                    smIcon: obj.field.smIcon,
+                                    smId: data.smId,
+                                    smLinkType: obj.field.smLinkType,
+                                    smName: obj.field.smName,
+                                    smPid: data.smPid,
+                                    smPidAll: data.smPidAll,
+                                    smType: obj.field.smType,
+                                    smUrl: obj.field.smUrl,
+                                    smRemark: obj.field.smRemark,
+                                };
+                                var layerLoader =common.layerLoader();
+                                common.fetchPost('sysmgr/menu/saveSysMenu', params, function (res) {
+                                    layer.close(layerLoader);
+                                    if(res.success){
+                                        layer.close(index_edit);
+										layer.alert("修改成功。", {
+                                            icon: 6
+                                        });
+                                        eventHandle.treeReload();
+                                        eventHandle.tableReload(currentTableId);
+                                        eventHandle.reloadMenu2Redis();//异步重新加载菜单与权限关系至Redis。
+                                    }
+                                }, function () {
+                                    layer.msg('修改失败');//失败后提示
+                                    layer.close(layerLoader);
+                                    layer.close(index_edit);
+                                });
+                                return false;
+                            });
+
+                            table.render(common.tableInitParams({
+                                elem: $(obj.selector).find('#table2'),
+                                url: baseUrl+'sysmgr/menu/selectSysMenuButtonPage?smId='+data.smId,
+                                contentType:'text/plain',
+                                method:'get',
+                                request:null,
+                                cellMinWidth: 80,
+                                height:'full-200',
+                                toolbar:'#tableToolBar2',
+                                defaultToolbar:[],
+                                cols: [
+                                    [
+                                        {type:'checkbox'},
+                                        {field: 'ggSort', title: '排序',sort: true},
+                                        {field: 'smbName', title: '按钮名称',sort:true},
+                                        {field: 'smbCode', title: '按钮编号',sort:true},
+                                        {field: 'smbType', title: '类型',sort:true,templet:function (rowData) {
+                                            return (rowData['smbType']==='business')?'业务':'系统';
+                                        }},
+                                        {field: 'lock', title: '操作', toolbar:'#tableOper2'},
+                                    ]
+                                ]
+                            }));
+                            //table监听事件
+                            table.on('toolbar(table2)',function (obj) {
+                                var data=obj.data;
+                                var checkStatus = table.checkStatus(obj.config.id);
+                                switch(obj.event){
+                                    case 'menuBtn-add':
+                                    //点击添加按钮
+                                     var index_menuAddBtn=layer.open({
+                                            offset: '10px',
+                                            title:'新增菜单按钮信息',
+                                            maxmin: false,
+                                            type: 1,//页面层
+                                            area: ['580px'],//高度自适应
+                                            shadeClose: false,
+                                            content: $('.menuBtnLayer').html(),//加载该区域的html
+                                            success:function() {
+                                                form.render();
+                                                form.on('submit(saveSysMenuBtnInfo)', function (obj) {
+                                                    var params = {
+                                                        smId:menuSmId,
+                                                        ggSort: obj.field.ggSort,
+                                                        smbCode: obj.field.smbCode,
+                                                        smbName: obj.field.smbName,
+                                                        smbType: obj.field.smbType,
+                                                        smbUrl: obj.field.smbUrl,
+                                                    };
+                                                    var layerLoader =common.layerLoader();
+                                                    eventHandle.treeReload();
+                                                    common.fetchPost('sysmgr/menu/saveSysMenuButton', params,function (result) {
+                                                    //表格重载
+                                                    layer.close(layerLoader);
+                                                    if(result.success){
+                                                        layer.close(index_menuAddBtn);
+                                                        table.reload('table2', {
+                                                            url: baseUrl+'sysmgr/menu/selectSysMenuButtonPage?smId='+menuSmId,
+                                                            contentType:'text/plain',
+                                                            method:'get',
+                                                            request:null,
+                                                            page: {
+                                                                curr: 1
+                                                            },
+                                                            done:function (res) {
+                                                            }
+                                                        });
+                                                    }else{
+                                                        layer.msg(result.resultMessage);
+                                                    }
+
+                                                }, function () {
+                                                    layer.msg('添加失败');//失败后提示
+                                                });
+                                                    return false;
+                                                });
+                                            }
+                                        });
+                                        break;
+                                    case 'menuBtn-delete':
+                                        //点击删除按钮
+                                        if(checkStatus.data.length>0){
+                                            layer.confirm('确定删除选中项?', {icon: 3, title:'提示',offset: '150px'}, function(index){
+                                                var smbIdArr=[];
+
+                                                for(var i=0;i<checkStatus.data.length;i++){
+                                                    smbIdArr.push(checkStatus.data[i]['smbId'])
+                                                }
+                                                var layerLoader =common.layerLoader();
+                                                common.fetchDelete('sysmgr/menu/deleteSysMenuButtonByIds?smbIds='+smbIdArr.join(','),function (result) {
+                                                    layer.close(layerLoader);
+                                                    if(result.success){
+                                                        //成功之后刷新tree 以及表格
+                                                        table.reload('table2', {
+                                                            url: baseUrl+'sysmgr/menu/selectSysMenuButtonPage?smId='+menuSmId,
+                                                            contentType:'text/plain',
+                                                            method:'get',
+                                                            request:null,
+                                                            page: {
+                                                                curr: 1
+                                                            },
+                                                            done:function (res) {
+                                                            }
+                                                        });
+                                                        layer.msg('删除成功');
+                                                        eventHandle.reloadMenu2Redis();//异步重新加载菜单与权限关系至Redis。
+                                                    }else{
+                                                        layer.msg(result.resultMessage);
+                                                    }
+
+                                                },function () {
+                                                    layer.close(layerLoader);
+                                                });
+
+                                                layer.close(index);
+                                            });
+                                        }else{
+                                            layer.msg('请选择删除列')
+                                        }
+                                        break;
+                                }
+                            });
+                            //table2监听事件
+                            table.on('tool(table2)',function (obj) {
+                                var data = obj.data;
+                                switch(obj.event){
+                                case 'menuBtn-edit':
+                                    //点击编辑按钮
+                                    var index_menuBtn=layer.open({
+                                        offset: '10px',
+                                        title:'编辑菜单按钮信息',
+                                        maxmin: false,
+                                        type: 1,//页面层
+                                        area: ['580px'],//高度自适应
+                                        shadeClose: false,
+                                        content: $('.menuBtnLayer').html(),//加载该区域的html
+                                        success:function(obj) {
+                                            form.render();
+                                            $(obj.selector).find('input[name=smbName]').val(data.smbName);
+                                            $(obj.selector).find('input[name=ggSort]').val(data.ggSort);
+                                            $(obj.selector).find('input[name=smbUrl]').val(data.smbUrl);
+                                            $(obj.selector).find('input[name=smbCode]').val(data.smbCode);
+                                            $(obj.selector).find('#smbType').val(data.smbType);
+
+                                            form.render('select');
+                                            form.on('submit(saveSysMenuBtnInfo)', function (obj) {
+                                                var params = {
+                                                    smbId:data.smbId,
+                                                    ggSort: obj.field.ggSort,
+                                                    smbName: obj.field.smbName,
+                                                    smbType: obj.field.smbType,
+                                                    smbUrl: obj.field.smbUrl,
+                                                    smbCode: obj.field.smbCode
+                                                };
+                                                var layerLoader =common.layerLoader();
+                                                common.fetchPost('sysmgr/menu/saveSysMenuButton', params,
+                                                 function (result) {
+                                                    //表格重载
+                                                    layer.close(layerLoader);
+                                                    if(result.success){
+                                                        layer.close(index_menuBtn);
+														layer.alert("修改成功。", {
+															icon: 6
+														});
+                                                        table.reload('table2', {
+                                                            url: baseUrl+'sysmgr/menu/selectSysMenuButtonPage?smId='+data.smId,
+                                                            contentType:'text/plain',
+                                                            method:'get',
+                                                            request:null,
+                                                            page: {
+                                                                curr: 1
+                                                            },
+                                                            done:function (res) {
+
+                                                            }
+                                                        });
+                                                        eventHandle.reloadMenu2Redis();//异步重新加载菜单与权限关系至Redis。
+                                                    }else{
+                                                        layer.msg('添加失败' + result.resultMessage);
+                                                    }
+                                                }, function () {
+                                                    layer.msg('添加失败');//失败后提示
+                                                });
+                                                return false;
+                                            });
+                                        }
+                                    });
+                                    break;
+                            }
+                            });
+                        }
+                    });
+            }
+        });
+        //查询
+        form.on('submit(formSearch)',function (obj) {
+            //表格重载
+            table.reload('table1',{
+                url: baseUrl+'sysmgr/menu/selectSysMenuPage',
+                method:'post',
+                contentType:'application/json',
+                page:{
+                    curr:1
+                },
+                where:{
+                    smName:obj.field.smName,
+                    smUrl:obj.field.smUrl,
+                    smType:obj.field.smType,
+                    ggEnStatus:obj.field.ggEnStatus
+                },
+            });
+            return false;
+        });
+
+        $('#leftTree').css({
+            height: ($(document).height() - 118) + 'px'
+        });
+        // common.buttonLimit();
+        common.columnSide();
+
+        //数据权限需要reload的模块注册
+        common.dataAccessReloadModule({
+            table: ['table1'],
+            tree: [],
+            chart: []
+        });
+    });
+
+
+
+</script>
+
+<!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

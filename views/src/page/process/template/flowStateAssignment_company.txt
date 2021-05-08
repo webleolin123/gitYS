@@ -1,0 +1,6 @@
+﻿[
+['rootCompany','顶级单位'],
+['parentCompany','上级单位'],
+['brotherCompany','平级单位'],
+['childrenCompany','下级单位']
+]

@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+
+<head>
+    <meta charset="UTF-8">
+    <title>会议管理-被退回</title>
+    <meta content="webkit" name="renderer" />
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../../js/layui/css/layui.css" />
+    <link href="../../../css/public.css?v1.01" rel="stylesheet" />
+    <link href="../../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <script src="../../../js/lib/jquery.1.12.3.js"></script>
+</head>
+
+<body class="iframe-h">
+    <div class="content-wrap" style="padding: 15px;">
+        <div class="layui-row layui-col-space10">
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>被退回列表</span></div>
+                <div class="layui-card-body">
+                    <form action="" class="layui-form layui-form-pane">
+                        <div class="layui-row layui-col-space10">
+                            <div class="layui-col-xs4">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">会议名称</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="meetingName" placeholder="请输入会议名称" autocomplete="off"
+                                            class="layui-input">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-xs4">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">会议日期</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="meetingTime" placeholder="请选择时间" autocomplete="off"
+                                            class="layui-input" readonly="readonly">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="toggle-area layui-col-space10">
+                                <div class="layui-col-xs4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">退回日期</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="auditDatetime" placeholder="请选择时间"
+                                                autocomplete="off" class="layui-input" readonly="readonly">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="formSearch-btnArea">
+                                <button class="layui-btn" lay-submit lay-filter="formSearch"><i
+                                        class="fa fa-search"></i>查询</button>
+                                <button type="reset" class="layui-btn layui-btn-primary"><i
+                                        class="fa fa-eraser"></i>重置</button>
+                                <a class="toggle-btn">
+                                    <span>展开</span>
+                                    <i class="fa fa-angle-up"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="layui-card">
+                    <div class="layui-card-body" style="padding-top: 0">
+                        <table id="table1" lay-filter="table1"></table>
+                        <script type="text/html" id="tableToolBar">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-sm" lay-event="meetingSubmit" permission-btn="meetingBackSubmit" >
+                                <i class="fa fa-check" style="margin-right: 2px"></i> 提交
+                            </button>
+                            <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete" permission-btn="meetingBackDel">
+                                <i class="layui-icon">&#xe640;</i> 删除
+                            </button>
+                        </div>
+                    </script>
+
+                        <script type="text/html" id="tableOper">
+                        <a class="layui-btn layui-btn-xs" lay-event="edit" permission-btn="meetingBackEdit">编辑</a>
+                        <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="view" permission-btn="meetingBackView">查看</a>
+                    </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./../../../js/layui/layui.js"></script>
+    <script>
+
+        layui.config({
+            base: '../../../../src/js/',
+            version: new Date().getTime()
+        }).use(['layer', 'form', 'common', 'laydate', 'table'], function () {
+            var form = layui.form;
+            var common = layui.common;
+            var table = layui.table;
+            var laydate = layui.laydate;
+            var baseUrl = '../../../../';
+            common.themeSet();
+            common.toggleArea($('.toggle-btn'), $('.toggle-area'));
+            laydate.render({
+                elem: '[name=meetingTime]',
+                type: 'date',
+                trigger: 'click'
+            });
+            laydate.render({
+                elem: '[name=auditDatetime]',
+                type: 'date',
+                trigger: 'click'
+            });
+            var selectBackMeetingUrl = baseUrl + 'meetingmgr/tiolMeeting/selectBackMeetingPage';
+            var eventHandle = {
+                tableReload: function (params) {
+                    var meetingName = $('input[name=meetingName]')[0].value;
+                    var meetingTime = $('input[name=meetingTime]')[0].value;
+                    var auditDatetime = $('input[name=auditDatetime]')[0].value;
+                    table.reload('table1', {
+                        url: selectBackMeetingUrl,
+                        method: 'post',
+                        contentType: 'application/json',
+                        page: {
+                            curr: 1
+                        },
+                        where: {
+                            "meetingName": meetingName,
+                            "meetingTimeRange": meetingTime,
+                            "auditDatetime": auditDatetime
+                        },
+                    });
+                }
+            };
+            table.render(common.tableInitParams({
+                elem: '#table1',
+                url: baseUrl + 'meetingmgr/tiolMeeting/selectBackMeetingPage',
+                method: 'post',
+                toolbar: '#tableToolBar',
+                height: "full-180",
+                cols: [
+                    [
+                        { type: 'checkbox' },
+                        { type: 'numbers', title: '序号' },
+                        { field: 'meetingName', title: '会议名称', minWidth: 200 },
+                        {
+                            field: 'meetingTime', title: '会议日期', width: 250, templet: function (rowDta) {
+                                if (rowDta['meetingTime'] && rowDta['meetingTimeEnd']) {
+                                    if (rowDta['meetingTime'] != rowDta['meetingTimeEnd']) {
+                                        return rowDta['meetingTime'] + '至' + rowDta['meetingTimeEnd']
+                                    } else {
+                                        return rowDta['meetingTime']
+                                    }
+                                } else {
+                                    return '-'
+                                }
+                            }
+                        },
+                        { field: 'meetingTypeName', title: '会议类型', minWidth: 110, align: "center" },
+                        {
+                            field: 'backOrgName', title: '退回操作部门', minWidth: 200, templet: function (rowData) {
+                                return rowData.backSeName + "-" + rowData.backOrgName;
+                            }
+                        },
+                        {
+                            field: 'auditDatetime', title: '退回日期', align: "center", width: 150, templet: function (rowData) {
+                                return common.dateFormat(rowData.auditDatetime, 'yyyy-MM-dd');
+                            }
+                        },
+                        { field: '', title: '操作', width: 120, toolbar: '#tableOper', fixed: 'right', align: "center" },
+                    ]
+                ],
+                done: function () {
+                    common.buttonLimit();
+                }
+            }));
+
+            table.on('toolbar(table1)', function (obj) {
+
+                var checkStatus = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+                    case 'meetingSubmit'://提交
+                        if (checkStatus.data.length === 0) {
+                            layer.msg('请选择会议');
+                            return false;
+                        }
+                        var meetingIds = [];
+                        var meetingNames = [];
+                        var flowStatusIds = [];
+                        for (var i = 0; i < checkStatus.data.length; i++) {
+                            meetingIds.push(checkStatus.data[i].meetingId);
+                            meetingNames.push(checkStatus.data[i].meetingName);
+                            flowStatusIds.push(checkStatus.data[i].flowStatusId);
+                        }
+                        layer.confirm('确定提交该会议?', { icon: 3, title: '提示', offset: '150px' }, function (index) {
+                            var layerLoader = common.layerLoader();
+                            common.fetchPost('meetingmgr/tiolMeeting/batchValidMeetingException', {
+                                meetingIds: meetingIds.join(","),
+                                meetingNames: meetingNames.join(",")
+                            }, function (res) {
+                                if (res.success) {
+                                    if (res.object == "success") {
+                                        common.fetchPost('meetingmgr/tiolMeeting/batchCommitMeeting', {
+                                            "meetingIds": meetingIds.join(","),
+                                            "flowStatusIds": flowStatusIds.join(",")
+                                        }, function (res) {
+                                            layer.close(layerLoader);
+                                            if (res == null || res.resultCode == '-1') {
+                                                layer.alert(res.resultMessage);
+                                                return false;
+                                            } else {
+                                                layer.alert('提交成功，请到已提交和本企业会议报送模块进行下一步操作。');
+                                                eventHandle.tableReload();
+                                            }
+                                        }, function (err) {
+                                            layer.close(layerLoader);
+                                            layer.alert(err.resultMessage)
+                                        });
+                                    } else if (res.object == "meetingEx") {
+                                        layer.close(layerLoader);
+                                        layer.confirm('会议召开异常:会议出席人数不足1/2,是否提交?', function (innerConfirm) {
+                                            layer.close(innerConfirm);
+                                            var layerLoader1 = common.layerLoader();
+                                            common.fetchPost('meetingmgr/tiolMeeting/batchCommitMeeting', {
+                                                "meetingIds": meetingIds,
+                                                "flowStatusIds": flowStatusIds,
+                                            }, function (res) {
+                                                if (res == null || res.resultCode == '-1') {
+                                                    layer.alert(res.resultMessage);
+                                                } else {
+                                                    eventHandle.tableReload();
+                                                    layer.alert('提交成功，请到已提交和本企业会议报送模块进行下一步操作。');
+                                                }
+                                                layer.close(layerLoader1);
+                                            }, function () {
+                                                layer.close(layerLoader1);
+                                                layer.alert(res.resultMessage)
+                                            });
+                                        });
+                                    } else {
+                                        layer.close(layerLoader);
+                                        layer.alert(res.resultMessage);
+                                    }
+                                } else {
+                                    layer.close(layerLoader);
+                                    layer.alert(res.resultMessage)
+                                }
+                            });
+                            layer.close(index);
+                        });
+                        // layer.full(sumbitLayer);
+                        break;
+                    case 'delete':
+                        //点击删除按钮
+                        if (checkStatus.data.length > 0) {
+                            layer.confirm('确定删除选中项?', { icon: 3, title: '提示', offset: '150px' }, function (index) {
+                                var meetingIdArr = [];
+                                for (var i = 0; i < checkStatus.data.length; i++) {
+                                    if (checkStatus.data[i]['uploadStatus'] == '2' || checkStatus.data[i]['uploadStatus'] == '6') {
+                                        layer.alert("【" + checkStatus.data[i]['meetingName'] + "】已经上报国资委,无法删除!");
+                                        return false;
+                                    }
+                                    meetingIdArr.push(checkStatus.data[i]['meetingId'])
+                                }
+                                var layerLoader = common.layerLoader();
+                                common.fetchPost('meetingmgr/tiolMeeting/deleteTiolMeetingById', { "meetingIds": meetingIdArr.join(',') }, function (res) {
+                                    layer.close(layerLoader);
+                                    if (res.success) {
+                                        eventHandle.tableReload();
+                                        layer.alert('删除成功');
+                                    } else {
+                                        layer.alert(res.resultMessage);
+                                    }
+                                }, function () {
+                                    layer.close(layerLoader);
+                                });
+
+                                layer.close(index);
+                            });
+                        } else {
+                            layer.msg('请选择删除列')
+                        }
+                        break;
+                }
+            });
+
+            table.on('tool(table1)', function (obj) {
+                var data = obj.data;
+                var meetingId = data.meetingId;
+                switch (obj.event) {
+                    case 'view':
+                        var selectId = obj.data.smId;
+                        layer.open({
+                            title: '退回情况',
+                            type: 1,
+                            area: ['80%', '80%'],
+                            content: '<div class="moduleBox"><table id="table2" lay-filter="table2"></table></div>',
+                            btn: ['<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭'],
+                            btnAlign: 'c',
+                            success: function (obj) {
+                                table.render(common.tableInitParams({
+                                    elem: '#table2',
+                                    shadeClose: true,
+                                    url: baseUrl + 'meetingmgr/tiolMeeting/selectBackMeetingAuditPage',
+                                    where: { "meetingId": meetingId },
+                                    method: 'post',
+                                    cols: [
+                                        [
+                                            { type: 'numbers', title: '序号' },
+                                            { field: 'backOrgName', title: '退回操作部门', minWidth: 120 },
+                                            { field: 'backUserName', title: '退回操作人', width: 200 },
+                                            { field: 'auditOpnion', title: '退回意见', minWidth: 150 },
+                                            {
+                                                field: 'backDatetime', title: '退回时间', minWidth: 80, templet: function (rowData) {
+                                                    return common.dateFormat(rowData.backDatetime);
+                                                }
+                                            }
+                                        ]
+                                    ],
+                                    height: 'full-350',
+                                    done: function () {
+                                        common.buttonLimit();
+                                    }
+                                }));
+                            }
+                        });
+
+                        break;
+                    case 'edit'://编辑
+                        //var urlParam = '?meetingTypeName=1&meetingTypeId=&meetingTypeCode=1';
+                        var urlParam = '?flowStatusId=' + data.flowStatusId + '&formOperType=edit&meetingId=' + data.meetingId + '&meetingTypeName=' + encodeURIComponent(data.meetingTypeName) + '&meetingTypeId=' + data.meetingTypeId + '&meetingTypeCode=' + data.meetingTypeCode;
+                        // common.openNewWrap({
+                        //     url: '/src/page/ys/hygl/meetingAdd.html' + urlParam,
+                        //     title: data.meetingTypeName + '会议'
+                        // });
+                        var editLayer = layer.open({
+                                    title: [data.meetingTypeName + '会议'],
+                                    type: 2,
+                                    content: baseUrl + '/src/page/ys/hygl/meetingAdd.html' + urlParam,
+                                    maxmin: true,
+                                    end:function(){
+                                        table.reload("table1");
+                                    }
+                                });
+                                layer.full(editLayer);
+                                break;
+                }
+            });
+
+            form.on('submit(formSearch)', function (obj) {
+                //表格重载
+                table.reload('table1', {
+                    url: selectBackMeetingUrl,
+                    method: 'post',
+                    contentType: 'application/json',
+                    page: {
+                        curr: 1
+                    },
+                    where: {
+                        meetingName: obj.field.meetingName,
+                        meetingTimeRange: obj.field.meetingTime,
+                        auditDatetime: obj.field.auditDatetime
+                    },
+                });
+                return false;
+            });
+        });
+    </script>
+
+    <!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+
+</html>

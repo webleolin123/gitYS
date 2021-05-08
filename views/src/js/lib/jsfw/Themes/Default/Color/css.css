@@ -1,0 +1,46 @@
+.Color{
+	border:1px solid gray;
+	background-Color: white;
+	padding:1px;
+	width:180px !important;
+	width:184px;
+	height:126px;
+}
+
+.Color_Item{
+	border:1px solid white;
+	width:16px !important;
+	width:18px;
+	height:16px !important;
+	height:18px;
+	float:left;
+}
+
+.Color_Item_Over{
+	border:1px solid #0A246A;
+	width:16px !important;
+	width:18px;
+	height:16px !important;
+	height:18px;
+	background-color:#B6BDD2;
+	float:left;
+}
+
+.Color_Item_Sel{
+	border:1px solid #0A246A;
+	width:16px !important;
+	width:18px;
+	height:16px !important;
+	height:18px;
+	background-color:#D4D5D8;
+	float:left;
+}
+
+.Color_Item_Sub{
+	margin:2px;
+	width:10px !important;
+	width:12px;
+	height:10px !important;
+	height:12px;
+	border:1px solid #808080;
+}

@@ -1,0 +1,104 @@
+.jsfw_Menu{
+	background-image: url('BG.gif');
+	background-repeat: repeat-x;
+	height:29px;
+	/*overflow:hidden;*/
+}
+.jsfw_Menu xmp{
+	display:none;
+}
+.Menu xmp{
+	display:none;
+}
+
+.jsfw_MenuBtn_Split{
+	float:left;
+	height:29px;
+	width:6px;
+	background-image: url('Split.gif');
+	background-repeat: no-repeat;
+	BACKGROUND-POSITION:50% 50%;
+	margin-left:10px;
+}
+.jsfw_MenuBtn{
+	float:left;
+	height:29px;
+	cursor:default;
+	padding-top:2px;
+	margin-left:10px;
+}
+.jsfw_MenuBtn_disabled{
+	float:left;
+	height:29px;
+	cursor:default;
+	color:gray;
+	filter:gray() alpha(opacity=50); /* IE */ 
+	-moz-opacity:0.5; /* Moz + FF */
+	opacity: 0.5; /* 支持CSS3的浏览器（FF 1.5也支持）*/ 
+}
+.jsfw_MenuBtn_Over{
+	float:left;
+	margin-left:10px;
+	margin-top:2px;
+	padding-top:3px;
+	height:24px;
+	border:1px solid #76A2D3;
+	background-color:#E1F1FF;
+	cursor:default;
+}
+
+.jsfw_MenuBtn_left{
+	padding-left:3px;
+	padding-right:3px;
+}
+.jsfw_MenuBtn_center{
+	padding-left:0px;
+	padding-right:4px;
+}
+.jsfw_MenuBtn_right, .jsfw_MenuBtn_right0{
+	cursor:default;
+	width:10px;
+	background-image: url('Arrow_Down.gif');
+	background-repeat: no-repeat;
+	BACKGROUND-POSITION:0 45%;
+	height:20px;
+}
+
+.jsfw_MenuBtn_Over .jsfw_MenuBtn_left{
+	padding-left:2px;
+	padding-right:2px;
+}
+.jsfw_MenuBtn_Over .jsfw_MenuBtn_center{
+	padding-left:1px;
+	padding-right:3px;
+}
+.jsfw_MenuBtn_Over .jsfw_MenuBtn_right{
+	width:9px;
+	border-left:1px solid #76A2D3;
+}
+.jsfw_MenuBtn_Over .jsfw_MenuBtn_right0{
+	width:10px;
+	BACKGROUND-POSITION:1 45%;
+}
+
+.jsfw_Menu_More{
+	float:right;
+	height:29px;
+	width:10px;
+	background-image: url('More.gif');
+	background-repeat: no-repeat;
+	BACKGROUND-POSITION:50% 50%;
+}
+
+.jsfw_Menu_MoreSel{
+	border:1px solid #76A2D3;
+	background-color:#E1F1FF;
+	float:right;
+	height:27px !important;
+	height:29px;
+	width:8px !important;
+	width:10px;
+	background-image: url('More.gif');
+	background-repeat: no-repeat;
+	BACKGROUND-POSITION:50% 50%;
+}

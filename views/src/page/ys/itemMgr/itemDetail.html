@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh" xml:lang="zh" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>事项明细</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+    <link href="../../../js/layui/css/layui.css" rel="stylesheet"/>
+    <link href="../../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../../js/lib/jquery.1.12.3.js"></script>
+    <script charset="utf-8" src="../../../js/common/plugin.js"></script>
+    <style>
+        .custom-title {
+            margin: 15px 0;
+        }
+
+        .bg-f7 {
+            width: 15%;
+            font-weight: bold;
+        }
+
+        .layui-table tr:nth-child(even) {
+            /* background: #fbfbfb; */
+            background: white;
+        }
+
+        .layui-table tbody tr:hover {
+            background-color: inherit;
+        }
+    </style>
+</head>
+<body class="iframe-h itemDetailPage">
+<div class="content-wrap">
+    <div class="layui-tab layui-tab-card gloBg" lay-filter="stepTep" style="padding-bottom: 60px" id="sxDetailInfo">
+        <ul class="layui-tab-title whiteTab">
+            <li class="layui-this">事项信息</li>
+            <li class="ydListTab">流程图</li>
+        </ul>
+        <div class="layui-tab-content" id="tabContainer">
+            <div class="layui-tab-item layui-show" style="position: relative">
+                <div class="custom-title" style="margin-top: 10px">清单信息</div>
+                <table class="layui-table custom-table">
+
+                    <tr>
+                        <td class="label bg-f7">所属企业名称</td>
+                        <td class="value seName">-</td>
+                        <td class="label bg-f7">版本</td>
+                        <td class="value listVersion">-</td>
+                    </tr>
+                    <tr>
+                        <td class="label bg-f7">事项清单名称</td>
+                        <td class="value listName">-</td>
+                        <td class="label bg-f7">流程名称</td>
+                        <td class="value flowName">-</td>
+                    </tr>
+                    <tr>
+                        <td class="label bg-f7">生效时间</td>
+                        <td class="value effectiveDate">-</td>
+                        <td class="label bg-f7">失效时间</td>
+                        <td class="value invalidDate">-</td>
+                    </tr>
+                    <tr>
+                        <td class="label bg-f7">描述</td>
+                        <td class="value remark" colspan="3">-</td>
+                    </tr>
+                    <tr>
+                        <td class="label bg-f7">添加时间</td>
+                        <td class="value ggCreateDatetime">-</td>
+                        <td class="label bg-f7">修改时间</td>
+                        <td class="value ggUpdateDatetime">-</td>
+                    </tr>
+                    <!-- <tr>
+                        <td class="bg-f7">添加人</td>
+                        <td>-</td>
+                        <td class="bg-f7">修改人</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td class="bg-f7">添加单位</td>
+                        <td>-</td>
+                        <td class="bg-f7">修改单位</td>
+                        <td>-</td>
+                    </tr> -->
+                    <tr>
+                        <td class="label bg-f7">操作状态</td>
+                        <td class="value operTypeCn red4">-</td>
+                        <td class="label bg-f7">上报状态</td>
+                        <td class="value uploadStatusCn red4">-</td>
+                    </tr>
+                </table>
+                 <!-- 业务流程状态信息 -->
+                <div class="layui-card systemFlowSetArea" id="flowBusinessDetail">
+                        <div class="custom-title">业务流程状态信息</div>
+                         <div class="layui-card-body" style="padding: 0 10px">
+                            <div class="layui-row">
+                                <div class="layui-col-xs12">
+                                    <table class="layui-table " id="hyFlowStateInfo">
+                                        <tbody>
+                                            <tr>
+                                                <td class="label bg-f7">流程名称</td>
+                                                <td class="value" name="flowName">-</td>
+                                                <td class="label bg-f7">办结状态</td>
+                                                <td class="value" name="flowState">-</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="label bg-f7">当前环节</td>
+                                                <td class="value" name="flowStateName">-</td>
+                                                <td class="label bg-f7">当前环节处理人</td>
+                                                <td class="value" name="todoUserName">-</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="label bg-f7">上一环节</td>
+                                                <td class="value" name="formFlowStateName">-</td>
+                                                <td class="label bg-f7">上一环节意见</td>
+                                                <td class="value" name="handleOpinion">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="label bg-f7">起草人</td>
+                                                <td class="value" name="drafterName">
+                                                </td>
+                                                <td class="label bg-f7">起草时间</td>
+                                                <td class="value" name="draftDatetime">
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+
+
+                <div class="custom-title">事项信息</div>
+                <table class="layui-table custom-table">
+                    <tr>
+                        <td class="label bg-f7">事项名称</td>
+                        <td class="value" name="itemName">-</td>
+                        <td class="label bg-f7">目录编码首字母</td>
+                        <td class="value" name="catalogChar">-</td>
+                    </tr>
+                    <tr>
+                        <td class="label bg-f7">事项编码</td>
+                        <td class="value" name="itemCode">-</td>
+                        <td class="label bg-f7">是否经过法律审核</td>
+                        <td class="value" name="legalFlag">-</td>
+                    </tr>
+                    <tr>
+                        <td class="label bg-f7">决策会议顺序</td>
+                        <td class="value" name="itemMeetingOrder" colspan="3">-</td>
+                    </tr>
+                    <tr>
+                        <td class="label bg-f7">添加人</td>
+                        <td class="value" name="ggCreateUser">-</td>
+                        <td class="label bg-f7">修改人</td>
+                        <td class="value" name="ggUpdateUser">-</td>
+                    </tr>
+                    <tr>
+                        <td class="label bg-f7">添加时间</td>
+                        <td class="value" name="ggCreateDatetime">-</td>
+                        <td class="label bg-f7">修改时间</td>
+                        <td class="value" name="ggUpdateDatetime">-</td>
+                    </tr>
+                    <tr>
+                        <td class="label bg-f7">添加单位</td>
+                        <td class="value" name="ggCreateEname">-</td>
+                        <td class="label bg-f7">修改单位</td>
+                        <td class="value" name="ggUpdateEname">-</td>
+                    </tr>
+                    <tr>
+                        <td class="label bg-f7">操作状态</td>
+                        <td class="value red4" name="operTypeCn">-</td>
+                        <td class="label bg-f7">上报状态</td>
+                        <td class="value red4" name="uploadStatusCn">-</td>
+                    </tr>
+                </table>
+
+
+                <div class="custom-title systemFlowSetArea">流程日志</div>
+                <div class="moduleBox systemFlowSetArea" id="flowLogDataSet" style="min-height: 300px">
+                    <div class="gloEmptyBox emptyDataAreaSubject">
+                        <img alt="" src="../../../images/emptyImg.png">
+                        <span>暂无流程日志</span>
+                    </div>
+                    <div class="verticalTimeLine"></div>
+                </div>
+                <div class="flowStepBox" id="flowStepBox">
+                </div>
+            </div>
+            <div class="layui-tab-item" id="iframeShowFlow" style="text-align: center;min-height: 600px">
+                <div class="gloEmptyBox emptyDataAreaSubject" style="margin-top: 100px">
+                    <img alt="" src="../../../images/emptyImg.png">
+                    <span>无流程信息</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../../../js/layui/layui.js"></script>
+<script charset="utf-8" src="../../../js/lib/echarts-4.1.0.min.js"></script>
+<script charset="utf-8" src="../../../js/lib/echartTheme.js"></script>
+<script src="../../../js/module/ys/itemMgr/itemDetail.js"></script>
+<!--[if lt IE 9]>
+<script src="../../../js/lib/html5.min.js"></script>
+<script src="../../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

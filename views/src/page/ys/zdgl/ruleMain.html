@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+
+<head>
+    <meta charset="UTF-8">
+    <title>制度管理-草稿箱</title>
+    <meta content="webkit" name="renderer" />
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../../js/layui/css/layui.css" />
+    <link href="../../../css/public.css?v1.01" rel="stylesheet" />
+    <link href="../../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <script src="../../../js/lib/jquery.1.12.3.js"></script>
+    <style>
+        .eleTree.ele5,
+        .eleTree.ele6 {
+            height: 300px;
+            width: 100%;
+            display: none;
+            position: absolute;
+            top: 100%;
+            background-color: #fff;
+            z-index: 10000;
+            border: 1px solid #ccc;
+        }
+
+        .shqkTab {
+            display: inline-block;
+            border: 1px solid gray;
+            background: #ffff;
+            padding: 0 5px;
+            margin: 0 5px;
+            height: 26px;
+            line-height: 26px;
+            color: black;
+            opacity: 0.3;
+        }
+
+        .isYsh {
+            opacity: 1;
+        }
+
+        a.layui-layer-ico.layui-layer-max {
+            display: none;
+        }
+
+        a.layui-layer-ico.layui-layer-max.layui-layer-maxmin {
+            display: inline-block !important;
+        }
+        th>div{
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body class="iframe-h">
+
+    <div class="content-wrap">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <div class="layui-card white-bg">
+                    <div class="layui-card-header layui-card-header-custom"><span><i></i>草稿列表</span></div>
+                    <div class="layui-card-body">
+                        <!--layui-form-pane-->
+                        <form action="" class="layui-form layui-form-pane">
+                            <div class="layui-row layui-col-space10">
+                                <div class="layui-col-xs4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">制度名称</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="regulationName" placeholder="请输入"
+                                                autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">制度类型</label>
+                                        <div class="layui-input-block">
+                                            <select name="trtId" id="trtName">
+                                                <option value="">请选择</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="toggle-area layui-col-space10">
+                                    <div class="layui-col-xs4">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">制度类别</label>
+                                            <div class="layui-input-block">
+                                                <!-- <select name="regulationTypeName" id="regulationTypeName"> -->
+                                                    <input type="text" name="regulationTypeName" placeholder="请输入"
+                                                    autocomplete="off" class="layui-input">
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-col-xs4">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">填写日期</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" class="layui-input" name="ggCreateDatetime"
+                                                    placeholder="请选择时间范围" readonly="readonly">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                               
+                                <div class="" style="text-align: center; margin-bottom: 5px;right: 0;bottom: 0;">
+                                    <div class="layui-input-inline" style="padding-left: 20px">
+                                        <button class="layui-btn  " lay-filter="formSearch" lay-submit=""
+                                            name="searchSubmit"><i class="fa fa-search"></i>查询
+                                        </button>
+                                        <button class="layui-btn layui-btn-primary  " lay-filter="reset" name="reset"
+                                            type="reset"><i class="fa fa-eraser"></i>重置
+                                        </button>
+                                        <a class="toggle-btn">
+                                            <span>展开</span><i class="fa fa-angle-up"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="layui-card">
+                    <div class="layui-card-body" style="padding-top: 0">
+                        <table id="table1" lay-filter="table1"></table>
+                        <button class="layui-btn layui-btn-sm layui-btn-danger hyzl-add hide" id="refreshTable">
+                            <i class="layui-icon">&#xe640;</i> 刷新
+                        </button>
+                        <script type="text/html" id="tableToolBar">
+                        <div class="layui-btn-container">
+                                <button class="layui-btn layui-btn-sm "  lay-event="submit" permission-btn='regulationApproval'>
+                                        <i class="fa fa-check" style="margin-right: 2px"></i> 提交
+                                    </button>
+                            <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete" permission-btn="regulationDelete">
+                                <i class="layui-icon">&#xe640;</i> 删除
+                            </button>
+
+                            <!--<button class="layui-btn layui-btn-sm" lay-event="shenhe">-->
+                            <!--<i class="layui-icon">&#xe608;</i> 审核-->
+                            <!--</button>-->
+                        </div>
+                    </script>
+
+                        <script type="text/html" id="tableOper">
+                        <!-- <a class="layui-btn layui-btn-xs" lay-event="view" permission-btn="regulationCheck">查看</a> -->
+                        <a class="layui-btn layui-btn-xs" lay-event="edit" permission-btn="regulationEdit">编辑</a>
+                        <!-- <a class="layui-btn layui-btn-xs" lay-event="approval" permission-btn="regulationApproval">提交</a> -->
+                    </script>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./../../../js/layui/layui.js"></script>
+    <script>
+
+        layui.config({
+            base: '../../../../src/js/',
+            version: new Date().getTime()
+        }).use(['layer', 'table', 'form', 'laytpl', 'common', 'element', 'laydate', 'eleTree'], function () {
+            var table = layui.table;
+            var form = layui.form;
+            var common = layui.common;
+            var element = layui.element;
+            var laydate = layui.laydate;
+            var tree = layui.eleTree;
+            var util = layui.util;
+            element.init();
+            var baseUrl = '../../../../';
+
+            common.themeSet();
+            common.toggleArea($('.toggle-btn'), $('.toggle-area'));
+
+            var paras = {};
+
+
+            eventHandle = {
+                pageInit: function () {
+                    common.fetchGet('rulemgr/regulation/getRegulationTypeSelect', function (res) {
+                        var list = res.list;
+                        var optionHtml = '<option value="">请选择</option>';
+                        for (var i = 0; i < list.length; i++) {
+                            optionHtml += '<option value ="' + list[i].trtId + '">' + list[i].trtName + '</option>';
+                        };
+                        $('#trtName').html(optionHtml);
+                        form.render();
+                    }, function (err) {
+                        layer.alert(err.resultMessage);
+                    });
+                },
+                tableInit: function () {
+                    table.render(common.tableInitParams({
+                        elem: '#table1',
+                        url: baseUrl + 'rulemgr/regulation/draftList',
+                        // method:'post',
+                        data:[],
+                        height: 'full-170',
+                        toolbar: '#tableToolBar',
+                        page:true,
+                        defaultToolbar: [],
+                        // defaultToolbar:['exports'],
+                        cols: [
+                            [
+                                { type: 'checkbox' },
+                                { type: 'numbers', title: '序号', width: 50 },
+                                // {field: 'ggSort', title: '序号',width: 80,align:'center',  sort: true},
+                                { field: 'regulationName', title: '制度名称',minWidth:180 },
+                                { field: 'trtName', title: '制度类型' },
+                                { field: 'regulationTypeName', title: '制度类别',minWidth:180 },
+                                { field: 'formulateDept', title: '制定部门',align:"left", minWidth:400 },
+                                {
+                                    field: 'ggCreateDatetime',width: 200,align:'center', title: '填写日期'
+                                    , templet: function (rowData) {
+                                        return util.toDateString(rowData.ggCreateDatetime, 'yyyy-MM-dd');
+                                    }
+                                },
+
+                                // {field: 'ggmemo', title: '备注', sort: true},
+                                { field: '', title: '操作', width: 100,align:'center', toolbar: '#tableOper', fixed: 'right',align:'center' }
+                            ]
+                        ],
+                        where: paras,
+                        done: function () {
+                            //按钮权限
+                            common.buttonLimit();
+                        }
+                    }));
+                },
+                formSearch: function () {
+                    form.on('submit(formSearch)', function (obj) {
+                        var obj = obj.field;
+                        //表格重载
+                        table.reload('table1', {
+                            method: 'post',
+                            contentType: 'application/json',
+                            page: {
+                                curr: 1
+                            },
+                            where: obj,
+
+                        });
+                        return false;
+                    });
+                },
+                eventListen: function () {
+                    laydate.render({
+                        elem: 'input[name=ggCreateDatetime]',
+                        type: 'date',
+                        range: true
+                        , trigger: 'click'
+                    });
+
+                    table.on('toolbar(table1)', function (obj) {
+                        var checkStatus = table.checkStatus(obj.config.id);
+                        switch (obj.event) {
+                            case 'submit'://提交
+                                if (checkStatus.data.length === 0) {
+                                    layer.msg('至少选择一条制度');
+                                    return false;
+                                };
+
+                                
+                                layer.confirm('确定提交选中制度?', { icon: 3, title: '提示', offset: '150px' }, function (index) {
+                                    var ids = [];
+                                    for (var i = 0; i < checkStatus.data.length; i++) {
+                                            ids.push(checkStatus.data[i]['regulationId']);
+                                        }
+                                    var layerLoader = common.layerLoader();
+                                    common.fetchPost('rulemgr/reportRegulation/reportRegulation', { 'regulationIds' : ids.join(','),'auditResultCode':'1'}, function (res) {
+                                        
+                                        if (res == null || res.resultCode == '-1') {
+                                            layer.alert(res.resultMessage, {
+                                                btn: ['<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭'],
+                                                btnAlign: 'c',
+                                                time: 20000
+                                            });
+                                        } else {
+                                            table.reload("table1");
+                                            layer.alert('提交成功，请到已提交和本企业制度报送模块进行下一步操作。');
+                                        };
+                                        layer.close(layerLoader);
+                                    }, function () {
+                                        layer.close(layerLoader);
+                                    });
+                                    // return false;
+                                    layer.close(index);
+                                });
+                                // layer.full(sumbitLayer);
+                                break;
+                            case 'delete':
+                                //点击删除按钮
+                                if (checkStatus.data.length > 0) {
+                                    layer.confirm('确定删除选中列?', { icon: 3, title: '提示', offset: '150px' }, function (index) {
+                                        var ids = [];
+
+                                        for (var i = 0; i < checkStatus.data.length; i++) {
+                                            ids.push(checkStatus.data[i]['regulationId']);
+                                        }
+                                        var layerLoader = common.layerLoader();
+                                        common.fetchDelete('rulemgr/regulation/delete?ids=' + ids.join(','), function (res) {
+                                            if (res.resultCode == 0) {
+                                                layer.close(layerLoader);
+                                                table.reload("table1");
+                                                layer.msg('删除成功');
+                                            } else {
+                                                layer.alert(res.resultMessage);
+                                            }
+                                        }, function (res) {
+                                            layer.msg('删除失败');
+                                            layer.close(layerLoader);
+                                        });
+
+                                        layer.close(index);
+                                    });
+                                } else {
+                                    layer.msg('请选择删除列')
+                                }
+                                break;
+                        }
+                    });
+
+                    //制度列表 table 监听事件
+                    table.on('tool(table1)', function (obj) {
+                        var data = obj.data;
+                        switch (obj.event) {
+                            case 'edit'://编辑
+                                var editLayer = layer.open({
+                                    title: ['编辑制度'],
+                                    type: 2,
+                                    content: baseUrl + 'src/page/ys/zdgl/ruleAdd.html?regulationId=' + data.regulationId,
+                                    maxmin: true,
+                                    end:function(){
+                                        table.reload("table1");
+                                    }
+                                });
+                                layer.full(editLayer);
+                                break;
+                        }
+                    });
+
+                    //查询
+                }
+            }
+            eventHandle.pageInit();
+            eventHandle.tableInit();
+            eventHandle.formSearch();
+            eventHandle.eventListen();
+
+
+
+
+            //制度列表 table
+
+            //制度列表 table 监听事件
+
+
+            common.columnSide();
+            common.dataAccessReloadModule({
+                table: ['table1']
+            });
+        });
+
+    </script>
+
+    <!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+
+</html>

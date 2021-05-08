@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>制度分析</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1,IE=EmulateIE11,IE=EmulateIE10,IE=EmulateIE9,IE=EmulateIE8" http-equiv="X-UA-Compatible">
+    <meta content="webkit|ie-comp|ie-stand" name="renderer">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../../js/layui/css/layui.css"/>
+    <link href="../../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../../js/lib/jquery.1.12.3.js"></script>
+    <style>
+    </style>
+</head>
+<body class="iframe-h">
+<div class="content-wrap">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+            <!-- layui tree-->
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom" style="position: relative">
+                    <span><i></i>企业层级</span>
+                    <div style="position: absolute;right: 5px;top: -2px;">
+                        <p style="display: inline-block;font-size: 12px;vertical-align: center">
+                            包含下级
+                        </p>
+                        <form class="layui-form" style="display: inline-block">
+                            <input checked lay-filter="switch" lay-skin="switch" name="switch" type="checkbox">
+                        </form>
+                    </div>
+                </div>
+                <div class="layui-card-body">
+                    <!--<div class="searchBar">-->
+                    <!--&lt;!&ndash;<input class="layui-input" id="keySearch" placeholder="请输入关键字"&ndash;&gt;-->
+                    <!--&lt;!&ndash;style="display: inline-block" type="text">&ndash;&gt;-->
+                    <!--<span class="icon-btn" id="btnSearch" title="搜索"><i class="fa fa-search"></i></span>-->
+                    <!--</div>-->
+                    <!-- <div class="searchInput">
+                        <i class=" layui-icon layui-icon-search"></i>
+                        <input class="layui-input " placeholder="请输入关键字" type="text" id="searchTree">
+                    </div> -->
+                    <div class="layuiTree eleTree ele4" id="leftTree" lay-filter="leftTree" style="overflow-y: auto;margin-top: 10px">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
+            <div class="layui-row">
+                <div class="">
+                    <div class="moduleBox">
+                        <form class="layui-form" style="margin-top: 0;padding-top: 5px">
+                            <div style="display: inline-block">
+                                <b class="columnToggle"><i class="fa fa-toggle-left"></i></b>
+                                <label class="" style="padding-left: 10px">报送状态：</label>
+                                <div class="layui-input-inline">
+                                    <input checked lay-filter="uploadStatusRadio" name="uploadStatusRadio" title="全部" type="radio" value="-1">
+                                    <input  lay-filter="uploadStatusRadio" name="uploadStatusRadio" title="已报送" type="radio" value="2">
+                                    <input lay-filter="uploadStatusRadio" name="uploadStatusRadio" title="未报送" type="radio" value="1">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- <div class="layui-col-xs12" style="margin-top: 10px">
+                    <div class="layui-tab layui-tab-brief gloBg" lay-filter="regulationTypeTab">
+                        <ul class="layui-tab-title" id="regulationTypeTab" style="border-color: transparent">
+                            <li class="layui-this">董事会</li>
+                           
+                            <li>党委（党组）会</li>
+                           
+                            <li>总经理办公室</li>
+                           
+                        </ul>
+                    </div>
+                </div> -->
+            </div>
+            <div class="layui-row " style="margin-top: 10px">
+                <div class="moduleBox">
+                    <table id="table" lay-filter="table"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+<script src="../../../js/layui/layui.js"></script>
+<script src="../../../js/module/ys/spssMgr/ruleUpMgr.js"></script>

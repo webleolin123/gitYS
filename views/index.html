@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html class="menuTheme-light" lang="zh" lang="en" primarycolor="primary" xml:lang="zh"
+      xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no,minimal-ui"
+          name="viewport">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <!--[if ie 9]>
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"><![endif]-->
+    <title class="htmlTitle"></title>
+    <link class="favicon" href="src/images/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="src/images/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="src/images/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="src/js/layui/css/layui.css" />
+    <link href="src/css/public.css?v1.01" rel="stylesheet"/>
+    <link href="src/css/module/index.css" rel="stylesheet"/>
+    <link href="src/js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="src/js/lib/jquery.1.12.3.js"></script>
+    <script src="src/js/lib/modernizr.custom.01239.js"></script>
+    <script src="src/js/lib/aes/aes.js"></script>
+    <script src="src/js/lib/aes/pad-zeropadding-min.js"></script>
+    <style>
+        .pageRocket {
+            display: none;
+        }
+
+        .mainBarHelp a {
+            font-size: 14px !important;
+        }
+
+        .navSpan {
+            display: inline-block;
+            height: 25px;
+            line-height: 25px;
+            padding-right: 10px;
+            border-right: 1px solid #5b8fce;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<script type="text/html" id="systemNotice">
+    <div class="layui-card-body" style="background:#FBFBFB;">
+        <form class="layui-form layui-form-pane" name="xxx">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md12">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">更新日志标题</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="snTitle" id="snTitle"
+                                autocomplete="off" class="layui-input hyinput" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md12">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">更新内容</label>
+                        <div class="layui-input-block">
+                            <textarea type="text" id="snContent" autocomplete="off" class="layui-textarea" readonly></textarea>
+                        </div>
+                    </div>
+                </div>             
+            </div>
+        </form>
+    </div>
+</script>
+
+<body class="layui-layout-body">
+    <div class="layui-layout layui-layout-admin" id="indexLayout">
+        <input type="hidden" style="display: none" id="currentMenuCompId">
+        <input type="hidden" style="display: none" id="currentMenuSmId">
+        <div class="layui-header index-top" id="pageTop">
+            <div class="logoHeader clearFix" id="logoHeader">
+                <img src="src/images/login/empty.png" title="">
+                <b></b>
+                <span></span>
+            </div>
+            <span class="layui-nav-bar" style="left: 33px; top: 49px; width: 0; opacity: 0;"></span>
+
+            <ul class="mainBarHelp layui-nav layui-layout-right index-right-icon clearFix" style="padding-right: 0">
+                <li class="layui-nav-item">
+                    <span class="pageAlertTip" style="font-size: 18px;padding-right: 10px">上网不涉密，涉密不上网</span>
+                </li>
+                <li class="layui-nav-item" id="todoIcon">
+                    <a href="javascript:;" style="color: #fff" title="待办">
+                        <i class="fa fa-bell-o" style="margin-right: 5px;font-weight: bold;font-size: 16px"></i><span
+                            class="navSpan" style="padding-right: 20px">待办</span><b class="todoThingIcon">2</b>
+                    </a>
+                </li>
+                <li class="layui-nav-item" id="helpIcon">
+                    <a href="src/page/docxFiles/helpManual.docx" download="中国有色集团“三重一大”信息管理系统2.1版本用户操作手册V2.0.20200222.docx" style="color: #fff" title="帮助手册V2.0.20200222">
+                        <i class="fa fa-question-circle" style="margin-right: 5px;font-size: 18px"></i><span
+                            class="navSpan">帮助</span>
+                    </a>
+                </li>
+                <li class="layui-nav-item" id="themeConfig">
+                    <a href="javascript:;" style="color: #fff" title="主题切换">
+                        <i class="layui-icon layui-icon-theme font-weight-bold" style="margin-right: 5px"></i><span
+                            class="navSpan">主题</span>
+                    </a>
+                </li>
+
+                <li class="layui-nav-item" id="sysUser">
+                    <a href="javascript:;" style="min-width:70px;color: #fff">
+                        <!-- <i class="fa fa-user"></i> -->
+                        <!--<i class="icon iconfont icon-SZYD-shujujiaoserenyuan" style="vertical-align: middle;"></i>-->
+                        <div class="barUserHeader"><img alt="" src="./src/images/defaultUser.jpg"></div>
+                        <span id="suName" style="vertical-align: middle;padding-right: 10px"></span>
+                    </a>
+                    <dl class="layui-nav-child" style="min-width: auto;width: 120px;left: auto;right: 0;">
+                        <dd id="changeE">
+                            <a><i class="icon iconfont icon-DEZJ-xitongzuzhiguanli"
+                                  style="padding-right: 5px;"></i>切换部门</a>
+                        </dd>
+                        <dd id="changeP">
+                            <a><i class="icon iconfont icon-SZYD-zhongzhimima" style="padding-right: 5px;"></i>修改密码</a>
+                        </dd>
+                        <dd id="updateLog">
+                            <a><i class="icon iconfont icon-DEZJ-yangqiqiyeshujudongtaijianceyingyong"
+                                    style="padding-right: 5px;"></i>更新日志</a>
+                        </dd>
+                        <dd class="loginOut" login-area="in" style="display: none">
+                            <a><i class="icon iconfont icon-button-guanji-1" style="padding-right: 5px;"></i>退出</a>
+                        </dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item loginOut" login-area="out" style="display: none">
+                    <a title="退出"><i class="icon iconfont icon-button-guanji-1"
+                                     style="padding-right: 5px;font-weight: bold"></i><span
+                            style="font-size: 14px">退出</span></a>
+                </li>
+            </ul>
+
+        </div>
+        <div class="layui-side layui-bg-black index-leftSide" style="top:60px;overflow: hidden; z-index: 1">
+            <div class="navModuleCcordion" style="display: none">
+                <div class="layui-collapse" lay-accordion>
+                    <div class="layui-colla-item">
+                        <h2 class="layui-colla-title">功能菜单</h2>
+                        <div class="layui-colla-content layui-show">
+                            <div class="layui-side-scroll" style="overflow-y: auto;">
+                                <ul class="layui-nav layui-nav-tree leftMenuList" lay-filter="leftNav"></ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-colla-item">
+                        <h2 class="layui-colla-title">单位</h2>
+                        <div class="layui-colla-content ">
+                            <div class="unitSelection" id="unitSelection">
+                                <ul class="eleTree ele4 unitTree" lay-filter="unitTree"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="navModuleTab" style="display: none">
+                <div class="menuTabBox">
+                    <div class="customTabList">
+                        <ul class="clearFix">
+                            <li class="selected" data-customTabList="menu" data-tip="功能菜单">
+                                <i class="layui-icon layui-icon-note"></i>
+                                <span class="menuTabTip">功能菜单</span>
+                            </li>
+                            <!--<li data-customTabList="unit" data-tip="企业单位">
+                                <i class="icon iconfont icon-enterprise"></i>
+                                <span>企业单位</span>
+                            </li>
+                            <li data-customTabList="system" data-tip="制度类型">
+                                <i class="icon iconfont icon-SZYD-zhiduleixing"></i>
+                                <span>制度类型</span>
+                            </li>
+                            <li data-customTabList="meeting" data-tip="会议类型">
+                                <i class="icon iconfont icon-SZYD-huiyileixing"></i>
+                                <span>会议类型</span>
+                            </li>-->
+                        </ul>
+                    </div>
+                    <div class="customTabContent" style="top: 40px;">
+                        <div class="item  selected" data-customTabContent="menu">
+                            <div class="menu-title gnMenu">功能菜单</div>
+                            <div class="layui-side-scroll" style="overflow-y: auto;">
+                                <ul class="layui-nav layui-nav-tree leftMenuList" lay-filter="leftNav"></ul>
+                            </div>
+                        </div>
+                        <!-- <div class="item " data-customTabContent="unit" >
+                             <div class="unitSelection">
+                                 <div class="menu-title">企业单位</div>
+                                 <ul class="eleTree ele4 unitTree" lay-filter="unitTree"></ul>
+
+                             </div>
+                         </div>
+                         <div class="item " data-customTabContent="system">
+                             <div class="unitSelection">
+                                 <div class="menu-title">制度类型</div>
+                                 <ul class="eleTree ele4 systemTree" lay-filter="systemTree"></ul>
+
+                             </div>
+                         </div>
+                         <div class="item " data-customTabContent="meeting">
+                             <div class="unitSelection">
+                                 <div class="menu-title">会议类型</div>
+                                 <ul class="eleTree ele4 meetingTree" lay-filter="meetingTree"></ul>
+                             </div>
+                         </div>-->
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="toggleSide" id="toggleSide" style="z-index: 10">
+            <i class="icon iconfont icon-DEZJ-shouqicaidan"></i>
+        </div>
+        <!-- 内容主体区域1 -->
+        <div class="layui-body index-rightSide tabBreadcrumb" style="display: none;z-index: 0">
+            <div class="main-layout-tab layui-tab layui-tab-brief" lay-filter="tab" lay-allowclose="true">
+                <ul class="layui-tab-title" id="mainMenuTab">
+                    <li class="layui-this" style="min-width: 30px" lay-id="main">
+                        <i class="layui-icon layui-icon-home" style="margin:0px 5px 0px 0px;"></i>首页
+                    </li>
+                </ul>
+                <div class="kit-tab-tool tab-tool" style="z-index:999;width:90px;">
+                    <i class="iconfont icon-DEZJ-mobanliexiangguanli"></i>&nbsp;页面操作&nbsp;
+                </div>
+                <div class="kit-tab-tool-body tab-tool layui-anim layui-anim-upbit">
+                    <ul style="display: none;" id="tabOper">
+                        <li class="kit-item" data-target="refresh"><i class="iconfont icon-button-zhongzhi-1"></i>&nbsp;刷新当前选项卡
+                        </li>
+                        <li class="kit-line"></li>
+                        <li class="kit-item" data-target="closeCurrent"><i class="iconfont icon-button-cha-2"></i>&nbsp;关闭当前选项卡
+                        </li>
+                        <li class="kit-line"></li>
+                        <li class="kit-item" data-target="closeOther"><i class="iconfont icon-button-jian-1"></i>&nbsp;关闭其他选项卡
+                        </li>
+                        <li class="kit-line"></li>
+                        <li class="kit-item" data-target="closeAll"><i class="iconfont icon-DEZJ-guanbi"></i>&nbsp;关闭所有选项卡
+                        </li>
+                    </ul>
+                </div>
+                <!--<div class="menuTipBox" style="top: 40px;z-index: 1">-->
+                <!--<span class="unitTip">数据来源单位：<b></b></span>-->
+                <!--</div>-->
+                <div class="layui-tab-content" id="mainTabContent">
+                    <div class="layui-tab-item layui-show">
+                        <!--<iframe src="./src/page/ys/ruleReportMgr.html" id="main" width="100%" height="100%" name="iframe" scrolling="auto" class="iframe" framborder="0"></iframe>-->
+                        <!--<iframe class="iframe" framborder="0" height="100%" id="main" name="iframe" scrolling="auto"-->
+                        <!--src="./src/page/main/main.html" width="100%"></iframe>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-body index-rightSide menuBreadcrumb" style="display: block;z-index: 0">
+            <span class="layui-breadcrumb layui-breadcrumb-custom" id="breadcrumb-custom">
+                <!--<a class="fNodeMenu" data-compId="" data-text="首页" data-url="main" href="javascript:;" id="mainPage" title="首页"> <i class="layui-icon layui-icon-home" style="display:inline-block;width:18px;margin:0px 5px 0px 0px;"></i>首页</a>-->
+            </span>
+            <!--<div class="menuTipBox">-->
+            <!--<span class="unitTip">数据来源单位：<b></b></span>-->
+            <!--</div>-->
+            <div class="breadcrumb-content" id="breadcrumb-content">
+                <div class="menuContentMark">
+                    <img alt="正在载入..." src="./src/images/loading-grid.gif">
+                    <span>正在载入...</span>
+                </div>
+                <div class="menuContent" id="menuContent">
+                    <!--<iframe border="0" class="iframe" frameborder="no" height="100%" id="main" name="iframe"-->
+                    <!--scrolling="auto" src="./src/page/main/main.html"-->
+                    <!--width="100%"></iframe>-->
+                </div>
+            </div>
+        </div>
+
+        <!-- 底部 -->
+        <!--<div class="layui-footer">Copyright © 2019 ZF All rights reserved. <span class="pull-right">Version 2.0</span></div>-->
+        <!--遮罩-->
+        <div class="main-mask">
+
+        </div>
+    </div>
+
+    <!-- 更新日志弹窗 -->
+    <div class="layui-card updateLogLayer hide">
+        <div class="layui-card-header layui-card-header-custom"><span><i></i>当前版本号:V1.XXXXXXXXX</span></div>
+        <div class="layui-card-body">
+            <form action="" class="layui-form layui-form-pane">
+                <div class="layui-row layui-col-space10">
+                    <div class="layui-col-md12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" style="width:100%">更新记录</label>
+                            <div class="layui-input-block" id="sysUpdateLog" style="margin-left:0;left:0">
+                                <!-- <textarea class="layui-textarea" id="sysUpdateLog" name="memo" placeholder="请输入">
+                                    这是更新记录
+                                </textarea> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!--修改密码弹框-->
+    <div class="passwordLayer hide">
+        <div style="padding: 15px 20px">
+            <form class="layui-form layui-form-pane" name="passwordLayer" layui-filter="passwordLayui">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><b class="red">*</b>旧密码</label>
+                    <div class="layui-input-block">
+                        <input type="password" id="oldPwd" name="oldPwd" required lay-verify="required"
+                            placeholder="请输入" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><b class="red">*</b>新密码</label>
+                    <div class="layui-input-block">
+                        <input type="password" id="newPwd" name="newPwd" required lay-verify="required|checkPassword"
+                            placeholder="请输入" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><b class="red">*</b>确认密码</label>
+                    <div class="layui-input-block">
+                        <input type="password" id="againPwd" name="againPwd" required lay-verify="required|checkPassword"
+                            placeholder="请输入" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item adapt">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" id="changeP-btn" lay-submit lay-filter="changeP"><i class="layui-icon">&#xe605;</i>提交</button>
+                        <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                        <button class="layui-btn layui-btn-primary" id="logOut-btn">退出登录</button>
+                    </div>
+                </div>
+                <div style="text-align:center">
+                    <p>
+                        <b>备注：</b>密码长度应在8位以上并由同时包含大小字母、数字及特殊符号等共同组成。特殊符的内容如下：".","+","-","*","/","$","#"。
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="themeSetTable" style="display: none">
+        <div style="padding: 15px;">
+            <div id="themeTable" lay-filter="themeTable"></div>
+        </div>
+
+        <script id="tableOper1" type="text/html">
+            <!--    <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="singleEnable"
+                   permission-btn="nav_enable" style="display: {{d.ggEnStatus==='0'?'inline-block':'none'}} ">启用</a>-->
+            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="singleEnable"
+               permission-btn="nav_enable">启用</a>
+        </script>
+    </div>
+
+    <script type="text/html" id="themeConfigArea">
+        <div class="content-wrap themeConfigArea">
+            <div class="layui-row ">
+                <div class="layui-col-md12">
+                    <div class="line-title">菜单风格设置</div>
+                    <div class="mainThemeArea">
+                        <ul class="clearFix">
+                            <li class="selected" data-menuTheme="dark">
+                                <img src="https://gw.alipayobjects.com/zos/rmsportal/LCkqqYNmvBEbokSDscrm.svg"
+                                    alt="dark">
+                                <i class="fa fa-check"></i>
+                            </li>
+                            <li data-menuTheme="light">
+                                <img src="https://gw.alipayobjects.com/zos/rmsportal/jpRkZQMyYRryryPNtyIC.svg"
+                                    alt="light">
+                                <i class="fa fa-check"></i>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="layui-col-md12">
+                    <div class="line-title">主题色</div>
+                    <div class="primaryColorArea">
+                        <ul class="clearFix">
+                            <li data-primary="primary">
+                                <span class="bg-primary"></span>
+                                <i class="fa fa-check"></i>
+                            </li>
+                            <li data-primary="green">
+                                <span class="bg-green"></span>
+                                <i class="fa fa-check"></i>
+                            </li>
+                            <li data-primary="gray">
+                                <span class="bg-gray"></span>
+                                <i class="fa fa-check"></i>
+                            </li>
+                            <!-- <li data-primary="#2ec770" style="top:-19px;left:20px;">
+                            <div id="bg-more"></div>
+                        </li> -->
+                        </ul>
+                    </div>
+                </div>
+                <div class="layui-col-md12 ">
+                    <div class="line-title">设置</div>
+                    <div class="primarySettingArea" id="primarySettingArea">
+                        <div class="layui-tab layui-tab-brief" lay-filter="primarySettingArea">
+                            <ul class="layui-tab-title">
+                                <li class="layui-this">顶部</li>
+                                <li>侧边栏</li>
+                                <li>内容</li>
+                                <li>其他</li>
+                            </ul>
+                            <div class="layui-tab-content" style="background:#fff">
+                                <div class="layui-tab-item layui-show">
+                                    <div class="setting-drawer-item">
+                                        <span>高</span>
+                                        <div class="row-input">
+                                            <input autocomplete="off" class="layui-input settingInput" type="number"
+                                                name="topHeightPx" min="-100" max="300" placeholder="" step="2"
+                                                value="60">
+                                            <span class="px-insert">px</span>
+                                        </div>
+                                    </div>
+                                    <div class="setting-drawer-item">
+                                        <span>背景色
+                                            <span style="color:#bfbfbf;padding-left:5px;">默认同主色系</span>
+                                        </span>
+                                        <div style="margin-left: 30px;">
+                                            <div class="pickColor0"></div>
+                                        </div>
+                                    </div>
+                                    <div class="setting-drawer-item">
+                                        <span>顶部左右内边距</span>
+                                        <div class="row-input">
+                                            <input autocomplete="off" class="layui-input settingInput" type="number"
+                                                name="paddingPx" min="-100" max="300" placeholder="" step="2"
+                                                value="16">
+                                            <span class="px-insert">px</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-tab-item">
+                                    <div class="setting-drawer-item">
+                                        <span>宽度</span>
+                                        <div class="row-input">
+                                            <input autocomplete="off" class="layui-input settingInput" type="number"
+                                                name="widthPx" min="-100" max="300" placeholder="" step="2" value="200">
+                                            <span class="px-insert">px</span>
+                                        </div>
+                                    </div>
+                                    <div class="setting-drawer-item">
+                                        <span>背景</span>
+                                        <div style="margin-left: 30px;">
+                                            <div class="pickColor1"></div>
+                                        </div>
+                                    </div>
+                                    <div class="setting-drawer-item">
+                                        <span>收缩宽度</span>
+                                        <div class="row-input">
+                                            <input autocomplete="off" class="layui-input settingInput" type="number"
+                                                name="ssWidth" min="-100" max="300" placeholder="" step="2" value="64">
+                                            <span class="px-insert">px</span>
+                                        </div>
+                                    </div>
+                                    <div class="setting-drawer-item">
+                                        <span>项上下内边距</span>
+                                        <div class="row-input">
+                                            <input autocomplete="off" class="layui-input settingInput" type="number"
+                                                name="itemPaddingPx" min="-100" max="300" placeholder="" step="2"
+                                                value="8">
+                                            <span class="px-insert">px</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-tab-item">
+                                    <div class="setting-drawer-item">
+                                        <span>背景色</span>
+                                        <div style="margin-left: 30px;">
+                                            <div class="pickColor2"></div>
+                                        </div>
+                                    </div>
+                                    <div class="setting-drawer-item">
+                                        <span>标题背景色</span>
+                                        <div style="margin-left: 30px;">
+                                            <div class="pickColor2"></div>
+                                        </div>
+                                    </div>
+                                    <div class="setting-drawer-item">
+                                        <span>标题底部边框色</span>
+                                        <div style="margin-left: 30px;">
+                                            <div class="pickColor2"></div>
+                                        </div>
+                                    </div>
+                                    <div class="setting-drawer-item">
+                                        <span>内边距</span>
+                                        <div class="row-input">
+                                            <input autocomplete="off" class="layui-input settingInput" type="number"
+                                                name="itemPaddingPx" min="-100" max="300" placeholder="" step="2"
+                                                value="24">
+                                            <span class="px-insert">px</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-tab-item">
+                                    <div class="setting-drawer-item">
+                                        <span>开启表单元素的视觉反馈</span>
+                                        <form class="layui-form layui-form-pane" action="">
+                                            <div>
+                                                <div class="layui-input-block">
+                                                    <input type="checkbox" checked="" name="open" lay-skin="switch"
+                                                        lay-filter="switchTest" lay-text="ON|OFF">
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="setting-drawer-item">
+                                        <span>开启 preserveWhitespaces</span>
+                                        <form class="layui-form layui-form-pane" action="">
+                                            <div>
+                                                <div class="layui-input-block">
+                                                    <input type="checkbox" checked="" name="open" lay-skin="switch"
+                                                        lay-filter="switchTest" lay-text="ON|OFF">
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="setting-drawer-item">
+                                        <span>表格中:图片圆角</span>
+                                        <div class="row-input">
+                                            <input autocomplete="off" class="layui-input settingInput" type="number"
+                                                name="circleHeightPx" min="-100" max="300" placeholder="" step="2"
+                                                value="4">
+                                            <span class="px-insert">px</span>
+                                        </div>
+                                    </div>
+                                    <div class="setting-drawer-item">
+                                        <span>表格中:图片右外边距</span>
+                                        <div class="row-input">
+                                            <input autocomplete="off" class="layui-input settingInput" type="number"
+                                                name="MarginRHeightPx" min="-100" max="300" placeholder="" step="2"
+                                                value="4">
+                                            <span class="px-insert">px</span>
+                                        </div>
+                                    </div>
+                                    <div class="setting-drawer-item">
+                                        <span>表格中:图片最大宽度</span>
+                                        <div class="row-input">
+                                            <input autocomplete="off" class="layui-input settingInput" type="number"
+                                                name="imgMaxWidthPx" min="-100" max="300" placeholder="" step="2"
+                                                value="32">
+                                            <span class="px-insert">px</span>
+                                        </div>
+                                    </div>
+                                    <div class="setting-drawer-item">
+                                        <span>表格中:图片最大高度</span>
+                                        <div class="row-input">
+                                            <input autocomplete="off" class="layui-input settingInput" type="number"
+                                                name="imgMaxheightPx" min="-100" max="300" placeholder="" step="2"
+                                                value="32">
+                                            <span class="px-insert">px</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script src="./src/js/layui/layui.js"></script>
+    <script src="./src/js/lib/pointer_events_polyfill.js"></script>
+    <script>
+        layui.config({
+            base: './src/js/',
+            version: new Date().getTime()
+        }).use('index', function () {
+            var index = layui.index;
+            //检查是否登入
+            //导入用户信息
+            index.output()
+        });
+    </script>
+
+
+    <!--[if lt IE 9]>
+    <script src="./src/js/lib/html5.min.js"></script>
+    <script src="./src/js/lib/respond.js"></script>
+<![endif]-->
+</body>
+
+</html>

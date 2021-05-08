@@ -1,0 +1,189 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META http-equiv=Content-Type content="text/html; charset=utf-8">
+	<TITLE>修改流程源码</TITLE>
+	<META NAME="Author" CONTENT="Witson">
+		<link rel="stylesheet" type="text/css" href="../../../js/flow/images/style.css"/>
+	<style type="text/css">
+	#txtSrc{
+		width:100%;height:100%;
+		/*font-family:fixedsys;*/
+	}
+	</style>
+</HEAD>
+	<script type="text/javascript">
+		var oFlow=parent.oFlow;
+
+		function funOK(){
+			var oXML=getXMLDom();
+			oXML.async = false;
+			if (/msie/i.test(navigator.userAgent)){
+				oXML.loadXML(getEditVal());
+				if (oXML.parseError.errorCode != 0){
+					alert('解析XML出错：\n行：' + oXML.parseError.line + '\n原因：' + oXML.parseError.reason + '\n详细：\n' + oXML.parseError.srcText);
+					return;
+				}
+				oFlow.loadFromString(oXML.xml);
+			}else{
+				oXML = new DOMParser().parseFromString(getEditVal(),"text/xml");
+				oFlow.loadFromString(oXML.documentElement);
+			}
+			/*var sName=oFlow.getAttr('','name');
+			var sVersion=oFlow.getAttr('','version');
+			var sLabel=oFlow.getAttr('','label');
+			var oRoot=oXML.documentElement;
+			oRoot.setAttribute('name',sName);
+			oRoot.setAttribute('version',sVersion);
+			oRoot.setAttribute('label',sLabel);*/
+
+			// oFlow.loadFromString(oXML.xml);
+			oFlow.modified=true;
+			parent.readProperty();
+			parent.closeDialog(self);
+		}
+
+		function loadData(){
+			setEditVal(oFlow.getFlowXML());
+			try{
+				jsfw.$('txtSrc').focus();
+			}catch(e){}
+			
+		}
+		function getEditVal(){
+			return frmSrc.document.body.innerText;
+			//return jsfw.$('txtSrc').value;
+		}
+		function setEditVal(sVal){
+			frmSrc.document.body.innerText = sVal;
+			edit_SetColor();
+			//jsfw.$('txtSrc').value=sVal;
+		}
+		function getXMLDom(){
+			if (/msie/i.test(navigator.userAgent))
+				for (var i=0; i<4; i++)
+					try{
+						var r = new ActiveXObject(["MSXML2.DOMDocument", "Microsoft.XMLDOM", "MSXML.DOMDocument", "MSXML3.DOMDocument"][i]);
+						return r;
+					}catch (e){return null;}
+			else return document.implementation.createDocument("", "doc", null);
+		}
+</script>
+
+<BODY loadWebUI="Toolbar" scroll="no" onload1="loadData()">
+
+<table width="100%" style="table-layout:fixed;height:100%" border="0" cellpadding="0" cellspacing="0">
+	<COL width="120">
+	<tr>
+		<td height="28">
+			<div class="Toolbar" style="padding-left:10px;">
+			<xmp style="display:none">
+				<root>
+					<item text="确定" icon="../../../js/flow/images/icon/check.gif" action="funOK();"/>
+					<item text="取消" icon="../../../js/flow/images/icon/close.gif" action="parent.closeDialog(self);"/>
+					<item text=""/>
+					<item text="格式化" action="edit_Format();"/>
+				</root>
+			</xmp>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td style="padding:3px;padding-top:0px;">
+			<textarea name="txtSrc" id="txtSrc" style="display:none"></textarea>
+			<iframe id="ifrmSrc" name="ifrmSrc" style="width:100%;height:100%;border:1px solid gray" frameborder="0"></iframe>
+		</td>
+	</tr>
+</table>
+</BODY>
+</HTML>
+<script type="text/javascript" src="../../../js/lib/jsfw/boot.js" loadClass="" loadPrototype="Array" loadWebUI="" Theme="Default"></script>
+<script type="text/javascript">
+	if (!jsfw.Class.CodeHighlight) jsfw.Import("classes.CodeHighlight");
+	var frmSrc = document.getElementById('ifrmSrc').contentWindow;
+	function initEdit(){
+		frmSrc.document.write('<HTML><HEAD><style type="text/css">'+
+    'body,td,th,a,p,div,input,textarea,select,button {word-break:break-all; font-size:9pt;font-family:"宋体","Fixedsys";} image{border:0px} ' +
+    'body{margin:3px;} p{margin:0px;padding-top:6px;}' +
+    '</style></HEAD><BODY scroll="auto" contentEditable="true"></BODY></HTML>');
+	}//word-break:break-all;
+	function edit_SetColor(){
+		var strTem = frmSrc.document.body.innerText;
+		strTem = (new jsfw.Class.CodeHighlight(strTem,'xml').highlight());
+		//strTem = strTem.replace(/&lt;<span style='color:#808000;'>&nbsp;xmp/img,'&lt;<span style=\'color:#808000;\'>xmp');
+		//strTem = strTem.replace(/&lt;<span style='color:#808000;'>\/&nbsp;xmp/img,'&lt;<span style=\'color:#808000;\'>/xmp');
+		frmSrc.document.body.innerHTML = strTem;
+	}
+	function edit_Format(){
+		var strTem = frmSrc.document.body.innerText;
+		strTem = formatXml(strTem);
+		frmSrc.document.body.innerText = strTem;
+		edit_SetColor();
+	}
+	initEdit();
+
+	////公用函数
+	String.prototype.removeLineEnd = function(){
+		return this.replace(/(<.+?\s+?)(?:\n\s*?(.+?=".*?"))/g,'$1 $2')
+	}
+	function getPrefix(prefixIndex){
+		var span = '    ';
+		var output = [];
+		for(var i = 0 ; i < prefixIndex; ++i) output.push(span);
+		return output.join('');
+	}
+	function formatXml(text){
+		//去掉多余的空格
+		text = '\n' + text.replace(/(<\w+)(\s.*?>)/g,function($0, name, props){
+			return name + ' ' + props.replace(/\s+(\w+=)/g," $1");
+		}).replace(/>\s*?</g,">\n<");
+
+		//把注释编码
+		text = text.replace(/\n/g,'\r').replace(/<!--(.+?)-->/g,function($0, text){
+			var ret = '<!--' + escape(text) + '-->';//alert(ret);
+			return ret;
+		}).replace(/\r/g,'\n');
+
+		//调整格式
+		var rgx = /\n(<(([^\?]).+?)(?:\s|\s*?>|\s*?(\/)>)(?:.*?(?:(?:(\/)>)|(?:<(\/)\2>)))?)/mg;
+		var nodeStack = [];
+		var output = text.replace(rgx,function($0,all,name,isBegin,isCloseFull1,isCloseFull2 ,isFull1,isFull2){
+			var isClosed = (isCloseFull1 == '/') || (isCloseFull2 == '/' ) || (isFull1 == '/') || (isFull2 == '/'); //alert([all,isClosed].join('='));
+			var prefix = '';
+			if(isBegin == '!'){
+				prefix = getPrefix(nodeStack.length);
+			}else{
+				if(isBegin != '/'){
+					prefix = getPrefix(nodeStack.length);
+					if(!isClosed){
+						nodeStack.push(name);
+					}
+				}else{
+					nodeStack.pop();
+					prefix = getPrefix(nodeStack.length);
+				}
+			}
+			var ret =  '\n' + prefix + all;
+			return ret;
+		});
+
+		var prefixSpace = -1;
+		var outputText = output.substring(1);
+		//alert(outputText);
+
+		//把注释还原并解码，调格式
+		outputText = outputText.replace(/\n/g,'\r').replace(/(\s*)<!--(.+?)-->/g,function($0, prefix,  text){
+			//alert(['[',prefix,']=',prefix.length].join(''));
+			if(prefix.charAt(0) == '\r') prefix = prefix.substring(1);
+			text = unescape(text).replace(/\r/g,'\n');
+			var ret = '\n' + prefix + '<!--' + text.replace(/^\s*/mg, prefix ) + '-->';
+			//alert(ret);
+			return ret;
+		});
+		return outputText.replace(/\s+$/g,'').replace(/\r/g,'\r\n');
+	}
+
+
+loadData();
+edit_Format();
+</script>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html  class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>模块管理</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../js/layui/css/layui.css"/>
+    <link href="../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+</head>
+<body class="iframe-h">
+
+<div class="content-wrap">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body" style="padding-top: 0">
+                    <table id="mainTable" lay-filter="mainTable"></table>
+                    <script type="text/html" id="tableOper">
+                        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                        <a class="layui-btn layui-btn-xs" lay-event="generate">生成</a>
+                        <a class="layui-btn layui-btn-xs" lay-event="preview">预览</a>
+                    </script>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="./../../js/layui/layui.js"></script>
+<script>
+
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).use(['layer','table','form','laytpl','common','element','laydate','eleTree'],function () {
+        var table=layui.table;
+        var form=layui.form;
+        var common=layui.common;
+        var element = layui.element;
+        var laydate = layui.laydate;
+        var tree = layui.eleTree;
+        var util = layui.util;
+        element.init();
+        var baseUrl='../../../';
+
+        common.themeSet();
+        common.toggleArea($('.toggle-btn'),$('.toggle-area'));
+
+        //模块列表
+        table.render(common.tableInitParams({
+            elem: '#mainTable',
+            url: baseUrl+'compmgr/module/list',
+            height: 'full-170',
+            toolbar:'#tableToolBar',
+            cols: [
+                [
+                    // {field: 'ggSort', title: '序号',width: 80,align:'center',  sort: true},
+                    {field: 'moduleName', title: '模块名称', width: '50%', templet: function(rowdata){
+                        return '<i class="' + rowdata.icon + '"></i>' + rowdata.moduleName;
+                    }},
+                    {field: 'status', title: '状态', width: '20%', templet: function(rowdata){
+                        return rowdata.status == 0 ? "未生成" : "已生成";
+                    }},
+                    {field: '', title: '操作', toolbar:'#tableOper',fixed: 'right'}
+                ]
+            ],
+            done: function(){
+                //按钮权限
+                common.buttonLimit();
+            }
+        }));
+
+        //制度列表 table 监听事件
+        table.on('tool(mainTable)', function(obj){
+            var data = obj.data;
+            switch(obj.event){
+                case 'edit'://编辑
+                var editLayer=layer.open({
+                        title:['编辑模块'],
+                        type: 2,
+                        content: baseUrl+'src/page/module/moduleEdit.html?moduleId=' + data.moduleId,
+                        maxmin: true
+                    });
+                    layer.full(editLayer);
+                    break;
+                case 'generate'://生成
+                    layer.confirm("确认生成"+data.moduleName+"的扩展表吗？", 
+                        function(index){
+                            var sURL = baseUrl + "compmgr/module/generate?id=" + data.moduleId;
+                            common.fetchGet(sURL, function(data){
+                                if(data.success){
+                                    table.reload("mainTable");
+                                }else{
+                                    layer.msg(data.resultMessage);
+                                }
+                            }, function(data){
+                                layer.msg(data.resultMessage);
+                            }, false);
+                            layer.close(index);
+                        }
+                    );
+                    break;
+            }
+        });
+    });
+
+</script>
+
+<!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

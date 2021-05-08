@@ -1,0 +1,32 @@
+{
+    "resultCode": null,
+    "resultMessage": null,
+    "list": null,
+    "page": {
+        "pageNum": 1,
+        "pageSize": 10,
+        "startRow": null,
+        "endRow": null,
+        "total": 3,
+        "pages": null,
+        "list": [
+            {
+                "id": "ae267feee2e64f5dbbb1526cc4b275c7",
+                "name": "马尾区_管理员角色",
+                "email": "zkq51681@sina.com"
+            },
+            {
+                "id": "ee21528d42d8494692c0b18d74fffe5a",
+                "name": "国家开发银行_管理员角色",
+                "email": "zkq51682@sina.com"
+            },
+            {
+                "id": "367f0e1a6d174c7aac7bfe89de2ee38f",
+                "name": "测试企业全称_管理员角色",
+                "email": "zkq51683@sina.com"
+            }
+        ]
+    },
+    "object": null,
+    "success": true
+}

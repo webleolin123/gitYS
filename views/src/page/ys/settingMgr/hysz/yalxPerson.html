@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>议案列席人员-成员维护</title>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+    <link class="favicon" href="./../../../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link href="../../../../js/layui/css/layui.css" rel="stylesheet"/>
+    <link href="../../../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../../../js/lib/jquery.1.12.3.js"></script>
+    <style>
+        .eleTree.ele5,
+        .eleTree.ele6 {
+            height: auto;
+            width: 100%;
+            display: none;
+            position: absolute;
+            top: 100%;
+            background-color: #fff;
+            z-index: 10000;
+            border: 1px solid #ccc;
+        }
+
+        .shqkTab {
+            display: inline-block;
+            border: 1px solid gray;
+            background: #ffff;
+            padding: 0 5px;
+            margin: 0 5px;
+            height: 26px;
+            line-height: 26px;
+            color: black;
+            opacity: 0.3;
+        }
+
+        .isYsh {
+            opacity: 1;
+        }
+
+        a.layui-layer-ico.layui-layer-max {
+            display: none;
+        }
+
+        a.layui-layer-ico.layui-layer-max.layui-layer-maxmin {
+            display: inline-block !important;
+        }
+
+
+    </style>
+</head>
+<body class="iframe-h">
+<div class="content-wrap">
+    <!-- 页面刷新按钮 -->
+    <div id="refresh" style="display: none"></div>
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+            <div class="layui-card white-bg">
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>议案列席</span></div>
+                <div class="layui-card-body">
+                    <!--layui-form-pane-->
+                    <form action="" class="layui-form layui-form-pane">
+                        <div class="layui-row layui-col-space10">
+                            <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">分组名称</label>
+                                        <div class="layui-input-block">
+                                            <input autocomplete="off" class="layui-input" name="tcgName" placeholder="请输入"
+                                                    type="text">
+                                        </div>
+                                    </div>
+                            </div>
+                            <div class="layui-col-md4">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">所属部门</label>
+                                    <div class="layui-input-block">
+                                        <input name="tcgDepartmentId" type="hidden"/>
+                                        <input autocomplete="off" class="layui-input" name="tcgDepartment" placeholder="请选择" readonly="" required="" type="text">
+                                        <div class="eleTree ele5" lay-filter="data5"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="toggle-area layui-col-space10">
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">开始日期</label>
+                                        <div class="layui-input-block">
+                                            <input class="layui-input" name="tcgStartDataS" placeholder="请选择" type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">结束日期</label>
+                                        <div class="layui-input-block">
+                                            <input class="layui-input" name="tcgStartDataE" placeholder="请选择" type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class=" " style="text-align: center;margin-bottom: 5px">
+                                <button class="layui-btn" lay-filter="formSearch" permission-btn="hysz_yalxry_query" lay-submit><i class="fa fa-search"></i>查询</button>
+                                <button class="layui-btn layui-btn-primary" id="resetBtn"><i class="fa fa-eraser"></i>重置</button>
+                                <a class="toggle-btn">
+                                    <span>展开</span>
+                                    <i class="fa fa-angle-up"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="layui-card">
+                <div class="layui-card-body" style="padding-top: 0">
+                    <table id="table1" lay-filter="table1"></table>
+                    <script id="tableToolBar" type="text/html">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-sm" lay-event="add" permission-btn="hysz_yalxry_add">
+                                <i class="layui-icon">&#xe608;</i> 新增
+                            </button>
+                            <!-- <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete" permission-btn="motionDel">
+                                <i class="layui-icon">&#xe640;</i> 删除
+                            </button> -->
+                        </div>
+                    </script>
+
+                    <script id="tableOper" type="text/html">
+                        <a class="layui-btn layui-btn-xs" lay-event="edit"  permission-btn="hysz_yalxry_edit">编辑</a>
+                        <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="singleDel" permission-btn="hysz_yalxry_delete">删除</a>
+                        <a class="layui-btn layui-btn-xs" lay-event="singleEnable" permission-btn="hysz_yalxry_enable">启用</a>
+                        <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="singleDisable" permission-btn="hysz_yalxry_enable">禁用</a>
+                    </script>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="./../../../../js/layui/layui.js"></script>
+<script>
+
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).use(['layer', 'table', 'form', 'laytpl', 'common', 'element', 'laydate', 'eleTree'], function () {
+        var table = layui.table;
+        var form = layui.form;
+        var common = layui.common;
+        var element = layui.element;
+        var laydate = layui.laydate;
+        var tree = layui.eleTree;
+        element.init();
+        var baseUrl = '../../../../../';
+
+        common.themeSet();
+        common.toggleArea($('.toggle-btn'), $('.toggle-area'));
+        common.columnSide();
+
+        var eventHandle={
+            tableInit:function(){//议案列席人员列表
+                table.render(common.tableInitParams({
+                    elem: '#table1',
+                    url: baseUrl+'meetingmgr/tiolCompanyGroup/pageQueryTiolSubjectMemberGroup',
+                    method:'post',
+                    height: 'full-170',
+                    toolbar: '#tableToolBar',
+                    cols: [
+                        [
+                            {type: 'checkbox'},
+                            {type: 'numbers',align:'center', title: '序号'},
+                            {field: 'tcgName',align:'center',title: '分组名称',minWidth:120, sort: true},
+                            {
+                                field: 'ggEnStatus', align:'center',title: '启用状态', width: 100, sort: true,  templet: function(rowData) {
+                                    return (rowData["ggEnStatus"]=="1") ? '<span class="green">启用</span>' : '<span class="red">禁用</span>';
+                                }
+                            },
+                            {field: 'tcgDepartment',align:'center',title: '所属部门',minWidth:120, sort: true},
+                            {field: 'tcgStartDate', align:'center',title: '开始日期', width: 150, sort: true},
+                            {field: '',align:'center', title: '操作', width: 220, toolbar: '#tableOper', fixed: 'right'},
+                        ]
+                    ]
+                }));
+            },
+            tableReload:function (params) {
+                params=params||{},
+                table.reload('table1',{
+                    url: baseUrl+'meetingmgr/tiolCompanyGroup/pageQueryTiolSubjectMemberGroup',
+                    method:'post',
+                    where:params,
+                    page:1
+                });
+            },
+            formQuery:function(){//表单查询
+                form.on('submit(formSearch)', function (obj) {
+                    var params=obj.field;
+                    eventHandle.tableReload(params);
+                    return false;
+                });
+            },
+            refreshPage:function(){
+                eventHandle.tableInit();
+            },
+            initRender:function(){
+            //获取所有部门
+                var el5,el6;
+                $("input[name='tcgDepartment']").on("click",function (e) {
+                    e.stopPropagation();
+                    if(!el5){
+                        el5=tree.render({
+                            elem: '.ele5',
+                            url: baseUrl + 'sysmgr/sysOrgan/selectSysOrganTreeBySeId',
+                            method: 'post',
+                            response: {
+                                statusName: "success",
+                                statusCode: "0",
+                                dataName: "list"
+                            },
+                            defaultExpandAll: true,
+                            expandOnClickNode: false,
+                            highlightCurrent: true
+                        });
+                    }
+                    $(".ele5").toggle();
+                });
+                tree.on("nodeClick(data5)",function(d) {
+                    $("[name='tcgDepartment']").val(d.data.parentData.data.id!=d.data.currentData.id?(d.data.parentData.data.name+'-'+d.data.currentData.name):d.data.currentData.name);
+                    $("[name='tcgDepartmentId']").val(d.data.currentData.id);
+                    $(".ele5").hide();
+                });
+                $(document).on("click",function() {
+                    $(".ele5").hide();
+                    $(".ele6").hide();
+                });
+            },
+            domEvent:function(){//事件监听
+                //开始日期
+                laydate.render({
+                    elem: 'input[name=tcgStartDataS]',
+                    type: 'date',
+                    format: 'yyyy-MM',
+                    trigger: 'click'
+                });
+                //结束日期
+                laydate.render({
+                    elem: 'input[name=tcgStartDataE]',
+                    type: 'date',
+                    format: 'yyyy-MM',
+                    trigger: 'click'
+                });
+                //刷新列表
+                $('#refresh').off('click').on('click',function(){
+                    eventHandle.refreshPage();
+                })
+                //重置
+                $('#resetBtn').off('click').on('click',function(){
+                    $('[name=tcgName]').val('');
+                    $('[name=tcgStartDataS]').val('');
+                    $('[name=tcgStartDataE]').val('');
+                    $('[name=tcgDepartmentId]').val('');
+                    $('[name=tcgDepartment]').val('');
+                    return false
+                });
+                //表单查询
+                eventHandle.formQuery();
+                //table监听事件--新增/批量删除        
+                table.on('toolbar(table1)', function (obj) {
+                    var checkStatus = table.checkStatus(obj.config.id);
+                    switch (obj.event) {
+                        case 'add':
+                            var addLayer = layer.open({
+                                title: ['新增'],
+                                offset: 't',
+                                type: 2,
+                                content: './yalxPersonAdd.html',
+                                maxmin: true
+                            });
+                            layer.full(addLayer);
+                            break;
+                        case 'delete':
+                            //点击删除按钮
+                            if (checkStatus.data.length > 0) {
+                                layer.confirm('确定删除选中列?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                                    layer.msg('演示 已删除');
+                                    return false;
+                                    var smIdArr = [];
+
+                                    for (var i = 0; i < checkStatus.data.length; i++) {
+                                        smIdArr.push(checkStatus.data[i]['spIds'])
+                                    }
+                                    var layerLoader = common.layerLoader();
+                                    common.fetchPost('sysmgr/sysPath/deleteSysPathByIds?spIds=' + smIdArr.join(','), null, function () {
+                                        layer.close(layerLoader);
+                                        if(res.success){
+                                            eventHandle.tableReload();
+                                            layer.msg('删除成功', {
+                                                time: 2000
+                                            });
+                                        }
+                                        else{
+                                            layer.msg('删除失败.' + res.resultMessage, {
+                                            time: 4000
+                                            });
+                                        }
+                                    }, function () {
+                                        layer.close(layerLoader);
+                                    });
+
+                                    layer.close(index);
+                                });
+                            } else {
+                                layer.msg('请选择删除列')
+                            }
+                            break;
+                        default:break;
+                    }
+                });
+                //table监听事件--编辑/单行删除
+                table.on('tool(table1)', function (obj) {
+                    var data = obj.data;
+                    var selectId = data.tcgId;
+                    switch (obj.event) {
+                        case 'singleDel'://删除
+                            layer.confirm('确定删除选中列?', { icon: 3, tnodeClickitle: '提示', offset: '150px' }, function (index) {
+                                var layerLoader = common.layerLoader();
+                                common.fetchPost("meetingmgr/tiolCompanyGroup/deleteTiolCompanyGroup?groupId=" + selectId,{},function (res) {
+                                    layer.close(layerLoader);
+                                    if (res.success) {
+                                        eventHandle.tableReload();
+                                        layer.msg('删除成功', {
+                                            time: 2000
+                                        });
+                                    } else {
+                                        layer.msg('删除失败。' + res.resultMessage, {
+                                            time: 4000
+                                        });
+                                    }
+                                    layer.close(index);
+                                }, function (res) {
+                                    layer.close(layerLoader);
+                                    layer.alert(res.resultMessage);
+                                    return;
+                                });
+                            });
+                            break;
+                        case 'edit'://编辑
+                            var editLayer = layer.open({
+                                title: ['编辑'],
+                                offset: 't',
+                                type: 2,
+                                content: './yalxPersonAdd.html?groupId='+selectId,
+                                maxmin: true
+                            });
+                            layer.full(editLayer);
+                            break;
+                        case 'singleEnable':
+                            if(data.ggEnStatus==1){
+                                layer.msg('已启用，请勿重复点击');
+                                return false;
+                            }
+                            layer.confirm('确定启用?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                                    var layerLoader = common.layerLoader();
+                                    common.fetchPost('meetingmgr/tiolCompanyGroup/enableTiolCompanyGroup?enable=true&groupID='+selectId,{},function (res) {
+                                        layer.close(layerLoader);
+                                        if(res.success){
+                                            eventHandle.tableReload();
+                                            layer.msg('启用成功', {
+                                                time: 2000 
+                                            });
+                                        }else{
+                                            layer.msg('启用失败' + res.resultMessage, {
+                                                time: 4000
+                                            });
+                                        }
+                                    }, function (err) {
+                                        layer.close(layerLoader);
+                                        layer.msg('启用失败' + err.resultMessage, {
+                                                time: 4000
+                                        });
+                                    });
+                                    layer.close(index);
+                                });
+                            break;
+                        case 'singleDisable':
+                            if(data.ggEnStatus==0){
+                                layer.msg('已禁用，请勿重复点击');
+                                return false;
+                            }
+                            layer.confirm('确定禁用?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                                    var layerLoader = common.layerLoader();
+                                    common.fetchPost('meetingmgr/tiolCompanyGroup/enableTiolCompanyGroup?enable=false&groupID='+selectId,{},function (res) {
+                                        layer.close(layerLoader);
+                                        if(res.success){
+                                            eventHandle.tableReload();
+                                            layer.msg('禁用成功', {
+                                                time: 2000 
+                                            });
+                                        }else{
+                                            layer.msg('禁用失败' + res.resultMessage, {
+                                                time: 4000
+                                            });
+                                        }
+                                    }, function (err) {
+                                        layer.close(layerLoader);
+                                        layer.msg('禁用失败' + err.resultMessage, {
+                                                time: 4000
+                                        });
+                                    });
+                                    layer.close(index);
+                                });
+                            break;
+                        default:
+                            break;
+                    }
+                });
+            },
+            output:function(){
+                //获取字典类型,日期控件
+                eventHandle.initRender();
+                // 获取人员维护列表
+                eventHandle.tableInit();
+                // 事件监听
+                eventHandle.domEvent();
+            }
+        };
+        eventHandle.output();
+    });
+
+</script>
+
+<!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

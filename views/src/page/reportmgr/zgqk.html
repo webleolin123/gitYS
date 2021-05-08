@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>整改情况</title>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link href="../js/layui/css/layui.css" rel="stylesheet"/>
+    <link href="../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../js/lib/jquery.1.12.3.js"></script>
+</head>
+<style>
+
+</style>
+<body class="iframe-h">
+<div class="content-wrap">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md2 moniBox" style="height: auto">
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>决策制定</span></div>
+                <div class="layui-card-body iconBoxMain" style="height: 100px">
+                    <div class="icon-box bg-green1">
+                        <i class="icon iconfont icon-enterprise"></i>
+                    </div>
+                    <div class="icon-des" id="regulationRectifyInfo">
+                        <p class="p-text"><b class="primary">-</b><span>家企业</span></p>
+                        <p class="p-number">
+                            <b class="primary">-</b>
+                            <span>项</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md2 moniBox" style="height: auto">
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>事项清单</span></div>
+                <div class="layui-card-body iconBoxMain" style="height: 100px">
+                    <div class="icon-box bg-green2">
+                        <i class="icon iconfont icon-DEZJ-buchuanrenwutongzhiguanli"></i>
+                    </div>
+                    <div class="icon-des" id="itemRectifyInfo">
+                        <p class="p-text"><b class="primary">-</b><span>家企业</span></p>
+                        <p class="p-number">
+                            <b class="primary">-</b>
+                            <span>项</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md4 moniBox" style="height: auto">
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>决策异常变化情况</span></div>
+                <div class="layui-card-body iconBoxMain" style="height: 100px">
+                    <div class="icon-box bg-green4"><i class="icon iconfont icon-SZYD-minganshixiang"></i></div>
+                    <div class="icon-des">
+                        <p class="p-text">决议情况</p>
+                        <p class="p-number" id="subjectRectifyInfo">
+
+                            <b class="primary">-</b>
+                            <span>家，</span>
+                            <b class="primary">-</b>
+                            <span style="margin-right: 10px">项</span>
+
+                        </p>
+                        <p class="p-number" id="subjectUnrectifyInfo">
+
+                            <b class="danger">-</b>
+                            <span>家，</span>
+                            <b class="danger">-</b>
+                            <span style="margin-right: 10px">项</span>
+
+                        </p>
+                    </div>
+                    <div class="icon-des">
+                        <span class="gloBg"
+                              style="display: block;width: 70px;height: 70px;border-radius: 100%;text-align: center"><b
+                                class="danger" style="display: block;padding-top: 10px" id="ectifyRate">-</b><b
+                                style="font-weight:normal;">整改率</b></span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="layui-col-md4" style="height: auto">
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>决策异常变化情况</span></div>
+                <div class="layui-card-body">
+                    <div id="chart1" style="width: 100%;height: 120px"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>企业列表</span></div>
+                <div class="layui-card-body">
+                    <div class="layui-btn-group">
+                        <button class=" layui-btn layui-btn-primary" type="button" lay-filter="default-btn">默认排序</button>
+                        <button class=" layui-btn layui-btn-primary" type="button" lay-filter="add-btn">整改数量排序</button>
+                        <button class=" layui-btn layui-btn-primary" type="button" lay-filter="add-up">整改排序</button>
+                    </div>
+
+                    <form action="" class="layui-form layui-form-pane">
+                        <div class="layui-row layui-col-space10">
+                            <div class="layui-col-xs4">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">企业名称</label>
+                                    <div class="layui-input-block">
+                                        <input class="layui-input" placeholder="请输入企业名称" name="seName" type="text">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="layui-col-xs4">
+                                <div class="layui-input-item" style="text-align: center">
+                                    <button class="layui-btn  " lay-filter="formSearchZgqk" lay-submit=""
+                                            name="searchSubmit"><i class="fa fa-search"></i>查询
+                                    </button>
+                                    <button class="layui-btn layui-btn-primary  " lay-filter="reset" name="reset"
+                                            type="reset"><i class="fa fa-eraser"></i>重置
+                                    </button>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+                    <div style="position: relative">
+<!--                        <div class="tableTip">对比时间：2019-10-11</div>-->
+                        <table id="table1" lay-filter="table1"></table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script charset="utf-8" src="../js/common/plugin.js"></script>
+<script src="./../../js/layui/layui.js"></script>
+<script charset="utf-8" src="../js/lib/echarts-4.1.0.min.js"></script>
+<script charset="utf-8" src="../js/lib/echartTheme.js"></script>
+<script>
+
+    layui.config({
+        base: '../../src/js/',
+        version: new Date().getTime()
+    }).use(['layer', 'transfer', 'util', 'table', 'common', 'form'], function () {
+
+        var baseUrl='../../';
+
+        var table = layui.table,
+        form = layui.form,
+            common = layui.common;
+        common.themeSet();
+
+        var chart1 = echarts.init(document.getElementById('chart1'), 'custom');
+
+
+
+        common.fetchPost(baseUrl +"szydmgr/statistics/findRegulationRectifyInfo",null,function (res) {
+            var obj = res.object;
+            if (obj!=null&&typeof obj== "object") {
+                $("#regulationRectifyInfo").find(".primary").eq(0).text(obj.seNum);
+                $("#regulationRectifyInfo").find(".primary").eq(1).text(obj.count);
+            }
+        });
+        common.fetchPost(baseUrl +"szydmgr/statistics/findItemRectifyInfo",null,function (res) {
+            var obj = res.object;
+            if (obj!=null&&typeof obj== "object") {
+                $("#itemRectifyInfo").find(".primary").eq(0).text(obj.seNum);
+                $("#itemRectifyInfo").find(".primary").eq(1).text(obj.count);
+            }
+        });
+        var ectifyCount = 0;
+        var unEctifyCount = 0;
+
+        common.fetchPost(baseUrl +"szydmgr/statistics/findSubjectRectifyInfo",null,function (res) {
+            var obj = res.object;
+            if (obj!=null&&typeof obj== "object") {
+                $("#subjectRectifyInfo").find(".primary").eq(0).text(obj.seNum);
+                $("#subjectRectifyInfo").find(".primary").eq(1).text(obj.count);
+                ectifyCount = obj.count;
+            }
+            common.fetchPost(baseUrl +"szydmgr/statistics/findSubjectUnrectifyInfo",null,function (res) {
+                var obj = res.object;
+                if (obj!=null&&typeof obj== "object") {
+                    $("#subjectUnrectifyInfo").find(".danger").eq(0).text(obj.seNum);
+                    $("#subjectUnrectifyInfo").find(".danger").eq(1).text(obj.count);
+                    unEctifyCount = obj.count;
+                }
+                var ectifyRate = 0;
+                if (ectifyCount) {
+                    var l = (ectifyCount-unEctifyCount)/ectifyCount;
+                    ectifyRate = l.toFixed(2)*100;
+                }
+                $("#ectifyRate").text(ectifyRate+"%");
+
+            });
+        });
+
+
+        common.fetchPost(baseUrl + "szydmgr/statistics/findSubjectExcSituation", null, function (res) {
+
+            var obj = res.object;
+            if (obj!=null&&typeof obj == "object") {
+                chart1.setOption({
+                    grid: {
+                        top: "15",
+                        bottom: "20",
+                        right: "2",
+                        left: "30"
+                    },
+                    // color: ['#afa3f5', '#00d488', '#eea9c5', '#3bafff', '#c0f18a', "rgba(250,250,250,0.5)"],
+                    tooltip: {
+                        trigger: "axis"
+                    },
+                    xAxis: {
+                        type: 'category',
+                        data: obj.Axis,
+                        axisLabel: {
+                            show: true,
+                            interval: 0,    // {number}
+
+                            margin: 8
+
+                        }
+                    },
+                    yAxis: [
+                        {
+                            type: "value",
+                        }
+                    ],
+                    series: [
+                        {
+                            name: "legend1",
+                            type: "bar",
+                            barWidth: 23,
+                            data: obj.series.data,
+                            "label": {
+                                "normal": {
+                                    "show": true,
+                                    "position": "top",
+                                    "formatter": "{c}%"
+                                }
+                            },
+                        }
+                    ]
+                });
+            }
+        });
+
+
+
+
+        table.render(common.tableInitParams({
+            elem: '#table1',
+            height: 'full-240',
+            url: baseUrl + "szydmgr/statistics/selectExcEnInfoList",
+            method: 'post',
+            toolbar: '#tableToolBar',
+            id:"table1Zgqk",
+            cols: [
+                [
+                    {"type": "numbers", "title": "序号"},
+                    {
+                        "field": "seName", "title": "企业名称", "align": "center"
+                    },
+                    {
+                        "align": "center", "title": "企业制度", templet: function (rowData) {
+                            return '<div><span class="primary">'+rowData.regulationCount+'</span><i class="fa fa-arrow-down green" style="display: inline-block;margin: 0 5px"></i> <span class="green">'+(rowData.regulationAddCount>0?'+'+rowData.regulationAddCount:rowData.regulationAddCount)+' '+(rowData.regulationUpCount)+' </span></div>'
+                        }
+                    },
+                    {
+                        "align": "center", "title": "事项清单", templet: function (rowData) {
+                            return '<div><span class="primary">'+rowData.itemCount+'</span><i class="fa fa-arrow-up danger" style="display: inline-block;margin: 0 5px"></i> <span class="danger">'+(rowData.itemAddCount>0?'+'+rowData.itemAddCount:rowData.itemAddCount)+' '+(rowData.itemUpCount)+' </span></div>'
+                        }
+                    },
+                    {
+                        "align": "center", "title": "异常整改情况", templet: function (rowData) {
+                            return '<div><span class="primary">'+rowData.subjectExceptionCount+'</span><i class="fa fa-arrow-up danger" style="display: inline-block;margin: 0 5px"></i> <span class="danger">'+(rowData.subjectExceptionAddCount>0?'+'+rowData.subjectExceptionAddCount:rowData.subjectExceptionAddCount)+' '+(rowData.subjectExceptionUpCount)+' </span></div>'
+                        }
+                    }
+                ]
+            ]
+        }));
+
+        common.chartResize(['chart1'], [chart1]);
+
+
+        form.on('submit(formSearchZgqk)', function(data){
+            table.reload('table1Zgqk', {
+                contentType: 'application/json',
+                page: {
+                    curr: 1
+                },
+                where: {
+                    seName: data.field.seName,
+                }
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+        $("[lay-filter='default-btn']").unbind("click").bind("click",function (e) {
+            table.reload('table1Zgqk', {
+                page: {
+                    curr: 1
+                },
+                where: {
+                    order: "",
+                }
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+        $("[lay-filter='add-btn']").unbind("click").bind("click",function (e) {
+            table.reload('table1Zgqk', {
+                page: {
+                    curr: 1
+                },
+                where: {
+                    order: 'subjectExceptionAddCount',
+                }
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+        $("[lay-filter='add-up']").unbind("click").bind("click",function (e) {
+            table.reload('table1Zgqk', {
+                page: {
+                    curr: 1
+                },
+                where: {
+                    order: 'subjectExceptionUpCount',
+                }
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+
+    });
+
+</script>
+
+<!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

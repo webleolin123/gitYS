@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html  class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>新增模板</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../js/layui/css/layui.css"/>
+    <link href="../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script charset="utf-8" src="../../js/common/plugin.js"></script>
+</head>
+<!--添加按钮中的弹框-->
+<div class="addLayer hide">
+    <div style="padding: 15px 20px;overflow-y:auto;overflow-x:hidden">
+        <form class="layui-form layui-form-pane" name="addLayer" lay-filter="flowForm">
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>流程名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>流程标识</label>
+                <div class="layui-input-block">
+                    <input type="text" name="label" required  lay-verify="required|label" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                    <label class="layui-form-label">业务类型名称</label>
+                    <input type="hidden" name="version" value='1.0.0' placeholder="请输入" autocomplete="off" class="layui-input">
+                    <input type="hidden" name="business" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                    <div class="layui-input-block">
+                        <input type="text" name="businessName" required  readOnly lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            <div class="layui-form-item adapt">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formAdd" permission-btn="processSaveBtnInfo"> <i class="layui-icon">&#x1005;</i>保存</button>
+                    <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="deployTemplate hide">
+    <div style="padding: 15px 20px;overflow-y:auto;overflow-x:hidden">
+        <div class="layui-card-body" style="padding-top: 0">
+            <table id="deployTable"  lay-filter="deployTable" ></table>
+
+        </div>
+    </div>
+</div>
+
+<!--按钮信息中的弹框-->
+<body class="iframe-h">
+<div class="content-wrap">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+            <!-- layui tree-->
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>业务流程列表</span><div class="columnSide"><i class="fa fa-toggle-left"></i></div></div>
+                <div class="layui-card-body" style="height: 500px;overflow-y: auto;">
+                    <div class="layuiTree eleTree ele4" style="min-height: 500px;" id="leftTree"  lay-filter="leftTree"></div>
+                    <!--<ul id="leftTree" class="layuiTree"></ul>-->
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
+            <iframe border="0" class="" frameborder="0" id="flowIFrame" width="100%" height="800px" ></iframe>
+        </div>
+    </div>
+</div>
+<script src="./../../js/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).extend({}).use(['eleTree', 'layer', 'table', 'form', 'laytpl', 'common', 'element', 'util'], function () {
+
+        var table=layui.table;
+        var form=layui.form;
+        var tree=layui.eleTree;
+        var common=layui.common;
+        var element = layui.element;
+        var util = layui.util;
+        element.init();
+        var baseUrl='../../../';
+        common.themeSet();
+        common.toggleArea($('.toggle-btn'),$('.toggle-area'));//查询条件面版收缩
+        //按钮权限
+        // common.buttonLimit($("#currentMenuSmId",window.parent.document).val(),function (res) {
+            //输入所有可操作的按钮集合
+            // var list=res['list']?res['list']:[];
+
+        // });
+
+
+        var businessTypeId = getUrlParam("businessTypeId");
+        var eleTreeId;
+        var currentEnterpriseId=null;//用于保存当前table的ID
+        var currentPid=null;//用于保存当前table的ID
+        var pageInitialParam = {
+            pageNum : 1,
+            pareSize : 10,
+            curr:1
+        };
+
+        var userInfo = common.getUserInfo();
+        var label = '';
+        var version = '';
+        var orgId = '';
+        var eventHandle={
+            treeInit: function () {
+
+                common.fetchPost('sasprocessmgr/businessEngineModuleConfig/selectBusinessEngineModuleConfig',{},function (res) {
+                    //树信息的导入
+                    if(res.success && res.list){
+                        var dataList = [];
+                        for(var i=0;i<res.list.length;i++){
+                            var sobj = res.list[i];
+                            res.list[i]['id'] = sobj.bemcId;
+                            res.list[i]['name'] = sobj.businessTypeName;
+                            res.list[i]['bType'] = sobj.businessTypeId;
+                            res.list[i]['bTypeName'] = sobj.businessTypeName;
+                            res.list[i]['nType'] = 'business';
+                            if(businessTypeId){
+                                if(businessTypeId == sobj.businessTypeId){
+                                    dataList.push(sobj);
+                                }else{
+                                    continue;
+                                }
+                            }else{
+                                dataList.push(sobj);
+                            }
+
+                        }
+                        eleTreeId = tree.render({
+                            elem: '#leftTree',
+                            data: dataList,
+                            showCheckbox: false,
+                            lazy: true,
+                            highlightCurrent: true,
+                            checkOnClickNode: true,
+                            contextmenuList:[{eventName: "create", text: "新增"},{eventName: "delete", text: "删除"}],
+                            load: function(data, callback) {
+                                if(data.nType === "flow") return;
+                                var buinessTypeName  = data.name;
+                                var buinessTypeId = data.bType
+                                common.fetchPost('flowEngine/engineTemplate/queryModelTemplateList',{
+                                    business:data.bType,
+                                    orgId:userInfo.seId
+                                }, function (res) {
+                                    if (res.success && res.list) {
+                                        for(var i=0;i<res.list.length;i++){
+                                            var sobj = res.list[i];
+                                            var dataId = res.list[i]['label'] + '@' + res.list[i]['version']  + '@' + res.list[i]['orgId'];
+                                            res.list[i]['id'] = dataId;
+                                            res.list[i]['nType'] = 'flow';
+                                            res.list[i]["isLeaf"] = true;
+                                            res.list[i]['bType'] = buinessTypeId;
+                                            res.list[i]['bTypeName'] = buinessTypeName;
+                                        }
+                                        callback(res.list)
+                                        if(!label && res.list.length >0){
+                                            var dataId = res.list[0]['label'] + '@' + res.list[0]['version']  + '@' + res.list[0]['orgId'];
+                                            $("#leftTree").find("div[data-id='" + dataId + "']").find(".eleTree-node-content").click();
+                                        }
+                                    }
+                                }, function () {
+                                    callback([])
+                                });
+                            }
+                        });
+                        tree.on("nodeClick(leftTree)",function(obj) {
+                            if(obj.data.currentData.nType=='flow'){
+                                label = obj.data.currentData.label;
+                                version = obj.data.currentData.version;
+                                orgId = obj.data.currentData.orgId;
+                                paramData = '&label=' + label + '&version=' + version + '&orgId=' + orgId 
+                                $("#flowIFrame")[0].src = "template/procesDesign.html?" + paramData;
+                            }
+                        });
+                        tree.on("nodeCreate(leftTree)",function(d) {
+                            var key = d.data.id;
+                            var nodeType = d.data.nType;
+                            var sParam = {
+                                version:"1.0.0",
+                                business:d.data.bType,
+                                businessName:d.data.bTypeName
+                            }
+                            var mainMenu = layer.open({
+                                offset: '10px',
+                                title:'新增流程模板',
+                                maxmin: false,
+                                type: 1,//页面层
+                                area: ['580px'],//高度自适应
+                                zIndex:998,
+                                id: 'addTemplate', //防止重复弹出
+                                content: $('.addLayer').html(),//加载该区域的html
+                                success:function(obj) {
+                                    form.val('flowForm',sParam);
+                                    form.render();
+                                    form.on('submit(formAdd)', function (obj) {
+                                        var params = obj.field;
+                                        params['business'] = params.business;
+                                        params['module'] = 'P_' + params.business;
+                                        params['orgId'] = userInfo.seId
+                                        var layerLoader =common.layerLoader();
+                                        common.fetchPost('flowEngine/engineTemplate/createTemplate',
+                                            params, function (data) {
+                                            layer.close(layerLoader);
+                                            //表格重载
+                                            if(data.success){
+                                                // eventHandle.tableReload();
+                                                var nodeDate = {
+                                                    id:params.label +'@'+  params.version + '@' + userInfo.seId,
+                                                    name:params.name,
+                                                    nType:'flow',
+                                                    isLeaf:true,
+                                                    label:params.label,
+                                                    version:"1.0.0",
+                                                    orgId:userInfo.seId,
+                                                    bType:sParam.business,
+                                                    bTypeName:sParam.businessName
+                                                }
+                                                if(nodeType == 'flow'){
+                                                    eleTreeId.insertAfter(key,nodeDate)
+                                                }else{
+                                                    eleTreeId.append(key,nodeDate)
+                                                }
+                                                var paramData = '&label=' + params.label + '&version=1.0.0' + '&orgId=' + userInfo.seId 
+                                                $("#flowIFrame")[0].src = "template/procesDesign.html?" + paramData;
+                                                layer.msg('添加成功')
+                                                layer.close(mainMenu);
+                                            }else{
+                                                layer.msg(data.resultMessage);
+                                            }
+
+                                        }, function () {
+                                            layer.close(layerLoader);
+                                            layer.msg('添加失败');//失败后提示
+                                            // layer.close(layer.index);
+                                        });
+                                        return false;
+                                    });
+                                }
+                            });
+                        });
+                        tree.on("nodeDelete(leftTree)",function(d) {
+                            if(d.data.nType === 'flow'){
+                                var label = d.data.label;
+                                var version = d.data.version;
+                                var orgId = d.data.orgId;
+                                var ids = d.data.label + '@' + d.data.version + '@' + d.data.orgId
+                                layer.confirm('确定删除选中流程?', {icon: 3, title:'提示',offset: '150px'}, function(index){
+                                    var layerLoader =common.layerLoader();
+                                    var flowArr = [];
+                                    flow ={
+                                        label:label,
+                                        version:version,
+                                        orgId:orgId
+                                    }
+                                    flowArr.push(flow);
+                                    common.fetchPost('flowEngine/engineTemplate/delModelTemplate',
+                                    flowArr,function (res) {
+                                        layer.close(layerLoader);
+                                        //成功之后刷新tree 以及表格
+                                        if(res.success){
+                                            eleTreeId.remove(ids);
+                                            if(d.data.id === (label + '@' + version + '@' + orgId)){
+                                                $("#leftTree").find(".eleTree-node-content")[1].click();
+                                            }
+                                            layer.msg('删除流程成功');
+                                        }else{
+                                            layer.alert(res.resultMessage);
+                                        }
+                                    },function () {
+                                        layer.close(layerLoader);
+                                    });
+
+                                    layer.close(index);
+                                });
+                            }else{
+                                layer.msg("业务节点不能删除!");
+                            }
+                        })
+                        $("#leftTree").find(".eleTree-node-content")[0].click();
+                        
+                    }else{
+                        //不存在数据时的显示
+                    }
+                    
+
+                },function () {});
+
+            }
+        };
+
+        //初始化树
+        // eventHandle.treeInit();
+
+        form.verify({
+            //我们既支持上述函数式的方式，也支持下述数组的形式
+            //数组的两个值分别代表：[正则匹配、匹配不符时的提示文字]
+            version: [
+                /^\d+\.\d+\.\d+$/
+                ,'请输入正确的版本号，如1.0.0'
+            ],
+            label:[
+                /^[a-zA-Z]+$/
+                ,'流程标识只能输入英文字符'
+            ]
+        });
+        // common.columnSide();
+    });
+    function getUrlParam(paraName) {
+        var url = document.location.toString();
+        var arrObj = url.split("?");
+        if (arrObj.length > 1) {
+            var arrPara = arrObj[1].split("&");
+            var arr;
+            for (var i = 0; i < arrPara.length; i++) {
+                arr = arrPara[i].split("=");
+                if (arr != null && arr[0] == paraName) {
+                    return arr[1];
+                }
+            }
+            return "";
+        }else {
+            return "";
+        }
+    }
+</script>
+
+<!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>上报预览</title>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link href="../../../js/layui/css/layui.css" rel="stylesheet"/>
+    <link href="../../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <link href="../../../js/lib/layui-step/step.css" rel="stylesheet">
+    <script src="../../../js/lib/jquery.1.12.3.js"></script>
+    <style>
+        .layui-table-view .layui-table {
+            width: 100%;
+        }
+
+        .layui-table-box .layui-table-main {
+            height: auto !important;
+        }
+    </style>
+</head>
+
+<body class="iframe-h">
+<!--新增制度表决-->
+<!-- 本次上报上级单位 -->
+<div class="companyTree" style="display: none">
+    <div style="padding: 10px">
+        <div class="layui-row layui-col-space10">
+            <div class="layui-col-xs12">
+                <div class="custom-title">上级单位</div>
+                <ul class="eleTree ele4 unitTree" lay-filter="unitTree"></ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body" style="padding-top: 40px;">
+            <div style="width: 650px; margin: 0 auto;text-align: center">
+                <h2 id="reportRegulationName"></h2>
+                <div style="line-height: 40px" id="fillInfo"></div>
+            </div>
+            <div class="layui-carousel" id="stepForm" lay-filter="stepForm" style="margin: 0 auto;">
+                <div carousel-item>
+                    <div>
+                        <div style="padding: 10px;width: 290px;margin: auto">
+                            <div class="layui-row layui-col-space10">
+                                <span style="display: block">
+                                    <input type="hidden" name="reportSeId" id="reportSeId">
+                                    <input type="hidden" name="reportSeName" id="reportSeName">
+                                    <i></i>本次上报上级单位:<b class="primary" id="reportSeNameText"></b>
+                                    <button class="layui-btn" id="customCellBtn"
+                                            style="display: inline-block;margin-left: 20px"
+                                            type="button" permission-btn="selfRuleCompany" >自定义
+                                    </button>
+                                </span>
+                                <div style="margin: 10px auto">
+                                </div>
+                            </div>
+                        </div>
+
+                        <form class="layui-form"
+                              style="margin: 0 auto;max-width: 460px;padding-top: 40px;text-align: center">
+                            <div class="layui-form-item" style="text-align: center">
+                                <div class="layui-input-block">
+                                    <button class="layui-btn" lay-filter="formStep" lay-submit>
+                                        &emsp;下一步&emsp;
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div>
+                        <div style="padding: 10px;margin: auto">
+                            <div class="layui-row layui-col-space10">
+                                <div class="layui-col-xs12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header layui-card-header-custom">
+                                            <span><i></i>制度文本
+                                            </span>
+                                        </div>
+                                        <div class="layui-card-body">
+                                            <table id="ruleTextTable" lay-filter="ruleTextTable"></table>
+                                        </div>
+                                    </div>
+                                </div>
+                               <!-- <div class="layui-col-xs12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header layui-card-header-custom">
+                                    <span><i></i>表决方式
+                                    </span>
+                                        </div>
+                                        <div class="layui-card-body">
+                                            <table id="ruleVoteTable" lay-filter="ruleVoteTable"></table>
+                                            <script id="bjfsOper" type="text/html">
+                                                <a class="layui-btn layui-btn-xs edit2" lay-event="edit">编辑</a>
+                                            </script>
+                                        </div>
+                                    </div>
+                                </div>-->
+                            </div>
+                        </div>
+
+                        <form class="layui-form" style="margin: 0 auto;max-width: 460px;padding-top: 40px;">
+
+                            <div class="layui-form-item">
+                                <div class="layui-input-block">
+                                    <button class="layui-btn layui-btn-primary pre" type="button">上一步</button>
+                                    <button class="layui-btn" lay-filter="formStep2" lay-submit>
+                                        &emsp;下一步
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div>
+                        <div style="padding: 0 20px 0;width: 650px;margin: 0 auto">
+                            <div class="custom-title">本次上报校验结果</div>
+                            <form action="" class="layui-form layui-form-pane">
+                            </form>
+                            <div style="line-height: 40px">未发现异常情况</div>
+                        </div>
+                        <form class="layui-form" style="margin: 0 auto;max-width: 460px;padding-top: 40px;">
+
+                            <div class="layui-form-item">
+                                <div class="layui-input-block">
+                                    <button class="layui-btn layui-btn-primary pre" type="button">上一步</button>
+                                    <button class="layui-btn" lay-filter="formStep2" lay-submit>
+                                        &emsp;下一步
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div>
+                        <div style="padding: 10px">
+                            <iframe border="0" class="" frameborder="0" height="600px" id="ruleIFrame" src=""
+                                    width="100%"></iframe>
+                        </div>
+                        <form class="layui-form" style="margin: 0 auto;max-width: 460px;padding-top: 40px;">
+
+                            <div class="layui-form-item">
+                                <div class="layui-input-block">
+                                    <button class="layui-btn layui-btn-primary pre" type="button">上一步</button>
+                                    <button class="layui-btn" lay-filter="formStep3" lay-submit>
+                                        &emsp;确认上报&emsp;
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="./../../../js/layui/layui.js"></script>
+<script charset="utf-8" src="../../../js/lib/echarts-4.1.0.min.js"></script>
+<script charset="utf-8" src="../../../js/lib/echartTheme.js"></script>
+<script charset="utf-8" src="../../../js/lib/layui-step/step.js"></script>
+<script>
+
+    layui.config({
+        base: '../../../../src/js/',
+        version: new Date().getTime()
+    }).extend({
+        custom: 'common/custom',
+        step: 'lib/layui-step/step'
+    }).use(['layer', 'eleTree', 'table', 'step', 'form', 'laytpl', 'element', 'custom', 'laydate', 'util'], function () {
+        var table = layui.table;
+        var form = layui.form;
+        var common = layui.common;
+        var element = layui.element;
+        var tree = layui.eleTree;
+        var laydate = layui.laydate;
+        var util = layui.util;
+        var step = layui.step;
+        var baseUrl = '../../../../';
+        step.render({
+            elem: '#stepForm',
+            filter: 'stepForm',
+            width: '100%', //设置容器宽度
+            stepWidth: '750px',
+            height: '800px',
+            stepItems: [{
+                title: '确认上报单位'
+            }, {
+                title: '确认上报信息'
+            }, {
+                title: '上报校验'
+            }, {
+                title: '确认上报'
+            }]
+        });
+        common.themeSet();
+        element.init();
+        var regulationId = getUrlParam("id");
+        // $("#ruleIFrame")[0].src = "../../ys/ruleAdd.html?view=view&regulationId=" + regulationId;
+        var userInfo = common.getUserInfo();
+        var getRegulationInfoById = baseUrl + 'rulemgr/regulation/info?regulationId=';
+        var getReportCompany = baseUrl + 'reportmgr/tiolReportRule/queryTiolReportRuleBySeId';
+        var getParentCompany = baseUrl + 'sysmgr/sysEnterprise/findfParentInfoBySeId';
+        var getTextUrl = baseUrl + "rulemgr/regulation/selectFilePage";
+        var getVoteUrl = baseUrl + "rulemgr/regulationVote/list";
+        var selectUrl = baseUrl + 'rulemgr/reportRegulationSelectInfo/querySelectFileList?regulationId='+ regulationId
+        var reportRegulationUrl = baseUrl + "rulemgr/reportRegulation/reportRegulationInfo";
+        var getRuleModeUrl = baseUrl + "reportmgr/tiolAuditRule/queryTiolAuditRuleByTarget";
+        var regulationTypeId;
+        var treeCheckEnt;
+        common.fetchGet(getRegulationInfoById + regulationId,function(res){
+            if(res.success) {
+                regulation = res.object;
+                $("#reportRegulationName").html(regulation.regulationName);
+                $("#fillInfo").html('填报单位：' + regulation.seName + ' 填报时间：' + regulation.ggCreateDatetime);
+                regulationTypeId = regulation.regulationTypeId;
+            }else{
+                layer.msg("获取制度信息失败!");
+            }
+        },function(res){
+            layer.msg("获取制度信息失败!");
+        });
+        
+        common.fetchGet(getReportCompany + "?seId=" + userInfo.seId,function(res){
+            if(res.success) {
+                reportRule = res.object;
+                if(reportRule){
+                    $("#reportSeId").val(reportRule.superSeId);
+                    $("#reportSeName").val(reportRule.superSeName);
+                    $("#reportSeNameText").html(reportRule.superSeName);
+                }else{
+                    common.fetchGet(getParentCompany + "?seId=" + userInfo.seId,function(res){
+                        if(res.success) {
+                            sysEnt = res.object;
+                            if(sysEnt){
+                                if (sysEnt.seId==-1) {
+                                    $("#customCellBtn").hide();
+                                }
+                                $("#reportSeId").val(sysEnt.seId);
+                                $("#reportSeName").val(sysEnt.seName);
+                                $("#reportSeNameText").html(sysEnt.seName);
+                            }else{
+                            }
+                        }else{
+                            layer.msg("获取上级单位信息失败!");
+                        }
+                    },function(res){
+                        layer.msg("获取上级单位信息失败!");
+                    });
+                }
+            }else{
+                layer.msg("获取上报单位信息失败!");
+            }
+        },function(res){
+            layer.msg("获取上报单位信息失败!");
+        });
+
+        form.on('submit(formStep)', function (data) {
+            step.next('#stepForm');
+            return false;
+        });
+
+        form.on('submit(formStep2)', function (data) {
+            step.next('#stepForm');
+            return false;
+        });
+        form.on('submit(formStep3)', function (data) {
+            var index = parent.layer.getFrameIndex(window.name);
+            var waitSeId = $("#reportSeId").val();
+            var waitSeName = $("#reportSeName").val();
+            var param = {
+                regulationId:regulationId,
+                waitSeId: waitSeId,
+                waitSeName:waitSeName
+            }
+            getRuleModeUrl += "?type=REGULATION&ruleType=REPORT&subType=" + regulationTypeId;
+            common.fetchGet(getRuleModeUrl,function(res){
+                if(res.success) {
+                	//debugger
+                    ruleMode = res.object;
+                    var msgText = "上报请求成功,制度将进入本单位制度审核模块，审核通过后自动上报至上级单位!"
+                    if(ruleMode){
+                        param.auditMode = ruleMode.auditRuleMode;   
+                    }else{
+                        param.auditMode = 0;
+                    }
+                    if(param.auditMode == 0 ){
+                        msgText = "上报成功，该制度已上报至上级单位!"
+                    }
+                    var checkStatus = table.checkStatus('ruleTextTable');
+                    var fiIds = []
+                    for(var i=0;i < checkStatus.data.length;i++){
+                        var obj = checkStatus.data[i];
+                        fiIds.push(obj.textId);
+                    }
+                    param.fiIds = fiIds;
+                    
+                    common.fetchPost(reportRegulationUrl,param,function(res){
+                            if(res.success) {
+                                var layercheck4 = layer.confirm(msgText, {
+                                    btn: ['<i class="fa fa-check-circle"></i>确定'] //按钮
+                                    }, function(){
+                                        $(parent.window.document).find("#refresh").click();
+                                        layer.close(layercheck4);
+                                        parent.layer.close(index);
+                                    });
+                            }
+                        },function(res){
+                            layer.msg("操作失败:" + res.resultMessage);
+                        });
+                }else{
+                    layer.msg("操作失败:" + res.resultMessage);
+                }
+            },function(res){
+                if(res.resultMessage){
+                    layer.msg("操作失败:" + res.resultMessage);
+                }else{
+                    layer.msg("操作失败,请联系管理员-code-502");
+                }
+                
+            })
+            
+            return false;
+        });
+
+        $('.pre').click(function () {
+            step.pre('#stepForm');
+        });
+
+        $('.next').click(function () {
+            step.next('#stepForm');
+        });
+        table.render(common.tableInitParams({
+            elem: $('#ruleTextTable'),
+            height: '250px',
+            id:'ruleTextTable',
+            method:'post',
+            url:getTextUrl,
+            where:{
+                pageNum : 1,
+                pareSize : 10,
+                curr:1,
+                resId:regulationId,
+                sdPcode:"REGULATION_TEXT_TYPE"
+            },
+            cols: [
+                [
+                    {type: 'checkbox', LAY_CHECKED: false},
+                    {type: "numbers", title: "序号", width: 60},
+                    {field: 'fiOriginalName', title: '文件名称', width: 500},
+                    {field: 'sdName', title: '资料类型', width: 200},
+                    {field: 'fiUploadTime', title: '创建时间', width: 200},
+                    {field: 'ggMemo', title: '备注'},
+                    {field: '', title: '操作', width: 80, templet: function (rowData) {
+                        return '<a class="layui-btn layui-btn-xs layui-btn-primary" lay-event="downloadFile">查看</a>'
+                        }
+                    }
+                ]
+            ],
+            page: false,
+            done:function(res){
+                var tableData  = res.data;
+                common.fetchGet(selectUrl,function(selectres){
+                    if(!selectres.success){
+                        return ;
+                    }
+                    
+                    for(var i=0;i< tableData.length;i++){
+                        for (var j = 0; j < selectres.list.length; j++) {
+                            //数据id和要勾选的id相同时checkbox选中
+                            if(tableData[i].textId == selectres.list[j].fiId)
+                            {
+                                //这里才是真正的有效勾选
+                                tableData[i]["LAY_CHECKED"]='true';
+                                //找到对应数据改变勾选样式，呈现出选中效果
+                                var index= tableData[i]['LAY_TABLE_INDEX'];
+                                $('div[lay-id=ruleTextTable] tr[data-index=' + index + '] input[type="checkbox"]').prop('checked', true)
+                                $('div[lay-id=ruleTextTable] tr[data-index=' + index + '] input[type="checkbox"]').next().addClass('layui-form-checked');
+                                // $('.layui-table-fixed-l tr[data-index=' + index + '] input[type="checkbox"]').prop('checked', true);
+                                // $('.layui-table-fixed-l tr[data-index=' + index + '] input[type="checkbox"]').next().addClass('layui-form-checked');
+                            }
+                        }
+                    }
+                });
+            }
+        }));
+        // table.render(common.tableInitParams({
+        //     elem: $('#ruleVoteTable'),
+        //     height: '120px',
+        //     url:getVoteUrl,
+        //     where:{
+        //         pageNum : 1,
+        //         pareSize : 10,
+        //         curr:1,
+        //         regulationId:regulationId
+        //     },
+        //     cols: [
+        //         [
+        //             {type: 'checkbox', LAY_CHECKED: true},
+        //             {type: 'numbers', title: '序号'},
+        //             {field: 'billName', title: '议案类别'},
+        //             {field: 'modeName', title: '表决方式'},
+        //         ]
+        //     ],
+        //     page: false
+        // }));
+
+        //自定义按钮点击触发
+        $('#customCellBtn').off('click').on('click', function () {
+            var index = layer.open({
+                title: '本次上报上级单位',
+                maxmin: false,
+                offset: '1px',
+                type: 1,//页面层
+                area: ['580px', '600px'],
+                shadeClose: false,
+                content: $('.companyTree').html(),
+                btn: ['保存', '<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭'],
+                btnAlign: 'c',
+                yes:function(){
+                    $("#reportSeId").val(treeCheckEnt.id);
+                    $("#reportSeName").val(treeCheckEnt.name);
+                    $("#reportSeNameText").html(treeCheckEnt.name);
+                    layer.close(index);
+                },
+                btn2:function(){
+                    treeCheckEnt = null;
+                },
+                success: function (obj) {
+                    var parent = $(obj.selector);
+                    tree.render({
+                        elem: parent.find('.unitTree'),
+                        defaultExpandAll: true,
+                        url: baseUrl+'sysmgr/sysEnterprise/selectSysEnterpriseTree?isAll=true',
+                        done: function(data){
+                            parent.find('.unitTree .eleTree-node-content').each(function () {
+                                $(this).click();
+                            });
+                        },
+                        load: function(data,callback) {
+                            common.fetchGet(baseUrl+'sysmgr/sysEnterprise/selectSysEnterpriseTree?id=' + data.id,function (res) {
+                                if(res.success && res.list){
+                                    callback(res.list);
+                                }
+                            },function () {
+                                callback([])
+                            });
+                        },
+                        response: {// 对于后台数据重新定义名字
+                            dataName: "list"
+                        },
+                        showCheckbox: false,
+                        lazy: true,
+                    });
+                    tree.on("nodeClick(unitTree)",function(d) {
+                        treeCheckEnt = d.data.currentData;
+                    }) 
+                }
+            });
+        });
+
+        table.on('tool(ruleTextTable)', function (obj) {
+            switch (obj.event) {
+                case 'downloadFile':
+                    var iframe = document.createElement("iframe");
+                    document.body.appendChild(iframe);
+                    iframe.style.display = "none";
+                    var src = baseUrl + "dfsmgr/file/filesDownload?fid=" + obj.data.fiId;
+                    iframe.src = src
+                    break;
+            }
+        });
+
+        setTimeout(function () {
+            $("#qxry-setting", $("iframe")[0].contentWindow.document).hide();
+            $(".layui-table-tool", $("iframe")[0].contentWindow.document).hide();
+            $(".edit1", $("iframe")[0].contentWindow.document).hide();
+            $(".edit2", $("iframe")[0].contentWindow.document).hide();
+            $("input", $("iframe")[0].contentWindow.document).attr('disabled', true);
+            $("select", $("iframe")[0].contentWindow.document).attr('disabled', true);
+        }, 500);
+
+        
+    });
+
+    function getUrlParam(paraName) {
+　　　　var url = document.location.toString();
+　　　　var arrObj = url.split("?");
+　　　　if (arrObj.length > 1) {
+　　　　　　var arrPara = arrObj[1].split("&");
+　　　　　　var arr;
+　　　　　　for (var i = 0; i < arrPara.length; i++) {
+　　　　　　　　arr = arrPara[i].split("=");
+　　　　　　　　if (arr != null && arr[0] == paraName) {
+　　　　　　　　　　return arr[1];
+　　　　　　　　}
+　　　　　　}
+　　　　　　return "";
+　　　　}else {
+　　　　　　return "";
+　　　　}
+　　}
+
+</script>
+
+<!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

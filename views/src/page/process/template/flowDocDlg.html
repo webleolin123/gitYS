@@ -1,0 +1,258 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META http-equiv=Content-Type content="text/html; charset=utf-8">
+	<TITLE>选择分类</TITLE>
+	<META NAME="Author" CONTENT="Witson">
+	<link rel="stylesheet" type="text/css" href="../../../js/flow/images/style.css"/>
+	<script type="text/javascript" src="../../../js/flow/jt.js"></script>
+	<style type="text/css">
+		#div_Main div{
+			padding:2px;
+			width:160px;
+			float:left;
+		}
+	</style>
+</HEAD>
+<script type="text/javascript">
+	
+	var strTem=self.location.href;
+	strTem = strTem.substr(strTem.indexOf('flowDocDlg.html?parVal=')+23);
+	var sNodeName=strTem.split(',')[0];
+	var tempTitle = strTem.split(',')[1];
+	var stitle = "";
+	var btnInput = null;
+	if(tempTitle=='operation'){
+		stitle = "流程可用操作";
+		btnInput = parent.document.getElementsByName("operationsAll")[0];
+	}else if(tempTitle=="stateControl"){
+		stitle = "环节触发控制";
+	}else if(tempTitle=="checkedMsg"){
+		stitle = "默认勾选消息";
+	}
+	document.title = '选择'+stitle;
+	
+	var oInput = parent.document.getElementsByName(sNodeName)[0];
+	var proNodes,oXML;
+	
+	function funOK(){
+		if(tempTitle=='operation'){
+			var resultText = jsfw.$('txtValue').value;
+			btnInput.value = resultText;
+			var optArr = resultText.split(";");
+			var text = "";
+			for(var j=0;j<optArr.length;j++){
+				if (text!='') text+=';';
+				text+=optArr[j].split("##")[0];
+			}
+			oInput.value = text;
+			parent.setCurrentObjAttr(btnInput);
+			parent.setCurrentObjAttr(oInput);
+		}else{
+			oInput.value = jsfw.$('txtValue').value;
+			parent.setCurrentObjAttr(oInput);
+		}
+		parent.closeDialog(self);
+	}
+	
+	function loadData(){
+		jsfw.$('txtValue').value=oInput.value;
+		var moduleId = parent.oFlow.getAttr('','modules');
+		if(sNodeName=='operations'||sNodeName=='appoperations'){
+			// var form = sNodeName=="operations"?parent.oFlow.getAttr('','business'):parent.oFlow.getAttr('','appform');
+			jsfw.$('txtValue').value=btnInput.value;
+			var business = parent.oFlow.getAttr('','business');
+			if(isEmpty(business)) {
+				jsfw.$('divLoading').style.display = 'none';
+				return;
+			}
+			var sURL = '/sasprocessmgr/businessEngineButtonConfig/selectBusinessEngineButtonConfig'
+			// var sURL= '{SYSURL.bam}/bam/BizFormButton/list.action?FORM_ID='+form;
+			jt.postJSON(sURL,{businessTypeId:business,includeCommon:1},function(json){
+				jsfw.$('divLoading').style.display = 'none';
+				var butArr = [];
+				if(json.success && json.list && json.list.length){
+					afterLoaded(json.list);
+				}
+			},true,{"Content-Type":"application/json"})
+		}else if(sNodeName=='dominoAction'){
+			var sURL = '{contextPath}/engine/baseConfigAction.action?m=listConfig2ListMap&key=cfg_engine_nextoperate';
+			getJSON(sURL,function (json,o){
+				jsfw.$('divLoading').style.display = 'none';
+				for(var i= 0,j=json.data.length;i<j;i++){
+					if(json.data[i].id==moduleId){
+						var arr = json.data[i].text.split("/");
+						afterLoadedAction(arr);
+						return;
+					}
+				}
+	
+			}); 
+		}else if(sNodeName=='action'){
+			var sURL = '{contextPath}/engine/baseConfigAction.action?m=listConfig2ListMap&key=cfg_engine_stateoperate';
+			getJSON(sURL,function (json,o){
+				jsfw.$('divLoading').style.display = 'none';
+				for(var i= 0,j=json.data.length;i<j;i++){
+					if(json.data[i].id==moduleId){
+						var arr = json.data[i].text.split("/");
+						afterLoadedAction(arr);
+						return;
+					}
+				}
+	
+			}); 
+		}else if(tempTitle =="checkedMsg"){
+			var sURL = "{contextPath}/engine/parameterAction.action?method=getParameterByRangeId&module=MESSAGE&paraName=RegisteredMessageChannel&rangeId="+curUser.companyId;
+			getJSON(sURL,function (json,o){
+				jsfw.$('divLoading').style.display = 'none';
+				if(json && json.data && json.data.length==1){
+					var arr = json.data[0].split(",");
+					afterLoadedAction(arr);
+					return;
+				}
+			});
+		}
+	
+	}
+	function afterLoadedAction(arr){
+	  var sHTML = "";
+	  var arrVal = jsfw.$('txtValue').value.split(';').delEmpty();
+	   for (var i=0; i<arr.length; i++){
+			sHTML += '<div>';
+			sHTML += '<input type="checkbox" name="chkItem" onclick="setTxtValue()" id="chkItem+'+i+'" value="'+arr[i]+'" ';
+			for (var j=0; j<arrVal.length; j++){
+				if (arrVal[j]==arr[i]){
+					sHTML += ' checked ';
+					break;
+				}
+			}
+			sHTML += '><label for="chkItem+'+i+'">'+arr[i]+'</label>';
+			sHTML += '</div>';
+		}
+		jsfw.$('div_Main').innerHTML = sHTML;
+	}
+	function afterLoaded(arr){
+	　
+	  var sHTML = "";
+	  var arrVal = jsfw.$('txtValue').value.split(';').delEmpty();
+	   for (var i=0; i<arr.length; i++){
+		   var sBtnName = arr[i].embcButtonName;
+		   var sBtnCode = arr[i].embcButtonCode;
+		   var sBindState = arr[i].bindActionState;
+		   if(sBtnName.indexOf("/")!=-1) sBtnName = sBtnName.split("/")[1];
+		   if(!sBtnName || sBtnName=="|") continue;
+		   if(sBtnName=="||"){
+			 sHTML += '<div style="width:100%;border-top:1px dotted #ccc;padding:0px;"><span/></div>';
+			 continue;
+		   }
+			sHTML += '<div>';
+			sHTML += '<input type="checkbox" name="chkItem" onclick="setTxtValue()" id="chkItem+'+i+'" value="'+sBtnName+'" ';
+			sHTML += 'code="' + sBtnCode +'" ';
+			sHTML += 'state="' + sBindState + '" ';
+			for (var j=0; j<arrVal.length; j++){
+				var btnAttrArr = arrVal[j].split("##")
+				var btnAttrCode = btnAttrArr[1];
+				if (btnAttrCode==sBtnCode){
+					sHTML += ' checked ';
+					break;
+				}
+			}
+			sHTML += '><label for="chkItem+'+i+'">'+sBtnName+'</label>';
+			sHTML += '</div>';
+		}
+		jsfw.$('div_Main').innerHTML = sHTML;
+	}
+	
+	function setTxtValue(){
+		
+		var arrVal = jsfw.$('txtValue').value.split(';').delEmpty();
+		var objs=document.getElementsByName('chkItem');
+		for (var i=0; i<objs.length; i++){
+			var strTem=objs[i].value;
+			var code = objs[i].getAttribute("code");
+			var state = objs[i].getAttribute("state");
+			var strTemText = strTem + "##" + code + "##" + state;
+			if (objs[i].checked){
+				var bFind=false;
+				for (var j=0; j<arrVal.length; j++){
+					var btnAttrArr = arrVal[j].split("##")
+					var btnAttrCode = btnAttrArr[1];
+					if (btnAttrCode==code){
+						bFind=true;
+						break;
+					}
+				}
+				if (!bFind) {
+					arrVal[arrVal.length]=strTemText;
+				}
+			}else{
+				for (var j=0; j<arrVal.length; j++){
+					var btnAttrArr = arrVal[j].split("##")
+					var btnAttrCode = btnAttrArr[1];
+					if (btnAttrCode==code){
+						arrVal = arrVal.del(j);
+						break;
+					}
+				}
+			}
+		}
+		var sTem='';
+		for (var i=0; i<arrVal.length; i++){
+			if (sTem!='') sTem+=';';
+			sTem+=arrVal[i];
+		}
+		jsfw.$('txtValue').value = sTem;
+	}
+	
+	
+	function selAll(){
+		
+		var objs=document.getElementsByName('chkItem');
+		if (objs.length==0) return;
+		objs[0].checked = !objs[0].checked;
+		for (var i=1; i<objs.length; i++) objs[i].checked=objs[0].checked;
+		setTxtValue()
+	}
+	function isEmpty(value) {
+		if (value == null || value == undefined || value == 'undefined' || value == '') {
+			return true;
+		}
+		return false;
+	}
+	</script>
+
+<BODY loadWebUI="Toolbar" scroll="no" onload="loadData()">
+
+<table width="100%" style="table-layout:fixed;height:100%" border="0" cellpadding="0" cellspacing="0">
+	<!--COL width="120"-->
+	<tr>
+		<td height="28" colspan="1">
+			<div class="Toolbar" style="padding-left:10px;">
+			<xmp style="display:none">
+				<root>
+					<item text="确定" icon="../../../js/flow/images/icon/check.gif" action="funOK();"/>
+					<item text="取消" icon="../../../js/flow/images/icon/close.gif" action="parent.closeDialog(self);"/>
+					<item text=""/>
+					<item text="全选" icon="../../../js/flow/images/icon/sel_all.gif" action="selAll();"/>
+				</root>
+			</xmp>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td id="tdCate" style="display:none;"></td>
+		<td>
+			<div id="div_Main" style="overflow:auto;height:100%;padding:5px"></div>
+		</td>
+	</tr>
+	<tr style="display:none;">
+		<td height="53" colspan="1">
+			<textarea name="txtValue" id="txtValue" rows="3" style="width:100%;height:98%" onchange="showItems(cursCate)"></textarea>
+		</td>
+	</tr>
+</table>
+<div id="divLoading" style="position:absolute;width:180px;height:40px;top:40%;left:35%;padding:15px;background-color:#FFFFE1;border:1px solid black;text-align:center;">正在加载数据....</div>
+</BODY>
+</HTML>
+<script type="text/javascript" src="../../../js/lib/jsfw/boot.js" loadClass="" loadPrototype="Array" loadWebUI="" Theme="Default"></script>
+

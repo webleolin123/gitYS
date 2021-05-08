@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html  class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>功能配置页面</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../js/layui/css/layui.css"/>
+    <link href="../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <!--[if lt IE 9]>
+    <script src="../../js/lib/html5.min.js"></script>
+    <script src="../../js/lib/respond.js"></script>
+    <![endif]-->
+
+</head>
+
+<body class="iframe-h">
+<div class="content-wrap">
+    <input type="text" style="display: none" title="" id="compData">
+    <div class="layui-row">
+        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>功能页列表</span></div>
+                <div class="layui-card-body">
+                    <form action="" class="layui-form layui-form-pane">
+                        <div class="layui-row layui-col-space10">
+                            <div class="layui-col-md4">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">页面名称</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="qsdName" placeholder="请输入页面名称" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md4">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">ID</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="wumiId" placeholder="请输入ID" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="toggle-area layui-col-space10">
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">项目分类</label>
+                                        <div class="layui-input-block">
+                                            <select name="projectCode"></select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--<div class="layui-col-xs4">-->
+                                    <!--<div class="layui-form-item">-->
+                                <!--<label class="layui-form-label">创建时间</label>-->
+                                        <!--<div class="layui-input-block">-->
+                                <!--<input class="layui-input" id="date1" type="text">-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            </div>
+
+                            <div class="" style="text-align: center;margin-bottom: 5px">
+                                <div class="layui-input-inline" style="padding-left: 20px">
+                                    <button class="layui-btn" lay-submit lay-filter="formSearch" permission-btn="tableSearch"><i class="fa fa-search"></i>查询</button>
+                                    <button class="layui-btn layui-btn-primary  " lay-filter="reset" name="reset"
+                                            type="reset"><i class="fa fa-eraser"></i>重置
+                                    </button>
+                                    <a class="toggle-btn">
+                                        <span>展开</span><i class="fa fa-angle-up"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="layui-card">
+                <div class="layui-card-body" style="padding: 0 10px 10px;">
+                    <table class="layui-hide" id="configTable" lay-filter="configTable"></table>
+                    <script type="text/html" id="tableToolBar">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-sm layui-btn-primary" lay-event="refresh" id="refreshBtn">
+                                <i class="layui-icon">&#xe669;</i> 刷新
+                            </button>
+                            <button class="layui-btn layui-btn-sm" lay-event="add" permission-btn="addConfig">
+                                <i class="layui-icon">&#xe608;</i> 新增
+                            </button>
+
+                            <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete" permission-btn="deleteConfig">
+                                <i class="layui-icon">&#xe640;</i> 删除
+                            </button>
+                        </div>
+                    </script>
+
+                    <script type="text/html" id="tableOper">
+                        <a class="layui-btn layui-btn-xs " permission-btn="editConfig" lay-event="edit">
+                            <i style="margin: 0 5px" class="fa fa-edit"></i>
+                            <span>编辑</span></a>
+                        <!--<a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delete">删除</a>-->
+                        <!--<a class="layui-btn layui-btn-xs layui-btn-primary" lay-event="review">配置详情</a>-->
+                        <a class="layui-btn layui-btn-xs layui-btn-warm" permission-btn="copyConfig" lay-event="copy"><i
+                                style="margin: 0 5px" class="fa fa-copy"></i><span>复制</span></a>
+                        <a class="layui-btn layui-btn-xs layui-btn-primary" lay-event="preview" permission-btn="previewConfig"><i  style="margin: 0 5px" class="fa fa-newspaper-o"></i><span>预览</span></a>
+                    </script>
+                    <script type="text/html" id="switchMenu">
+                        <div permission-btn="switchConfig">
+                            <input  type="checkbox"  name="switchMenu" data-compId="{{d.wumiId}}" data-smId="{{d.smId}}"  data-compName="{{d.wumiChname}}" lay-skin="switch" lay-text="开|关" lay-filter="switchMenu" {{ d.smId == null ? '' :'checked' }}>
+                        </div>
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="menuSet">
+    <div class="layui-row">
+        <div class="treeLeft layui-col-md4 layui-col-xs4 layui-col-sm4" style="padding: 20px 10px;overflow-y: auto;height: 350px">
+            <div style="width: 100%;text-align: center;margin-top: 120px;" class="menuLoadArea">
+                <i class="fa fa-spinner fa-pulse"></i>
+            </div>
+            <div class="eleTree ele4" id="treeLeft" lay-filter="treeLeft"></div>
+        </div>
+        <div class="menuBox layui-col-md8 layui-col-xs8 layui-col-sm8" style="padding: 10px">
+            <div class="menuText"
+                 style="height: 24px;line-height: 24px;border-radius: 10px;margin: 10px 0;padding: 5px 10px 5px;">
+                点击左侧菜单,选择插入的菜单位置 ，默认菜单为根级目录
+            </div>
+            <div class="menuLayer">
+                <div style="">
+                    <form class="layui-form layui-form-pane" name="menuLayer" lay-filter="menuLayer">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><b class="red">*</b>名称</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="smName" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><b class="red">*</b>编码</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="smCode" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><b class="red">*</b>序号</label>
+                            <div class="layui-input-block">
+                                <input type="number" name="ggSort" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item" style="position: relative">
+                            <label class="layui-form-label">图标</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="smIcon" id="icon123" placeholder="请点击选择" autocomplete="off" class="layui-input" style="padding-right: 50px;">
+                                <span class="icon-btn" id="icon-choose"><i class="fa fa-ellipsis-h"></i></span>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">地址</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="url" readonly autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <input type="hidden" name="smType" value="business">
+                        <input type="hidden" name="smLinkType" value="0">
+                        <input type="hidden" name="smUrl">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script src="./../../js/common/plugin.js"></script>
+<script src="./../../js/layui/layui.js"></script>
+<script src="./../../js/module/funConfigManage/configMgr.js"></script>
+
+</body>
+</html>

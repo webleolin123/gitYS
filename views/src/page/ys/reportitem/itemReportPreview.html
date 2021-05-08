@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html  class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>事项预览</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../../js/layui/css/layui.css"/>
+    <link href="../../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../../js/lib/jquery.1.12.3.js"></script>
+    <script charset="utf-8" src="../../../js/common/plugin.js"></script>
+    <style>
+        .iframe-h{
+            height: 100%;
+        }
+        .content-wrap{
+            padding: 10px;
+        }
+        .red{
+            color: red;
+            padding-left: 5px;
+        }
+        .hide{
+            display: none;
+        }
+        .adapt{
+            margin-top: 15px;
+            margin-left: 10%;
+        }
+    </style>
+</head>
+<!--添加按钮中的弹框-->
+<body class="iframe-h">
+
+<div class="content-wrap">
+    <div class="layui-row layui-col-space15">
+        <div class="reportLayer">
+            <div style="padding: 10px">
+                <div class="layui-row layui-col-space10" style="background: white">
+                    <div class="layui-col-xs12">
+                        <div class="layui-card-header layui-card-header-custom">
+                            <span><i></i>本次上报单位:
+                                <b class="primary" id="reportCompany"></b>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-row layui-col-space10" style="background: white">
+                    <div class="layui-col-xs12">
+                        <div class="layui-card-header layui-card-header-custom">
+                            <span><i></i>事项详情:
+                                <b class="primary" id="reportCompany"></b>
+                            </span>
+                        </div>
+                    </div>
+                    <iframe border="0" class="" frameborder="0" height="800px" id="itemFrame" src=""
+                        width="100%"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="./../../../js/layui/layui.js"></script>
+<script>
+
+    layui.config({
+        base: '../../../../src/js/',
+        version: new Date().getTime()
+    }).use(['eleTree','layer','table','form','laytpl','common','element'], function () {
+        var table = layui.table;
+        var form = layui.form;
+        var tree = layui.eleTree;
+        var common = layui.common;
+        var element = layui.element;
+        element.init();
+        var baseUrl='../../../../';
+        common.themeSet();
+        var itemId = getUrlParam("id");
+        $("#itemFrame")[0].src = "../../ys/itemMgr/itemAuditView.html?itemId=" + itemId;
+
+        var getItemStatusUrl = baseUrl + 'catalog/reportItem/getReportItemInfo'
+
+        common.fetchPost(getItemStatusUrl,{resId:itemId},function(res){
+            if(res.success && res.object){
+                $("#reportCompany").html(res.object.waitSeName);
+            }
+        });
+    });
+    function getUrlParam(paraName) {
+　　　　var url = document.location.toString();
+　　　　var arrObj = url.split("?");
+　　　　if (arrObj.length > 1) {
+　　　　　　var arrPara = arrObj[1].split("&");
+　　　　　　var arr;
+　　　　　　for (var i = 0; i < arrPara.length; i++) {
+　　　　　　　　arr = arrPara[i].split("=");
+　　　　　　　　if (arr != null && arr[0] == paraName) {
+　　　　　　　　　　return arr[1];
+　　　　　　　　}
+　　　　　　}
+　　　　　　return "";
+　　　　}else {
+　　　　　　return "";
+　　　　}
+　　}
+
+</script>
+
+<!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

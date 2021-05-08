@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+
+<head>
+    <meta charset="UTF-8">
+    <title>制度统计</title>
+    <meta content="webkit" name="renderer" />
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../../js/layui/css/layui.css" />
+    <link href="../../../css/public.css?v1.01" rel="stylesheet" />
+    <link href="../../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <script src="../../../js/lib/jquery.1.12.3.js"></script>
+    <style>
+
+    </style>
+</head>
+
+<body class="iframe-h">
+    <div class="content-wrap">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+                <!-- layui tree-->
+                <div class="layui-card">
+                    <div class="layui-card-header layui-card-header-custom">
+                        <span><i></i>企业层级</span>
+                        <div style="position: absolute;right: 5px;top: -2px;">
+                            <p style="display: inline-block;font-size: 12px;vertical-align: center">包含下级</p>
+                            <form class="layui-form" action="" style="display: inline-block;" id="isIncludeChild">
+                                <input type="checkbox" name="isIncludeChild" title="含下级企业" lay-filter='isIncludeChild' lay-skin="switch" >
+                            </form>
+                        </div>
+                    </div>
+                    <div class="layui-card-body">
+                        <div class="layuiTree eleTree ele4" id="leftTree" lay-filter="leftTree"
+                            style="overflow-y: auto;margin-top: 10px"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
+                <div class="layui-card" style="padding:0 10px 10px;">
+                    <div class="layui-card-header layui-card-header-custom" style="position: relative">
+                        <span><i></i>制度统计<b class="columnToggle"><i class="fa fa-toggle-left"></i></b></span>
+                    </div>
+                    <div class="layui-card-body" style="padding:5px 0 10px;">
+
+                        <form class="layui-form layui-form-pane">
+                            <div class="layui-row layui-col-space10">
+                                <div class="layui-col-xs4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">境内外</label>
+                                        <div class="layui-input-block">
+                                            <select name="seOutsideFlag">
+                                                <option value="">请选择</option>
+                                                <option value="">全部</option>
+                                                <option value="1">境内</option>
+                                                <option value="0">境外</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">提交状态</label>
+                                        <div class="layui-input-block">
+                                            <select name="commitStatus">
+                                                <option value="">请选择</option>
+                                                <option value="0">全部</option>
+                                                <option value="1">已提交</option>
+                                                <option value="2">未提交</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="toggle-area layui-col-space10">
+                                    <div class="layui-col-xs4">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">提交日期</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" class="layui-input" id="submitDate" name=""
+                                                    placeholder="请选择时间范围">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="" style="text-align: center; margin-bottom: 5px;right: 0;bottom: 0;">
+                                    <div class="layui-input-inline" style="padding-left: 20px">
+                                        <button class="layui-btn  " lay-filter="formSearch" lay-submit=""
+                                            name="searchSubmit"><i class="fa fa-search"></i>查询
+                                        </button>
+                                        <button class="layui-btn layui-btn-primary  " lay-filter="reset" name="reset"
+                                            type="reset" id="reset"><i class="fa fa-eraser"></i>重置
+                                        </button>
+                                        <a class="toggle-btn">
+                                            <span>展开</span><i class="fa fa-angle-up"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                    <table id="table" lay-filter="table"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script src="../../../js/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../../src/js/',
+        version: new Date().getTime()
+    }).extend({
+        treeGrid: 'lib/treeGrid'
+    }).use(['eleTree', 'layer', 'table', 'form', 'laytpl', 'common', 'util', 'element', 'upload', 'treeGrid', 'laydate'], function () {
+        var table = layui.table;
+        var form = layui.form;
+        var tree = layui.eleTree;
+        var treeGrid = layui.treeGrid;//很重要
+        var common = layui.common;
+        var util = layui.util;
+        var element = layui.element;
+        var upload = layui.upload;
+        var laydate = layui.laydate;
+        element.init();
+        var baseUrl = '../../../../';
+        //跨域通信
+        common.themeSet();
+        common.toggleArea($('.toggle-btn'), $('.toggle-area'));
+        var seId = common.getUserInfo().seId
+
+        var currentMenuSmId = $("#currentMenuSmId", window.parent.document).val();
+        // 是否包含下级
+        var isIncludeChild = false;
+
+        //组织机构URL
+        var sysEnterpriseTreeUrl = "sysmgr/sysEnterprise/selectSysEnterpriseOrganPostTreeAllList?treeType=enterpriseTree";
+
+        Array.prototype.insert = function (index, item) {
+            this.splice(index, 0, item);
+        };
+
+        //分页查询参数
+        var pageQueryParam = { "suName": "" };
+        var param = { seId: common.getUserInfo().seId, isIncludeChild: true };
+        var selectTreeNode = {}
+        var eleTreeId = null;
+        var mainTable = null;
+        var tableData = [];
+
+        var eventHandle = {
+
+            treeInit: function () {
+                formatTree();
+                common.fetchGet(sysEnterpriseTreeUrl, function (res) {
+                    //树信息的导入
+                    if (res.success && res.list) {
+
+                        eleTreeId = tree.render({
+                            elem: '#leftTree',
+                            data: res.list,
+                            checkOnClickNode: true,
+                            highlightCurrent: true,    // 是否高亮当前选中节点，默认值是 false。
+                            expandOnClickNode: false,    // 是否在点击节点的时候展开或者收缩节点， 默认值为 true，如果为 false，则只有点箭头图标的时候才会展开或者收缩节点。
+                            showCheckbox: false,
+                            lazy: true,
+                            load: function (data, callback) {
+                                eventHandle.setQueryParam(data);
+                                eventHandle.treeReload(data, callback);
+                            }
+
+                        });
+                        $('#leftTree').find('.eleTree-node-content-icon').eq(0).trigger('click');
+                        tree.on("nodeClick(leftTree)", function (obj) {
+                            obj.node.select();
+                            var curTreeNode = obj.data.currentData;
+                            seId = curTreeNode.seId
+                            $('#reset').click()
+                            eventHandle.initTable()
+                            // pageQueryParam = { "suName": "" };
+                            // eventHandle.setQueryParam(curTreeNode);
+                            // eventHandle.userTableReload(pageQueryParam);
+                            // param.seId = curTreeNode.id;
+                            //重新初始化选项卡
+                            // eventHandle.initTab();
+
+                        });
+                    } else {
+                        //不存在数据时的显示
+                    }
+                }, function () { });
+            },
+            treeReload: function (data, callback) {
+                common.fetchGet(sysEnterpriseTreeUrl + '&id=' + data.id + '&extendAttr=' + data.extendAttr, function (res) {
+                    if (res.success && res.list) {
+                        callback(res.list);
+                    }
+                }, function () {
+                    callback([]);
+                });
+            },
+            setQueryParam: function (curTreeNode) {
+                pageQueryParam["seId"] = curTreeNode.seId;
+                pageQueryParam["soId"] = curTreeNode.soId;
+                pageQueryParam["spId"] = curTreeNode.spId;
+                selectTreeNode["seId"] = curTreeNode.seId;
+                selectTreeNode["soId"] = curTreeNode.soId;
+                selectTreeNode["spId"] = curTreeNode.spId;
+                if (curTreeNode.extendAttr == "enterprise") {
+                    selectTreeNode["seName"] = curTreeNode.name;
+                }
+                if (curTreeNode.extendAttr == "organ") {
+                    selectTreeNode["soName"] = curTreeNode.name;
+                }
+                if (curTreeNode.extendAttr == "post") {
+                    selectTreeNode["spName"] = curTreeNode.name;
+                }
+            },
+
+
+            initTable: function () {
+                // var sURL = baseUrl + "sasszrule/statistics/selecRegulationTypeList";
+                // common.fetchPost(sURL, param, function (data) {
+                //     tableData = data.list;
+                //     tableData = eventHandle.handleTableData(tableData);
+                mainTable = table.render(common.tableInitParams({
+                    elem: '#table',
+                    url: baseUrl + 'rulemgr/ruleStatistics/statisticsInfo',
+                    where: { 'seId': seId, 'isIncludeChild': isIncludeChild },
+                    page: false,
+                    limit: 10000,
+                    height: 'full-165',
+                    cols: [
+                        [
+                            { type: 'numbers', title: '序号', width: 50 },
+                            { field: 'seShortName', title: '企业简称', minWidth: 220, },
+                            {
+                                field: 'seOutsideFlag', title: '境内外', minWidth: 100, align: 'center', templet: function (rowData) {
+                                    if (rowData.seOutsideFlag === '0') {
+                                        return '境外'
+                                    } else if (rowData.seOutsideFlag === '1') {
+                                        return '境内'
+                                    }else{
+                                        return '未设置'
+                                    }
+                                }
+                            },
+                            { field: 'totalNum', minWidth: 100, align: 'center', title: '总数' },
+                            { field: 'fileNum', minWidth: 200, align: 'center', title: '<span title="制度审核或制度文本已上传文件">已上传文件制度总数</span>' },
+                            { field: 'noFileNum', minWidth: 200, align: 'center', title: '<span title="制度审核或制度文本未上传文件">未上传文件制度总数</span>' }
+                            // {field: 'ggmemo', title: '备注', sort: true},
+                        ]
+                    ],
+
+                }));
+            },
+
+            //处理表格数据
+            handleTableData: function () {
+                var treeJson = common.arrayToTreeJson(tableData, "id", "pId", "children");
+                var resultData = common.jsonToArray(treeJson, "children");
+                return resultData;
+            },
+            tableReload: function (where) {
+                table.reload('table', {
+                    method: 'post',
+                    where: where
+                });
+            },
+            domListen: function () {
+                form.on('submit(formSearch)', function (obj) {
+                    //表格重载
+                    eventHandle.tableReload(obj.field);
+                    return false;
+                });
+                form.on('switch(isIncludeChild)', function (data) {
+                    isIncludeChild = data.elem.checked
+                    eventHandle.initTable()
+                })
+            },
+            pageLoad: function () {
+                //初始化事件
+                // eventHandle.init();
+                //初始化树
+                eventHandle.treeInit();
+                //初始化选项卡
+                // var tabData = eventHandle.initTab();
+                //获取表格列数据
+                // var cols = eventHandle.initCols(tabData);
+                //初始化表格
+                eventHandle.initTable();
+                eventHandle.domListen();
+            },
+        }
+
+        eventHandle.pageLoad();
+
+        laydate.render({
+            elem: '#submitDate',
+            type: 'date',
+            range: true
+            , trigger: 'click'
+            // value:'2018-08-20 20:08:08'
+        });
+        /**
+         * 格式化树形控件
+         */
+        function formatTree() {
+            var cacluHeight = $(document).height() - $("#mainMenuTab").height() - $(".layui-card-header").height() - 80;
+            $("#leftTree").css({
+                "height": cacluHeight + "px",
+                "overflow-y": "auto"
+            });
+        }
+        common.columnToggle();
+        $('.columnSide').on('click', function () {
+            $('#isIncludeChild').toggle();
+        });
+    });
+</script>

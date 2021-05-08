@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html  class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>会议管理-新增</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../../js/layui/css/layui.css"/>
+    <link href="../../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../../js/lib/jquery.1.12.3.js"></script>
+    <style>
+        body{
+            background:#f8f8f8;
+        }
+        .load-btn,.check-btn,.right-btn{
+            position: absolute;
+            top:0;
+            right:0;
+            border-radius: 3px;
+        }
+        .right70{
+            right:70px;
+        }
+        .relative{
+            position: relative;
+        }
+        .padRt64{
+            padding-right: 64px;
+        }
+        li{
+            cursor: pointer;
+        }
+        .zsBga{
+            color:purple;
+            vertical-align: 1px;
+            opacity: 0.5;
+        }
+        .hytitle{
+            font-size: 16px;
+        }
+        .hylabel{
+            border: 1px solid transparent!important;
+            background: transparent!important;
+        }
+        .hyinput{
+            border: 1px solid transparent!important;
+            border-bottom-color: red!important;
+        }
+        .layui-unselect {
+            border-color: #f56c6c;
+            border-top-style: none;
+            border-right-style: none;
+            border-left-style: none;
+        }
+        .layui-form-select .layui-edge{
+            border-top-color: #f56c6c;
+        }
+        a.layui-layer-ico.layui-layer-max{
+             display:none;
+        }
+        a.layui-layer-ico.layui-layer-max.layui-layer-maxmin{
+            display:inline-block!important;
+        }
+        /* .editView{
+            display: none;
+        } */
+    </style>
+
+</head>
+
+<!--列席人员设置-->
+<div class="set-attendanceForm hide">
+    <div class="layui-card-body">
+        <table id="attendanceTable" lay-filter="attendanceTable"></table>
+    </div>
+</div>
+
+<!--列席人员查看-添加-->
+<div class="setAdd-attendanceForm hide">
+    <div class="layui-card-body">
+        <form class="layui-form layui-form-pane" name="setAdd-attendanceForm">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label hylabel">列席人</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="attendanceName" lay-verify="required" name="attendanceName" placeholder="请输入" autocomplete="off" class="layui-input hyinput">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label hylabel">职位</label>
+                            <div class="layui-input-block">
+                                <select name="position" id="position" lay-filter="positionFilter">
+                                    <option name="" value=""></option>
+                                </select>
+                            </div>
+                        </div>
+                        <input type="hidden" name="positionName">
+                    </div>
+                </div>
+        </form>
+    </div>
+</div>
+
+<!--表决清单-查看-->
+<script type="text/html" class="bjqk-edit hide">
+    <div class="layui-card-body">
+        <form class="layui-form layui-form-pane" name="dshyt-add" id="bjqkForm">
+                <div class="layui-row layui-col-space15">
+                    <input type="hidden" id="deliberationId" name="deliberationId" class="layui-input hyinput">
+                    <input type="hidden" id="subjectId" name="subjectId" class="layui-input hyinput">
+                    <div class="layui-col-md12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label hylabel"><b class="red">*</b>姓名</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="deliberationPersonnel" lay-verify="deliberationPersonnel" name="deliberationPersonnel" placeholder="请输入" autocomplete="off" class="layui-input hyinput">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label hylabel">职务</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="job" name="job" placeholder="请输入" autocomplete="off" class="layui-input hyinput">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label hylabel"><b class="red">*</b>参会状态</label>
+                            <div class="layui-input-block">
+                                <select id="attendStatus" name="attendStatus" lay-verify="attendStatus">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label hylabel">缺席原因</label>
+                            <div class="layui-input-block">
+                                <select id="reasonCode" name="reasonCode">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label hylabel"><b class="red">*</b>审议结果</label>
+                            <div class="layui-input-block">
+                                <select id="deliberationResult" name="deliberationResult" lay-verify="deliberationResult">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label hylabel">备注</label>
+                            <div class="layui-input-block">
+                                <textarea id="remark" name="remark" placeholder="请输入" class="layui-textarea hyinput"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </form>
+    </div>
+</script>
+<script type="text/html" id="subjectFileTableOper">
+    <a class="layui-btn layui-btn-xs" lay-event="load">下载</a>
+</script>
+<script type="text/html" id="bjTableOper">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">查看</a>
+</script>
+<body class="iframe-h">
+
+<div class="content-wrap">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+            <!-- 基本信息 -->
+            <form class="layui-form layui-form-pane" name="edit-syForm">
+                    <div class="layui-card">
+                        <div class="layui-card-header layui-card-header-custom">
+                            <span><i></i>审议信息
+                                <b class="zsBga"></b>
+                            </span>
+                        </div>
+                        <div class="layui-card-body">
+                            <div class="layui-row layui-col-space15">
+                                <div class="layui-col-md12">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label hylabel"><b class="red">*</b>议题名称</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" lay-verify="subjectName" name="subjectName" placeholder="请输入" autocomplete="off" class="layui-input hyinput" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="subjectId">
+                                <input type="hidden" readonly name="subjectCode" placeholder="请输入" autocomplete="off" class="layui-input hyinput">
+
+                                <!-- <div class="layui-col-md6">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label hylabel"><b class="red">*</b>议题编码</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" lay-verify="subjectCode" readonly name="subjectCode" placeholder="请输入" autocomplete="off" class="layui-input hyinput">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md6">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label hylabel">紧急程度</label>
+                                            <div class="layui-input-block">
+                                                <select name="exigence"  id="exigence" lay-filter="exigenceFilter">
+                                                    <option name="" value=""></option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div> -->
+                            </div>
+                            <div class="layui-row layui-col-space15">
+                                <input type="hidden" name="exigenceName">
+                                <div class="layui-col-md6">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label hylabel">议题类型</label>
+                                        <div class="layui-input-block">
+                                            <select name="subjectType"  id="subjectType" lay-filter="subjectTypeFilter">
+                                                <option name="" value=""></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="subjectTypeName">
+                                <div class="layui-col-md6">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label hylabel">决议类别</label>
+                                            <div class="layui-input-block">
+                                                <select name="resultType"  id="resultType" lay-filter="resultTypeFilter">
+                                                    <option name="" value=""></option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                </div>
+                                <input type="hidden" name="resultTypeName">
+                                <!-- <div class="layui-col-md12">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label hylabel"><b class="red">*</b>是否上报国资委</label>
+                                            <div class="layui-input-block">
+                                                <select name="approvalFlag"  id="approvalFlag" lay-verify="approvalFlag" lay-filter="approvalFlagFilter">
+                                                    <option name="" value=""></option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                </div>
+                                <input type="hidden" name="approvalFlagName"> -->
+                            </div>
+                            <div class="layui-row layui-col-space15">
+                                <div class="layui-col-md12">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label hylabel">汇报人</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="reporter" placeholder="请输入" autocomplete="off" class="layui-input hyinput"
+                                                value="">
+                                            </div>
+                                        </div>
+                                </div>
+                            </div>
+                            <div class="layui-row layui-col-space15">
+                                <div class="layui-col-md12">
+                                    <div class="layui-form-item relative">
+                                        <label class="layui-form-label hylabel">列席人员</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" readonly id="attendances" name="attendances" placeholder="请输入" autocomplete="off" class="layui-input padRt64 hyinput"
+                                            value="" lay-verify="attendances">
+                                            <button class="layui-btn layui-btn-radius right-btn" id="attendances-btn">查看</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-row layui-col-space15">
+                                <div class="layui-col-md12">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label hylabel"><b class="red">*</b>审议结果</label>
+                                        <div class="layui-input-block">
+                                            <select name="passFlag" id="passFlag" lay-filter="passFlagFilter" lay-verify="passFlag">
+                                                <option name="" value=""></option>
+                                            </select>
+                                            <!-- <button class="layui-btn layui-btn-radius right-btn" id="passFlag-btn">计算</button> -->
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="passFlagName">
+                                </div>
+                                <div class="layui-row layui-col-space15">
+                                    <div class="layui-col-md12">
+                                        <div class="layui-form-item">
+                                            <div class="layui-form-item">
+                                                    <label class="layui-form-label hylabel"><b class="red">*</b>审议结论</label>
+                                                    <div class="layui-input-block">
+                                                        <textarea name="subjectResult" lay-verify="subjectResult" placeholder="请输入" class="layui-textarea hyinput"></textarea>
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                         </div>
+                    </div>
+                    <div class="layui-card">
+                        <div class="layui-card-header layui-card-header-custom">
+                            <span><i></i>表决详情
+                                <b class="zsBga"></b>
+                            </span>
+                        </div>
+                        <div class="layui-card-body">
+                                <div class="layui-row layui-col-space15">
+                                        <div class="layui-col-md12">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label hylabel">表决情况</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" readonly name="bjqk" placeholder="根据下方列表自动生成" autocomplete="off" class="layui-input hyinput">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                            <div class="layui-row layui-col-space15">
+                                <div class="layui-col-md12">
+                                    <table id="bjTable" lay-filter="bjTable"></table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                        <div class="layui-card">
+                            <div class="layui-card-header layui-card-header-custom">
+                                <span><i></i>议题资料
+                                    <b class="zsBga"></b>
+                                </span>
+                            </div>
+                            <div class="layui-card-body">
+                                <div class="layui-row layui-col-space15">
+                                    <div class="layui-col-md12">
+                                        <table id="subjectFileTable" lay-filter="subjectFileTable"></table>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display: none">
+                            <div class="layui-card" style="margin-top: 10px">
+                                <div class="layui-card-body">
+                                    <div class="layui-form-item" style="text-align: center;">
+                                        <button class="layui-btn" lay-submit lay-filter="formSubjectEdit"> <i class="layui-icon">&#x1005;</i>保存</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </form>
+        </div>
+    </div>
+</div>
+<div style="position: fixed;width: 100%;bottom: 12px;">
+    <div class="layui-card" style="margin-top: 10px">
+        <div class="layui-card-body">
+            <div class="layui-form-item" style="text-align: center;">
+                <button class="layui-btn" id="formMeetingClose"><i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--脚垫-->
+<div style="height: 80px;"> </div>
+<script src="./../../js/layui/layui.js"></script>
+<script>
+
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).use(['eleTree','layer','table','form','laytpl','common','element','laydate','upload'],function () {
+        var table=layui.table;
+        var form=layui.form;
+        var tree=layui.eleTree;
+        var common=layui.common;
+        var element = layui.element;
+        var laydate = layui.laydate;
+        var upload = layui.upload;
+        var util = layui.util;
+        element.init();
+        var baseUrl='../../../';
+        common.themeSet();
+        //获取url传参
+        (function ($) {
+                $.getUrlParam = function (name) {
+                    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+                    var r = window.location.search.substr(1).match(reg);
+                    if (r != null) return decodeURIComponent(r[2]); return null;
+                }
+        })(jQuery);
+        var initFormObj={};
+        var subjectIdForm = parent.dataObj||$.getUrlParam('subjectId');
+        if(subjectIdForm==null||subjectIdForm==''){
+            subjectIdForm = common.uuid();
+        }
+        //操作类型，add:新增；edit：查看
+        $("#subjectId").val(subjectIdForm);
+        var reasonCodeMap = {};
+        var reasonCodeList = [];
+        var approvalFlagMap = {};
+        var approvalFlagList = [];
+        var passFlagMap = {};
+        var attendStatusMap = {};
+        var attendStatusList = [];
+        var deliberationResultMap = {};
+        var deliberationResultList = [];
+        //表决弹窗
+        var bj_index_edit;
+        //议题弹窗
+        var yt_index_edit;
+        var formMeetingCloseIndex = window.parent.layer.index;
+        $('#formMeetingClose').unbind('click').bind('click',function (e) {
+            window.parent.layer.close(formMeetingCloseIndex);
+            return false;
+        });
+        // --------------------------------下拉框-----------------------------------
+        //字典获取URL
+        var dictUrl = baseUrl + "sysmgr/dicts/selectDictListByPcode";
+
+        var keyValueTypeMap = {
+            "dict": {
+                "url": dictUrl,
+                "key": "sdCode",
+                "value": "sdName"
+            }
+        };
+
+        var selectDictMap = {
+            "deliberationResult":{
+                "kvType": keyValueTypeMap.dict,
+                "param": {
+                    "dictPCode": "DELIBERATIONRESULT"
+                }
+            },
+            "attendStatus":{
+                "kvType": keyValueTypeMap.dict,
+                "param": {
+                    "dictPCode": "attendStatus"
+                }
+            },
+            "reasonCode":{
+                "kvType": keyValueTypeMap.dict,
+                "param": {
+                    "dictPCode": "reasonCode"
+                }
+            },
+            "meetingMode": {
+                "kvType": keyValueTypeMap.dict,
+                "param": {
+                    "dictPCode": "MEETING_REVIEW_MODE"
+                }
+            },
+            "exigence":{
+                "kvType": keyValueTypeMap.dict,
+                "param": {
+                    "dictPCode": "msRank"
+                }
+            },
+            "passFlag":{
+                "kvType": keyValueTypeMap.dict,
+                "param": {
+                    "dictPCode": "PASSFLAG"
+                }
+            },
+            "subjectType":{
+                "kvType": keyValueTypeMap.dict,
+                "param": {
+                    "dictPCode": "subjectType"
+                }
+            },
+            "resultType":{
+                "kvType": keyValueTypeMap.dict,
+                "param": {
+                    "dictPCode": "resultType"
+                }
+            },
+            "position":{
+                "kvType": keyValueTypeMap.dict,
+                "param": {
+                    "dictPCode": "POSITION_TYPE"
+                }
+            },
+            "subjectFileType":{
+                "kvType": keyValueTypeMap.dict,
+                "param": {
+                    "dictPCode": "subjectMaterialType"
+                }
+            },
+        }
+
+        common.selectDataSet({
+            elem: $('[name=passFlag]'),
+            url: 'sysmgr/dicts/selectDictListByPcode?dictPCode=PASSFLAG',
+            responseList: 'list',
+            method: 'get',//默认为get
+            optionText: 'sdName',
+            optionValue: 'sdCode',
+            success: function (data) {
+                if (data && data.list && data.list.length > 0) {
+                    $.map(data.list, function (item) {
+                        passFlagMap[item.sdCode] = item;
+                    });
+                }
+                form.render('select');
+            }
+        });
+
+        // --------------------------------下拉框END--------------------------------
+        // --------------------------------初始化--------------------------------
+
+
+        var eventHandle={
+            initDict:function(array,parent,where,json,callback){
+                $.map(array,function(value){
+                    var dictId = value;
+                    var dictConfigInfo = selectDictMap[dictId];
+                    if(!dictConfigInfo) return false;
+                    var queryParam = '?';
+                    $.map(dictConfigInfo.param,function(value,key){
+                        queryParam += key + '=' + value + '&';
+                    });
+                    if(where && dictConfigInfo.where ){
+                        queryParam += "&where=" + where;
+                    }
+                    var option = {
+                        elem: $('#'+dictId),
+                        url: dictConfigInfo.kvType.url + queryParam,
+                        method: 'get',
+                        responseList: 'list',
+                        optionText: dictConfigInfo.kvType.value,
+                        optionValue: dictConfigInfo.kvType.key,
+                        success: function(obj) {
+                            form.render("select");
+                            if(typeof(callback) == "function"){
+                                callback();
+                            }
+                        }
+                    }
+                    if(json){
+                        var selectData = [];
+                        $.each(json,function(i){
+                            $.map(json[i],function(value,key){
+                                var data = {};
+                                data[dictConfigInfo.kvType.key] = key;
+                                data[dictConfigInfo.kvType.value] = value;
+                                selectData.push(data);
+                            })
+                        })
+                        option.loadData = selectData;
+                        option.loadSuccess = function(obj){
+
+                            if(obj && obj.length == 1){
+                                this.elem.val(obj[0][this.optionValue]);
+                                form.render();
+                            }
+                        }
+                    }
+                    common.selectDataSet(option);
+                });
+            },
+            shqkInit:function (subjectId) {
+                common.fetchPost('meetingmgr/tiolDeliberation/selectTiolDeliberationTj?subjectId='+subjectId,null,function (res) {
+                    $('input[name=bjqk]').eq(1).val(res.object);
+                    form.render();
+                },function () {});
+            }
+        }
+
+            eventHandle.initDict(['exigence','passFlag','subjectType','resultType','position']);
+            // common.selectDataSet({
+            //     elem: $('[name=approvalFlag]'),
+            //     url: 'sysmgr/dicts/selectDictListByPcode?dictPCode=APPROVALFLAG',
+            //     responseList: 'list',
+            //     method: 'get',//默认为get
+            //     optionText: 'sdName',
+            //     optionValue: 'sdCode',
+            //     success: function (data) {
+            //         if (data && data.list && data.list.length > 0) {
+            //             $.map(data.list, function (item) {
+            //                 approvalFlagMap[item.sdCode] = item;
+            //             });
+            //         }
+            //         form.render('select');
+            //     }
+            // });
+            common.fetchGet('sysmgr/dicts/selectDictListByPcode?dictPCode=attendStatus', function (data) {
+                if (data && data.list && data.list.length > 0) {
+                        attendStatusList=data.list;
+                        $.map(data.list, function (item) {
+                            attendStatusMap[item.sdCode] = item;
+                        });
+                }
+            });
+            common.fetchGet('sysmgr/dicts/selectDictListByPcode?dictPCode=DELIBERATIONRESULT', function (data) {
+                if (data && data.list && data.list.length > 0) {
+                        deliberationResultList =data.list;
+                        $.map(data.list, function (item) {
+                            deliberationResultMap[item.sdCode] = item;
+                        });
+                }
+            });
+            common.fetchGet('sysmgr/dicts/selectDictListByPcode?dictPCode=reasonCode', function (data) {
+                if (data && data.list && data.list.length > 0) {
+                        reasonCodeList =data.list;
+                        $.map(data.list, function (item) {
+                            reasonCodeMap[item.sdCode] = item;
+                        });
+                }
+            });
+            common.fetchPost('meetingmgr/tiolSubject/selectTiolSubjectById', {subjectId:subjectIdForm}, function (data) {
+                if(data.success){
+                    $('input[name=subjectId]').val(data.object.subjectId);
+                    $('input[name=subjectName]').val(data.object.subjectName);
+                    $('input[name=subjectCode]').val(data.object.subjectCode);
+                    $('select[name=exigence]').val(data.object.exigence);
+                    $('input[name=exigenceName]').val(data.object.exigenceName);
+                    $('select[name=subjectType]').val(data.object.subjectType);
+                    $('input[name=subjectTypeName]').val(data.object.subjectTypeName);
+                    $('select[name=resultType]').val(data.object.resultType);
+                    $('input[name=resultTypeName]').val(data.object.resultTypeName);
+                    // $('input[name=approvalFlagName]').val(data.object.approvalFlagName);
+                    $('input[name=reporter]').val(data.object.reporter);
+                    $('input[name=attendances]').val(data.object.attendances);
+                    $('select[name=passFlag]').val(data.object.passFlag);
+                    $('textarea[name=subjectResult]').val(data.object.subjectResult);
+                    $('input[name=bjqk]').val(data.object.bjqk);
+                    // $('select[name=approvalFlag]').val(data.object.approvalFlag);
+                    form.render();
+                }else{
+                    layer.msg("查询会议信息失败:"+data.resultMessage);
+                }
+            }, function () {
+                layer.msg('查询会议信息失败');//失败后提示
+            });
+            table.render(common.tableInitParams({//表决情况表
+                elem:  $('#bjTable'),
+                url: baseUrl+'meetingmgr/tiolDeliberation/selectTiolDeliberationPage?subjectId='+subjectIdForm,
+                // data:bjTableData,
+                where:{
+                    subjectId:subjectIdForm
+                },
+                method:'post',
+                height: 'full-400',
+                defaultToolbar:[],
+                cols: [[
+                {type:'checkbox'},
+                {type: 'numbers', title: '序号',width:80},
+                // {field:'ggSort', title:'序号',width:80},
+                {field:'deliberationPersonnel', title:'姓名'},
+                {field:'job', title:'职务'},
+                {field: 'attendStatus', title: '参会状态',
+                    templet:function (rowData) {
+                        if (rowData['attendStatus']&&attendStatusMap[rowData['attendStatus']]) {
+                            return attendStatusMap[rowData['attendStatus']]['sdName']
+                        } else {
+                            return ''
+                        }
+                    }
+                }
+                ,{field:'reasonCode', title:'缺席原因',
+                    templet:function (rowData) {
+                        if (rowData['reasonCode']&&reasonCodeMap[rowData['reasonCode']]) {
+                            return reasonCodeMap[rowData['reasonCode']]['sdName']
+                        } else {
+                            return ''
+                        }
+                    }
+                }
+                ,{field:'deliberationResult', title:'审议结果',
+                    templet:function (rowData) {
+                        if (rowData['deliberationResult']&&deliberationResultMap[rowData['deliberationResult']]) {
+                            if(rowData['deliberationResult'] == "同意"){
+                                                return '<span class="green">同意</span>'
+                                            }else if(rowData['deliberationResult'] == "反对"){
+                                                return '<span class="red">反对</span>'
+                                            }else{
+                                                return '<span class="green3">弃权</span>'
+                                            }
+                        } else {
+                            return ''
+                        }
+                    }
+                }
+                ,{field:'remark', title:'备注'},
+                {field: '', title: '操作',toolbar:'#bjTableOper',fixed: 'right'}
+                ]]
+                ,page: true
+            }));
+
+            table.on('tool(bjTable)', function(obj){
+                var data = obj.data;
+                switch(obj.event){
+                    case 'edit'://查看
+                        bj_index_edit=layer.open({
+                            offset: '10px',
+                            title:'<i class="iconfont icon-SZYD-xitongcaidanguanli"></i>查看表决表单',
+                            maxmin: false,
+                            type: 1,//页面层
+                            area: ['580px'],//高度自适应
+                            shadeClose: false,
+                            btn:['<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭'],
+                            btnAlign:'c',
+                            yes:function(){
+                                layer.close(bj_index_edit);
+                            },
+                            content:$('.bjqk-edit').html(),//加载该区域的html
+                            success:function (obj) {
+                                form.render();
+                                common.selectDataSet({
+                                    elem: $('[name=attendStatus]'),
+                                    loadData: attendStatusList,
+                                    optionText: 'sdName',
+                                    optionValue: 'sdCode'
+                                });
+                                common.selectDataSet({
+                                    elem: $('[name=deliberationResult]'),
+                                    loadData:deliberationResultList,
+                                    optionText: 'sdName',
+                                    optionValue: 'sdCode'
+                                });
+                                common.selectDataSet({
+                                    elem: $('[name=reasonCode]'),
+                                    loadData:reasonCodeList,
+                                    optionText: 'sdName',
+                                    optionValue: 'sdCode'
+                                });
+                                $('input[name=deliberationId]').val(data.deliberationId);
+                                $('input[name=subjectId]').val(data.subjectId);
+                                $('input[name=deliberationPersonnel]').val(data.deliberationPersonnel);
+                                $('input[name=job]').val(data.job);
+                                $('select[name=attendStatus]').val(data.attendStatus);
+                                $('select[name=reasonCode]').val(data.reasonCode);
+                                $('select[name=deliberationResult]').val(data.deliberationResult);
+                                $('textarea[name=remark]').val(data.remark);
+                                form.render('select');
+                            }
+                        });
+                }
+            });
+
+            //---------------------议题附件列表star
+            table.render(common.tableInitParams({//议题附件列表
+                elem:  $('#subjectFileTable'),
+                url: baseUrl+'dfsmgr/file/getFileByResId?id='+subjectIdForm,
+                method:'post',
+                height: 'full-400',
+                id:'subjectFileTableReload',
+                defaultToolbar:[],
+                cols: [[
+                    {type:'checkbox'},
+                    {type: 'numbers', title: '序号'},
+                    {field: 'fiFileType', title: '资料类型',sort:true,templet:function (rowData) {
+                            var html='';
+                            switch (rowData['fiFileType']) {
+                                case "NOTICE":html='会议通知';break;
+                                case "SUMMARY":html='会议纪要';break;
+                                case "RECORD":html='会议记录';break;
+                                case "RESOLUTION":html='会议决议';break;
+                                case "SUBJECT":html='议题材料';break;
+                                case "OPINION":html='听取意见情况';break;
+                                case "MOTION":html='议案材料';break;
+                                default:html='议案材料';break;
+                            }
+                            return html;
+                    }},
+                    {field: 'fiOriginalName', title: '文件名称',sort:true},
+                    {field: 'fiUploadTime', title: '上传时间',sort:true
+                            ,templet:function (rowData) {return util.toDateString(rowData.effectTime, 'yyyy-MM-dd');
+                    }},
+                    {field: 'ggMemo', title: '备注'},
+                    {field: '', title: '排序', toolbar:'#subjectFileTableOper',fixed: 'right'}
+                ]]
+                ,page: true
+            }));
+
+            table.on('tool(subjectFileTable)', function(obj){
+                var data = obj.data;
+                switch(obj.event){
+                    case 'load':
+                        var sURL = baseUrl + "dfsmgr/file/filesDownload?fid=" + obj.data.fiId;
+                        window.location.href = sURL;
+                        break;
+                }
+            });
+            //---------------------议题附件列表end
+            $('#attendances-btn').on('click',function(){
+                var subjectId=subjectIdForm;
+                var index_lx=layer.open({
+                    offset: '10px',
+                    title:'<i class="iconfont icon-SZYD-xitongcaidanguanli"></i>列席人员查看',
+                    // maxmin: false,
+                    area: ['800px','600px'],//高度自适应
+                    type: 1,//页面层
+                    shadeClose: false,
+                    btn:['<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭'],
+                    btnAlign:'c',
+                    yes:function(){
+                        layer.close(index_lx);
+                        return false;
+                    },
+                    content: $('.set-attendanceForm').html(),//加载该区域的html
+                    success:function(obj) {
+                        table.render(common.tableInitParams({
+                            elem: $(obj.selector).find('#attendanceTable'),
+                            id:"attendanceTableReload",
+                            url: baseUrl+'meetingmgr/tiolAttendance/selectTiolAttendancePage?subjectId='+subjectId,
+                            contentType:'text/plain',
+                            method:'get',
+                            cellMinWidth: 60,
+                            height:'full-300',
+                            defaultToolbar:[],
+                            cols: [
+                                [
+                                    {type:'checkbox'},
+                                    {type: 'numbers', title: '序号'},
+                                    {field: 'attendanceName', title: '列席人',sort:true},
+                                    {field: 'positionName', title: '职位',sort:true}
+                                ]
+                            ],
+                            done:function(){
+
+                            }
+                        }));
+                    }, cancel: function (index, layero) {
+
+                    }
+                });
+
+                return false;
+            });
+
+        common.buttonLimit($("#currentMenuSmId",window.parent.document).val(),function (res) {
+            //输入所有可操作的按钮集合
+            var list=res['list']?res['list']:[];
+
+        });
+    });
+
+</script>
+
+<!--[if lt IE 9]>
+<script src="../../../js/lib/html5.min.js"></script>
+<script src="../../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

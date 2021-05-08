@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>目录信息管理</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../js/layui/css/layui.css"/>
+    <link href="../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script src="../../js/common/plugin.js"></script>
+</head>
+<script type="text/html" class="changeCatagoryLayer hide">
+    <div style="padding: 15px 20px">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <ul id="changeCatagoryTree" lay-filter="changeCatagoryTree" class="eleTree"
+                            style="overflow: hidden;"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<!-- 新增/编辑组件弹窗 -->
+<div class="cmLayer hide">
+    <div style="padding: 15px 20px">
+        <form class="layui-form layui-form-pane" lay-filter="addForm">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><b class="red">*</b>目录名称</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="ciName" required lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md6">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><b class="red">*</b>编码</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="ciCode" required lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md6">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><b class="red">*</b>主体类型</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="ciMainType" required lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md6">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><b class="red">*</b>序号</label>
+                            <div class="layui-input-block">
+                                <input type="number" name="ciOrder" required lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md6">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><b class="red">*</b>公开程度</label>
+                            <div class="layui-input-block">
+                                <select name="ciPublicDegree" required lay-verify="required" id="add_ciPublicDegreeType">
+                                    <option value=""></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><b class="red">*</b>有效期限类型</label>
+                            <div class="layui-input-block">
+                                <select name="ciPeriodType" required lay-verify="required">
+                                    <option value="0">长期有效</option>
+                                    <option value="1">指定期限</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-col-space15">
+                        <div class="layui-col-md6">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label"><b class="red">*</b>单位编码</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="ciUnitcode" required lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="layui-col-md6">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label" style="width:130px;"><b class="red">*</b>时间计量单位</label>
+                                    <div class="layui-input-block" style="margin-left: 130px;">
+                                        <select name="ciTimeUnit" required lay-verify="required">
+                                            <option value=""></option>
+                                            <option value="0">年</option>
+                                            <option value="1">季</option>
+                                            <option value="2">月</option>
+                                            <option value="3">天</option>
+                                        </select>
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="layui-col-md12">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label"><b class="red">*</b>有效期限</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="ciPeriod" required lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="layui-col-md12">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" style="width:100%">备注</label>
+                                <div class="layui-input-block" style="margin-left:0;left:0">
+                                    <textarea name="ggMemo" placeholder="请输入" class="layui-textarea"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            <div class="layui-form-item adapt">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formSavue" permission-btn="submitContentInfo"> <i class="layui-icon">&#x1005;</i>保存</button>
+                    <button class="layui-btn layui-btn-primary" id="formClose"><i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<body class="iframe-h">
+<div class="content-wrap">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+            <!-- layui tree-->
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>目录分类树</span><div class="columnSide"><i class="fa fa-toggle-left"></i></div></div>
+                <div class="layui-card-body">
+                    <ul id="leftTree" lay-filter="leftTree" class="eleTree">
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>目录信息列表</span></div>
+                <div class="layui-card-body">
+                    <form class="layui-form layui-form-pane">
+                        <div class="layui-row layui-col-space10">
+                            <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">名称</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="ciName" placeholder="请输入" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                            <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">单位编码</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="ciUnitcode" placeholder="请输入" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                            <div class="toggle-area layui-col-space10">
+                                    <div class="layui-col-md4">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">主体类型</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="ciMainType" placeholder="请输入" autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-col-md4">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">公开程度</label>
+                                            <div class="layui-input-block">
+                                                <select name="ciPublicDegree">
+                                                    <option value="">请选择</option>
+                                                    <option value="SHGK">社会公开</option>
+                                                    <option value="BGK">不共享</option>
+                                                    <option value="YXGX">有限共享</option>
+                                                    <option value="SQGX">授权共享</option>
+                                                    <option value="ZWGX">政务共享</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-col-md4">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">有效期限类型</label>
+                                            <div class="layui-input-block">
+                                                <select name="ciPeriodType">
+                                                    <option value="">请选择</option>
+                                                    <option value="0">长期有效</option>
+                                                    <option value="1">指定期限</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </div>
+                            <div class="formSearch-btnArea">
+                                <button class="layui-btn" lay-submit lay-filter="formSearch"><i class="fa fa-search"></i>查询</button>
+                                <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                                <a class="toggle-btn">
+                                    <span>展开</span>
+                                    <i class="fa fa-angle-up"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+            <div class="layui-card">
+                <div class="layui-card-body" style="padding-top: 0">
+                    <table id="table1" lay-filter="table1"></table>
+                    <script type="text/html" id="tableToolBar">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-sm" lay-event="add" permission-btn="addContentInfo">
+                                    <i class="layui-icon">&#xe608;</i> 新增
+                            </button>
+                            <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete" permission-btn="deleteContentInfo">
+                                <i class="layui-icon">&#xe640;</i> 删除
+                            </button>
+                        </div>
+                    </script>
+                    <script type="text/html" id="tableOper">
+                        <a class="layui-btn layui-btn-xs" lay-event="edit" permission-btn="updateContentInfo">
+                            编辑
+                        </a>
+                        <a class="layui-btn layui-btn-xs" lay-event="changeCategory" permission-btn="mlxx_mag_change_catagory">
+                            迁移目录
+                        </a>
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="./../../js/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).extend({
+    }).use(['layer','table','form','laytpl','common','element','eleTree',],function () {
+        var table=layui.table;
+        var form=layui.form;
+        var common=layui.common;
+        var element = layui.element;
+        var tree = layui.eleTree;
+        element.init();
+        var baseUrl='../../../';
+        common.themeSet();
+        common.toggleArea($('.toggle-btn'),$('.toggle-area'));
+
+        var currentMenuSmId=$("#currentMenuSmId", top.window.parent.document).val();
+
+        var sdPid = "-1";
+        var sdPname = "-1";
+        var sdPidAll = "-1";
+
+        var catalogueCategory = undefined;
+        var newCatalogueCategory = undefined;
+
+        var eleTreeId;
+        var eventHandle={
+            treeInit:function () {
+                common.fetchGet('sysmgr/contentCatagory/contentCategoryTree',function (res) {
+                    //树信息的导入
+                    if(res.success && res.list){
+                        eleTreeId = tree.render({
+                            elem: '#leftTree',
+                            data: res.list,
+                            showCheckbox: false,
+                            lazy: true,
+                            highlightCurrent: true,
+                            load: function(data, callback) {
+                                common.fetchGet('sysmgr/contentCatagory/contentCategoryTree?pid=' + data.id, function (res) {
+                                    if (res.success && res.list) {
+                                        callback(res.list)
+                                    }
+                                }, function () {
+                                    callback([])
+                                });
+                            }
+                        });
+                        tree.on("nodeClick(leftTree)",function(obj) {
+                            catalogueCategory = obj.data.currentData;
+                            eventHandle.tableReload({ccId:obj.data.currentData.id});
+                        });
+                    }else{
+                        //不存在数据时的显示
+
+                    }
+
+                },function () {});
+            },
+            treeReload:function () {
+                common.fetchGet('sysmgr/contentCatagory/contentCategoryTree',function (res) {
+                    if(res.success && res.list){
+                        eleTreeId.reload({data:res.list});
+                    }
+                });
+            },
+            tableInit: function(){
+                table.render({
+                elem: '#table1',
+                url: baseUrl+'sysmgr/catalogue/cataloguePagination',
+                contentType: "application/json; charset=utf-8",
+                method:'post',
+                request:{},
+                height:  'full-200',
+                // data:resData,
+                toolbar:'#tableToolBar',
+                parseData: function(res) {
+                    return {
+                        "code": 0,
+                        "msg": '',
+                        "count": 0,
+                        "data":res.page.list
+                    };
+                },
+                cols: [
+                    [
+                        {type:'checkbox'},
+                        {field: 'ciOrder', title: '序号',align:'center', sort: true},
+                        {field: 'ciName', title: '名称', sort: true},
+                        {field: 'ciUnitcode', title: '单位编码', sort: true},
+                        {field: 'ciMainType', title: '主体类型', sort: true},
+                        {field: 'ciPublicDegree', title: '公开程度', sort: true,
+                                templet: function(rowData) {
+                                    var html='';
+                                    switch(rowData['ciPublicDegree']){
+                                        case 'SHGK':html='社会公开';break;
+                                        case 'BGK':html='不共享';break;
+                                        case 'YXGX':html='有限共享';break;
+                                        case 'SQGX':html='授权共享';break;
+                                        case 'ZWGX':html='政务共享';break;
+                                        default:break;
+                                    }
+                                    return  '<span>'+html+'</span>'
+                                }
+                        },
+                        {field: 'ciPeriodType', title: '有效期限类型', sort: true,
+                            templet: function(rowData) {
+                                var html='';
+                                switch(rowData['ciPeriodType']){
+                                    case '0':html='长期有效';break;
+                                    case '1':html='指定期限';break;
+                                    default:break;
+                                }
+                                return  '<span>'+html+'</span>'
+                            }
+                        },
+                        {field: 'ciPeriod', title: '有效期限', sort: true},
+                        {field: '', title: '操作', width:'15%', toolbar:'#tableOper',fixed: 'right'}
+                    ]
+                ],
+                done: function(){
+                    common.buttonLimit(currentMenuSmId);
+                },
+                page:true
+            });
+
+            //table监听事件
+                table.on('toolbar(table1)',function (obj) {
+                var checkStatus = table.checkStatus(obj.config.id);
+                switch(obj.event) {
+                    case 'add':
+                        //先判断是否选择了目录分类
+                        if(!catalogueCategory){
+                            layer.msg('请选择目录分类');
+                            return;
+                        }
+                        if(!catalogueCategory.isLeaf){
+                            layer.msg('目录只能添加在最终分类节点上');
+                            return;
+                        }
+
+                        var index_add=layer.open({
+                            offset: '10px',
+                            title: '新增',
+                            maxmin: false,
+                            type: 1,//页面层
+                            area: ['580px'],//高度自适应
+                            shadeClose: false,
+                            content: $('.cmLayer').html(),//加载该区域的html
+                            // btn:['保存','<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>取消'],
+                            success: function (obj) {
+                                form.render();
+                                $(obj.selector).find('#formClose').off().on('click',function(){
+                                        layer.close(index_add);
+                                        return false;
+                                });
+                                //layer弹框中的类型select添加
+                                eventHandle.dictInit($(obj.selector).find('#add_ciPublicDegreeType'),
+                                'sysmgr/dicts/selectDictListByPcode?dictPCode=GKCD','sdCode','sdName');
+                                form.on('submit(formSavue)', function (obj) {
+                                    var params = {
+                                        ccId:catalogueCategory.id,
+                                        ciCode:obj.field.ciCode,
+                                        ciMainType:obj.field.ciMainType,
+                                        ciName:obj.field.ciName,
+                                        ciOrder:obj.field.ciOrder,
+                                        ciPeriod:obj.field.ciPeriod,
+                                        ciPeriodType:obj.field.ciPeriodType,
+                                        ciPublicDegree:obj.field.ciPublicDegree,
+                                        ciTableType:obj.field.ciTableType,
+                                        ciTimeUnit:obj.field.ciTimeUnit,
+                                        ciUnitcode:obj.field.ciUnitcode,
+                                        ggMemo:obj.field.ggMemo
+                                    };
+
+                                        var layerLoader = common.layerLoader();
+                                        common.fetchPost('sysmgr/catalogue/catalogue', params,function (res) {
+                                            layer.close(layerLoader);
+                                            layer.alert(res.resultMessage);
+                                            if(res.success){
+                                                layer.close(index_add);
+                                                eventHandle.tableReload();
+                                            }
+                                        }, function (res) {
+
+                                            layer.msg('添加失败');//失败后提示
+                                            layer.close(layerLoader);
+                                        });
+                                    return false;
+                                });
+                            },
+                        });
+                        break;
+                    case 'delete':
+                        //点击删除按钮
+                        if (checkStatus.data.length > 0) {
+                            layer.confirm('确定删除选中记录?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                                var tIdArr = [];
+
+                                for (var i = 0; i < checkStatus.data.length; i++) {
+                                    tIdArr.push(checkStatus.data[i]['ciId'])
+                                }
+                                var layerLoader = common.layerLoader();
+                                common.fetchDelete('sysmgr/catalogue/catalogues/' + tIdArr.join(','),function (res) {
+                                    layer.close(layerLoader);
+                                    layer.alert(res.resultMessage);
+                                    if(res.success){
+                                        eventHandle.tableReload();
+                                    }
+                                }, function (res) {
+                                    layer.alert(res.resultMessage);
+                                    layer.close(layerLoader);
+                                });
+                                layer.close(index);
+                            });
+                        } else {
+                            layer.msg('请选择删除记录')
+                        }
+                        break;
+                    case 'refresh':
+                        // eventHandle.tableReload();
+                        break;
+                    case 'init':
+                        layer.msg('已初始化');
+                        break;
+                }
+            });
+
+            // table row 监听事件
+                table.on('tool(table1)', function(obj){
+                var data = obj.data;
+                switch(obj.event){
+                    case 'edit'://编辑
+                        var index_edit=layer.open({
+                            offset: '10px',
+                            title:'编辑',
+                            maxmin: false,
+                            type: 1,//页面层
+                            area: ['580px'],//高度自适应
+                            shadeClose: false,
+                            content: $('.cmLayer').html(),//加载该区域的html
+                            success:function (obj) {
+                                //初始化表格
+                                form.render();
+
+                                //layer弹框中的类型select添加
+                                eventHandle.dictInit($(obj.selector).find('#add_ciPublicDegreeType'), 'sysmgr/dicts/selectDictListByPcode?dictPCode=GKCD','sdCode','sdName', data.ciPublicDegree);
+
+
+                                var ccId = data.ccId;
+                                var ciId = data.ciId;
+                                $(obj.selector).find('input[name=ciName]').val(data.ciName);
+                                $(obj.selector).find('input[name=ciCode]').val(data.ciCode);
+                                $(obj.selector).find('input[name=ciMainType]').val(data.ciMainType);
+                                $(obj.selector).find('input[name=ciOrder]').val(data.ciOrder);
+                                $(obj.selector).find('input[name=ciPeriod]').val(data.ciPeriod);
+                                $(obj.selector).find('input[name=ciUnitcode]').val(data.ciUnitcode);
+                                $(obj.selector).find('textarea[name=ggMemo]').val(data.ggMemo);
+                                //$(obj.selector).find('select[name=ciPublicDegree]').val(data.ciPublicDegree);
+                                $(obj.selector).find('select[name=ciPeriodType]').val(data.ciPeriodType);
+                                $(obj.selector).find('select[name=ciTimeUnit]').val(data.ciTimeUnit);
+                                form.render('select');
+
+                                $(obj.selector).find('#formClose').off().on('click',function(){
+                                    layer.close(index_edit);
+                                    return false;
+                                });
+                                //点击保存按钮
+                                form.on('submit(formSavue)', function (obj) {
+                                    var params = {
+                                        ccId:ccId,
+                                        ciId:ciId,
+                                        ciCode:obj.field.ciCode,
+                                        ciMainType:obj.field.ciMainType,
+                                        ciName:obj.field.ciName,
+                                        ciOrder:obj.field.ciOrder,
+                                        ciPeriod:obj.field.ciPeriod,
+                                        ciPeriodType:obj.field.ciPeriodType,
+                                        ciPublicDegree:obj.field.ciPublicDegree,
+                                        ciTableType:obj.field.ciTableType,
+                                        ciTimeUnit:obj.field.ciTimeUnit,
+                                        ciUnitcode:obj.field.ciUnitcode,
+                                        ggMemo:obj.field.ggMemo
+                                    };
+                                    var layerLoader = common.layerLoader();
+                                    common.fetchPut('sysmgr/catalogue/catalogue/', params, function (res) {
+                                        layer.close(layerLoader);
+                                        layer.alert(res.resultMessage);//成功提示
+                                        layer.close(index_edit);
+                                        //表格重载
+                                        eventHandle.tableReload();
+                                    }, function (res) {
+                                        layer.close(layerLoader);
+                                        layer.close(index_edit);
+                                        layer.alert(res.resultMessage);//失败后提示
+                                    });
+                                    return false;
+                                });
+                            }
+                        });
+                        break;
+                    case 'changeCategory':
+                        var changeSLayer = layer.open({
+                            type: 1,
+                            title: "选择目录分类",
+                            content: $(".changeCatagoryLayer").html(),
+                            area: ['400px', '500px'],
+                            btnAlign: "c",
+                            btn: ["确定", "关闭"],
+                            yes: function (index, layero) {
+                                if (!newCatalogueCategory) {
+                                    layer.msg("选择目录分类");
+                                    return;
+                                }
+                                if(!newCatalogueCategory.isLeaf){
+                                    layer.msg('目录只能添加在最终分类节点上');
+                                    return;
+                                }
+                                if (data.ccId != newCatalogueCategory.id) {
+                                    layer.confirm('点击确定按钮将后修改立即生效。确定要修改目录分类为[' + newCatalogueCategory.name + ']？', {
+                                        icon: 3,
+                                        title: '提示',
+                                        offset: '150px'
+                                    }, function (index) {
+                                        //调后台改变企业层级接口
+                                        var sURL = baseUrl + "sysmgr/catalogue/changeCatagory";
+                                        var param = {};
+                                        param.ciId = data.ciId;
+                                        param.ccId = newCatalogueCategory.id;
+                                        var loadingIndex = common.layerLoader();
+                                        common.fetchPost(sURL, param, function (obj) {
+                                            layer.close(loadingIndex);
+                                            layer.close(changeSLayer);
+
+                                            newCatalogueCategory = undefined;
+                                            eventHandle.tableReload({ccId:data.ccId});
+                                            layer.msg("迁移目录成功");
+                                        }, function (obj) {
+                                            layer.close(loadingIndex);
+                                            layer.msg(obj.resultMessage);
+                                        })
+                                    });
+
+                                } else {
+                                    layer.close(changeSLayer);
+                                }
+                            },
+                            btn2: function (index, layero) {
+                                layer.close(index);
+                            },
+                            success: function (layero, index) {
+                                common.fetchGet('sysmgr/contentCatagory/contentCategoryTree', function (res) {
+                                    var eleTreeId = tree.render({
+                                        showLine: true,
+                                        elem: '#changeCatagoryTree',
+                                        "expandOnClickNode": true,
+                                        data: common.arrayToTreeJson(res.list || [], "id", "pid", "children"),
+                                        defaultExpandAll: true,
+                                        request: {
+                                            name: "name",
+                                            key: "id",
+                                            children: "children",
+                                            checked: "checked",
+                                            disabled: "disabled",
+                                            isLeaf: "isLeaf",
+                                            extendAttr: "extendAttr"
+                                        },
+                                        lazy: false,
+                                        response: {// 对于后台数据重新定义名字
+                                            dataName: "list"
+                                        },
+                                        searchNodeMethod: function (value, data) {
+                                            if (!value) return true;
+
+                                            return data.title.indexOf(value) !== -1;
+                                        }
+                                    });
+                                }, false, false);
+
+                                tree.on("nodeClick(changeCatagoryTree)", function (obj) {
+                                    newCatalogueCategory = obj.data.currentData;
+                                });
+                            }
+                        });
+                        break;
+                }
+               });
+            },
+            tableReload:function (params) {
+                if(!params) params={};
+                table.reload('table1',{
+                    url: baseUrl+'sysmgr/catalogue/cataloguePagination',
+                    method:'post',
+                    contentType:'application/json',
+                    page:{
+                        curr:1
+                    },
+                    where:params
+                });
+            },
+            formInit: function(){
+                form.on('submit(formSearch)',function (obj) {
+                    //表格重载
+                    eventHandle.tableReload({
+                        ciName:obj.field.ciName,
+                        ciUnitcode:obj.field.ciUnitcode,
+                        ciMainType:obj.field.ciMainType,
+                        ciPublicDegree:obj.field.ciPublicDegree,
+                        ciPeriodType:obj.field.ciPeriodType
+                    });
+                    return false;
+                });
+            },
+            dictInit:function(elem,url,selVal,selText, selectedVal){
+                var option = {
+                        elem: elem,
+                        url: url,
+                        method: 'get',
+                        responseList: 'list',
+                        optionText: selText,
+                        optionValue: selVal,
+                        success: function(obj) {
+                            $(elem).val(selectedVal);
+                            form.render("select");
+                        }
+                    };
+                common.selectDataSet(option);
+            }
+        };
+         //初始化树
+        eventHandle.treeInit();
+        //初始表格
+        eventHandle.tableInit();
+        //初始化查询表单
+        eventHandle.formInit();
+        common.columnSide();
+        $('.eleTree').css({
+            'height':($(document).height()-150)+'px'
+        });
+    });
+</script>
+<!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

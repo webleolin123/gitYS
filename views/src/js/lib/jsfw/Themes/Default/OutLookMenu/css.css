@@ -1,0 +1,160 @@
+.OutLookMenu{
+	border-bottom:1px solid white;
+}
+.OutLookMenu_Title{
+	background-image: url('Title_BG.gif');
+	background-repeat: repeat-x;
+	font-weight:bold;
+	height:32px;
+	text-align:center;
+	padding-top:3px;
+	/*padding-left:25px;
+	font-weight:bold;*/
+	vertical-align:top;
+	white-space:nowrap; 
+	text-overflow:ellipsis; 
+	overflow:hidden; 
+}
+.OutLookMenu_Title legend{
+	padding-top:0px;
+	color:black;
+}
+
+.OutLookMenu_Content{
+	overflow:auto;
+}
+
+.OutLookMenu_Content_Item{
+	border:none;
+	padding:0px;
+	margin:0px;
+	height:100%;
+	overflow:auto;
+}
+
+.OutLookMenu_Split{
+	background-image: url('Resize_BG.gif');
+	background-repeat: repeat-x;
+	height:5px;
+	text-align:center;
+	cursor: row-resize;
+}
+
+.OutLookMenu_List{
+}
+
+.OutLookMenu_List legend{
+	padding-left:10px;
+	width:100%;
+	padding-top:4px;
+	color:black;/*** 标签字体颜色 ***/
+}
+
+.OutLookMenu_List_Item{
+	background-image: url('Tab_BG.gif');
+	background-repeat: repeat-x;
+	height:23px;
+}
+.OutLookMenu_List_Item_Sel{
+	background-image: url('Tab_BG_Sel.gif');
+	background-repeat: repeat-x;
+	height:23px;
+}
+.OutLookMenu_List_Item_Over{
+	background-image: url('Tab_BG_Over.gif');
+	background-repeat: repeat-x;
+	height:23px;
+	cursor:hand;
+}
+
+/*** 大样式 ***/
+.OutLookMenu_List_B legend{
+	padding-left:10px;
+	width:100%;
+	padding-top:5px;
+	color:black;/*** 标签字体颜色 ***/
+}
+.OutLookMenu_List_Item_B{
+	background-color:#BFD7FF;
+	background-image: url('List_Item_B.gif');
+	background-repeat: repeat-x;
+	height:32px;
+	padding-left:17px;
+	white-space:nowrap; 
+	text-overflow:ellipsis; 
+	overflow:hidden; 
+}
+.OutLookMenu_List_Item_Sel_B{
+	background-color:#D9EFFF;
+	background-image: url('Tab_BG_Sel_B.gif');
+	background-repeat: repeat-x;
+	height:32px;
+	cursor:hand;
+	padding-left:17px;
+	white-space:nowrap; 
+	text-overflow:ellipsis; 
+	overflow:hidden; 
+}
+.OutLookMenu_List_Item_Over_B{
+	background-image: url('Tab_BG_Over_B.gif');
+	background-repeat: repeat-x;
+	height:32px;
+	cursor:hand;
+	padding-left:17px;
+	white-space:nowrap; 
+	text-overflow:ellipsis; 
+	overflow:hidden; 
+}
+
+
+/*** 状态栏 ***/
+.OutLookMenu_Bottom{
+	background-image: url('Bottom_BG.gif');
+	background-repeat: repeat-x;
+	height:23px;
+	text-align:right;
+	padding-top:2px;
+	padding-right:4px;
+}
+
+.OutLookMenu_Bottom_Item{
+	border:1px solid #E7E7E7;
+	width:20px;
+	height:20px;
+	text-align:center;
+	display:inline;
+	cursor:hand;
+}
+.OutLookMenu_Bottom_Item_Sel{
+	border:1px solid gray;
+	width:20px;
+	height:20px;
+	text-align:center;
+	display:inline;
+}
+/*** 大样式 ***/
+
+.OutLookMenu_Bottom_B{
+	background-color:#BFD7FF;
+	background-image: url('Bottom_BG_B.gif');
+	background-repeat: repeat-x;
+	height:24px;/*height:30px;*/
+	text-align:right;
+	padding-top:2px;
+	padding-right:4px;
+}
+.OutLookMenu_Bottom_Item_B{
+	border:1px solid #B9D1FC;
+	width:20px;/*25*/
+	height:20px;
+	text-align:center;
+	display:inline;
+	cursor:hand;
+}
+.OutLookMenu_Bottom_Item_Sel_B{
+	border:1px solid blue;
+	width:20px;
+	height:20px;
+	text-align:center;
+	display:inline;
+}

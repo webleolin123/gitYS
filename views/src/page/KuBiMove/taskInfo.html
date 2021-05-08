@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>任务信息管理</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../js/layui/css/layui.css"/>
+    <link href="../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script src="../../js/common/plugin.js"></script>
+</head>
+
+<!-- 根据节点存档重置数据 -->
+<div class="saveReset hide">
+    <div style="padding: 15px 20px">
+        <form class="layui-form layui-form-pane" lay-filter="saveReset">
+            <div class="layui-row layui-col-space10">
+                <div class="layui-col-xs12">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" ><b class="red">*</b>任务名称</label>
+                        <div class="layui-input-block">
+                            <!-- <input type="text" name="rwMc" required  lay-verify="required" placeholder="请输入" class="layui-input"> -->
+                            <select name="rwMc">
+                                <option value="">选择要重新采集的任务</option>
+                                <option value="errLog">错误信息日志</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-xs12">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" ><b class="red">*</b>是否重置当前期</label>
+                        <div class="layui-input-block">
+                            <!-- <input type="text" name="rwMc" required  lay-verify="required" placeholder="请输入" class="layui-input"> -->
+                            <select name="isReset">
+                                <option value="">是否重置当前期</option>
+                                <option value="0">否</option>
+                                <option value="1">是</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <!-- 绑定目录弹窗 -->
+                <div class="layui-col-xs12 methodTmp">
+                    <div>
+                        <table id="methodTmp" lay-filter="methodTmp"></table>
+                    </div>
+                </div>
+                <div class="layui-form-item adapt" style="margin-left: 30%">
+                    <div class="layui-input-block">
+                        <button class="layui-btn " lay-submit lay-filter="formCommit">执行</button>
+                        <button class="layui-btn layui-btn-primary close-btn"><i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- 根据时间段重新采集任务弹窗 -->
+<div class="rePickLayer hide">
+    <div style="padding: 15px 20px">
+        <form class="layui-form layui-form-pane" lay-filter="rePickLayer">
+            <div class="layui-row layui-col-space10">
+                <div class="layui-col-xs12">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" ><b class="red">*</b>任务名称</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="rwMc" required  lay-verify="required" placeholder="请输入" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-xs12">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" ><b class="red">*</b>更新时间</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="rwGxsj" class="layui-input"  id="gxsj_rePick" placeholder="请输入时间范围">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-xs12">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" >其他条件</label>
+                        <div class="layui-input-block">
+                            <input name="qttj" type="text" class="layui-input"  placeholder="请输入">
+                        </div>
+                    </div>
+                </div>
+                    <div class="layui-form-item adapt">
+                        <div class="layui-input-block">
+                            <button class="layui-btn " lay-submit lay-filter="formCommit">执行</button>
+                            <button class="layui-btn layui-btn-primary close-btn"><i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭</button>
+                        </div>
+                    </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- 重置任务条件弹窗 -->
+<div class="resetTaskLayer hide">
+    <div style="padding: 15px 20px">
+        <form class="layui-form layui-form-pane" lay-filter="resetTaskLayer">
+            <div class="layui-row layui-col-space10">
+                <div class="layui-col-xs12">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" ><b class="red">*</b>任务名称</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="rwMc" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                    <div class="layui-form-item adapt">
+                        <div class="layui-input-block">
+                            <button class="layui-btn " lay-submit lay-filter="formCommit">执行</button>
+                            <button class="layui-btn layui-btn-primary close-btn"><i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭</button>
+                        </div>
+                    </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- 新增/编辑结构化数据任务弹窗 -->
+<div class="tplLayer hide">
+    <div style="padding: 15px 20px">
+        <form class="layui-form layui-form-pane" lay-filter="addForm">
+            <div class="layui-row layui-col-space10">
+                <div class="layui-col-xs6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" ><b class="red">*</b>任务名称</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="rwMc" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-xs6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" ><b class="red">*</b>任务编码</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="rwBm" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-xs6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" ><b class="red">*</b>任务类型</label>
+                        <div class="layui-input-block">
+                            <select name="rwLx">
+                                <option value="">输入任务类型</option>
+                                <option value="JGHSJQY">结构化数据迁移</option>
+                                <option value="KJSJQY">空间数据迁移</option>
+                                <option value="RZQY">日志迁移</option>
+                                <option value="JGHSJZH">结构化数据整合</option>
+                                <option value="KJSJZH">空间数据整合</option>
+                                <option value="RZZH">日志整合</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-xs6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" ><b class="red">*</b>任务是否自启</label>
+                        <div class="layui-input-block">
+                            <select name="rwSfzq">
+                                <option value="">选择任务是否自启</option>
+                                <option value="0">否</option>
+                                <option value="1">是</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-xs6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" >数据迁移调度类</label>
+                        <div class="layui-input-block">
+                            <select name="rwJavabean">
+                                <option value="">请选择数据迁移调度处理类路径</option>
+                                <option value="0">com.zefu.sjzh.rwgl.scheduler.AllDataMigrationJob</option>
+                                <option value="1">com.zefu.sjzh.rwgl.scheduler.ZlzdDataMigrationJob</option>
+                                <option value="2">com.zefu.sjzh.rwgl.scheduler.JarPackageRunJob</option>
+                                <option value="3">com.zefu.sjzh.rwgl.scheduler.AddDataMigrationJob</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-xs6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" >任务参数</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="rwCs" placeholder="请输入任务参数" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-xs6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" >jar路径</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="rwJarurl" placeholder="请输入任务参数" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-xs6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" >jar主程序入口类</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="rwJarzffzxl" placeholder="请输入任务参数" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-xs6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" >jar参数</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="rwJarParam" placeholder="请输入任务参数" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-xs6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width:150px;">数据迁移配置信息名称</label>
+                        <div class="layui-input-block" style="margin-left: 150px;">
+                            <select name="rwZxcsName">
+                                <option value="">请选择数据迁移配置信息名称</option>
+                                <option value="errLog">错误日志表</option>
+                                <option value="test">test</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-xs6 addInstru" style="display: none">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" >文件类型</label>
+                        <div class="layui-input-block">
+                            <select name="rwFiletype">
+                                <option value="">输入文件类型</option>
+                                <option value="png">png</option>
+                                <option value="jpg">jpg</option>
+                                <option value="img">img</option>
+                                <option value="doc">doc</option>
+                                <option value="docx">docx</option>
+                                <option value="xls">xls</option>
+                                <option value="xlsx">xlsx</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-xs6 addInstru" style="display: none">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" >监控文件路径</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="rwMonitordirectpath" placeholder="输入监控文件路径" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                <div class="layui-col-xs6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width:150px;" >任务循环执行时间类型</label>
+                        <div class="layui-input-block" style="margin-left: 150px;">
+                            <select name="rwXhzxsj" lay-filter="runTimeType_add">
+                                <option value="MT">每天</option>
+                                <option value="MZ">每周</option>
+                                <option value="MY">每月</option>
+                                <option value="MN">每年</option>
+                                <option value="MGJM">每隔几秒</option>
+                                <option value="MGJF" selected>每隔几分</option>
+                                <option value="MGJXS">每隔几小时</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-xs6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width:150px;">任务循环执行时间点</label>
+                        <div class="layui-input-block"  id="runTime_add" style="margin-left: 150px;">
+                            <input type="number" name="rwXhzxsjd"  autocomplete="off" class="layui-input" value="1">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-xs6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" >任务状态</label>
+                        <div class="layui-input-block">
+                            <select name="rwZt">
+                                <!-- <option value="">请选择</option> -->
+                                <option value="JHZ">计划中</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-xs6 addInstru" style="display: none">
+                    <div class="layui-form-item layui-upload ">
+                        <button type="button" class="layui-btn layui-btn-normal" id="test8"><i class="layui-icon"></i>上传文件</button>
+                    </div>
+                </div>
+                <div class="layui-col-xs12">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width:100%">备注</label>
+                        <div class="layui-input-block" style="margin-left:0;left:0">
+                            <textarea name="memo" placeholder="请输入" class="layui-textarea"></textarea>
+                        </div>
+                    </div>
+                </div>
+                    <div class="layui-form-item" style="margin-left: 40%">
+                        <div class="layui-input-block">
+                            <button class="layui-btn " lay-submit lay-filter="formSavue"> <i class="layui-icon">&#x1005;</i>保存</button>
+                            <!-- <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button> -->
+                            <button class="layui-btn layui-btn-primary close-btn"><i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭</button>
+                        </div>
+                    </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!--查询组件属性详情弹框-->
+<div class="checkLayer hide">
+    <div style="padding: 15px 20px;overflow-y:auto;overflow-x:hidden">
+    </div>
+</div>
+<body class="iframe-h">
+    <div class="content-wrap">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-header layui-card-header-custom"><span><i></i>任务信息列表</span></div>
+                    <div class="layui-card-body">
+                        <form action="" class="layui-form layui-form-pane">
+                            <div class="layui-row layui-col-space10">
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">任务名称</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="rwMc" placeholder="请输入" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">任务编码</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="rwBm" placeholder="请输入" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="toggle-area layui-col-space10">
+                                    <div class="layui-col-md4">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">是否自启</label>
+                                            <div class="layui-input-block">
+                                                <select name="rwSfzq" lay-verify="required">
+                                                    <option value="">请选择</option>
+                                                    <option value="1">是</option>
+                                                    <option value="0">否</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-col-md4">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">是否已绑定到作业</label>
+                                            <div class="layui-input-block">
+                                                <select name="isBindForZyxx" lay-verify="required">
+                                                    <option value="">请选择</option>
+                                                    <option value="1">是</option>
+                                                    <option value="0">否</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-col-md4">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">状态</label>
+                                            <div class="layui-input-block">
+                                                <select name="rwZtName" lay-verify="required">
+                                                    <option value="">请选择</option>
+                                                    <option value="YXZ">运行中</option>
+                                                    <option value="ZTZ">暂停中</option>
+                                                    <option value="JHZ">计划中</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-col-md4">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label" style="width:150px">数据迁移配置信息名称</label>
+                                            <div class="layui-input-block" style="margin-left: 150px;">
+                                                <input type="text" name="rwZxcsName" placeholder="请输入" autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="" style="text-align: center;margin-bottom: 5px">
+                                    <button class="layui-btn" lay-submit lay-filter="formSearch"><i class="fa fa-search"></i>查询</button>
+                                    <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                                    <a class="toggle-btn">
+                                        <span>展开</span>
+                                        <i class="fa fa-angle-up"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="layui-card">
+                    <div class="layui-card-body" style="padding-top: 0">
+                        <table id="table1" lay-filter="table1"></table>
+                        <script type="text/html" id="tableToolBar">
+                            <div class="layui-btn-container">
+                                <button class="layui-btn layui-btn-sm" lay-event="addStru" permission-btn="addKbtaskInfoConfig">
+                                    <i class="layui-icon">&#xe608;</i> 新增结构化数据任务
+                                </button>
+                                <button class="layui-btn layui-btn-sm" lay-event="addInStru" permission-btn="addInStruDataTask">
+                                    <i class="layui-icon">&#xe608;</i> 新增非结构化数据任务
+                                </button>
+                                <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete" permission-btn="deleteKbtaskInfoConfig">
+                                    <i class="layui-icon">&#xe640;</i> 删除
+                                </button>
+                                <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="resetStru" permission-btn="resetStruDataMTask">
+                                    <i class="layui-icon">&#xe640;</i> 重置结构化数据迁移任务
+                                </button>
+                                <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="reMove" permission-btn="reMoveStruData">
+                                    <i class="layui-icon">&#xe640;</i> 根据迁移段重新迁移结构化数据
+                                </button>
+                                <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="saveNode" permission-btn="saveNodeResetStru">
+                                    <i class="layui-icon">&#xe640;</i> 根据存档时间节点重置结构化数据迁移
+                                </button>
+                            </div>
+                        </script>
+                        <script type="text/html" id="tableOper">
+                            <a class="layui-btn layui-btn-xs" lay-event="edit" permission-btn="editKbtaskInfoConfig">编辑</a>
+                            <a class="layui-btn layui-btn-xs" lay-event="runOnece" permission-btn="runOnceKbtaskInfoConfig">执行一次</a>
+                            <a class="layui-btn layui-btn-xs" lay-event="run" permission-btn="runKbtaskInfoConfig">执行</a>
+                            <a class="layui-btn layui-btn-xs" lay-event="pause" permission-btn="pauseKbtaskInfoConfig">停止</a>
+                            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="singleDel" permission-btn="singleDelKbtaskInfo">删除</a>
+                            <a class="layui-btn layui-btn-xs" lay-event="checkLog" permission-btn="checkLogKbtaskInfo">查看日志</a>
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./../../js/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).extend({
+    }).use(['layer','table','form','laytpl','common','element','laydate','upload'],function () {
+        var table=layui.table;
+        var form=layui.form;
+        var common=layui.common;
+        var element = layui.element;
+        var laydate = layui.laydate;
+        var upload = layui.upload;
+        common.themeSet();
+        //分页初始参数
+        var pageInitialParam = {
+            pageNum : 1,
+            pareSize : 10,
+            curr:1
+        };
+        var pageRequest = {
+            pageName: 'pageNumber',//页码的参数名称，默认：page
+            limitName: 'pageSize' //每页数据量的参数名，默认：limit
+        }
+        var baseUrl='../../../';
+
+        common.toggleArea($('.toggle-btn'),$('.toggle-area'));
+        var currentMenuSmId=$("#currentMenuSmId",window.parent.document).val();
+        var eventHandle={
+            selectTimeType:function(selVal){
+                var selctTimeObj={};
+                selctTimeObj.html="";
+                selctTimeObj.timeType="";
+                selctTimeObj.tmpVal="";
+                if(selVal=="MGJM"||selVal=="MGJF"||selVal=="MGJXS"){//type=number timeType=null
+                    selctTimeObj.html=' <input type="number" name="runTime" id="runTime_input"  autocomplete="off" class="layui-input" value="1">';
+                }
+                else if(selVal=="MT"){//type='date' timeType='time'
+                selctTimeObj.html=' <input type="text" class="layui-input" id="runTime_input" placeholder="每天的时分秒">';
+                selctTimeObj.timeType='time';
+                }
+
+                else if(selVal=="MZ"){//weekday + type='date' timeType='time'
+                var weekDay=["星期天", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
+                selctTimeObj.html+=' <select name="weekDay">'
+                    for(var i=0;i<weekDay.length;i++){
+                        selctTimeObj.html+='<option value="'+i+'">'+weekDay[i]+'</option>'
+                    }
+                    selctTimeObj.html+='</select>'
+                    selctTimeObj.html+=' <input type="text" class="layui-input" id="runTime_input" placeholder="第几天的时分秒">';
+                    selctTimeObj.timeType='time';
+                }
+                else {//type='date' timeType='datetime'
+                    selctTimeObj.html+=' <input type="text" class="layui-input" id="runTime_input" placeholder="'+(selVal=="MY"?"每月第几天时分秒":"每年第几月第几天时分秒")+'">';
+                    selctTimeObj.timeType='datetime';
+                }
+                return selctTimeObj;
+            },
+            tableReload:function () {
+                table.reload('table1',{
+                    url: baseUrl+'compmgr/webComponent/pageTopWebComponent',
+                    contentType:'application/json',
+                    method:'post',
+                    page:pageInitialParam,
+                    request:pageRequest,
+                    where:{paras:{wtmiTypecode:"navComp"}},
+                    done:function () {
+                      common.buttonLimit(currentMenuSmId);
+                    }
+                });
+            },
+            tableReload_child:function (id) {
+                table.reload('table2',{
+                    url: baseUrl+'compmgr/webcomponenttemplateproperty/page',
+                    contentType:'application/json',
+                    method:'post',
+                    page:pageInitialParam,
+                    request:pageRequest,
+                    done:function () {
+                        common.buttonLimit(currentMenuSmId);
+                    }
+                });
+            },
+            execCheckBoxRowsEvent:function(data,options){
+                if (data && data.length > 0) {
+                    layer.confirm(options.confirmText, {
+                        icon: 3,
+                        title: '提示',
+                        offset: '150px'
+                    }, function(index) {
+                        var delParam = "";
+                        $.each(data,function(index){
+                            if(index){
+                                delParam +=","
+                            }
+                            delParam += data[index][options.value];
+                        });
+                        common.fetch(options.url + '?' + options.key + '=' + delParam,options.type,{suIds:delParam}, function(res) {
+                            if (res.success) {
+                                layer.msg(options.successText, {
+                                    icon: 6
+                                });
+                                options.success(res.list)
+                            }else{
+                                layer.msg(options.errorText, {
+                                    icon: 5
+                                });
+                            }
+                        }, function() {
+                            options.error([])
+                        });
+                        layer.close(index);
+                    });
+                } else {
+                    layer.msg(options.emptyText);
+                }
+            }
+        };
+
+        table.render(common.tableInitParams({
+            elem: '#table1',
+            // url: baseUrl+'compmgr/webComponent/pageTopWebComponent',
+            // method: 'post',
+            data: [{
+                "rwXhzxsj": "MGJF",
+                "rwLx": "JGHSJQY",
+                "rwMonitordirectpath": "",
+                "rwBm": "error_mig_log_task",
+                "rwJarurl": "",
+                "rwBz": "",
+                "rwXhzxsjd": "0 0/1 * * * ?",
+                "rwFiletype": "",
+                "rwMc": "错误信息日志",
+                "rwJavabean": "com.zefu.sjzh.rwgl.scheduler.ZlzdDataMigrationJob",
+                "rwJarzffzxl": "",
+                "rwSfzq": "1",
+                "rwZxcs": "6c66c181f0fe489fbb28510b3cb87371",
+                "rwZyzzt": "1",
+                "rwGxsj": "2019-07-19 15:47:21",
+                "rwYxj": 1,
+                "rwZyId": "a9bb08d45ab448a188f27787d6647c56",
+                "rwCs": "",
+                "rwJarParam": "",
+                "rwZt": "JHZ",
+                "rwZxlx": "",
+                "tails": {
+                    "stopAble": true,
+                    "rwLxName": "结构化数据迁移",
+                    "percentage": 0,
+                    "rwZxcsName": "错误日志表",
+                    "isBindForZyxx": 1,
+                    "rwZtName": "计划中",
+                    "runOnceAble": false,
+                    "runAble": false
+                },
+                "rwDdzxsj": null,
+                "rwId": "dea7a01c5537410588bc63e644b9b3b2",
+                "rwXhsjms": "每隔1分时触发"
+            }],
+            height:'full-200',
+            toolbar: '#tableToolBar',
+            cols: [
+                [
+                    {type:'checkbox',width:50},
+                    {type: "numbers", title: "序号",width:60},
+                    {field: 'rwMc',align:'center',title: '任务名称',sort: true},
+                    {field: 'rwBm', align:'center',title: '任务编码',sort: true},
+                    {field: 'rwLx', align:'center',title: '任务类型',sort: true,
+                        templet: function(rowData) {
+                            var html="";
+                            switch(rowData["rwLx"]){
+                                case "JGHSJQY": html='结构化数据迁移';break;
+                                case "KJSJQY": html='空间数据迁移';break;
+                                case "RZQY": html='日志迁移';break;
+                                case "JGHSJZH": html='结构化数据整合';break;
+                                case "KJSJZH": html='空间数据整合';break;
+                                case "RZZH": html='日志整合';break;
+                                default:break;
+                            }
+                            return html;
+                        }
+                    },
+                    {field: 'tails.rwZxcsName', align:'center',title: '数据迁移配置信息名称',sort: true,
+                         templet: function (rowData) {
+                            return rowData["tails"]["rwZxcsName"];
+                        }
+                    },
+                    {field: 'rwSfzq',align:'center', title: '是否自启',sort: true,
+                        templet: function(rowData) {
+                            return (rowData["rwSfzq"])==="1"?'是':'否';
+                        }
+                    },
+                    {field: 'tails.isBindForZyxx',align:'center', title: '是否绑定作业',sort: true,
+                        templet: function(rowData) {
+                            return (rowData["tails"]["isBindForZyxx"])==="1"?'是':'否';
+                        }
+                    },
+                    {field: 'rwGxsj', align:'center',title: '任务更新时间',sort: true},
+                    {field: 'tails.percentage', align:'center',title: '进度',sort: true,
+                            templet: function(rowData) {
+                            return (rowData["tails"]["percentage"])+'%';
+                        }
+                    },
+                    {field: 'rwZt',align:'center', title: '状态',sort:true,
+                        templet: function(rowData) {
+                            var html="";
+                            switch(rowData["rwZt"]){
+                                case "JHZ": html='计划中';break;
+                                default:break;
+                            }
+                            return html;
+                        }
+                    },
+                    {field: '', title: '操作',align:'center',width:350, toolbar:'#tableOper',fixed: 'right'},
+                ]
+            ],
+            page:pageInitialParam,
+            // where:{paras:{wtmiTypecode:"navComp"}},
+            request:pageRequest,
+            done:function () {
+                common.buttonLimit(currentMenuSmId);
+            }
+        }));
+
+        //table监听事件
+        table.on('toolbar(table1)',function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch(obj.event) {
+                case 'addStru':
+                    var index_add=layer.open({
+                        offset: 't',
+                        title: '新增任务信息表信息窗口',
+                        maxmin: false,
+                        type: 1,//页面层
+                        area: ['100%','100%'],//高度自适应
+                        shadeClose: false,
+                        content: $('.tplLayer').html(),//加载该区域的html
+                        // btn:['保存','<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>取消'],
+                        success: function (obj) {
+                            form.on('select(runTimeType_add)', function(data){
+                                var selectTimeObj=eventHandle.selectTimeType(data.value);
+                                $(obj.selector).find('#runTime_add').empty().html(selectTimeObj.html);
+                                if(data.value=="week"){
+                                    form.render('select');
+                                }
+                                if(selectTimeObj.timeType){
+                                    var runtime=laydate.render({
+                                        elem: '#runTime_input',
+                                        type: selectTimeObj.timeType,
+                                        trigger: 'click',
+                                        show:false,
+                                        format: (data.value=="MN")?"MM-dd HH:mm:ss":(data.value=="MY")?"第dd天 HH:mm:ss":"HH:mm:ss"
+                                    });
+                                }
+                            });
+                            // form.render();
+                            form.render('select');
+                            $(obj.selector).find('.close-btn').on('click',function(){
+                                layer.close(index_add);
+                                return false;
+                            });
+                            form.on('submit(formSavue)', function (obj) {
+                                var currentSetCompId=common.uuid();
+                                var params = [{
+                                    parentCompId:-1,
+                                    enable:'0',
+                                    tempId:'3c8ce92924ce4c10b84ea5b670bd65ad',
+                                    compId:currentSetCompId,
+                                    compName:obj.field.wumiChname,
+                                    memo: obj.field.memo
+                                }];
+                                layer.confirm('您确定要保存?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                                    var layerLoader = common.layerLoader();
+                                    common.fetchPost('compmgr/webComponent/componentInfo', params,function (res) {
+                                        // layer.alert(res.resultMessage);
+                                        layer.close(layerLoader);
+                                        layer.close(index);
+                                        if(res.success){
+                                         layer.close(index_add);
+                                         eventHandle.tableReload();
+                                        }else{
+                                            layer.msg('添加失败');
+                                        }
+                                    }, function () {
+                                        layer.msg('添加失败');//失败后提示
+                                        layer.close(index);
+                                        layer.close(layerLoader);
+                                    });
+                                });
+                                return false;
+                            });
+                        },
+                    });
+                    break;
+                case 'addInStru':
+                    var index_add=layer.open({
+                        offset: 't',
+                        title: '新增任务信息表信息窗口',
+                        maxmin: false,
+                        type: 1,//页面层
+                        area: ['100%','100%'],//高度自适应
+                        shadeClose: false,
+                        content: $('.tplLayer').html(),//加载该区域的html
+                        // btn:['保存','<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>取消'],
+                        success: function (obj) {
+                            $(obj.selector).find('.addInstru').css('display','block');
+                            //选完文件后不自动上传
+                            upload.render({
+                                elem: $(obj.selector).find('#test8')
+                                // ,url: '/upload/'
+                                ,auto: false
+                                //,multiple: true
+                                ,done: function(res){
+
+                                }
+                            });
+                            form.on('select(runTimeType_add)', function(data){
+                                var selectTimeObj=eventHandle.selectTimeType(data.value);
+                                $(obj.selector).find('#runTime_add').empty().html(selectTimeObj.html);
+                                if(data.value=="week"){
+                                    form.render('select');
+                                }
+                                if(selectTimeObj.timeType){
+                                    var runtime=laydate.render({
+                                        elem: '#runTime_input',
+                                        type: selectTimeObj.timeType,
+                                        trigger: 'click',
+                                        show:false,
+                                        format: (data.value=="MN")?"MM-dd HH:mm:ss":(data.value=="MY")?"第dd天 HH:mm:ss":"HH:mm:ss"
+                                    });
+                                }
+                            });
+                            form.render();
+                            form.render('select');
+                            $(obj.selector).find('.close-btn').on('click',function(){
+                                layer.close(index_add);
+                                return false;
+                            });
+                            form.on('submit(formSavue)', function (obj) {
+                                var currentSetCompId=common.uuid();
+                                var params = [{
+                                    parentCompId:-1,
+                                    enable:'0',
+                                    tempId:'3c8ce92924ce4c10b84ea5b670bd65ad',
+                                    compId:currentSetCompId,
+                                    compName:obj.field.wumiChname,
+                                    memo: obj.field.memo
+                                }];
+                                layer.confirm('您确定要保存?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                                    var layerLoader = common.layerLoader();
+                                    common.fetchPost('compmgr/webComponent/componentInfo', params,function (res) {
+                                        // layer.alert(res.resultMessage);
+                                        layer.close(layerLoader);
+                                        layer.close(index);
+                                        if(res.success){
+                                         layer.close(index_add);
+                                         eventHandle.tableReload();
+                                        }else{
+                                            layer.msg('添加失败');
+                                        }
+                                    }, function () {
+                                        layer.msg('添加失败');//失败后提示
+                                        layer.close(index);
+                                        layer.close(layerLoader);
+                                    });
+                                });
+                                return false;
+                            });
+                        },
+                    });
+                    break;
+                case 'resetStru':
+                    var index_reset=layer.open({
+                        offset: '100px',
+                        title: '重置任务条件弹窗',
+                        maxmin: false,
+                        type: 1,//页面层
+                        area: ['580px'],//高度自适应
+                        shadeClose: false,
+                        content: $('.resetTaskLayer').html(),//加载该区域的html
+                        // btn:['保存','<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>取消'],
+                        success: function (obj) {
+                            form.render();
+                            form.render('select');
+                            $(obj.selector).find('.close-btn').on('click',function(){
+                                layer.close(index_reset);
+                                return false;
+                            });
+                            form.on('submit(formCommit)', function (obj) {
+                                layer.msg('演示 执行');
+                                return false;
+                                var currentSetCompId=common.uuid();
+                                var params = [{
+                                    parentCompId:-1,
+                                    enable:'0',
+                                    tempId:'3c8ce92924ce4c10b84ea5b670bd65ad',
+                                    compId:currentSetCompId,
+                                    compName:obj.field.wumiChname,
+                                    memo: obj.field.memo
+                                }];
+                                layer.confirm('您确定要保存?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                                    var layerLoader = common.layerLoader();
+                                    common.fetchPost('compmgr/webComponent/componentInfo', params,function (res) {
+                                        // layer.alert(res.resultMessage);
+                                        layer.close(layerLoader);
+                                        layer.close(index);
+                                        if(res.success){
+                                         layer.close(index_add);
+                                         eventHandle.tableReload();
+                                        }else{
+                                            layer.msg('添加失败');
+                                        }
+                                    }, function () {
+                                        layer.msg('添加失败');//失败后提示
+                                        layer.close(index);
+                                        layer.close(layerLoader);
+                                    });
+                                });
+                                return false;
+                            });
+                        },
+                    });
+                    break;
+                case 'reMove':
+                    var index_rePick=layer.open({
+                        id:'rePickLayer',
+                        offset: '100px',
+                        title: '根据时间段重新采集任务',
+                        maxmin: false,
+                        type: 1,//页面层
+                        area: ['580px'],//高度自适应
+                        shadeClose: false,
+                        content: $('.rePickLayer').html(),//加载该区域的html  //有缓存
+                        // btn:['保存','<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>取消'],
+                        success: function (obj) {
+                            form.render();
+                            $(obj.selector).find('.close-btn').on('click',function(){
+                                layer.close(index_rePick);
+                                return false;
+                            });
+                            form.on('submit(formCommit)', function (obj) {
+                                layer.msg('演示 执行');
+                                return false;
+                                var currentSetCompId=common.uuid();
+                                var params = [{
+                                    parentCompId:-1,
+                                    enable:'0',
+                                    tempId:'3c8ce92924ce4c10b84ea5b670bd65ad',
+                                    compId:currentSetCompId,
+                                    compName:obj.field.wumiChname,
+                                    memo: obj.field.memo
+                                }];
+                                layer.confirm('您确定要保存?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                                    var layerLoader = common.layerLoader();
+                                    common.fetchPost('compmgr/webComponent/componentInfo', params,function (res) {
+                                        // layer.alert(res.resultMessage);
+                                        layer.close(layerLoader);
+                                        layer.close(index);
+                                        if(res.success){
+                                         layer.close(index_rePick);
+                                         eventHandle.tableReload();
+                                        }else{
+                                            layer.msg('添加失败');
+                                        }
+                                    }, function () {
+                                        layer.msg('添加失败');//失败后提示
+                                        layer.close(index);
+                                        layer.close(layerLoader);
+                                    });
+                                });
+                                return false;
+                            });
+                        },
+                    });
+                    // 日期时间选择器
+                    laydate.render({
+                        elem: '#rePickLayer #gxsj_rePick',
+                        type: 'datetime',
+                        trigger: 'click',
+                        range:true
+                    });
+                    break;
+                case 'saveNode':
+                    var index_saveNode=layer.open({
+                        // offset: '100px',
+                        title: '根据存档时间节点重置结构化数据迁移',
+                        maxmin: false,
+                        type: 1,//页面层
+                        area: ['100%','100%'],//高度自适应
+                        shadeClose: false,
+                        content: $('.saveReset').html(),//加载该区域的html
+                        // btn:['保存','<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>取消'],
+                        success: function (obj) {
+                            form.render();
+                            $(obj.selector).find('.templateEditLayer')
+                            //公共方法配置
+                        table.render(common.tableInitParams({
+                            elem: $(obj.selector).find('#methodTmp'),
+                            url: baseUrl + 'sysmgr/catalogue/pageQueryUnbindHeadCatalogue',
+                            method: 'post',
+                            toolbar: true,
+                            cols: [
+                                [
+                                //  {"field": "ciId",  "sort": true, "title": "目录id"},
+                                 {"field": "ggCreateEid",  "sort": true, "title": "主键ID值"},
+                                 {"field": "ciOrder",  "sort": true, "title": "时间节点值"},
+                                 {"field": "ggCreateDatetime",  "sort": true, "title": "执行时间"}
+                                ]
+                            ],
+                            height: 450,
+                        }));
+                        form.render('select');
+                        //监听行双击事件
+                            table.on('rowDouble(methodTmp)', function (obj) {
+                            //写入值
+                            var data = obj.data;
+
+                            $('[name=ciName]').attr({
+                                'data-ciid':data['ciId'],
+                                'data-cicode':data['ciCode']
+                            }).val(data['ciName']);
+
+                            layer.close(methodTmp);
+                        });
+                            $(obj.selector).find('.close-btn').on('click',function(){
+                                layer.close(index_saveNode);
+                                return false;
+                            });
+                            form.on('submit(formCommit)', function (obj) {
+                                layer.msg('演示 执行');
+                                return false;
+                                var currentSetCompId=common.uuid();
+                                var params = [{
+                                    parentCompId:-1,
+                                    enable:'0',
+                                    tempId:'3c8ce92924ce4c10b84ea5b670bd65ad',
+                                    compId:currentSetCompId,
+                                    compName:obj.field.wumiChname,
+                                    memo: obj.field.memo
+                                }];
+                                layer.confirm('您确定要保存?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                                    var layerLoader = common.layerLoader();
+                                    common.fetchPost('compmgr/webComponent/componentInfo', params,function (res) {
+                                        // layer.alert(res.resultMessage);
+                                        layer.close(layerLoader);
+                                        layer.close(index);
+                                        if(res.success){
+                                         layer.close(index_add);
+                                         eventHandle.tableReload();
+                                        }else{
+                                            layer.msg('添加失败');
+                                        }
+                                    }, function () {
+                                        layer.msg('添加失败');//失败后提示
+                                        layer.close(index);
+                                        layer.close(layerLoader);
+                                    });
+                                });
+                                return false;
+                            });
+                        },
+                    });
+                    break;
+                case 'delete':
+                    //点击删除按钮
+                    if (checkStatus.data.length > 0) {
+                        layer.confirm('确定删除选中列?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                            layer.msg('删除');
+                                return
+                            var tIdArr = [];
+
+                            for (var i = 0; i < checkStatus.data.length; i++) {
+                                if(checkStatus.data[i].ggEnStatus==1){
+                                    layer.msg('包含已启用模板，不可删除!,请去除勾选');
+                                    return false;
+                                }
+                                else{
+                                    tIdArr.push(checkStatus.data[i]['wumiId']);
+                                }
+                            }
+                            var layerLoader = common.layerLoader();
+                            common.fetchDelete('compmgr/webComponent/topWebComponent?compIds=' + tIdArr.join(','),function (res) {
+                                // layer.alert(res.resultMessage);
+                                if(res.success){
+                                    layer.close(layerLoader);
+                                    eventHandle.tableReload();
+                                }else{
+                                    layer.msg('删除失败');
+                                }
+                            }, function (res) {
+                                layer.msg('删除失败');
+                                layer.close(layerLoader);
+                            });
+                            layer.close(index);
+                        });
+                    } else {
+                        layer.msg('请选择删除列')
+                    }
+                    break;
+            }
+        });
+
+        // table row 监听事件
+        table.on('tool(table1)', function(obj){
+            var data = obj.data;
+            var ggEnStatus = data.ggEnStatus;
+            switch(obj.event){
+                case 'edit'://编辑
+                    var index_edit=layer.open({
+                        offset: 't',
+                        title:'编辑导航页面',
+                        maxmin: false,
+                        type: 1,//页面层
+                        area: ['100%','100%'],//高度自适应
+                        shadeClose: false,
+                        content: $('.tplLayer').html(),//加载该区域的html
+                        success:function (obj) {
+                            //初始化表格
+                            form.render();
+
+                            $(obj.selector).find('input[name=taskName]').val(data.taskName);
+                            $(obj.selector).find('input[name=taskCode]').val(data.taskCode);
+                            $(obj.selector).find('select[name=portName]').val(data.portName);
+                            $(obj.selector).find('select[name=isRunSelf]').val(data.isRunSelf);
+                            $(obj.selector).find('select[name=isBindWork]').val(data.isBindWork);
+                            $(obj.selector).find('textarea[name=memo]').val(data.ggMemo);
+                            form.render('select');
+                            //点击保存按钮
+                            form.on('submit(formSavue)', function (obj) {
+                                var params = [{
+                                    parentCompId:-1,
+                                    tempId:'3c8ce92924ce4c10b84ea5b670bd65ad',
+                                    compId:data.wumiId,
+                                    compName:obj.field.wumiChname,
+                                    memo: obj.field.memo,
+                                    enable: data.ggEnStatus
+                                }];
+                                var layerLoader =common.layerLoader();
+                                common.fetchPost('compmgr/webComponent/componentInfo', params,function (res) {
+                                    layer.close(layerLoader);
+                                    //表格重载
+                                    if(res.success){
+                                        layer.close(index_edit);
+                                        eventHandle.tableReload();
+                                    }else{
+                                        layer.msg('修改失败');
+                                    }
+
+                                }, function () {
+                                    layer.close(layerLoader);
+                                    layer.close(index_edit);
+                                    layer.msg('修改失败');//失败后提示
+                                });
+                                return false;
+                            });
+
+                            table.render(common.tableInitParams({
+                                elem: $(obj.selector).find('#table2'),
+                                url: baseUrl+'compmgr/webcomponenttemplateproperty/page',
+                                method: 'post',
+                                height: 'full-250',
+                                cols: [
+                                    [
+                                        // {type:'checkbox'},
+                                        {field: 'wtmpPropname', title: '属性名',sort:true},
+                                        {field: 'wtmpChname', title: '属性中文名',sort:true},
+                                        {field: 'wtmpPropval', title: '属性值',sort:true},
+                                        {field: 'wtmpVersioncode', title: '属性版本', sort: true},
+                                        {field: 'ggMemo', title: '备注', sort: true},
+                                        {field: '', title: '操作', width:'25%',toolbar:'#tableOper2',fixed: 'right'},
+                                    ]
+                                ],
+                                page:pageInitialParam,
+                                where:{paras:{wtmiId:'3c8ce92924ce4c10b84ea5b670bd65ad'}},
+                                request:pageRequest,
+                                done:function () {
+                                    common.buttonLimit(currentMenuSmId);
+                                }
+                            }));
+                            //table2监听事件
+                            table.on('tool(table2)',function (obj) {
+                                var data = obj.data;
+                                switch(obj.event){
+                                    case 'prop-edit':
+                                    //点击添加按钮
+                                    var index_propEdit=layer.open({
+                                        offset: 't',
+                                        title:'编辑导航组件属性信息',
+                                        maxmin: false,
+                                        type: 1,//页面层
+                                        area: ['580px'],//高度自适应
+                                        shadeClose: false,
+                                        content: $('#propLayer').html(),//加载该区域的html
+                                        success:function(obj) {
+                                            form.render();//此处必须要有form.render()
+                                            $(obj.selector).find('textarea[name=wtmpPropval]').val(data.wtmpPropval);
+                                            $(obj.selector).find('input[name=wtmpChname]').val(data.wtmpChname);
+                                            $(obj.selector).find('input[name=wtmpPropname]').val(data.wtmpPropname);//不可修改
+                                            // $(obj.selector).find('input[name=wtmpPropname]').parent().parent().css('display','none');
+                                            $(obj.selector).find('input[name=wtmpPropname]').attr('disabled','disabled');
+
+                                            $(obj.selector).find('#wtmpPropvaltype').val(data.wtmpPropvaltype);
+                                            $(obj.selector).find('input[name=wtmpDictCode]').val(data.wtmpDictCode);
+                                            $(obj.selector).find('input[name=wtmpVersioncode]').val(data.wtmpVersioncode);
+                                            $(obj.selector).find('textarea[name=ggMemo]').val(data.ggMemo);
+                                            form.render('select');
+                                            form.on('submit(savePropInfo)', function (obj) {
+                                                var params = {
+                                                    wtmiId: data.wtmiId,
+                                                    wtmpId: data.wtmpId,
+                                                    wtmpPropname: data.wtmpPropname,
+                                                    wtmpChname: obj.field.wtmpChname,
+                                                    wtmpPropval: obj.field.wtmpPropval.replace(/\s+/g, ""),
+                                                    wtmpPropvaltype: obj.field.wtmpPropvaltype,
+                                                    wtmpDictCode: obj.field.wtmpDictCode,
+                                                    wtmpVersioncode: obj.field.wtmpVersioncode,
+                                                    ggMemo: obj.field.ggMemo,
+                                                };
+                                                var layerLoader =common.layerLoader();
+                                                common.fetchPost('compmgr/webcomponenttemplateproperty/updateProperty', params,function (res) {
+                                                    //表格重载
+                                                    layer.close(layerLoader);
+                                                    if(res.success){
+                                                        layer.close(index_propEdit);
+                                                        eventHandle.tableReload_child(data.wtmiId);
+                                                        if(ggEnStatus==="1"){//在用 配置后 刷新父页面
+                                                            parent.location.reload();
+                                                        }
+                                                    }else{
+                                                        layer.alert(res.resultMessage);
+                                                    }
+                                                }, function (err) {
+
+                                                    layer.close(layerLoader);
+                                                    layer.msg('添加失败');//失败后提示
+                                                });
+                                                return false;
+                                            });
+                                        }
+                                    });
+                                    break;
+                                    case 'prop-check'://查询
+                                        var index_pCheck=layer.open({
+                                            offset: 't',
+                                            title:'查看导航组件属性信息',
+                                            maxmin: false,
+                                            type: 1,//页面层
+                                            area: ['580px'],//高度自适应
+                                            shadeClose: false,
+                                            // btn: ['<i class="fa fa-check-circle"></i>确定'],
+                                            // btnAlign:'c',
+                                            // btn1:function(){
+                                            //     layer.close(index_pCheck);
+                                            // },
+                                            content: $('.propCheckLayer').html(),//加载该区域的html
+                                            success:function (obj) {
+                                                //初始化表格
+                                                form.render();
+                                                $(obj.selector).find('input[name=wtmpPropname]').val(data.wtmpPropname);
+                                                $(obj.selector).find('input[name=wtmpChname]').val(data.wtmpChname);
+                                                $(obj.selector).find('textarea[name=wtmpPropval]').val(data.wtmpPropval);
+                                                $(obj.selector).find('input[name=wtmpPropvaltype]').val(data.wtmpPropvaltype);
+                                                $(obj.selector).find('input[name=wtmpDictCode]').val(data.wtmpDictCode);
+                                                $(obj.selector).find('input[name=wtmpVersioncode]').val(data.wtmpVersioncode);
+                                                $(obj.selector).find('textarea[name=ggMemo]').val(data.ggMemo);
+                                            },
+                                        });
+                                    break;
+                                }
+                            });
+                            }
+                        });
+                    break;
+                case 'singleDel':
+                     layer.msg('删除');
+                            return
+                    var selectId = data.wumiId;
+                    layer.confirm('确定删除?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                        var layerLoader = common.layerLoader();
+                        common.fetchDelete('compmgr/webComponent/topWebComponent?compIds='+selectId,function (res) {
+                            layer.close(layerLoader);
+                            if(res.success){
+                                eventHandle.tableReload();
+                                layer.msg('删除成功');
+                            }else{
+                                layer.msg('删除成功')
+                            }
+                        }, function () {
+                            layer.close(layerLoader);
+                        });
+
+                        layer.close(index);
+                    });
+                    break;
+                case 'runOnece':
+                    layer.msg('执行一次');
+                    break;
+                case 'run':
+                    layer.msg('执行');
+                    break;
+                case 'pause':
+                    layer.msg('暂停');
+                    break;
+                case 'checkLog':
+                    layer.msg('查看日志');
+                    break;
+            }
+        });
+        //查询
+        form.on('submit(formSearch)',function (obj) {
+            var name=obj.field.wumiChname;
+            table.reload('table1',{
+                page:{
+                    curr:0
+                },
+                where:{
+                    paras:{
+                        taskName:obj.field.taskName,
+                        taskCode:obj.field.taskCode,
+                        portName:obj.field.portName,
+                        isRunSelf:obj.field.isRunSelf,
+                        isBindWork:obj.field.isBindWork,
+                        ggEnstatus:obj.field.ggEnstatus
+                    }
+                },
+                done:function () {
+                    common.buttonLimit(currentMenuSmId);
+                }
+            });
+            return false;
+        });
+    });
+</script>
+<!--[if lt IE 9]>
+    <script src="../../js/lib/html5.min.js"></script>
+    <script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

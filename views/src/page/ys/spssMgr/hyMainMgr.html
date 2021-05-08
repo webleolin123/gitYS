@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html  class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>会议分析</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1,IE=EmulateIE11,IE=EmulateIE10,IE=EmulateIE9,IE=EmulateIE8"
+          http-equiv="X-UA-Compatible">
+    <meta content="webkit|ie-comp|ie-stand" name="renderer">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../../js/layui/css/layui.css"/>
+    <link href="../../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../../js/lib/jquery.1.12.3.js"></script>
+    <style>
+
+    </style>
+</head>
+<body class="iframe-h">
+<div class="content-wrap">
+    <div class="layui-row layui-col-space10">
+        <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+            <!-- layui tree-->
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom" style="position: relative">
+                    <span><i></i>企业层级</span>
+                    <div style="position: absolute;right: 5px;top: -2px;">
+                        <p style="display: inline-block;font-size: 12px;vertical-align: center">包含下级</p>
+                        <form class="layui-form" style="display: inline-block"><input checked lay-filter="switch" lay-skin="switch" name="switch" type="checkbox"></form>
+                    </div>
+                </div>
+                <div class="layui-card-body">
+                    <!--<div class="searchBar">-->
+                    <!--&lt;!&ndash;<input class="layui-input" id="keySearch" placeholder="请输入关键字"&ndash;&gt;-->
+                    <!--&lt;!&ndash;style="display: inline-block" type="text">&ndash;&gt;-->
+
+
+                    <!--<span class="icon-btn" id="btnSearch" title="搜索"><i class="fa fa-search"></i></span>-->
+                    <!--</div>-->
+                    <!-- <div class="searchInput">
+                        <i class=" layui-icon layui-icon-search"></i>
+                        <input class="layui-input " id="searchTree" placeholder="请输入关键字" type="text">
+                    </div> -->
+                    <div class="layuiTree eleTree ele4" id="leftTree" lay-filter="leftTree"
+                         style="overflow-y: auto;margin-top: 10px"></div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
+            <div class="moduleBox">
+                <!--搜索框-->
+                <div class="layui-row ">
+                    <div class="gloBg">
+                        <form class="layui-form">
+                            <div style="display: inline-block">
+                                <b class="columnToggle"><i class="fa fa-toggle-left"></i></b>
+                                <label class="" style="padding-left: 10px">会议时间：</label>
+                                <div class="layui-input-inline">
+                                    <input class="layui-input" id="dateBegin" placeholder="请选择时间" style="width: 110px" type="text">
+                                </div>
+                                <label style="display: inline-block;margin: 0 5px">至</label>
+                                <div class="layui-input-inline">
+                                    <input  class="layui-input" id="dateEnd" placeholder="请选择时间" style="width: 110px" type="text">
+                                </div>
+                            </div>
+                            <div style="display: inline-block">
+                                <label class="" style="padding-left: 10px">报送状态：</label>
+                                <div class="layui-input-inline">
+                                    <input checked name="uploadStatusRadio" title="全部" type="radio" value="-1">
+                                    <input name="uploadStatusRadio" title="已报送" type="radio" value="2">
+                                    <input name="uploadStatusRadio" title="未报送" type="radio" value="1">
+                                </div>
+                            </div>
+                            <div style="display: inline-block;margin-left: 10px">
+                                <button class="layui-btn" id="btnSearch"><i class="fa fa-search"></i>查询</button>
+                            </div>
+                        </form>
+
+
+                    </div>
+                </div>
+                <!--图标展示-->
+                <div class="layui-row ">
+                    <div class="layui-col-xs6">
+                        <div>
+                            <div class="layui-card-header layui-card-header-custom">
+                                <span><i></i>会议分类占比</span>
+                            </div>
+                            <div id="chart1" style="width:100%;height:160px;"></div>
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6">
+                        <div>
+                            <div class="layui-card-header layui-card-header-custom">
+                                <span><i></i>会议分类汇总</span>
+                            </div>
+                            <div id="chart2" style="width:100%;height:160px;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                    <div class="moduleBox">
+                        <table id="table" lay-filter="table"></table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        
+    </div>
+</div>
+</body>
+</html>
+<script src="../../../js/layui/layui.js"></script>
+<script src="../../../js/module/ys/spssMgr/hyMainMgr.js"></script>
+<script src="../../../js/lib/echarts-4.1.0.min.js"></script>
+<script src="../../../js/lib/echartTheme.js"></script>

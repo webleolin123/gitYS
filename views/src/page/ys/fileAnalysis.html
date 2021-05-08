@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>上传数据补传</title>
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../js/layui/css/layui.css" />
+    <link href="../../css/public.css?v1.01" rel="stylesheet" />
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script charset="utf-8" src="../../js/common/plugin.js"></script>
+</head>
+<style>
+    /* html,body{
+        height: 100%;
+    } */
+
+
+    .white-bg {
+        background: white;
+    }
+
+    .iframe-h {
+        height: 100%;
+    }
+
+    .content-wrap {
+        padding: 10px;
+    }
+
+    .hide {
+        display: none;
+    }
+
+    .layui-form-pane .layui-form-label {
+        width: 150px;
+    }
+
+    .layui-form-pane .layui-input-block {
+        margin-left: 150px;
+    }
+
+    .eleTree.pType {
+        height: auto;
+        width: 100%;
+        display: none;
+        position: absolute;
+        top: 100%;
+        background-color: #fff;
+        z-index: 895;
+        border: 1px solid #ccc;
+    }
+
+    .layui-none {
+        border-bottom: 1px solid rgb(228, 219, 219);
+    }
+</style>
+
+<body>
+    <div class="userLayer" style="height: 100%;">
+        <div style="padding: 15px 20px;height: 100%;">
+            <div style="height: 100%;">
+                <div class="layui-row layui-col-space10">
+                    <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+                        <!-- layui tree-->
+                        <div class="layui-card">
+                            <div class="layui-card-header layui-card-header-custom"><span><i></i>企业层级</span>
+                            </div>
+                            <div class="layui-card-body">
+                                <div class="layuiTree eleTree ele4" id="leftTree" lay-filter="leftTree"
+                                    style="overflow-y: auto;margin-top: 10px">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
+                        <div class="layui-card">
+                            <b class="columnToggle hide"><i
+                                class="fa fa-toggle-left"></i></b>
+                            <div class="layui-card-header layui-card-header-custom">
+                                <span>
+                                    <i></i>未处理文件列表
+                                </span>
+                            </div>
+                            <div class="layui-card-body">
+                                <form action="" class="layui-form layui-form-pane">
+                                    <div class="layui-row layui-col-space10">
+                                        <div class="layui-col-xs4">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">文件名称</label>
+                                                <div class="layui-input-block">
+                                                    <input autocomplete="off" class="layui-input" name="fileName"
+                                                        placeholder="请输入文件名称" type="text">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class=""
+                                            style="text-align: center; margin-bottom: 5px;right: 0;bottom: 0;">
+                                            <div class="layui-input-inline" style="padding-left: 20px">
+                                                <button class="layui-btn" lay-filter="formSearch" lay-submit=""
+                                                    name="searchSubmit"><i class="fa fa-search"></i>查询
+                                                </button>
+                                                <button class="layui-btn layui-btn-primary  " lay-filter="reset"
+                                                    name="reset" type="reset" id="reset"><i class="fa fa-eraser"></i>重置
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                </form>
+
+                                <table id="table1" lay-filter="table1"></table>
+                                <script id="table1Oper" type="text/html">
+                                    <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="view">查看对应表</a>
+                                </script>
+                                <script id="table1ToolBar" type="text/html">
+                                    <div class="layui-btn-container"style="position:relative;margin-top:10px;">
+                                        <span style="position:absolute;left:0px;">
+                                            <a class="layui-btn layui-btn-sm" lay-event="jiexi"><i class="fa fa-dot-circle-o"></i>解析</a>
+                                            <!-- <a class="layui-btn layui-btn-sm" lay-event="chaxun">查询</a> -->
+                                        </span>
+                                    </div>
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+</body>
+<script src="./../../js/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).use(['eleTree', 'layer', 'table', 'form', 'laytpl', 'common', 'element', 'laydate', 'upload'], function (exports) {
+        var table = layui.table;
+        var form = layui.form;
+        var tree = layui.eleTree;
+        var common = layui.common;
+        var element = layui.element;
+        var laydate = layui.laydate;
+        var util = layui.util;
+        var upload = layui.upload;
+        var baseUrl = '../../../';
+        var sysEnterpriseTreeUrl = "meetingmgr/tiolExecution/getCountOfSubordinateReportExecutionVo?treeType=enterpriseTree";
+        element.init();
+        common.themeSet();
+        $('body').append("<style>html,body{height: " + ($(window).height() - 90) + "px !important;}</style>");
+        var seId;
+        common.columnToggle();
+
+        function formatTree() {
+            var cacluHeight = $(document).height() - $("#mainMenuTab").height() - $(".layui-card-header").height() - 80;
+            $("#leftTree").css({
+                "height": cacluHeight + "px",
+                "overflow-y": "auto"
+            });
+        };
+
+
+        var eventHandle = {
+            treeInit: function () {
+                formatTree();
+                common.fetchGet(sysEnterpriseTreeUrl, function (res) {
+                    if(res.list[0].name && res.list[0].name != '中国有色'){
+                        $('.columnToggle').click();
+                        return false;
+                    }
+                    //树信息的导入
+                    if (res.success && res.list) {
+                        eleTreeId = tree.render({
+                            elem: '#leftTree',
+                            data: res.list,
+                            checkOnClickNode: true,
+                            highlightCurrent: true,    // 是否高亮当前选中节点，默认值是 false。
+                            expandOnClickNode: true,    // 是否在点击节点的时候展开或者收缩节点， 默认值为 true，如果为 false，则只有点箭头图标的时候才会展开或者收缩节点。
+                            showCheckbox: false,
+                            lazy: true,
+                            load: function (data, callback) {
+                                eventHandle.treeReload(data, callback);
+                            }
+                        });
+                        // $('#leftTree').find('.eleTree-node-content-icon').eq(0).trigger('click');
+                        tree.on("nodeClick(leftTree)", function (obj) {
+                            var curTreeNode = obj.data.currentData;
+                            seId = curTreeNode.id;
+                            eventHandle.tableReload({"seId":seId});
+                        });
+                        
+                        $('#leftTree').find('.eleTree-node-content-label').eq(0).trigger('click');
+                        
+                    } else {
+                        //不存在数据时的显示
+                    }
+                }, function () { });
+            },
+            treeReload: function (data, callback) {
+                common.fetchGet(sysEnterpriseTreeUrl + '&id=' + data.id + '&extendAttr=' + data.extendAttr, function (res) {
+                    if (res.success && res.list) {
+                        callback(res.list)
+                    }
+                }, function () {
+                    callback([])
+                });
+            },
+            tableInit: function () {
+                table.render(common.tableInitParams({
+                    elem: '#table1',
+                    height: 'full-158',
+                    url: baseUrl + 'meetingmgr/tiolMeeting/selectFileParseLogList',
+                    data:[{noSuffixName:1212313}],
+                    method: 'post',
+                    where: {
+                        'seId': seId
+                    },
+                    toolbar: '#table1ToolBar',
+                    page: false,
+                    defaultToolbar: [],
+                    cols: [
+                        [
+                            { type: "numbers", title: "序号", width: 60, },
+                            { field: 'fileName', title: '文件名称'},
+                            { field: 'errMsg', title: '原因' },
+                            {
+                                field: '', title: '操作', align: "center", width: 150, fixed: 'right', templet: "#table1Oper"
+
+                            }
+                        ]
+                    ]
+                }));
+            },
+            tableReload: function (where) {
+                table.reload('table1', {
+                    method: 'post',
+                    where: where
+                });
+            },
+            formSearch: function () {
+                form.on('submit(formSearch)', function (obj) {
+                    var obj = obj.field;
+                    obj['seId'] = seId;
+                    //表格重载
+                    table.reload('table1', {
+                        method: 'post',
+                        contentType: 'application/json',
+                        page: {
+                            curr: 1
+                        },
+                        where: obj,
+
+                    });
+                    return false;
+                });
+            }
+
+        };
+        eventHandle.treeInit();
+        eventHandle.formSearch();
+        eventHandle.tableInit();
+
+
+        table.on('toolbar(table1)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch (obj.event) {
+                case 'jiexi':
+                    // if (!seId) {
+                    //     layer.msg('请选择左侧树节点');
+                    // } else {
+                        var layerLoader = common.layerLoader();
+                        common.fetchGet('/meetingmgr/tiolMeeting/parseAttachment?seId=' + seId, function (res) {
+                            if (res.success) {
+                                layer.close(layerLoader);
+                                layer.msg('解析成功');
+                                eventHandle.tableReload();
+                                // 将成功返回的信息字段赋值
+                            } else {
+                                layer.close(layerLoader);
+                                layer.msg('解析失败');
+                            }
+                        }, function (err) {
+                            layer.close(layerLoader);
+                            layer.msg('解析失败');
+                        })
+                    // }
+                break;
+            }
+        })
+
+        table.on('tool(table1)', function (obj) {
+                        var data = obj.data;
+                        switch (obj.event) {
+                            case 'view'://编辑
+                                var fiName=data.noSuffixName;
+                                if(fiName==null||fiName==""){
+                                    fiName=data.fileName.substring(0,common.indexOf(data.fileName,"."));
+                                }
+                                var editLayer = layer.open({
+                                    title: ['查看对应表'],
+                                    type: 2,
+                                    content: baseUrl + 'src/page/ys/viewFileForm.html?seId=' + data.seId + '&fiName=' + fiName + '&filePath=' + data.filePath +'&fiId=' + data.fiId,
+                                    btn:['关闭'],
+                                    btnAlign:'lc',
+                                    maxmin: true,
+                                    end:function(){
+                                        table.reload("table1");
+                                    }
+                                });
+                                layer.full(editLayer);
+                                break;
+                        }
+                    });
+
+
+
+
+    });
+</script>
+<!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+
+</html>

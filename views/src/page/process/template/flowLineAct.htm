@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META http-equiv=Content-Type content="text/html; charset=utf-8">
+	<TITLE>参数配置</TITLE>
+	<META NAME="Author" CONTENT="Witson">
+	<link rel="stylesheet" type="text/css" href="../images/style.css"/>
+</HEAD>
+<script type="text/javascript">
+var strTem=self.location.href;
+strTem = strTem.substr(strTem.indexOf('.htm?parVal=')+12);
+var sType=strTem.split(',')[0];
+var idx=parseInt(strTem.split(',')[1]);
+//alert(idx);
+
+function funOK(){
+	if (sType==''){
+		var str=jsfw.$('txtType').value;
+		var oNode = parent.oFlow.getCurrentObj().selectSingleNode('*[@type="'+str+'"]');
+		if (oNode==null){
+			var sXML='<action type="'+str+'"></action>';
+			if (str=='com.yr.gap.engine.core.beanshell.BeanShellCondition') sXML='<condition type="'+str+'"></condition>';
+			parent.oFlow.appendXmlChildNode(parent.oFlow.getCurrentObj(),sXML);
+			oNode = parent.oFlow.getCurrentObj().selectSingleNode('*[@type="'+str+'"]');
+		}
+		parent.oFlow.appendXmlChildNode(oNode,'<arg name="'+parent.toXML(jsfw.$('txtName').value)+'"><![CDATA['+jsfw.$('txtValue').value+']]></arg>');
+	}else{//修改
+		var oNode = parent.oFlow.getCurrentObj().selectNodes('*[@type="'+sType+'"]/arg')[idx];
+		parent.oFlow.setAttr(oNode,'name', jsfw.$('txtName').value);
+		oNode.text=jsfw.$('txtValue').value;
+	}
+	parent.oFlow.modified=true;
+	parent.readProperty_Line();
+	parent.closeDialog(self);
+}
+
+function loadData(){
+	if (sType=='') return;
+	jsfw.$('txtType').value = sType;
+	jsfw.$('txtType').disabled=true;
+	var oNode = parent.oFlow.getCurrentObj().selectNodes('*[@type="'+sType+'"]/arg')[idx];
+	jsfw.$('txtName').value = oNode.getAttribute('name');
+	jsfw.$('txtValue').value = oNode.text;
+}
+</script>
+
+<BODY loadWebUI="Toolbar" scroll="no" onload="loadData()">
+
+<table width="100%" style="table-layout:fixed;height:100%" border="0" cellpadding="0" cellspacing="0">
+	<tr>
+		<td height="28">
+			<div class="Toolbar" style="padding-left:10px;">
+			<xmp style="display:none">
+				<root>
+					<item text="确定" icon="../images/icon/check.gif" action="funOK();"/>
+					<item text="取消" icon="../images/icon/close.gif" action="parent.closeDialog(self);"/>
+				</root>
+			</xmp>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td valign="top" align="center" style="padding-top:25px;">
+			<table border="0" cellpadding="3" cellspacing="0">
+				<tr>
+					<td>分类</td>
+					<td>
+						<select id="txtType">
+							<option value="com.yr.gap.engine.core.action.GeneralNotifyAction">普通知会</option>
+							<option value="com.yr.gap.engine.core.beanshell.BeanShellCondition">迁移条件</option>
+							<option value="com.yr.gap.engine.core.action.SetProcessVariblesAction">变量设置</option>
+							<option value="com.yr.gap.engine.core.action.AutoNotifyAction">自动知会</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>参数名</td>
+					<td><input id="txtName"/></td>
+				</tr>
+				<tr>
+					<td>参数值</td>
+					<td><input id="txtValue"/></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+</BODY>
+</HTML>
+<script type="text/javascript" src="../jsfw/boot.js" loadClass="" loadPrototype="Array" loadWebUI="" Theme="Default"></script>

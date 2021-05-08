@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>议案管理-已提交-查看</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href=" ./../../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href=" ./../../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href=" ./../../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../../js/layui/css/layui.css"/>
+    <link href="../../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../../js/lib/jquery.1.12.3.js"></script>
+    <style>
+
+        .hylabel {
+            border: 1px solid transparent !important;
+            background: transparent !important;
+        }
+
+        .hyinput {
+            border: 1px solid transparent !important;
+            border-bottom-color: red !important;
+        }
+
+        .layui-unselect {
+            border-color: #f56c6c;
+            border-top-style: none;
+            border-right-style: none;
+            border-left-style: none;
+        }
+        .layui-table-cell .layui-unselect {
+            border-color: #d2d2d2;
+        }
+
+        .layui-form-select .layui-edge {
+            border-top-color: #f56c6c;
+        }
+
+        body {
+            background: #f8f8f8;
+        }
+
+        .load-btn, .upload-btn, .check-btn, .right-btn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            border-radius: 3px;
+        }
+
+        .right140 {
+            /*right: 140px;*/
+            right: 70px;
+        }
+
+        .right70 {
+            right: 70px;
+        }
+
+        .relative {
+            position: relative;
+        }
+
+        .padRt64 {
+            padding-right: 64px;
+        }
+
+        li {
+            cursor: pointer;
+        }
+
+        .zsBga {
+            color: purple;
+            vertical-align: 1px;
+            opacity: 0.5;
+            font-weight: normal;
+        }
+
+        .blueBg {
+            padding: 5px;
+            background: blue;
+            opacity: 0.5;
+            color: #fff;
+        }
+
+        .grayBg {
+            padding: 5px;
+            background: gray;
+            opacity: 0.5;
+            color: #fff;
+        }
+
+        a.layui-layer-ico.layui-layer-max {
+            display: none;
+        }
+
+        a.layui-layer-ico.layui-layer-max.layui-layer-maxmin {
+            display: inline-block !important;
+        }
+    </style>
+    <style>
+        /* 表格工具位置样式重置 */
+        .layui-table-tool-temp{
+            padding-right: 0!important;
+        }
+        .versionLabel{
+            text-align: center;
+        }
+    </style>
+    <style>
+        .layui-table-body,.layui-table-body .layui-none{
+            border-bottom: 1px solid #e6e6e6;
+        }
+        /* 统一图标尺寸 */
+        .layui-btn .layui-icon{
+            font-size: 12px!important;
+        }
+    </style>
+    <style>
+        /* .meetingTypeFlowUl{
+            text-align: left;
+        } */
+        .meetingTypeFlowUl li{
+            position: relative;
+            border: 1px solid #dfdfdf;
+            display: inline-block;
+            padding: 10px;
+            /* width: 31%;
+            margin-right: 1%; */
+            cursor: pointer;
+            list-style: none;
+        }
+        .meetingTypeFlowUl li div{
+            text-align: center
+        }
+        #syqkLayer .layui-form-label{
+            text-align: center;
+            width: 80px;
+        }
+    </style>
+</head>
+
+<body class="iframe-h">
+
+<!-- 页面主体 -->
+<div class="content-wrap">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" id="motionMain" style="padding-top: 0;">
+            <!-- 议案信息 -->
+            <div class="layui-form layui-form-pane">
+                <div class="layui-card">
+                        <div class="layui-card-header layui-card-header-custom">
+                            <span>
+                                <i></i>议案信息
+                            </span>
+                        </div>
+                        <div class="layui-card-body">
+                        <!-- 议案名称 -->
+                        <div class="layui-row layui-col-space15">
+                            <div class="layui-col-xs12">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label hylabel"><b class="red">*</b>议案名称:</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="motionName" placeholder="请输入" autocomplete="off" class="layui-input hyinput"  value="" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 提出部门 议案类别-->
+                        <div class="layui-row layui-col-space15">
+                            <div class="layui-col-xs6">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label hylabel"><b class="red">*</b>提出部门:</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="soName" autocomplete="off" class="layui-input hyinput" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" name="soId">
+                            <div class="layui-col-xs6">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label hylabel"><b class="red">*</b>议案类别:</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="motionTypeName" autocomplete="off" class="layui-input hyinput" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 上会类型 审议类型-->
+                        <div class="layui-row layui-col-space15">
+                            <div class="layui-col-xs6">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label hylabel"><b class="red">*</b>上会类型:</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="meetingTypeName"
+                                        readonly="" autocomplete="off" class="layui-input hyinput">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-xs6">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label hylabel"><b class="red">*</b>审议类型:</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="deliberationName"
+                                        readonly="" autocomplete="off" class="layui-input hyinput">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 创建日期 三重一大-->
+                        <div class="layui-row layui-col-space15">
+                            <div class="layui-col-xs6">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label hylabel"><b class="red">*</b>创建日期:</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="motionCreateTime" class="layui-input hyinput" value="" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-xs6 hide isRel">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label hylabel" style="width:150px;"><b class="red">*</b>三重一大:</label>
+                                    <div class="layui-input-block">
+                                        <input type="radio" name="tiolFlag" value="0" lay-filter="tiolFlag" title="否"
+                                                checked>
+                                        <input type="radio" name="tiolFlag" value="1" lay-filter="tiolFlag" title="是">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 主要内容 -->
+                        <div class="layui-row layui-col-space15">
+                            <div class="layui-col-xs12">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label hylabel">主要内容:</label>
+                                    <div class="layui-input-block">
+                                        <textarea name="motionContemt" class="layui-textarea hyinput" value="" readonly></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 退回情况 -->
+            <div class="layui-form layui-form-pane">
+                <div class="layui-card">
+                        <div class="layui-card-header layui-card-header-custom">
+                            <span>
+                                <i></i>退回情况
+                            </span>
+                        </div>
+                        <div class="layui-card-body">
+                            <!-- 退回操作单位 退回操作部门-->
+                            <div class="layui-row layui-col-space15">
+                                    <div class="layui-col-xs6">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label hylabel"><b class="red">*</b>退回操作单位:</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="backSeName"  class="layui-input hyinput" value="" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-col-xs6">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label hylabel">退回操作部门:</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="backOrgName"  class="layui-input hyinput" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </div>
+                            <!-- 退回意见-->
+                            <div class="layui-row layui-col-space15">
+                                    <div class="layui-col-xs12">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label hylabel"><b class="red">*</b>退回意见:</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="auditOpnion"  class="layui-input hyinput" value="" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </div>
+                             <!-- 退回操作人 退回时间-->
+                             <div class="layui-row layui-col-space15">
+                                    <div class="layui-col-xs6">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label hylabel">退回操作人:</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="backUserName"
+                                                readonly="" autocomplete="off" class="layui-input hyinput">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-col-xs6">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label hylabel">退回时间:</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="backDate"
+                                                readonly="" autocomplete="off" class="layui-input hyinput">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- <div style="position: fixed;width: 100%;bottom: 12px;">
+    <div class="layui-card" style="margin-top: 10px">
+        <div class="layui-card-body">
+            <div class="layui-form-item" style="text-align: center;">
+                <button class="layui-btn layui-btn-sm" id="closeBtn">
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div> -->
+<!--脚垫-->
+<div style="height: 80px;"></div>
+<script src="./../../../js/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../../src/js/',
+        version: new Date().getTime()
+    }).use(['eleTree', 'layer', 'table', 'form', 'laytpl', 'common', 'element', 'laydate', 'upload'], function () {
+
+        var table = layui.table;
+        var form = layui.form;
+        var tree = layui.eleTree;
+        var common = layui.common;
+        var element = layui.element;
+        var laydate = layui.laydate;
+        var upload = layui.upload;
+        var laytpl = layui.laytpl;
+        var motionId = common.getQueryVariable("motionId");
+        var motionType = common.getQueryVariable("motionType");
+        element.init();
+        var baseUrl = '../../../../';
+        common.themeSet();
+        //按钮权限
+        common.buttonLimit($("#currentMenuSmId", window.parent.document).val(), function (res) {
+            //输入所有可操作的按钮集合
+            var list = res['list'] ? res['list'] : [];
+
+        });
+
+        var eventHandle={
+            returnInfoInit: function (motionId) {
+                common.fetchPost('motionmgr/motiona/selectMotionBackInfo',{motionId:motionId}, function (res) {
+                    if(res.success){
+                        var defaultObj={
+                            "motionId": "",
+                            "motionName": "",
+                            "soName": "",
+                            "motionTypeName": "",
+                            "meetingTypeName": "",
+                            "deliberationName": "",
+                            "motionCreateTime": "",
+                            "motionContemt": "",
+                            "backSeName": "",
+                            "backOrgName": "",
+                            "backUserName": "",
+                            "backDate": "",
+                            "auditOpnion": ""
+                        };
+                        var data=res.object||defaultObj;
+                        $('[name=motionName]').val(data.motionName?data.motionName:'-');//议案名称
+                        $('[name=soName]').val(data.soName?data.soName:'-');//提出部门
+                        $('[name=motionTypeName]').val(data.motionTypeName?data.motionTypeName:'-');//议案类别
+                        $('[name=meetingTypeName]').val(data.meetingTypeName?data.meetingTypeName:'-');//上会类型
+                        $('[name=deliberationName]').val(data.deliberationName?data.deliberationName:'-');//审议类型
+                        var motionCreateTime=data.motionCreateTime;
+                        motionCreateTime=motionCreateTime?common.timestampToTime(motionCreateTime):'-';
+                        $('[name=motionCreateTime]').val(motionCreateTime);//创建日期
+                        $('[name=motionContemt]').val(data.motionContemt?data.motionContemt:'-');//主要内容
+                        $('[name=backSeName]').val(data.backSeName?data.backSeName:'-');//退回操作单位
+                        $('[name=backOrgName]').val(data.backOrgName?data.backOrgName:'-');//退回操作部门
+                        $('[name=auditOpnion]').val(data.auditOpnion?data.auditOpnion:'-');//退回意见
+                        $('[name=backUserName]').val(data.backUserName?data.backUserName:'-');//退回操作人
+                        var backDate=data.backDate;
+                        backDate=backDate?common.timestampToTime(backDate,'datetime'):'-';
+                        $('[name=backDate]').val(backDate);//退回时间
+                        form.render();
+                    }
+                    else{
+                        layer.msg('查询议案被退回信息获取失败:'+res.resultMessage);
+                        return false;
+                    }
+                }, function (err) {
+                    layer.msg('查询议案被退回信息获取失败:'+err.resultMessage);
+                    return false;
+                });
+            },
+            initRel:function(motionType){
+                common.fetchPost('catalog/tiolBillType/selectTiolBillTypePage', {billId:motionType}, function (data) {
+                    if (data.success&&data.page.list.length>0) {
+                        if (data.page&&data.page.list&&data.page.list[0].tails&&data.page.list[0].tails.catalogName) {
+                            $(".isRel").show();
+                        }
+                    }
+                });
+            },
+            output:function(){
+    // --------------------------------初始化--------------------------------
+                if (motionId) {//查看页面
+                    eventHandle.returnInfoInit(motionId);//详情接口
+                    eventHandle.initRel(motionType);//是否三重一大
+                }
+                else{
+                    parent.layer.msg('议案id不存在');
+                    parent.layer.closeAll();
+                }
+            }
+        };
+        eventHandle.output();
+    });
+
+</script>
+
+<!--[if lt IE 9]>
+<script src="https://cdn.staticfile.or
+<script src=" ../../js/lib/html5.min.js"></script>
+<
+script
+src = "../../js/lib/respond.js" ></script>
+<![endif]-->
+</body>
+</html>

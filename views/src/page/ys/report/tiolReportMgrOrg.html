@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+
+<head>
+    <meta charset="UTF-8">
+    <title>管理部门</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../../js/layui/css/layui.css"/>
+    <link href="../../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../../js/lib/jquery.1.12.3.js"></script>
+    <script charset="utf-8" src="../../../js/common/plugin.js"></script>
+    <style>
+        .tip {
+            width: 300px;
+            position: absolute;
+            left: 380px;
+            top: 10px;
+        }
+        .eleTree.eleFill {
+            height: auto;
+            width: 100%;
+            display: none;
+            position: absolute;
+            top:100%;
+            background-color: #fff;
+            z-index: 100;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<!--添加按钮中的弹框-->
+<div class="tiolReportMgrOrgLayer hide">
+    <div style="padding: 15px 20px">
+        <form class="layui-form layui-form-pane" name="tiolReportMgrOrgLayer" lay-filter="tiolReportMgrOrgForm">
+            <!-- 部门id -->
+            <input type="hidden" name="reportMgrOrgId"/>
+            <!-- 是否修改密码 -->
+            <input type="hidden" name="seId" id="seId"/>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>企业</label>
+                <div class="layui-input-block">
+                    <input type="text" name="seName" id="seName" class="layui-input" readonly>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>管理部门</label>
+                <div class="layui-input-block">
+                    <input name="orgId" type="hidden"/>
+                    <input autocomplete="off" class="layui-input" name="orgName" placeholder="请选择" readonly="" required="" type="text">
+                    <div class="eleTree ele5" lay-filter="data5"></div>
+                </div>
+            </div>
+            <div class="layui-form-item adapt">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formAdd" permission-btn="addTiolReportMgrOrg"> <i class="layui-icon">&#x1005;</i>保存</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="tiolReportMgrOrgEditLayer hide">
+    <div style="padding: 15px 20px">
+        <form class="layui-form layui-form-pane" name="tiolReportMgrOrgEditLayer" lay-filter="tiolReportMgrOrgEditForm">
+            <input type="hidden" name="reportMgrOrgId"/>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>企业</label>
+                <div class="layui-input-block">
+                    <input type="hidden" name="seId"/>
+                    <input type="text" name="seName" class="layui-input" readonly>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>管理部门</label>
+                <div class="layui-input-block">
+                    <input name="orgId" type="hidden"/>
+                    <input autocomplete="off" class="layui-input" name="orgName" placeholder="请选择" readonly="" required="" type="text">
+                    <!--<div class="eleTree ele5" lay-filter="data6"></div>-->
+                </div>
+            </div>
+            <!--<div class="layui-form-item adapt" style="margin-left: 20%">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formEdit" pemission-btn="editTiolReportMgrOrg"> <i class="layui-icon">&#x1005;</i>保存</button>
+                </div>
+            </div>-->
+        </form>
+        <div id="tiolMgrOrgTargetLayer" class="layui-card" style="margin-top: 10px;">
+            <div class="layui-card-body">
+                <table id="tiolMgrOrgTargetTable" lay-filter="tiolMgrOrgTargetTable"></table>
+                <script type="text/html" id="tiolMgrOrgTargetTableToolBar">
+                    <div class="layui-btn-container">
+                        <button class="layui-btn layui-btn-sm" lay-event="add" permission-btn="addTiolMgrOrgTarget">
+                            <i class="layui-icon">&#xe608;</i> 新增
+                        </button>
+                        <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete" permission-btn="delTiolMgrOrgTarget">
+                            <i class="layui-icon">&#xe640;</i> 删除
+                        </button>
+                    </div>
+                </script>
+                <script type="text/html" id="tiolMgrOrgTargetTableOper">
+                    <a class="layui-btn layui-btn-xs" lay-event="edit" permission-btn="editTiolMgrOrgTarget">编辑</a>
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="tiolMgrOrgTargetLayer hide">
+    <div style="padding: 15px 20px">
+        <form class="layui-form layui-form-pane" name="tiolMgrOrgTargetLayer" lay-filter="tiolMgrOrgTargetForm">
+            <input type="hidden" name="mgrOrgTargetId"/>
+            <div class="layui-form-item">
+                <label class="layui-form-label">一级类型</label>
+                <div class="layui-input-block">
+                    <select name="targetType" lay-filter="targetTypeSelect">
+                        <option value="">请选择</option>
+                        <!--<option value="ITEM">事项</option>-->
+                        <option value="REGULATION">制度</option>
+                        <option value="MEETING">会议</option>
+                        <option value="PROPOSAL">议案</option>
+                        <option value="DEPARTMENT">部门</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">子级类型</label>
+                <div class="layui-input-block">
+                    <input type="hidden" name="subTargetType" />
+                    <input type="text" name="subTargetTypeName" required="" lay-verify="required" placeholder="请选择" readonly="" autocomplete="off" class="layui-input hyinput">
+                    <!--<div class="eleTree eleFill eleItem" name="itemTree" lay-filter="subTargetTypeData"></div>-->
+                    <div class="eleTree eleFill eleRegulation" lay-filter="subTargetTypeData" name="regulationTree"></div>
+                    <div class="eleTree eleFill eleMeeting" lay-filter="subTargetTypeData" name="meetingTree"></div>
+                    <div class="eleTree eleFill eleProPosal" lay-filter="subTargetTypeData" name="proposalTree"></div>
+                    <div class="eleTree eleFill eleDepartment" lay-filter="subTargetTypeData" name="departmentTree"></div>
+                </div>
+            </div>
+            <div class="layui-form-item adapt">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="tiolMgrOrgTargetFormSave" permission-btn="addTiolMgrOrgTarget"> <i class="layui-icon">&#x1005;</i>保存</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="tiolMgrOrgTargetEditLayer hide">
+    <div style="padding: 15px 20px">
+        <form class="layui-form layui-form-pane" name="tiolMgrOrgTargetEditLayer" lay-filter="tiolMgrOrgTargetForm">
+            <input type="hidden" name="mgrOrgTargetId" id="mgrOrgTargetId" />
+            <div class="layui-form-item">
+                <label class="layui-form-label">一级类型</label>
+                <div class="layui-input-block">
+                    <select name="targetType" lay-filter="targetTypeSelect">
+                        <option value="">请选择</option>
+                        <!--<option value="ITEM">事项</option>-->
+                        <option value="REGULATION">制度</option>
+                        <option value="MEETING">会议</option>
+                        <option value="PROPOSAL">议案</option>
+                        <option value="DEPARTMENT">部门</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">子级类型</label>
+                <div class="layui-input-block">
+                    <input type="hidden" name="subTargetType" />
+                    <input type="text" name="subTargetTypeName" required="" lay-verify="required" placeholder="请选择" readonly="" autocomplete="off" class="layui-input hyinput">
+                    <!--<div class="eleTree eleFill eleItem" name="itemTree" lay-filter="subTargetTypeData"></div>-->
+                    <div class="eleTree eleFill eleRegulation" name="regulationTree" lay-filter="subTargetTypeData"></div>
+                    <div class="eleTree eleFill eleMeeting" name="meetingTree" lay-filter="subTargetTypeData"></div>
+                    <div class="eleTree eleFill eleProPosal" name="proposalTree" lay-filter="subTargetTypeData"></div>
+                    <div class="eleTree eleFill eleDepartment" lay-filter="subTargetTypeData" name="departmentTree"></div>
+                </div>
+            </div>
+            <div class="layui-form-item adapt">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="tiolMgrOrgTargetFormSave" permission-btn="editTiolMgrOrgTarget"> <i class="layui-icon">&#x1005;</i>保存</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+<body class="iframe-h">
+    <div class="content-wrap">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-header layui-card-header-custom"><span><i></i>管理规则列表</span></div>
+                    <div class="layui-card-body">
+                        <form action="" class="layui-form layui-form-pane">
+                            <div class="layui-row layui-col-space10">
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">单位名称</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="seName" placeholder="请输入" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">状态</label>
+                                        <div class="layui-input-block">
+                                                <select name="ggEnStatus">
+                                                    <option value="">请选择</option>
+                                                    <option value="1">启用</option>
+                                                    <option value="0">禁用</option>
+                                                </select>
+                                            </div>
+                                    </div>
+                                </div>
+                                <div class="formSearch-btnArea">
+                                    <button class="layui-btn" lay-submit lay-filter="formSearch"><i class="fa fa-search"></i>查询</button>
+                                    <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="layui-card">
+                    <div class="layui-card-body" style="padding-top: 0">
+                        <table id="tiolReportMgrOrgTable" lay-filter="tiolReportMgrOrgTable"></table>
+                        <script type="text/html" id="tiolReportMgrOrgTableToolBar">
+                            <div class="layui-btn-container">
+                                <button class="layui-btn layui-btn-sm" lay-event="add" permission-btn="addTiolReportMgrOrg">
+                                    <i class="layui-icon">&#xe608;</i> 新增
+                                </button>
+                                <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete" permission-btn="delTiolReportMgrOrg">
+                                    <i class="layui-icon">&#xe640;</i> 删除
+                                </button>
+                                <button class="layui-btn layui-btn-sm" lay-event="enable" permission-btn="enableTiolReportMgrOrg">
+                                    <i class="layui-icon ">&#x1005;</i> 启用
+                                </button>
+                                <button class="layui-btn layui-btn-sm layui-btn-warm" lay-event="disable" permission-btn="disableTiolReportMgrOrg">
+                                    <i class="layui-icon ">&#x1007;</i> 禁用
+                                </button>
+                            </div>
+                        </script>
+                        <script type="text/html" id="tiolReportMgrOrgTableOper">
+                            <a class="layui-btn layui-btn-xs" lay-event="edit" permission-btn="editTiolReportMgrOrg">编辑</a>
+                            <a class="layui-btn layui-btn-xs" lay-event="singleDel" permission-btn="delTiolReportMgrOrg">删除</a>
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./../../../js/layui/layui.js"></script>
+    <script>
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).use(['eleTree','layer','table','form','laytpl','common','util','element'],function () {
+        var table=layui.table;
+        var form=layui.form;
+        var tree=layui.eleTree;
+        var common=layui.common;
+        var util=layui.util;
+        var element = layui.element;
+        element.init();
+        var baseUrl = '../../../../';
+        //跨域通信
+        common.themeSet();
+        common.toggleArea($('.toggle-btn'),$('.toggle-area'));
+
+        var currentMenuSmId=$("#currentMenuSmId",window.parent.document).val();
+        //审核规则分页
+        var tiolReportMgrOrgPageUrl = baseUrl + "reportmgr/tiolReportMgrOrg/queryTiolReportMgrOrgPage";
+        //审核规则删除
+        var tiolReportMgrOrgDeleteUrl = baseUrl + "reportmgr/tiolReportMgrOrg/deleteTiolReportMgrOrg";
+        //审核规则户禁用
+        var tiolReportMgrOrgDisableUrl = baseUrl + "reportmgr/tiolReportMgrOrg/disableTiolReportMgrOrg";
+        //审核规则启用
+        var tiolReportMgrOrgEnableUrl = baseUrl + "reportmgr/tiolReportMgrOrg/enableTiolReportMgrOrg";
+        //审核规则新增
+        var tiolReportMgrOrgSaveUrl = baseUrl + "reportmgr/tiolReportMgrOrg/saveTiolReportMgrOrg";
+        //审核规则更新
+        var tiolReportMgrOrgUpdateUrl = baseUrl + "reportmgr/tiolReportMgrOrg/updateTiolReportMgrOrg";
+
+        //填报审核对象表组织
+        var tiolMgrOrgTargetPageUrl = baseUrl + "reportmgr/tiolMgrOrgTarget/queryTiolMgrOrgTargetPage";
+        //填报审核对象表获取
+        var tiolMgrOrgTargetGetUrl = baseUrl + "reportmgr/tiolMgrOrgTarget/selectResUserOrganById";
+        //填报审核对象表保存
+        var tiolMgrOrgTargetSaveUrl = baseUrl + "reportmgr/tiolMgrOrgTarget/saveTiolMgrOrgTarget";
+        //填报审核对象表保存
+        var tiolMgrOrgTargetUpdateUrl = baseUrl + "reportmgr/tiolMgrOrgTarget/updateTiolMgrOrgTarget";
+        //填报审核对象表删除
+        var tiolMgrOrgTargetDeleteUrl = baseUrl + "reportmgr/tiolMgrOrgTarget/deleteTiolMgrOrgTarget";
+
+        var dictCodeUrl = baseUrl + "sysmgr/autoCode/selectSysSelectDataList?table=SYS_ORGAN&codeAtt=SO_ID&nameAtt=SO_NAME";
+
+        var userInfo = common.getUserInfo();
+
+        var subTargetType;
+        var tiolReportMgrOrgId = '';
+        var eventHandle={
+            tableReload:function (ele,url,param) {
+                //表格重载
+                table.reload(ele, {
+                    url: url,
+                    method: 'post',
+                    contentType: 'application/json',
+                    page: {
+                        pageNum : 1,
+                        pareSize : 10,
+                        curr:1
+                    },
+                    where: param,
+                    done:function(){
+                        //this.where={};
+                    }
+                });
+            },
+            dictInit:function(elem,url,selVal,selText, selectedVal){
+                var option = {
+                        elem: elem,
+                        url: url,
+                        method: 'get',
+                        responseList: 'list',
+                        optionText: selText,
+                        optionValue: selVal,
+                        isExpend: true,
+                        success: function(obj) {
+                            $(elem).val(selectedVal);
+                            form.render("select");
+                        }
+                    };
+                    common.selectDataSet(option);
+            },
+            execCheckBoxRowsEvent:function(data,options){
+                if (data && data.length > 0) {
+                    layer.confirm(options.confirmText, {
+                        icon: 3,
+                        title: '提示',
+                        offset: '150px'
+                    }, function(index) {
+                        var delParam = "";
+                        $.each(data,function(index){
+                            if(index){
+                                delParam +=","
+                            }
+                            delParam += data[index][options.value];
+                        });
+                        common.fetch(options.url + '?' + options.key + '=' + delParam,options.type,{suIds:delParam}, function(res) {
+                            if (res.success) {
+                                layer.msg(options.successText, {
+                                    icon: 6
+                                });
+                                options.success(res.list)
+                            }else{
+                                layer.msg(options.errorText, {
+                                    icon: 5
+                                });
+                            }
+                        }, function() {
+                            options.error([])
+                        });
+                        layer.close(index);
+                    });
+                } else {
+                    layer.msg(options.emptyText);
+                }
+            },
+            tiolReportMgrOrgTableInit: function(){
+                table.render(common.tableInitParams({
+                    elem: '#tiolReportMgrOrgTable',
+                    url: tiolReportMgrOrgPageUrl,
+                    method: 'post',
+                    toolbar: '#tiolReportMgrOrgTableToolBar',
+                    where: {
+                        seId:userInfo.seId
+                    },
+                    height:'full-175',
+                    cols: [
+                        [
+                            { type: 'checkbox' },
+                            {"type":"numbers", "title":"序号"},
+                            { field: 'seName', title: '单位名称' },
+                            { field: 'orgName', title: '管理部门名称', width: 400 },
+                            {
+                                field: 'ggEnStatus',
+                                title: '状态',
+                                width: 100,
+                                templet: function(rowData) {
+                                    if(rowData['ggEnStatus'] === '1'){
+                                        return '<span class="layui-badge" style="background-color:#66c33a">启用</span>'
+                                    }else{
+                                        return '<span class="layui-badge" style="background-color:#f56c6c">禁用</span>'
+                                    }
+                                }
+                            },
+                            {field: '', title: '操作', width: 150, toolbar: '#tiolReportMgrOrgTableOper', fixed: 'right'}
+                        ]
+                    ],
+                    done:function(){
+                        common.buttonLimit(currentMenuSmId);
+                    }
+                }));
+
+                //userTable监听事件
+                table.on('toolbar(tiolReportMgrOrgTable)', function(obj) {
+                    var checkRows = table.checkStatus(obj.config.id);
+                    switch (obj.event) {
+                        case 'add':
+                            $(".ele5").hide();
+                            //点击添加按钮
+                            //  common.clearForm($('.userLayer'));
+                            var userWin = layer.open({
+                                offset: '10px',
+                                title: '新增',
+                                maxmin: false,
+                                type: 1, //页面层
+                                area: ['580px','600px'], //高度自适应
+                                maxHeight: '500px',
+                                shadeClose: false,
+                                content: $('.tiolReportMgrOrgLayer').html(), //加载该区域的html
+                                // btn:['<i class="fa fa-check-circle"></i>确定','<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>取消'],
+                                success: function(obj) {
+                                    $(obj.selector).find('input[name=seName]').val(userInfo.seName);
+                                    var el5;
+                                    $(obj.selector).find("input[name=orgName]").on("click",function (e) {
+                                        e.stopPropagation();
+                                        if(!el5){
+                                            el5=tree.render({
+                                                elem: '.ele5',
+                                                url: baseUrl + 'sysmgr/sysOrgan/selectSysOrganTreeBySeId',
+                                                method: 'post',
+                                                response: {
+                                                    statusName: "success",
+                                                    statusCode: "0",
+                                                    dataName: "list"
+                                                },
+                                                defaultExpandAll: true,
+                                                expandOnClickNode: false,
+                                                highlightCurrent: true
+                                            });
+                                        }
+                                        $(".ele5").toggle();
+                                    });
+                                    tree.on("nodeClick(data5)",function(d) {
+                                        $("[name='orgName']").val(d.data.parentData.data.id!=d.data.currentData.id?(d.data.parentData.data.name+'-'+d.data.currentData.name):d.data.currentData.name);
+                                        $("[name='orgId']").val(d.data.currentData.id);
+                                        $(".ele5").hide();
+                                    });
+                                    form.render();
+                                    form.on('submit(formAdd)', function (obj) {
+                                        var params = {
+                                            seId: userInfo.seId,
+                                            seName: userInfo.seName,
+                                            orgId: obj.field.orgId,
+                                            orgName: obj.field.orgName,
+                                        };
+                                        var loadingIndex = common.layerLoader();
+                                        common.fetchPost(tiolReportMgrOrgSaveUrl, params, function(res){
+                                            layer.close(loadingIndex);
+                                            if(res.success) {
+                                                layer.msg("保存成功！", {
+                                                    icon: 6
+                                                });
+                                                eventHandle.tiolReportMgrOrgTableReload();
+                                                layer.close(userWin);
+
+                                            } else {
+                                                layer.msg("保存失败！" + res.resultMessage, {
+                                                    icon: 5
+                                                });
+                                            }
+                                        },function(){layer.close(loadingIndex);});
+                                        return false;
+                                    });
+                                },
+
+                            });
+                            break;
+                        case 'delete':
+                            //点击删除按钮
+                            var options = {
+                                url: tiolReportMgrOrgDeleteUrl,
+                                type:'post',
+                                key:'ids',
+                                value:'reportMgrOrgId',
+                                confirmText:'确定删除选中数据?',
+                                emptyText:'请选择删除记录！',
+                                successText:'删除上报规则成功!',
+                                errorText:'删除上报规则失败,请先删除管理信息!',
+                                success:function(obj){eventHandle.tiolReportMgrOrgTableReload()},
+                                error:function(obj){}
+                            };
+                            eventHandle.execCheckBoxRowsEvent(checkRows.data, options);
+                            break;
+                        case 'enable':
+                            //点击启用按钮
+                            var options = {
+                                url: tiolReportMgrOrgEnableUrl,
+                                type:'post',
+                                key:'ids',
+                                value:'reportMgrOrgId',
+                                confirmText:'确定启用选中数据?',
+                                emptyText:'请选择启用记录！',
+                                successText:'启用上报规则成功!',
+                                errorText:'启用上报规则失败!',
+                                success:function(obj){eventHandle.tiolReportMgrOrgTableReload()},
+                                error:function(obj){}
+                            };
+                            eventHandle.execCheckBoxRowsEvent(checkRows.data, options);
+                            break;
+                        case 'disable':
+                            //点击禁用按钮
+                            var options = {
+                                url: tiolReportMgrOrgDisableUrl,
+                                type:'post',
+                                key:'ids',
+                                value:'reportMgrOrgId',
+                                confirmText:'确定禁用选中数据?',
+                                emptyText:'请选择禁用记录！',
+                                successText:'禁用上报规则成功!',
+                                errorText:'禁用上报规则失败,请先禁用管理信息!',
+                                success:function(obj){eventHandle.tiolReportMgrOrgTableReload()},
+                                error:function(obj){}
+                            };
+                            eventHandle.execCheckBoxRowsEvent(checkRows.data, options);
+                            break;
+                    }
+                });
+
+                table.on('tool(tiolReportMgrOrgTable)', function(obj) {
+                    var data = obj.data;
+                    switch (obj.event) {
+                        case 'edit': //编辑
+                            //原始数据导入
+                            var editWin = layer.open({
+                                offset: '10px',
+                                title: '编辑',
+                                maxmin: false,
+                                type: 1, //页面层
+                                area: ['800px','600px'], //高度自适应
+                                shadeClose: false,
+                                content: $('.tiolReportMgrOrgEditLayer').html(), //加载该区域的html
+                                success: function(obj) {
+                                    form.val('tiolReportMgrOrgEditForm', data);
+                                    //初始化表格
+                                    tiolReportMgrOrgId = data.reportMgrOrgId;
+                                    table.render(common.tableInitParams({
+                                        elem: $(obj.selector).find('#tiolMgrOrgTargetTable'),
+                                        url: tiolMgrOrgTargetPageUrl,
+                                        method: 'post',
+                                        height: 'full-200',
+                                        toolbar: '#tiolMgrOrgTargetTableToolBar',
+                                        where: {reportMgrOrgId: data.reportMgrOrgId},
+                                        cols: [
+                                            [
+                                                { type: 'checkbox' },
+                                                {"type":"numbers", "title":"序号"},
+                                                { field: 'targetTypeName', title: '一级类型'},
+                                                { field: 'subTargetTypeName', title: '子级类型'},
+                                                { field: '', title: '操作', width: 80, toolbar: '#tiolMgrOrgTargetTableOper', fixed: 'right'}
+                                            ]
+                                        ],
+                                        done:function(){
+                                            common.buttonLimit(currentMenuSmId);
+                                        }
+                                    }));
+                                    form.on('submit(formEdit)', function (obj) {
+                                        var loading = layer.msg('正在保存中.....', {
+                                            icon: 16,
+                                            shade: 0.3,
+                                            time: 5000
+                                        });
+                                        common.fetchPost(tiolReportMgrOrgUpdateUrl,obj.field,function(res){
+                                            layer.close(loading);
+                                            if(res.success) {
+                                                layer.msg("保存成功！", {
+                                                    icon: 6
+                                                });
+                                                eventHandle.tiolReportMgrOrgTableReload();
+                                                layer.close(editWin);
+                                            } else {
+                                                layer.msg("保存失败！"  + res.resultMessage, {
+                                                    icon: 5
+                                                });
+                                            }
+
+                                        },function(){layer.close(loading);});
+                                        return false;
+                                    });
+                                }
+                            });
+                            break;
+                        case 'singleDel':
+                            var selectId = obj.data.reportMgrOrgId;
+                            layer.confirm('确定删除?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                                var layerLoader = common.layerLoader();
+                                common.fetchPost(tiolReportMgrOrgDeleteUrl + '?ids=' + selectId,{},function (res) {
+                                    layer.close(layerLoader);
+                                    if(res.success){
+                                        eventHandle.tiolReportMgrOrgTableReload();
+                                        layer.msg('删除成功' , {
+                                            time: 4000, //20s后自动关闭
+                                        });
+                                    }else{
+                                        layer.alert(res.resultMessage, {
+                                            icon: 5
+                                        });
+                                    }
+                                }, function () {
+                                    layer.close(layerLoader);
+                                });
+                                layer.close(index);
+                            });
+                            break;
+                    }
+                });
+            },
+            tiolReportMgrOrgTableReload:function(param){
+                this.tableReload('tiolReportMgrOrgTable', tiolReportMgrOrgPageUrl, param)
+            },
+            tiolMgrOrgTargetTableInit: function(){
+                //orgTable监听事件
+                table.on('toolbar(tiolMgrOrgTargetTable)', function(data) {
+                    var checkRows = table.checkStatus(data.config.id);
+                    switch (data.event) {
+                        case 'add':
+                            var index = layer.open({
+                                offset: '10px',
+                                title: '新增',
+                                maxmin: false,
+                                type: 1, //页面层
+                                area: ['580px','400px'], //高度自适应
+                                maxHeight: '400px',
+                                shadeClose: false,
+                                content: $('.tiolMgrOrgTargetLayer').html(), //加载该区域的html
+                                // btn:['<i class="fa fa-check-circle"></i>确定','<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>取消'],
+                                success: function(obj) {
+                                    $(obj.selector).find('adapt').css('marginLeft','10%');
+                                    // eventHandle.dictInit($(obj.selector).find('#targetType'),dictTypeUrl,'sdCode','sdName', '');
+                                    var targetTypeSelect = $(obj.selector).find('select[name="targetType"]');
+                                    form.on('select(targetTypeSelect)',function(data){
+                                        $(obj.selector).find("input[name='subTargetTypeName']").val('');
+                                        $(obj.selector).find("input[name='subTargetType']").val('');
+                                        eventHandle.selectInit(obj, data.value);
+                                    });
+                                    form.render();
+
+                                    form.on('submit(tiolMgrOrgTargetFormSave)', function (obj) {
+                                        var loading = layer.msg('正在保存中.....', {
+                                            icon: 16,
+                                            shade: 0.3,
+                                            time: 5000
+                                        });
+                                        var param  = obj.field;
+                                        param.targetTypeName = targetTypeSelect.find('option:checked').text();
+                                        param.reportMgrOrgId = tiolReportMgrOrgId;
+                                        common.fetchPost(tiolMgrOrgTargetSaveUrl,param,function(res){
+                                            layer.close(loading);
+                                            if(res.success) {
+                                                layer.msg("保存成功！", {
+                                                    icon: 6
+                                                });
+                                                eventHandle.tiolMgrOrgTargetTableReload();
+                                                eventHandle.tiolReportMgrOrgTableReload();
+                                                layer.close(index);
+                                            } else {
+                                                layer.msg("保存失败！" + res.resultMessage, {
+                                                    icon: 5
+                                                });
+                                            }
+
+                                        },function(res){
+                                            if(res && res.resultMessage){
+                                                layer.msg("保存失败！"  + res.resultMessage, {
+                                                    icon: 5
+                                                });
+                                            }
+                                            layer.close(loading);
+                                        });
+                                        return false;
+                                    });
+                                },
+
+                            });
+                            break;
+                        case 'delete':
+                            //点击删除按钮
+                            var options = {
+                                url: tiolMgrOrgTargetDeleteUrl,
+                                type:'post',
+                                key:'ids',
+                                value:'mgrOrgTargetId',
+                                confirmText:'确定删除选中数据?',
+                                emptyText:'请选择删除记录！',
+                                successText:'删除填报审核对象成功!',
+                                errorText:'删除填报审核对象失败!',
+                                success:function(obj){eventHandle.tiolMgrOrgTargetTableReload()},
+                                error:function(obj){}
+                            };
+                            eventHandle.execCheckBoxRowsEvent(checkRows.data, options);
+                            break;
+                    }
+                });
+
+                table.on('tool(tiolMgrOrgTargetTable)', function(obj) {
+                    var data = obj.data;
+                    switch (obj.event) {
+                        case 'edit': //编辑
+                            var index = layer.open({
+                                offset: '10px',
+                                title: '编辑',
+                                maxmin: false,
+                                type: 1, //页面层
+                                area: ['580px','400px'], //高度自适应
+                                maxHeight: '400px',
+                                shadeClose: false,
+                                content: $('.tiolMgrOrgTargetEditLayer').html(), //加载该区域的html
+                                success: function(obj) {
+                                    var targetTypeSelect = $(obj.selector).find('select[name="targetType"]');
+                                    form.val('tiolMgrOrgTargetForm', data);
+                                    eventHandle.selectInit(obj, data.targetType);
+                                    form.on('select(targetTypeSelect)',function(data){
+                                        $(obj.selector).find("input[name='subTargetTypeName']").val('');
+                                        $(obj.selector).find("input[name='subTargetType']").val('');
+                                        eventHandle.selectInit(obj,data.value);
+                                    });
+                                    //初始化表格
+                                    form.render();
+                                    var seMap = {};
+                                    form.on('submit(tiolMgrOrgTargetFormSave)', function (obj) {
+                                        var loading = layer.msg('正在保存中.....', {
+                                            icon: 16,
+                                            shade: 0.3,
+                                            time: 5000
+                                        });
+                                        var param  = obj.field;
+                                        param.targetTypeName = targetTypeSelect.find('option:checked').text();
+                                        param.reportMgrOrgId = tiolReportMgrOrgId;
+                                        common.fetchPost(tiolMgrOrgTargetUpdateUrl,param,function(res){
+                                            layer.close(loading);
+                                            if(res.success) {
+                                                layer.msg("保存成功！", {
+                                                    icon: 6
+                                                });
+                                                eventHandle.tiolMgrOrgTargetTableReload();
+                                                eventHandle.tiolReportMgrOrgTableReload();
+                                                layer.close(index);
+                                            } else {
+                                                layer.msg("保存失败！"  + res.resultMessage, {
+                                                    icon: 5
+                                                });
+                                            }
+                                        },function(res){
+                                            if(res && res.resultMessage){
+                                                layer.msg("保存失败！"  + res.resultMessage, {
+                                                    icon: 5
+                                                });
+                                            }
+                                            layer.close(loading);
+                                        });
+                                        return false;
+                                    });
+
+                                }
+                            });
+                            break;
+                    }
+                });
+            },
+            tiolMgrOrgTargetTableReload:function(param){
+                this.tableReload('tiolMgrOrgTargetTable',tiolMgrOrgTargetPageUrl,param)
+            },
+            selectInit: function(obj,type,callback){
+                $(obj.selector).find(".eleProPosal").hide();
+                //$(obj.selector).find(".eleItem").hide();
+                $(obj.selector).find(".eleMeeting").hide();
+                $(obj.selector).find(".eleRegulation").hide();
+                var treeOption = {
+                        // elem: $(obj.selector).find("#subTargetTypeTree"),
+                        response: {                 // 对于后台数据重新定义名字
+                            statusName: "success",
+                            statusCode: "0",
+                            dataName: "list"
+                        },
+                        defaultExpandAll: true,
+                        expandOnClickNode: false,
+                        highlightCurrent: true,
+                        done:function(res){
+                            if(typeof(callback) === "function"){
+                                callback(res);
+                            }
+                        }
+                    };
+                var idStr = 'id';
+                var valueStr = 'name';
+                var eleTreeDiv = "";
+                if(type == "PROPOSAL"){
+                    treeOption.url = '/catalog/tiolBillType/queryTiolBillTypeTree';
+                    eleTreeDiv = 'eleProPosal';
+                    if($(obj.selector).find("." + eleTreeDiv).html().length <1){
+                        treeOption.elem = $(obj.selector).find("div[name='proposalTree']");
+                    }
+                    //$(obj.selector).find("." + eleTreeDiv).show();
+                    $(obj.selector).find("." + eleTreeDiv).hide();
+                }else if(type == "ITEM"){
+                    treeOption.url = '/catalog/tiolCatalog/selectTiolCatalogTreeList';
+                    eleTreeDiv = 'eleItem';
+                    if($(obj.selector).find("." + eleTreeDiv).html().length <1){
+                        treeOption.elem = $(obj.selector).find("div[name='itemTree']");
+                    }
+                    //$(obj.selector).find("." + eleTreeDiv).show();
+                    $(obj.selector).find("." + eleTreeDiv).hide();
+                }else if(type == "MEETING"){
+                    idStr = 'meetingTypeId';
+                    valueStr = 'meetingTypeName';
+                    treeOption.url = '/meetingmgr/tiolMeetingType/getTiolMeetingTypeList';
+                    treeOption.request = {     // 对后台返回的数据格式重新定义
+                        name: "meetingTypeName",
+                        key: "meetingTypeId",
+                    };
+                    eleTreeDiv = 'eleMeeting';
+                    if($(obj.selector).find("." + eleTreeDiv).html().length <1){
+                        treeOption.elem = $(obj.selector).find("div[name='meetingTree']");
+                    }
+                    //$(obj.selector).find("." + eleTreeDiv).show();
+                    $(obj.selector).find("." + eleTreeDiv).hide();
+                }else if(type == "REGULATION"){
+                    idStr = 'regulationTypeId';
+                    valueStr = 'regulationName';
+                    treeOption.url = '/rulemgr/regulationTypeAlias/getAll';
+                    treeOption.request = {     // 对后台返回的数据格式重新定义
+                        name: "regulationName",
+                        key: "regulationTypeId",
+                    };
+                    eleTreeDiv = 'eleRegulation';
+                    if($(obj.selector).find("." + eleTreeDiv).html().length <1){
+                        treeOption.elem = $(obj.selector).find("div[name='regulationTree']");
+                    }
+                    //$(obj.selector).find("." + eleTreeDiv).show();
+                    $(obj.selector).find("." + eleTreeDiv).hide();
+                }
+                else if(type == "DEPARTMENT"){
+                    idStr = 'id';
+                    valueStr = 'name';
+                    treeOption.url = '/sysmgr/sysOrgan/selectSysOrganTreeBySeId';
+                    treeOption.method = 'post';
+                    treeOption.request = {     // 对后台返回的数据格式重新定义
+                        name: "name",
+                        key: "id",
+                    };
+                    eleTreeDiv = 'eleDepartment';
+                    if($(obj.selector).find("." + eleTreeDiv).html().length <1){
+                        treeOption.elem = $(obj.selector).find("div[name='departmentTree']");
+                    }
+                    //$(obj.selector).find("." + eleTreeDiv).show();
+                    $(obj.selector).find("." + eleTreeDiv).hide();
+                }
+                subTargetType = tree.render(treeOption);
+
+                $(obj.selector).find("input[name=subTargetTypeName]").off("click");
+                $(obj.selector).find("input[name=subTargetTypeName]").on("click", function(e){
+                    e.stopPropagation();
+                    $(obj.selector).find("." + eleTreeDiv).toggle();
+                });
+
+                tree.on("nodeClick(subTargetTypeData)",function(item) {
+                    if(type == "PROPOSAL" || type == "ITEM"){
+                        if (item.data.currentData.isParent) return;
+                    }
+                    $(obj.selector).find("input[name='subTargetTypeName']").val(item.data.currentData[valueStr]);
+                    $(obj.selector).find("input[name='subTargetType']").val(item.data.currentData[idStr]);
+                    $(obj.selector).find("." + eleTreeDiv).hide();
+                });
+            }
+        };
+
+        form.on('submit(formSearch)',function (obj) {
+            var params= {
+                ggEnStatus:obj.field.ggEnStatus,
+                seId:userInfo.seId,
+                seName:obj.field.seName
+            };
+            eventHandle.tiolReportMgrOrgTableReload(params);
+            return false;
+        });
+
+        eventHandle.tiolReportMgrOrgTableInit();
+        eventHandle.tiolMgrOrgTargetTableInit();
+
+        common.buttonLimit(currentMenuSmId);
+        common.columnSide();
+    });
+    </script>
+    <!--[if lt IE 9]>
+    <script src="../../js/lib/html5.min.js"></script>
+    <script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+
+</html>

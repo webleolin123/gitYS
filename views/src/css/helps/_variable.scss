@@ -1,0 +1,47 @@
+@charset "utf-8";
+
+/*
+ * @author gl
+ * @description 变量
+ */
+
+/* 主色 */
+$primary-color: #407ac1;
+
+
+
+/* 辅助色 */
+$secondary-color: #e9e9e9;
+
+/* 成功色 */
+$success-color:#20d37f;
+
+/* 信息色 */
+$info-color:#5bc0de;
+
+/* 提醒色 */
+$warning-color:#FAB102;
+
+/* 警告色 */
+$alert-color: #fc6766;
+
+
+/*辅助字体色*/
+$gray-color:gray;
+
+/*副标题*/
+$title-color:#90AACD;
+
+/*分割线颜色*/
+$split-color:#3E4A5F;
+
+
+/*弹框色*/
+
+/* 强调色（文字滑过效果，可与主色一致）*/
+$emphasize-color: $primary-color;
+
+//通用绿色
+$green: #32be91;
+//通用灰色
+$gray:gray;

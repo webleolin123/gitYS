@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html style="height:100%;width:100%;overflow:hidden;">
+	<head>
+		<title>附件浏览</title>
+		<!-- <meta http-equiv="Content-Type" content="text/html;charset=GBK"/> -->
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<link rel="stylesheet" href="./src/js/layui/css/layui.css" media="all" />
+		<script src="./src/js/layui/layui.js"></script>
+		<script type="text/javascript" src="./AIP_MAIN.js"></script>
+		<!--该事件在AIP引擎初始化完毕之后触发-->
+		<script language=javascript for=HWPostil1 event=NotifyCtrlReady>
+		 	HWPostil1_NotifyCtrlReady();
+		</script>
+	</head>
+
+	<body style="background: #ccc; height: 100%; width: 100%; left: 0px; top: 0px">
+		<div style="padding-right: 0px; padding-left: 0px; background: #fff; padding-bottom: 0px; margin: -10px 0px 0px; width: 100%; padding-top: 0px; height: 100%" align=center>
+			<form name="myform" style="height: 100%;">
+				<table class="TableBlock" width="100%" style="height: 100%;">
+					<tr style="height: 100%;">
+						<td width="105%" height="100%" valign="top" >
+							<!-- -----------------------------== 装载AIP控件 ==--------------------------------- -->
+							<script src="./LoadAip.js"></script>
+							<!-- --------------------------------== 结束装载控件 ==----------------------------------- -->
+						</td>
+					</tr>
+				</table>
+			</form>
+		</div>
+		<div style="height: 100%;">
+			<!-- -----------------------------== 装载AIP控件 ==--------------------------------- -->
+			<script src="./LoadAip.js"></script>
+			<!-- --------------------------------== 结束装载控件 ==----------------------------------- -->
+		</div>
+		<!-- <script>
+			layui.config({
+			base: '../../../../../src/js/',
+			version: new Date().getTime()
+			}).use(['layer','common'], function () {
+				var layer=layui.layer;
+				var common=layui.common;
+				// var url='http://127.0.0.1/pdfPreview_ofd/invoice.pdf';
+				var url=common.getQueryVariable("url_file");
+				debugger
+			});
+		</script> -->
+		<script>
+			// function GetQueryString(name) {
+			//    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)","i");
+			//    var r = window.location.search.substr(1).match(reg);
+			//    if (r!=null) return (r[2]); return null;
+			// }
+			function getLocationOrigin(top){
+				if (!top) {
+					if (!window.location.origin) {
+						return window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+					} else {
+						return window.location.origin
+					}
+				} else {
+					if (!window.top.location.origin) {
+						return window.top.location.protocol + "//" + window.top.location.hostname + (window.top.location.port ? ':' + window.top.location.port : '');
+					} else {
+						return window.top.location.origin
+					}
+				}
+			}
+			function getQueryVariable(variable){
+				var query = window.location.search.substring(1);
+				var vars = query.split("&");
+				for (var i = 0; i < vars.length; i++) {
+					var pair = vars[i].split("=");
+					if (pair[0] == variable) {
+						return pair[1];
+					}
+				}
+				return (false);
+			}
+			var fiId=getQueryVariable('fiId');
+			var src = "/dfsmgr/file/filesDownload?fid=" + fiId;
+			var url=getLocationOrigin() + '/' + src;
+			function getNowFormatDate() {
+		        var date = new Date();
+		        var seperator1 = "-";
+		        var year = date.getFullYear();
+		        var month = date.getMonth() + 1;
+		        var strDate = date.getDate();
+		        if (month >= 1 && month <= 9) {
+		            month = "0" + month;
+		        }
+		        if (strDate >= 0 && strDate <= 9) {
+		            strDate = "0" + strDate;
+		        }
+		        var currentdate = year + seperator1 + month + seperator1 + strDate;
+		        return currentdate;
+		    }
+			//校验控件是否安装，未安装提示安装
+		    function valdataObject(){
+		    	//是IE浏览器
+		    	if(!!window.ActiveXObject || "ActiveXObject" in window){
+		    		var isInstall = document.getElementById("HWPostil1").object;
+			        if(isInstall == null || isInstall.val == "null"){
+			            // window.confirm('OFD电子签章控件未安装，是否下载？', function(index){
+			            // 	if(index == 1) {
+			            // 		window.location.href = "./ocx_install.exe";
+			            // 	}
+						// });
+						var result=window.confirm('OFD电子签章控件未安装，是否下载？');
+						if(result){
+							// window.location.href = "./ocx_install.exe";
+							window.location.href = "./ocx_install.zip";
+						}
+			        }
+		    	} else {
+		    		window.alert("请使用IE浏览器打开！");
+		    	}
+		    }
+			function getLocationOrigin(top){
+				if (!top) {
+					if (!window.location.origin) {
+						return window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+					} else {
+						return window.location.origin
+					}
+				} else {
+					if (!window.top.location.origin) {
+						return window.top.location.protocol + "//" + window.top.location.hostname + (window.top.location.port ? ':' + window.top.location.port : '');
+					} else {
+						return window.top.location.origin
+					}
+				}
+			}
+			function HWPostil1_NotifyCtrlReady(){
+				var obj = document.getElementById("HWPostil1");
+				//隐藏侧边栏
+				obj.SetValue("TEMP_FLAG_NOLEFTVIEW","256");
+				obj.SetValue("SET_TEMPFLAG_MODE_ADD","256");
+				
+				obj.ShowDefMenu = 0;// 隐藏菜单栏
+				obj.ShowScrollBarButton =0;	// 显示工具条
+				obj.ShowToolBar =0;//隐藏工具栏
+				obj.HideMenuItem(24611);
+				// obj.WaterMarkTextOrPath = curUserName+"\n"+getNowFormatDate();
+				//obj.WaterMarkTextOrPath = getNowFormatDate();
+				obj.WaterMarkTextColor= 9211020;//设置水印颜色
+				obj.WaterMarkMode =4;//水印平铺阴影
+				obj.WaterMarkAlpha = 52;//水印透明度
+				obj.WaterMarkAngle =-450;//水印旋转
+				
+				/* var IsOpen = AipObj.LoadFile(localhost); */
+				var IsOpen = obj.LoadFile(url);
+				if(IsOpen != 1) {
+					//alert(IsOpen);
+					window.alert("打开文档失败！");
+				}
+			}
+			window.onload=function(){
+				valdataObject();
+			}
+		</script>
+	</body>
+</html>
+

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>角色复制</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../js/layui/css/layui.css"/>
+    <link href="../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script charset="utf-8" src="../../js/common/plugin.js"></script>
+</head>
+<style>
+    .content{
+        height:100%;
+        width:100%;
+        position:fixed;
+    }
+    .auth-right-padding {
+        padding: 0 0 0 12px;
+        height: 90%;
+    }
+
+</style>
+
+<body class="iframe-h">
+
+<div class="content">
+    <div class="layui-row" id="authContainerFirstRowId" style="width:100%;height:100%; overflow-y: hidden;">
+        <!-- 左边一列 -->
+        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6  auth-right-padding" id="authTreeDivMd1" >
+            <div style="height:100%;overflow-y: auto;overflow-x: hidden;">
+                <blockquote class="layui-elem-quote">菜单按钮树</blockquote>
+                <div class="left_menu_tree" style="padding:0px 0px 0px 6px;width: 95%;height:auto;">
+                    <ul class="eleTree ele4" id="leftTree" lay-filter="leftTree" style="overflow:hidden"></ul>
+                </div>
+            </div>
+        </div>
+        <!-- 右边一列 -->
+        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6  auth-right-padding" id="authTreeDivMd2">
+            <div style="height: 100%;overflow-y: auto;overflow-x: hidden;">
+                <blockquote class="layui-elem-quote">企业树</blockquote>
+                <div class="left_menu_tree" style="padding:0px 0px 0px 6px;width: 95%;height:auto;">
+                    <ul class="eleTree ele4" id="rightTree" lay-filter="rightTree"></ul>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block" style="text-align:center;margin-left:0px;padding-top:0px;">
+                <label class="layui-form-label">角色名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="roleName" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+                <button class="layui-btn" id="copyRole" permission-btn="copyRole" title="复制">
+                    <i class="iconfont icon-SZYD-qiyong"></i> 复制</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+<script src="./../../js/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).use(['eleTree','layer','table','form','laytpl','common','element'], function () {
+        var table = layui.table;
+        var form = layui.form;
+        var tree = layui.eleTree;
+        var common = layui.common;
+        var element = layui.element;
+        element.init();
+        var baseUrl = '../../../';
+        var currentMenuSmId=$("#currentMenuSmId",top.window.parent.document).val();
+        common.themeSet();
+
+        var leftTree;
+        var rightTree;
+        var allData = {};
+
+        $('input[name="roleName"]').val(parent.lineData.srName);
+
+        function storeAllData(list) {
+            if(list && list.length>0) {
+                $.each(list, function () {
+                    allData[this.id] = this;
+                });
+            }
+        }
+
+        var eventHandler={
+            //菜单按钮树初始化
+            leftTreeInit: function() {
+                leftTree = tree.render({
+                    elem: '#leftTree',
+                    //url: baseUrl+'sysmgr/menu/selectSysMenuButtonTreeOfRole?isAll=1&srId='+parent.lineData.srId,
+                    url: baseUrl + 'sysmgr/menu/selectAllSysMenuButtonTreeOfRole?srId=' + parent.lineData.srId,
+                    done: function(data){
+                        //console.debug(data.list);
+                        storeAllData(data.list);
+                        $('#leftTree .eleTree-node-content').each(function () {
+                            $(this).click();
+                        });
+                        //加载后展开所有节点
+                        leftTree.expandAll();
+                    },
+                    checkStrictly: false,
+                    showCheckbox: true,
+                    lazy: false,
+                    renderAfterExpand: true,
+                    //defaultExpandAll: true,
+                    load: function(data,callback) {
+                       /*
+                        common.fetchGet(baseUrl+'sysmgr/menu/selectSysMenuButtonTreeOfRole?srId='+parent.lineData.srId+'&smId='+data.id,function (res) {
+                            if(res.success && res.list){
+                                storeAllData(res.list);
+                                callback(res.list);
+
+                                $('#leftTree div.eleTree-node[data-id='+data.id+'] .eleTree-node-group .eleTree-node-content').each(function () {
+                                    $(this).click();
+                                });
+                            }
+                        },function () {
+                            callback([])
+                        });
+                        */
+                    },
+                    response: {                 // 对于后台数据重新定义名字
+                        dataName: "list"
+                    },
+                    request: {                  // 对后台返回的数据格式重新定义
+                        disabled: "nocheck",
+                    },
+                });
+
+            },
+            //菜单按钮树重新载入
+            leftTreeReload: function(){
+
+            },
+            //企业树初始化
+            rightTreeInit: function() {
+                common.fetchGet('sysmgr/sysEnterprise/selectAllDescendantNodeFromRootNode?treeType=enterpriseTree&rootType=enterprise&rootId='+parent.lineData.seId, function(res) {
+                    //树信息的导入
+                    if (res.success && res.list) {
+                        for(var i=0; i < res.list.length;i++){
+                            if(res.list[i].id===parent.lineData.seId){
+                                res.list[i].disabled=true;
+                                break;
+                            }
+                        }
+
+                        rightTree = tree.render({
+                            elem: '#rightTree',
+                            data: common.arrayToTreeJson(res.list || [], "id", "pid", "children"),
+                            defaultExpandAll: true,
+                            checkOnClickNode: true,
+                            highlightCurrent: true,
+                            expandOnClickNode: false,
+                            showCheckbox: true,
+                            checkStrictly: false,
+                            lazy: false,
+                            request: {
+                                name: "title",
+                                key: "id",
+                                children: "children",
+                                checked: "checked",
+                                disabled: "disabled",
+                                isLeaf: "isLeaf",
+                                extendAttr: "extendAttr"
+                            },
+                            searchNodeMethod: function (value, data) {
+                                if (!value) return true;
+
+                                return data.title.indexOf(value) !== -1;
+                            }
+                        });
+                        tree.on("nodeClick(rightTree)", function(obj) {
+                        });
+                    } else {
+                        //不存在数据时的显示
+                    }
+                }, function() {},false);
+            },
+            //企业用户树重新载入
+            rightTreeReload: function(){
+
+            },
+            reloadMenu2Redis:function(){
+                common.fetchGet('sysmgr/menu/initMenuAndButtonAuthByUrl2Redis',function (res) {},function (ero) {});
+            }
+        };
+        $("#copyRole").on("click",function(){
+            var menuIds = '';
+            var buttonIds = '';
+            var seIds = '';
+            leftTree.getChecked(false, true).forEach(function (value, index, data) {
+                //console.debug(data[index].extendAttr + ":" + value.id);
+                if("button" == data[index].extendAttr){
+                    buttonIds += (buttonIds.length>0?",":"") + value.id;
+                }
+                else if("menu" == data[index].extendAttr){
+                    menuIds += (menuIds.length>0?",":"") + value.id;
+                }
+            });
+            rightTree.getChecked(false, false).forEach(function (value, index, data) {
+                if("enterprise" == data[index].extendAttr){
+                    seIds += (seIds.length>0?",":"") + value.id;
+                }
+            });
+            if(seIds.length==0 || (menuIds.length==0 && buttonIds.length==0)){
+                layer.msg("请选择企业");
+                return false;
+            }
+            if(menuIds.length==0 && buttonIds.length==0){
+                layer.msg("请选择菜单按钮");
+                return false;
+            }
+            var params = {
+                sourceRoleId: parent.lineData.srId,
+                targetRoleName: $('input[name=roleName]').val(),
+                menuIds: menuIds,
+                buttonIds: buttonIds,
+                seIds: seIds
+            };
+            var loadingIndex = layer.load(1, {shade: [0.1,'#fff']});
+            common.fetchPost('sysmgr/sysRole/copyRoleToEnterprise', params, function (data) {
+                layer.close(loadingIndex);
+                if(data.success){
+                    //eventHandler.reloadMenu2Redis();//异步重新加载菜单与权限关系至Redis。
+                    layer.msg('复制成功');
+                    parent.layer.close(parent.layer.index);
+                    parent.eventHandle.tableReload();
+                }
+                else{
+                    layer.msg(data.resultMessage);
+                }
+            }, function (data) {
+                layer.close(loadingIndex);
+                layer.msg(data.resultMessage);//失败后提示
+            });
+
+        });
+
+
+        eventHandler.leftTreeInit();
+        eventHandler.rightTreeInit();
+        common.buttonLimit();
+    });
+
+
+</script>
+</body>
+</html>

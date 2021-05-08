@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+
+<head>
+    <meta charset="UTF-8">
+    <title>会议管理-退回</title>
+    <meta content="webkit" name="renderer" />
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../../js/layui/css/layui.css" />
+    <link href="../../../css/public.css?v1.01" rel="stylesheet" />
+    <link href="../../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <script src="../../../js/lib/jquery.1.12.3.js"></script>
+</head>
+<style>
+    .layui-layer-btn-c {
+        position: relative;
+        top: -12px;
+    }
+</style>
+
+<body class="iframe-h">
+    <div class="content-wrap" style="padding: 15px;">
+        <div class="layui-row layui-col-space10">
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>退回列表</span></div>
+                <div class="layui-card-body">
+                    <form action="" class="layui-form layui-form-pane">
+                        <div class="layui-row layui-col-space10">
+                            <div class="layui-col-xs4">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">会议名称</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="smName" placeholder="请输入会议名称" autocomplete="off"
+                                            class="layui-input">
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <div class="layui-col-xs4">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">状态</label>
+                                    <div class="layui-input-block">
+                                        <select name="meetingStatus">
+                                            <option value="">请选择</option>
+                                            <option value="">草稿</option>
+                                            <option value="">被退回</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div> -->
+                            <div class="layui-col-xs4">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">会议日期</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="date1" placeholder="请选择时间" autocomplete="off"
+                                            class="layui-input">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="toggle-area layui-col-space10">
+                                <div class="layui-col-xs4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">会议类型</label>
+                                        <div class="layui-input-block">
+                                            <select name="meetingTypeId" id="meetingTypeId">
+                                                <option name="" value=""></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">退回日期</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="date2" placeholder="请选择时间" autocomplete="off"
+                                                class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="formSearch-btnArea">
+                                <button class="layui-btn" lay-submit lay-filter="formSearch"><i class="fa fa-search"></i>查询</button>
+                                <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                                <a class="toggle-btn">
+                                    <span>展开</span>
+                                    <i class="fa fa-angle-up"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="layui-card">
+                    <div class="layui-card-body" style="padding-top: 0">
+                        <table id="table1" lay-filter="table1"></table>
+                        <!-- <script type="text/html" id="tableToolBar">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-sm" lay-event="submit" >
+                                <i class="fa fa-check" style="margin-right: 2px"></i> 提交
+                            </button>
+                            <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete" >
+                                <i class="layui-icon">&#xe640;</i> 删除
+                            </button>
+                        </div>
+                    </script> -->
+
+                        <script type="text/html" id="tableOper">
+                        <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="view" permission-btn="meetingbackListView">查看</a>
+                    </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./../../../js/layui/layui.js"></script>
+    <script>
+
+        layui.config({
+            base: '../../../../src/js/',
+            version: new Date().getTime()
+        }).use(['layer', 'form', 'common', 'laydate', 'table'], function () {
+            var form = layui.form;
+            var common = layui.common;
+            var table = layui.table;
+            var laydate = layui.laydate;
+            var baseUrl = '../../../../';
+            var meetingTypeIdMap = {};
+            common.themeSet();
+            common.toggleArea($('.toggle-btn'), $('.toggle-area'));
+
+            common.selectDataSet({
+                elem: $('[name=meetingTypeId]'),
+                url: 'meetingmgr/tiolMeetingType/getHasPermMeetingTypeList',
+                responseList: 'list',
+                method: 'get',//默认为get
+                optionText: 'meetingTypeName',
+                optionValue: 'meetingTypeId',
+                success: function (data) {
+                    if (data && data.list && data.list.length > 0) {
+                        $.map(data.list, function (item) {
+                            meetingTypeIdMap[item.meetingTypeId] = item;
+                        });
+                    }
+                    form.render('select');
+                }
+            });
+
+            laydate.render({
+                elem: '[name=date1]',
+                type: 'date',
+                trigger: 'click'
+            });
+            laydate.render({
+                elem: '[name=date2]',
+                type: 'date',
+                trigger: 'click'
+            });
+
+            table.render(common.tableInitParams({
+                elem: '#table1',
+                url: baseUrl + 'meetingmgr/tiolMeeting/selectBackMeetingAuditPage',
+                method: 'post',
+                // toolbar:'#tableToolBar',
+                cols: [
+                    [
+                        { type: 'checkbox' },
+                        { type: 'numbers', title: '序号' },
+                        { field: 'meetingName', title: '会议名称', minWidth: 200 },
+                        {
+                            field: 'meetingTime', title: '会议日期', width: 250,align:"center", templet: function (rowDta) {
+                                if (rowDta['meetingTime'] && rowDta['meetingTimeEnd']) {
+                                    if (rowDta['meetingTime'] != rowDta['meetingTimeEnd']) {
+                                        return rowDta['meetingTime'] + '至' + rowDta['meetingTimeEnd']
+                                    } else {
+                                        return rowDta['meetingTime']
+                                    }
+                                } else {
+                                    return '-'
+                                }
+                            }
+                        },
+                        { field: 'meetingTypeName', title: '会议类型', minWidth: 110,align:"center" },
+                        { field: 'backOrgName', title: '退回操作部门', minWidth: 150 ,align:"center"},
+                        {
+                            field: 'backDatetime', title: '退回日期', minWidth: 140,align:"center", templet: function (rowData) {
+                                return common.dateFormat(rowData.backDatetime, 'yyyy-MM-dd');
+                            }
+                        },
+                        { field: '', title: '操作', width: 80, toolbar: '#tableOper', fixed: 'right' ,align:"center"},
+                    ]
+                ],
+                height:"full-180",
+                done: function () {
+                    common.buttonLimit();
+                }
+            }));
+
+            // table.on('toolbar(table1)',function (obj) {
+
+            //     var checkStatus = table.checkStatus(obj.config.id);
+            //     switch(obj.event){
+            //         case 'submit'://提交
+            //             if(checkStatus.data.length===0 ){
+            //                 layer.msg('请选择会议');
+            //                 return false;
+            //             }else if(checkStatus.data.length>1){
+            //                 layer.msg('请选择一条记录');
+            //                 return false;
+            //             }
+            //             var data=checkStatus.data[0];
+            //             layer.confirm('确定提交该会议?', {icon: 3, title:'提示',offset: '150px'}, function(index){
+            //                 var meetingId = data.meetingId;
+            //                 var layerLoader =common.layerLoader();
+            //                 common.fetchPost('meetingmgr/tiolMeeting/commitMeeting',{"meetingId":meetingId,"flowStatusId":data.flowStatusId},function (res) {
+            //                     if(res==null||res.resultCode=='-1'){
+            //                         layer.alert(res.resultMessage,{
+            //                             btn:['<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭'],
+            //                             btnAlign:'c',
+            //                             time:20000
+            //                         });
+            //                     }else{
+            //                         eventHandle.tableReload();
+            //                         layer.msg('已提交');
+            //                     }
+            //                     layer.close(layerLoader);
+            //                 },function () {
+            //                     layer.close(layerLoader);
+            //                 });
+            //                 // return false;
+            //                 layer.close(index);
+            //             });
+            //             // layer.full(sumbitLayer);
+            //             break;
+            //         case 'delete':
+            //             //点击删除按钮
+            //             if(checkStatus.data.length>0){
+            //                 layer.confirm('确定删除选中项?', {icon: 3, title:'提示',offset: '150px'}, function(index){
+            //                     var smIdArr=[];
+            //                     for(var i=0;i<checkStatus.data.length;i++){
+            //                         smIdArr.push(checkStatus.data[i]['smId'])
+            //                     }
+            //                     var layerLoader =common.layerLoader();
+            //                     common.fetchDelete('xxx?smIds='+smIdArr.join(','),function (res) {
+            //                         layer.close(layerLoader);
+            //                         //成功之后刷新tree 以及表格
+            //                         if(res.success){
+            //                             table.reload('table1', {
+            //                                 page: {
+            //                                     curr: 1
+            //                                 }
+            //                             });
+            //                             layer.msg('删除成功');
+            //                         }else{
+            //                             layer.alert(res.resultMessage);
+            //                         }
+            //                     },function () {
+            //                         layer.close(layerLoader);
+            //                     });
+
+            //                     layer.close(index);
+            //                 });
+            //             }else{
+            //                 layer.msg('请选择删除列')
+            //             }
+            //             break;
+            //     }
+            // });
+
+            table.on('tool(table1)', function (obj) {
+                var data = obj.data;
+                var flowAuditId = data.flowAuditId;
+                switch (obj.event) {
+                    case 'view':
+                        var viewRule = layer.open({
+                            title: ['退回查看'],
+                            type: 2,
+                            content: baseUrl + 'src/page/ys/hygl/meetingReturnedView.html?view=view&flowAuditId=' + flowAuditId,
+                            maxmin: true,
+                            offset: 't',
+                            btn: ['<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭'],
+                            btnAlign: 'c',
+                            btn2: function () {
+                                layer.close(editLayer);
+                            },
+                            success: function (layero, index) {
+
+                            }
+                        });
+                        layer.full(viewRule);
+                        break;
+                }
+            });
+
+            form.on('submit(formSearch)', function (obj) {
+                //表格重载
+                table.reload('table1', {
+                    url: baseUrl + 'meetingmgr/tiolMeeting/selectBackMeetingAuditPage',
+                    method: 'post',
+                    contentType: 'application/json',
+                    page: {
+                        curr: 1
+                    },
+                    where: {
+                        meetingName: obj.field.smName,
+                        meetingStatus: obj.field.meetingStatus,
+                        meetingTime: obj.field.date1,
+                        auditDatetime: obj.field.date2,
+                        meetingTypeId: obj.field.meetingTypeId
+                    },
+                });
+                return false;
+            });
+
+
+        });
+
+
+    </script>
+
+    <!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+
+</html>

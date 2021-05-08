@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>自定义页面</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../js/layui/css/layui.css"/>
+    <link href="../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script charset="utf-8" src="../../js/common/plugin.js"></script>
+    <!--[if lt IE 9]>
+    <script src="../../js/lib/html5.min.js"></script>
+    <script src="../../js/lib/respond.js"></script>
+    <![endif]-->
+
+    <style>
+        .content-box{
+            background: inherit;
+        }
+    </style>
+</head>
+
+<body class="iframe-h">
+<!--隐藏域的值-->
+<input type="hidden" id="rowDataLine">
+<input type="hidden" id="nodeDataLine">
+<input type="hidden" id="customDataLine">
+<input type="hidden" id="isDone">
+
+<div class="content-wrap mainBox clearFix">
+
+</div>
+
+<script charset="utf-8" src="../../js/lib/echarts-4.1.0.min.js"></script>
+<script charset="utf-8" src="../../js/lib/echartTheme.js"></script>
+
+<script src="./../../js/layui/layui.js"></script>
+<script>
+
+
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).extend({
+        custom:'common/custom'
+    }).use(['custom'],function () {
+        var custom=layui.custom;
+        var common=layui.common;
+
+
+        //获取当前url的？后的值
+
+        var currentID='';
+
+        if(window.location.search){
+            currentID=window.location.search.substring(1);
+        }else{
+            currentID=$("#currentMenuCompId",window.parent.document).val();
+        }
+
+
+        var tableList = [], treeList = [], chartList = [];
+        common.fetchGet('compmgr/webComponent/componentInfo?compId='+currentID,function (res) {
+
+
+            if( typeof res !="object"){
+                res= $.parseJSON(res);
+            }
+
+            if( typeof res !="object"){
+                res= JSON.parse(res);
+            }
+
+            var propArr=res.list||[];
+
+            var func={
+                getProp:function(components){
+                    if(!! components && components.length>0){
+                        $.map(components,function (val) {
+                            if(!!val.prop){
+                                propArr.push(val.prop);
+
+                                func.getProp(val.components);
+                            }
+                        })
+                    }
+                }
+
+            };
+
+            $.map(propArr,function (item,index) {
+                if (item.parentCompId === "-1") {
+                    document.title = item.compName;
+                }
+                if(!!item.prop && item.prop.layoutWidth){
+                    //第一个prop 元素 compName 为页面名字
+                    if ($('#module_' + item.compName).find('.content-box')[0]) {
+
+                        custom.layout({
+                            ele: $('#module_' + item.compName).find('.content-box'),
+                            layoutWidth:item.prop.layoutWidth,
+                            layoutHeight:item.prop.layoutHeight,
+                            moduleName:item.prop.moduleName,
+                            moduleStyle:item.prop.moduleStyle,
+                            done:function (res) {
+
+                            }
+                        });
+                    }else{
+                        custom.layout({
+                            ele: $('.mainBox'),
+                            layoutWidth:item.prop.layoutWidth,
+                            layoutHeight:item.prop.layoutHeight,
+                            moduleName:item.prop.moduleName,
+                            moduleStyle:item.prop.moduleStyle,
+                            done:function (res) {
+
+                            }
+                        });
+                    }
+                }
+            });
+
+            //各模块信息导入
+            $.map(propArr,function (item, index) {
+                var prop=item.prop;
+                if(prop){
+                    //组件注册
+
+                    if (prop.plugin === 'table') {
+                        tableList.push('table_' + prop.name);
+                    } else if (prop.plugin === 'tree') {
+                        treeList.push('tree_' + prop.name);
+                    } else if (prop.plugin === 'chart') {
+                        chartList.push('chart_' + prop.name);
+                    }
+                    custom.pluginReg(prop);
+                }
+            });
+            //通知上一级页面 加载完成
+            $('#isDone').val('yes');
+
+            //数据权限需要reload的模块注册
+            common.dataAccessReloadModule({
+                table: tableList,
+                tree: treeList,
+                chart: chartList
+            });
+
+        },function () {
+            $('#isDone').val('no');
+        }, false);
+        common.themeSet();
+    });
+
+
+</script>
+
+</body>
+</html>

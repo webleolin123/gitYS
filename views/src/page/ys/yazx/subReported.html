@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+
+<head>
+    <meta charset="UTF-8">
+    <title>上报管理-议案执行-下级上报</title>
+    <meta content="webkit" name="renderer" />
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../../js/layui/css/layui.css" />
+    <link href="../../../css/public.css?v1.01" rel="stylesheet" />
+    <link href="../../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <script src="../../../js/lib/jquery.1.12.3.js"></script>
+</head>
+
+<style>
+    span#reportNums i {
+        height: 20px;
+        vertical-align: -2px;
+    }
+
+    .eleTree.ele5,
+    .eleTree.ele6 {
+        height: auto;
+        width: 100%;
+        display: none;
+        position: absolute;
+        top: 100%;
+        background-color: #fff;
+        z-index: 10000;
+        border: 1px solid #ccc;
+    }
+</style>
+
+<body class="iframe-h">
+    <!-- 上报弹窗 -->
+    <div class="reportPreview" style="display: none">
+        <div style="padding: 10px">
+            <div class="layui-row layui-col-space10">
+                <div class="layui-col-xs6">
+                    <div class="layui-card-header layui-card-header-custom">
+                        <span><i></i>本次上报上级单位:
+                            <b class="primary" id="reportCompany"></b>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-col-space10">
+                <div class="layui-col-xs12">
+                    <div class="layui-card">
+                        <div class="layui-card-header layui-card-header-custom">
+                            <span><i></i>会议资料
+                            </span>
+                        </div>
+                        <div class="layui-card-body">
+                            <table id="tableMeetingFile" lay-filter="tableMeetingFile"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-col-space10">
+                <div class="layui-col-xs12">
+                    <div class="layui-card">
+                        <div class="layui-card-header layui-card-header-custom">
+                            <span><i></i>议题清单
+                            </span>
+                        </div>
+                        <div class="layui-card-body">
+                            <table id="tableSubjectList" lay-filter="tableSubjectList"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-col-space10">
+                <div class="layui-col-xs12">
+                    <div class="layui-card">
+                        <div class="layui-card-header layui-card-header-custom">
+                            <span><i></i>议题资料
+                            </span>
+                        </div>
+                        <div class="layui-card-body">
+                            <table id="tableSubjectFile" lay-filter="tableSubjectFile"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-wrap">
+        <div class="layui-row layui-col-space10">
+            <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+                <!-- layui tree-->
+                <div class="layui-card">
+                    <div class="layui-card-header layui-card-header-custom"><span><i></i>企业层级</span>
+                    </div>
+                    <div class="layui-card-body">
+                        <ul id="leftTree" lay-filter="leftTree" class="eleTree"></ul>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-xs10 layui-col-sm10 layui-col-xs10">
+                <div class="layui-card">
+                    <div class="layui-card-header layui-card-header-custom"><span><i></i>上报列表<b class="columnToggle"><i class="fa fa-toggle-left"></i></b></span></div>
+                    <div class="layui-card-body">
+                        <form action="" class="layui-form layui-form-pane">
+                            <div class="layui-row layui-col-space10">
+
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">议案名称</label>
+                                        <div class="layui-input-block">
+                                            <input autocomplete="off" class="layui-input" name="subjectName"
+                                                placeholder="请输入" type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">会议名称</label>
+                                        <div class="layui-input-block">
+                                            <input autocomplete="off" class="layui-input" name="meetingName"
+                                                placeholder="请输入" type="text">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="toggle-area layui-col-space10">
+                                    <div class="layui-col-md4">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">审核日期</label>
+                                            <div class="layui-input-block">
+                                                <input id="auditTime" autocomplete="off" class="layui-input"
+                                                    readonly="readonly" name="auditTime" placeholder="请选择" type="text">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="" style="text-align: center;">
+                                    <div class="layui-input-inline" style="padding-left: 20px">
+                                        <button name="searchSubmit" class="layui-btn  " lay-submit=""
+                                            lay-filter="formSearch"><i class="fa fa-search"></i>查询</button>
+                                        <button name="reset" lay-filter="reset" type="reset"
+                                            class="layui-btn layui-btn-primary  "><i class="fa fa-eraser"></i>重置</button>
+                                        <a class="toggle-btn">
+                                            <span>展开</span><i class="fa fa-angle-up"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="layui-card" style="margin-top: -13px">
+                    <div class="layui-card-body">
+                        <table id="tabelSubMeetingReport" lay-filter="tabelSubMeetingReport" style="margin-top:5px;">
+                        </table>
+                        <script type="text/html" id="tableToolBar">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-sm hide" id="refresh" lay-event="refresh">
+                                <i class="layui-icon layui-icon-diamond"></i>
+                                刷新
+                            </button>
+                            <button class="layui-btn layui-btn-sm" lay-event="audit"><i class="fa fa-check"></i>审核</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-primary" lay-event="back"><i class="fa fa-mail-reply"></i>退回</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-warm" lay-event="withdraw"><i class="fa fa-mail-reply"></i>撤回</button>
+                        </div>
+                        <div class="tableDes" style="font-size: 14px;margin-top: -5px;height:30px" >
+                            <div style="display: inline-block">
+                                <span>执行情况：</span>
+                                <span><b class="primary" name="tj_seName"></b>已提交需报国资委的议案执行情况<b class="primary" name="tj_submitCount"></b>个，其中已报送<b class="primary" name="tj_reportCount"></b>个（上报国资委<b
+                                        class="primary" name="tj_reportSasac"></b>个，占已上报的<b class="primary" name="tj_rate"></b>）</span>
+                            </div>
+                        </div>
+                    </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./../../../js/layui/layui.js"></script>
+    <script src="../../../js/lib/echarts-4.1.0.min.js" charset="utf-8"></script>
+    <script src="../../../js/lib/echartTheme.js" charset="utf-8"></script>
+    <script>
+
+        layui.config({
+            base: '../../../../src/js/',
+            version: new Date().getTime()
+        }).extend({
+            custom: 'common/custom'
+        }).use(['layer', 'eleTree', 'table', 'form', 'laytpl', 'element', 'custom', 'laydate', 'util'], function () {
+            var table = layui.table;
+            var form = layui.form;
+            var common = layui.common;
+            var element = layui.element;
+            var tree = layui.eleTree;
+            var laydate = layui.laydate;
+            var util = layui.util;
+            var fileIframe;
+            element.init();
+            var baseUrl = '../../../../';
+
+            common.themeSet();
+            common.toggleArea($('.toggle-btn'), $('.toggle-area'));
+            //树高度设置
+            $('#leftTree').css('height', $(window).height() - 115 + 'px');
+
+            var where = {};
+            var seId;
+            var count = 0;
+            laydate.render({
+                elem: 'input[name=auditTime]',
+                type: 'date',
+                range: false,
+                trigger: 'click'
+            });
+            var userInfo = common.getUserInfo();
+            var userSeId = userInfo.seId;
+            var shortName;
+            var eventHandle = {
+                // tableReload : function (where) {
+                //             table.reload('tabelSubMeetingReport', {
+                //                 url: baseUrl + 'meetingmgr/tiolExecution/pageQuerySubordinateReportExecutionVo',
+                //                 method: 'post',
+                //                 where: where
+                //             });
+                //             eventHandle.getExecutionReportInfo();
+
+                //         },
+                //         treeInit: function () {
+                //             //企业层级加载
+                //             var eleTreeId = tree.render({
+                //                 elem: '#leftTree',
+                //                 url: baseUrl + 'meetingmgr/tiolExecution/getCountOfSubordinateReportExecutionVo?treeType=enterpriseTree',
+                //                 showIcon: true,
+                //                 done: function (data) {
+                //                     //默认点击树第一个节点
+                //                     $('#leftTree').find('.eleTree-node-content-label').eq(0).trigger('click');
+                //                 },
+                //                 lazy: true,
+                //                 load: function (data, callback) {
+                //                     common.fetchGet('meetingmgr/tiolExecution/getCountOfSubordinateReportExecutionVo?treeType=enterpriseTree' + '&id=' + data.id + "&extendAttr=" + data.extendAttr, function (res) {
+                //                         if (res.success && res.list) {
+                //                             callback(res.list);
+                //                             if (res.list[0].checked == false && count == 0) {
+                //                                 $(".eleTree-node-group").eq(0).find('.eleTree-node-content').eq(0).click();
+                //                                 count++;
+                //                             }
+                //                         }
+                //                     }, function () {
+                //                         callback([])
+                //                     });
+                //                 },
+                //                 response: {
+                //                     dataName: "list"
+                //                 }
+                //             });
+                //             tree.on("nodeClick(leftTree)", function (obj) {
+                //                 seId = obj.data.currentData.id;
+                //                 var para = { 'subordinateSeId': seId };
+                //                 $.extend(where, para);
+                //                 eventHandle.tableReload(where);
+                //             });
+                //         },
+                /*examineCount: function(){
+                    common.fetchPost('meetingmgr/tiolExecution/getCountOfSubordinateReportExecutionVo',{subordinateSeId:userSeId},function (res) { 
+                        if(res.success){
+                            $('.examineCount').text('('+ res.object + ')');
+                            $('#leftTree').find('.eleTree-node-content-label').eq(0).attr('title','待当前单位审核信息'+ res.object + '条');
+                        }else{
+                            layer.alert("待审核数量查询失败:"+res.resultMessage);
+                            $('#leftTree').find('.eleTree-node-content-label').eq(0).attr('title','待审核数量查询失败');
+                        }
+                     },function (err) {
+                        layer.alert(err.resultMessage);
+                        $('#leftTree').find('.eleTree-node-content-label').eq(0).attr('title','待审核数量查询失败');
+                     },false)
+                },*/
+                tableReload: function (where) {
+                    table.reload('tabelSubMeetingReport', {
+                        url: baseUrl + 'meetingmgr/tiolExecution/pageQuerySubordinateReportExecutionVo',
+                        method: 'post',
+                        where: where
+                    });
+                    eventHandle.getExecutionReportInfo();
+                },
+                treeInit: function () {
+                    //企业层级加载
+                    var eleTreeId = tree.render({
+                        elem: '#leftTree',
+                        url: baseUrl + 'meetingmgr/tiolExecution/getCountOfSubordinateReportExecutionVo?treeType=enterpriseTree',
+                        showIcon: true,
+                        done: function (data) {
+                            //默认点击树第一个节点
+                            $('#leftTree').find('.eleTree-node-content-label').append(data.list[0].toAuditCount == 0?'(<span class="examineCount">' + data.list[0].toAuditCount + '</span>)':'(<span class="examineCount red">' + data.list[0].toAuditCount + '</span>)');
+                            $('#leftTree').find('.eleTree-node-content-label').eq(0).attr('title','待当前单位审核信息'+ data.list[0].toAuditCount + '条');
+                            $('#leftTree').find('.eleTree-node-content-label').eq(0).trigger('click');
+                        },
+                        lazy: true,
+                        load: function (data, callback) {
+                            common.fetchGet('meetingmgr/tiolExecution/getCountOfSubordinateReportExecutionVo?treeType=enterpriseTree' + '&id=' + data.id + "&extendAttr=" + data.extendAttr, function (res) {
+                                if (res.success && res.list) {
+                                    if(res.list.length > 0){
+                                        $.map(res.list,function(val){
+                                            val["shortName"] = val.name;
+                                            val.name += '<span>('+ val.toAuditCount +')</span>';
+                                        })
+                                    }
+                                    // for(var i=0;i<res.list;i++){
+                                    //     res.list[i].name += '<span>('+ res.list[i].toAuditCount +')</span>';
+                                    // }
+                                    callback(res.list);
+                                    
+                                    if (res.list[0].checked == false && count == 0) {
+                                        $(".eleTree-node-group").eq(0).find('.eleTree-node-content').eq(0).click();
+                                        count++;
+                                    }
+                                }
+                            }, function () {
+                                callback([])
+                            });
+                        },
+                        response: {
+                            dataName: "list"
+                        }
+                    });
+                    
+                    tree.on("nodeClick(leftTree)", function (obj) {
+                        seId = obj.data.currentData.id;
+                        if (seId === userInfo.seId) {
+                            table.reload('tabelSubMeetingReport',{
+                                url:null,
+                                data:[]
+                            });
+                            $('.tableDes').html('<div><span>本模块功能仅支持子企业,请选择<b class="primary" name="seNa"></b>的子企业。</span></div>');
+                            $('[name=seNa]').text("集团公司");
+                            return false;
+                        }
+                        shortName = obj.data.currentData.shortName;
+                        var para = { 'subordinateSeId': obj.data.currentData.id };
+                        $.extend(where, para);
+                        eventHandle.tableReload(where);
+                    });
+                },
+                getExecutionReportInfo: function () {
+                    if (seId && seId !== userInfo.seId) {
+                        //查询统计信息
+                        
+                        var param = { seId: seId, includeSubEnterprise: false, excludeSeId: userInfo.seId };
+                        common.fetchPost('meetingmgr/tiolExecution/getSubordinateExecutionReportInfo', param, function (res) {
+                            $('b[name=tj_seName]').html(res.object.seId=='001'? '集团公司': (res.object.seShortName == null? res.object.seName: res.object.seShortName));
+                            $('b[name=tj_submitCount]').html(res.object.submitCount);
+                            $('b[name=tj_reportCount]').html(res.object.reportCount);
+                            $('b[name=tj_reportSasac]').html(res.object.reportSasacCount);
+                            $('b[name=tj_rate]').html(res.object.reportSasacRate);
+                        }, function () {
+                        });
+                        $('.tableDes').show();
+                    }
+                    else {
+                        $('.tableDes').hide();
+                        return false;
+                    }
+                },
+                tableInit: function () {
+                    table.render(common.tableInitParams({
+                        elem: '#tabelSubMeetingReport',
+                        height: 'full-175',
+                        //url: baseUrl+'meetingmgr/tiolExecution/pageQuerySubordinateReportExecutionVo',
+                        method: 'post',
+                        toolbar: '#tableToolBar',
+                        cols: [
+                            [
+                                { type: 'checkbox' },
+                                { "type": "numbers", "title": "序号" },
+                                { field: 'subjectName', title: '议案名称', minWidth: 150, sort: true },
+                                { field: 'meetingName', title: '会议名称', minWidth: 150, sort: true },
+                                { field: 'meetingTime', title: '会议日期', minWidth: 150, sort: true },
+                                { field: 'leadDept', title: '责任部门', minWidth: 100, sort: true },
+                                { field: 'leadPerson', title: '责任人', minWidth: 100, sort: true },
+                                { field: 'implementationStatus', title: '执行状态', minWidth: 100, sort: true },
+                                {
+                                    field: 'tail.subordinateReportTime', title: '下级报送日期', minWidth: 140, sort: true, templet: function (rowDta) {
+                                        return rowDta.tails.subordinateReportTime == null ? "" : common.timestampToTime(rowDta.tails.subordinateReportTime);
+                                    }
+                                },
+                                {
+                                    field: 'tail.auditTime', width: 130, title: '审核日期', sort: true, templet: function (rowDta) {
+                                        return rowDta.tails.auditTime == null ? "" : common.timestampToTime(rowDta.tails.auditTime);
+                                    }
+                                },
+                                {
+                                    field: 'alreadySubmitGzw', width: 120, title: '已报国资委', sort: true, templet: function (rowDta) {
+                                        return rowDta.uploadStatus == '6' ? "作废" : rowDta.uploadStatus == '0' ? "否" : "是";
+                                    }
+                                },
+                                {
+                                    field: '', title: '操作', width: 80, fixed: 'right',
+                                    templet: function (rowData) {
+                                        return '<a class="layui-btn layui-btn-xs" lay-event="view" >查看</a>';
+                                    }
+                                }
+                            ]
+                        ],
+                        where: where
+                    }));
+                    //table监听事件
+                    table.on('toolbar(tabelSubMeetingReport)', function (obj) {
+                        var checkStatus = table.checkStatus(obj.config.id);
+                        switch (obj.event) {
+                            case 'audit'://审核通过
+                                if (checkStatus.data.length === 0) {
+                                    layer.msg('请选择议案执行');
+                                    return false;
+                                }
+                                /*else if (checkStatus.data.length > 1) {
+                                    layer.msg('请选择一条记录');
+                                    return false;
+                                }*/
+                                var data = checkStatus.data[0];
+                                layer.confirm('确定审核通过该议案执行?', { icon: 3, title: '提示', offset: '150px' }, function (index) {
+                                    var executionId = data.executionId;
+                                    var layerLoader = common.layerLoader();
+                                    common.fetchPost('meetingmgr/tiolExecution/reportTiolExecution?executionId=' + executionId, {}, function (res) {
+                                        layer.close(layerLoader);
+                                        eventHandle.showHandleResult(res.object);
+                                        eventHandle.tableReload();
+                                        //eventHandle.examineCount();
+                                    }, function (data) {
+                                        layer.close(layerLoader);
+                                        layer.msg(data.resultMessage);
+                                    });
+                                    layer.close(index);
+                                });
+                                break;
+                            case 'back'://退回
+                                if (checkStatus.data.length > 0) {
+                                    /*if (checkStatus.data.length > 1) {
+                                        layer.msg('请选择一条记录');
+                                        return false;
+                                    }*/
+                                    layer.confirm('确定退回选中列?', { icon: 3, title: '提示', offset: '150px' }, function (index) {
+                                        var tIdArr = [];
+
+                                        var reportedToSasac = [];
+                                        for (var i = 0; i < checkStatus.data.length; i++) {
+                                            if("1"==checkStatus.data[i]['alreadySubmitGzw']){
+                                                reportedToSasac.push(checkStatus.data[i]['subjectName']);
+                                            }
+                                        }
+                                        if(reportedToSasac.length > 0){
+                                            layer.msg(reportedToSasac.join(",")+'的议案执行已报送至国资委，不能退回');
+                                            return false;
+                                        }
+
+                                        for (var i = 0; i < checkStatus.data.length; i++) {
+                                            tIdArr.push(checkStatus.data[i]['executionId']);
+                                        }
+                                        var layerLoader = common.layerLoader();
+                                        common.fetchPost('meetingmgr/tiolExecution/backTiolExecution?executionId=' + tIdArr.join(','), {}, function (res) {
+                                            layer.close(layerLoader);
+                                            eventHandle.showHandleResult(res.object);
+                                            eventHandle.tableReload();
+                                            //eventHandle.examineCount();
+                                        }, function (data) {
+                                            layer.close(layerLoader);
+                                            layer.msg(data.resultMessage);
+                                        });
+                                        layer.close(index);
+                                    });
+                                } else {
+                                    layer.msg('请选择退回列')
+                                }
+                                break;
+                            case 'withdraw'://撤回
+                                if (checkStatus.data.length > 0) {
+                                    layer.confirm('确定撤回选中列?', { icon: 3, title: '提示', offset: '150px' }, function (index) {
+                                        var tIdArr = [];
+
+                                        var unAuditExecution = [];
+                                        for (var i = 0; i < checkStatus.data.length; i++) {
+                                            if(null == checkStatus.data[i].tails.auditTime){
+                                                unAuditExecution.push(checkStatus.data[i]['subjectName']);
+                                            }
+                                        }
+                                        if(unAuditExecution.length > 0){
+                                            layer.msg(unAuditExecution.join(",")+'的议案执行未审核，不需要做撤回操作');
+                                            return false;
+                                        }
+
+                                        for (var i = 0; i < checkStatus.data.length; i++) {
+                                            tIdArr.push(checkStatus.data[i]['executionId']);
+                                        }
+                                        var layerLoader = common.layerLoader();
+                                        common.fetchPost('meetingmgr/tiolExecution/withdrawTiolExecution?executionId=' + tIdArr.join(','), {}, function (res) {
+                                            layer.close(layerLoader);
+                                            eventHandle.showHandleResult(res.object);
+                                            eventHandle.tableReload();
+                                            //eventHandle.examineCount();
+                                        }, function (data) {
+                                            layer.close(layerLoader);
+                                            layer.msg(data.resultMessage);
+                                        });
+                                        layer.close(index);
+                                    });
+                                } else {
+                                    layer.msg('请选择退回列');
+                                }
+                                break;
+                        }
+                    });
+
+                    table.on('tool(tabelSubMeetingReport)', function (obj) {
+                        var data = obj.data;
+                        switch (obj.event) {
+                            case 'view':
+                                var editLayer = layer.open({
+                                    title: '查看',
+                                    type: 2,
+                                    content: baseUrl + 'src/page/ys/yazx/yazxAdd.html?view=view&executionId=' + data.executionId,
+                                    maxmin: true,
+                                    offset: 't',
+                                    btnAlign: 'lc',
+                                    yes: function () {
+                                        return false;
+                                    },
+                                    btn2: function () {
+                                        layer.close(editLayer);
+                                    },
+                                    success: function (layero, index) {
+                                        //获取单页面的所有配置内容 传入compId
+                                        // $("#compId", layero.find("iframe")[0].contentWindow.document).text(data['compId']);
+                                    }
+                                });
+                                layer.full(editLayer);
+                                break;
+                        }
+                    });
+
+                    form.on('submit(formSearch)', function (obj) {
+                        //表格重载
+                        var param = {
+                            meetingName: obj.field.meetingName,
+                            subjectName: obj.field.subjectName,
+                            auditTime: obj.field.auditTime
+                        };
+
+                        eventHandle.tableReload(param);
+                        return false
+                    })
+                },
+                showHandleResult: function(object, defaultMsg) {
+                    if(object.fCount > 0) {
+                        layer.alert("共处理" + object.total + "条数据，失败" + object.fCount + "条。失败原因：<br>"+ object.fMsg.join('<br>'));
+                    }
+                    else{
+                        layer.msg(defaultMsg||"处理成功");
+                    }
+                }
+            };
+            eventHandle.getExecutionReportInfo();
+            eventHandle.tableInit();
+            eventHandle.treeInit();
+            common.columnToggle();
+        });
+        $('.treeHeight').css({ 'height': $(document).height() - 130 + 'px' });
+
+        
+
+        // eventHandle.tableInit();
+        // eventHandle.treeInit();
+        // common.columnToggle();
+
+
+    </script>
+
+    <!--[if lt IE 9]>
+<script src="../../../js/lib/html5.min.js"></script>
+<script src="../../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+
+</html>

@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>目录公共指标管理</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../js/layui/css/layui.css"/>
+    <link href="../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script src="../../js/common/plugin.js"></script>
+    <style>
+        .adapt{
+            margin-top: 20px;
+            margin-left:20%;
+        }
+    </style>
+</head>
+
+<!-- 新增/编辑组件弹窗 -->
+<div class="aeLayer hide">
+    <div style="padding: 15px 20px">
+        <form class="layui-form layui-form-pane" lay-filter="addForm">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><b class="red">*</b>名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="ccfName" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><b class="red">*</b>编码</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="ccfCode" required lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width:130px;">字段小数长度</label>
+                    <div class="layui-input-block" style="margin-left:130px;">
+                        <input type="number" name="ccfFieldDigitLen" placeholder="请输入" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><b class="red">*</b>是否必填</label>
+                    <div class="layui-input-block">
+                        <select name="ccfRequire" required lay-verify="required">
+                            <option value="">请选择</option>
+                            <option value="0">否</option>
+                            <option value="1">是</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><b class="red">*</b>字段类型</label>
+                    <div class="layui-input-block">
+                        <select name="ccfFieldType" required  lay-verify="required" >
+                            <option value="">请选择字段类型</option>
+                            <option value="varchar2">varchar2</option>
+                            <option value="integer">integer</option>
+                            <option value="long">long</option>
+                            <option value="date">date</option>
+                            <option value="blob">blob</option>
+                            <option value="clob">clob</option>
+                            <option value="char">char</option>
+                            <!-- <option value="0">string</option> -->
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><b class="red">*</b>字段长度</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="ccfFieldLen" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width:130px;">是否为必用字段</label>
+                    <div class="layui-input-block"  style="margin-left:130px;">
+                        <select name="ccfMustUse">
+                            <option value="">请选择</option>
+                            <option value="0">否</option>
+                            <option value="1">是</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item adapt">
+                <div class="layui-input-block">
+                    <button class="layui-btn " lay-submit lay-filter="formSavue" currentMenuSmId="updateCreditPublicInfo" permission-btn="submitCreditPublicInfo"><i class="fa fa-check-circle"></i>确定</button>
+                    <button class="layui-btn layui-btn-primary" id="formClose"><i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- 查看弹窗 -->
+<div class="ckLayer hide">
+        <div style="padding: 15px 20px">
+            <form class="layui-form layui-form-pane" lay-filter="checkForm">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><b class="red">*</b>名称</label>
+                            <div class="layui-input-block">
+                                <input autocomplete="off" class="layui-input" disabled name="ccfName" placeholder="请输入"
+                                       type="text">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><b class="red">*</b>编码</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="ccfCode" placeholder="请输入" autocomplete="off" class="layui-input" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" style="width:130px;">字段小数长度</label>
+                            <div class="layui-input-block" style="margin-left:130px;">
+                                <input type="number" name="ccfFieldDigitLen" placeholder="请输入" autocomplete="off" class="layui-input" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md12">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label"><b class="red">*</b>是否必填</label>
+                                <div class="layui-input-block">
+                                    <select name="ccfRequire" disabled>
+                                        <option value="1">是</option>
+                                        <option value="0">否</option>
+                                    </select>
+                                </div>
+                            </div>
+                    </div>
+                    <div class="layui-col-md12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><b class="red">*</b>字段类型</label>
+                            <div class="layui-input-block">
+                                <select name="ccfFieldType" disabled>
+                                    <option value="">请选择字段类型</option>
+                                    <option value="varchar2">varchar2</option>
+                                    <option value="integer">integer</option>
+                                    <option value="long">long</option>
+                                    <option value="date">date</option>
+                                    <option value="blob">blob</option>
+                                    <option value="clob">clob</option>
+                                    <option value="char">char</option>
+                                    <!-- <option value="0">string</option> -->
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><b class="red">*</b>字段长度</label>
+                            <div class="layui-input-block">
+                                <input type="number" name="ccfFieldLen" placeholder="请输入" autocomplete="off" class="layui-input" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" style="width:130px;">是否为必用字段</label>
+                            <div class="layui-input-block"  style="margin-left:130px;">
+                                <select name="ccfMustUse" disabled>
+                                    <option value="1">是</option>
+                                    <option value="0">否</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+<body class="iframe-h">
+<div class="content-wrap">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+            <div class="layui-collapse white-bg">
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title white-bg">查询条件</h2>
+                    <div class="layui-colla-content">
+                        <!--layui-form-pane-->
+                        <form class="layui-form layui-form-pane">
+                                <div class="layui-row layui-col-space15">
+                                    <div class="layui-col-md6">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">名称</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="ccfName" placeholder="请输入" autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- <div class="layui-col-md6">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">编码</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="ccfCode" placeholder="请输入" autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+                                    </div> -->
+                                </div>
+                                <div class="layui-row layui-col-space15">
+                                    <div class="layui-col-md6">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">是否必填</label>
+                                                <div class="layui-input-block">
+                                                    <select name="ccfRequire">
+                                                        <option value="">请选择</option>
+                                                        <option value="1">是</option>
+                                                        <option value="0">否</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                     </div>
+                                    <div class="layui-col-md6">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label" style="width:130px;">是否为必用字段</label>
+                                                <div class="layui-input-block" style="margin-left:130px;">
+                                                    <select name="ccfMustUse">
+                                                        <option value="">请选择</option>
+                                                        <option value="1">是</option>
+                                                        <option value="0">否</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                    </div>
+                                </div>
+                            <div class="layui-form-item">
+                                <div class="layui-input-block">
+                                    <button class="layui-btn" lay-submit lay-filter="formSearch" currentMenuSmId="queryCreditPublicInfo"><i class="fa fa-search"></i>查询</button>
+                                    <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-card" style="margin-top: 10px">
+                <div class="layui-card-body">
+                    <table id="table1" lay-filter="table1"></table>
+                    <script type="text/html" id="tableToolBar">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-sm" lay-event="add" currentMenuSmId="addCreditPublicInfo" permission-btn="addCreditPublicInfo">
+                                <i class="layui-icon">&#xe608;</i> 新增
+                            </button>
+                            <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete" currentMenuSmId="delCreditPublicInfo" permission-btn="delCreditPublicInfo">
+                                <i class="layui-icon">&#xe640;</i> 删除
+                            </button>
+                            <!-- <button class="layui-btn layui-btn-sm" lay-event="refresh">
+                                <i class="layui-icon ">&#xe669;</i> 更新缓存
+                            </button> -->
+                        </div>
+                    </script>
+                    <script type="text/html" id="tableOper">
+                        <a class="layui-btn layui-btn-xs" lay-event="edit" currentMenuSmId="updateCreditPublicInfo" permission-btn="updateCreditPublicInfo">
+                            <i class="layui-icon layui-icon-edit"></i> 编辑
+                        </a>
+                        <a class="layui-btn layui-btn-xs" lay-event="singleDel" currentMenuSmId="delCreditPublicInfo" permission-btn="delCreditPublicInfo">
+                            <i class="layui-icon layui-icon-edit"></i> 删除
+                        </a>
+                        <a class="layui-btn layui-btn-xs" lay-event="check" currentMenuSmId="queryCreditPublicInfo" permission-btn="queryCreditPublicInfo">
+                                <i class="layui-icon layui-icon-survey"></i> 查看
+                        </a>
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="./../../js/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).extend({
+    }).use(['layer','table','form','laytpl','common','element'],function () {
+        var table=layui.table;
+        var form=layui.form;
+        var common=layui.common;
+        var element = layui.element;
+        element.init();
+        var baseUrl='../../../';
+        common.themeSet();
+        var currentMenuSmId=$("#currentMenuSmId", top.window.parent.document).val();
+
+        var eventHandle={
+            tableReload:function () {
+                table.reload('table1',{
+                    url: baseUrl+'sysmgr/commonIndicator/commonIndicatorPagination',
+                    contentType: "application/json; charset=utf-8",
+                    method:'post',
+                    request:{},
+                    page:{
+                        curr:1
+                    },
+                });
+            },
+        };
+        table.render({
+            elem: '#table1',
+            url: baseUrl+'sysmgr/commonIndicator/commonIndicatorPagination',
+            // contentType:'text/plain',
+            contentType: "application/json; charset=utf-8",
+            // method:'get',
+            // request:null,
+            method:'post',
+            request:{},
+            height:  'full-200',
+            // data:resData,
+            toolbar:'#tableToolBar',
+            parseData: function(res) {
+                return {
+                    "code": 0,
+                    "msg": '',
+                    "count": 0,
+                    "data":res.page.list
+                };
+            },
+            cols: [
+                [
+                    {type:'checkbox'},
+                    {field: 'ccfName', title: '名称', sort: true},
+                    {field: 'ccfCode', title: '编码',sort:true},
+                    {field: 'ccfRequire', title: '是否必填', sort: true,
+                         templet: function(rowData) {
+                            if(rowData['ccfRequire'] == 0){
+                                return '<span>否</span>'
+                            }else{
+                                return '<span>是</span>'
+                            }
+                         }
+                    },
+                    {field: 'ccfMustUse', title: '是否为必用字段', sort: true,
+                        templet: function(rowData) {
+                                if(rowData['ccfMustUse'] == 0){
+                                    return '<span>否</span>'
+                                }else{
+                                    return '<span>是</span>'
+                                }
+                        }
+                    },
+                    {field: 'ccfFieldType', title: '字段类型', sort: true},
+                    {field: 'ccfFieldLen', title: '字段长度', sort: true},
+                    {field: 'ccfFieldDigitLen', title: '字段小数长度', sort: true},
+                    {field: '', title: '操作', width:'20%', toolbar:'#tableOper',fixed: 'right'},
+                ]
+            ],
+            done: function(){
+                common.buttonLimit(currentMenuSmId);
+            },
+            page:true
+        });
+
+        //table监听事件
+        table.on('toolbar(table1)',function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch(obj.event) {
+                case 'add':
+                    var index_add=layer.open({
+                        offset: '10px',
+                        title: '新增目录公共指标窗口',
+                        maxmin: false,
+                        type: 1,//页面层
+                        area: ['580px'],//高度自适应
+                        shadeClose: false,
+                        content: $('.aeLayer').html(),//加载该区域的html
+                        // btn:['保存','<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>取消'],
+                        success: function (obj) {
+                            form.render();
+                            form.render('select');
+                            $(obj.selector).find('#formClose').off().on('click',function(){
+                                layer.close(index_add);
+                                return false;
+                            });
+                            form.on('submit(formSavue)', function (obj) {
+                                var bigitlen = obj.field.ccfFieldDigitLen;
+                                if(bigitlen == ''){
+                                    bigitlen = 0;
+                                }
+                                var params = {
+                                    ccfCode:obj.field.ccfCode,
+                                    ccfFieldDigitLen:bigitlen,
+                                    ccfFieldLen:obj.field.ccfFieldLen,
+                                    ccfFieldType:obj.field.ccfFieldType,
+                                    ccfMustUse:obj.field.ccfMustUse,
+                                    ccfName:obj.field.ccfName,
+                                    ccfRequire:obj.field.ccfRequire,
+                                };
+                                layer.confirm('您确定要保存?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                                    var layerLoader = common.layerLoader();
+                                    common.fetchPost('sysmgr/commonIndicator/commonIndicator', params,function (res) {
+                                        layer.alert(res.resultMessage);
+                                        layer.close(layerLoader);
+                                        layer.close(index);
+                                        if(res.success){
+                                            layer.close(index_add);
+                                            eventHandle.tableReload();
+                                        }
+                                    }, function () {
+                                        layer.msg('添加失败。');//失败后提示
+                                        layer.close(index);
+                                        layer.close(layerLoader);
+                                    });
+                                });
+                                return false;
+                            });
+                        },
+                    });
+                    break;
+                case 'delete':
+                    //点击删除按钮
+                    if (checkStatus.data.length > 0) {
+                        layer.confirm('确定删除选中列?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                            var tIdArr = [];
+
+                            for (var i = 0; i < checkStatus.data.length; i++) {
+                                tIdArr.push(checkStatus.data[i]['ccfId'])
+                            }
+                            console.debug("tID:" + tIdArr);
+                            var layerLoader = common.layerLoader();
+                            common.fetchDelete('sysmgr/commonIndicator/commonIndicator/' + tIdArr.join(','),function (res) {
+                                layer.alert(res.resultMessage);
+                                if(res.success){
+                                    layer.close(layerLoader);
+                                    eventHandle.tableReload();
+                                }
+                            }, function (res) {
+                                layer.msg('删除失败');
+                                layer.close(layerLoader);
+                            });
+                            layer.close(index);
+                        });
+                    } else {
+                        layer.msg('请选择删除列')
+                    }
+                    break;
+                case 'refresh':
+                    eventHandle.tableReload();
+                    break;
+            }
+        });
+
+        // table row 监听事件
+        table.on('tool(table1)', function(obj){
+            var data = obj.data;
+            switch(obj.event){
+                case 'edit'://查看
+                    var layerLoader =common.layerLoader();
+                    common.fetchGet('sysmgr/commonIndicator/commonIndicator/'+data.ccfId,function (res) {
+                        data=res.object;
+                        layer.close(layerLoader);
+                        if(res.success){
+                            var index_edit=layer.open({
+                            offset: '10px',
+                            title:'编辑目录公共指标窗口',
+                            maxmin: false,
+                            type: 1,//页面层
+                            area: ['580px'],//高度自适应
+                            shadeClose: false,
+                            content: $('.aeLayer').html(),//加载该区域的html
+                            success:function (obj) {
+                            //初始化详情表格
+                            form.render();
+                            $(obj.selector).find('input[name=ccfName]').val(data.ccfName);
+                            $(obj.selector).find('input[name=ccfCode]').val(data.ccfCode);
+                            $(obj.selector).find('input[name=ccfFieldDigitLen]').val(data.ccfFieldDigitLen);
+                            $(obj.selector).find('input[name=ccfFieldLen]').val(data.ccfFieldLen);
+
+                            $(obj.selector).find('select[name=ccfFieldType]').val(data.ccfFieldType);
+                            $(obj.selector).find('select[name=ccfMustUse]').val(data.ccfMustUse);
+                            $(obj.selector).find('select[name=ccfRequire]').val(data.ccfRequire);
+                            $(obj.selector).find('#formClose').off().on('click',function(){
+                                layer.close(index_edit);
+                                return false;
+                            });
+                            form.render('select');
+                            form.on('submit(formSavue)', function (obj) {
+                                var bigitlen = obj.field.ccfFieldDigitLen;
+                                if(bigitlen == ''){
+                                    bigitlen = 0;
+                                }
+                                var params = {
+                                    ccfId:data.ccfId,
+                                    ccfName:obj.field.ccfName,
+                                    ccfCode:obj.field.ccfCode,
+                                    ccfFieldDigitLen:bigitlen,
+                                    ccfFieldLen:obj.field.ccfFieldLen,
+                                    ccfFieldType:obj.field.ccfFieldType,
+                                    ccfMustUse:obj.field.ccfMustUse,
+                                    ccfRequire:obj.field.ccfRequire
+                                };
+                                var layerLoader =common.layerLoader();
+                                common.fetchPut('sysmgr/commonIndicator/commonIndicator', params, function (res) {
+                                    layer.alert(res.resultMessage);//成功提示
+                                    layer.close(layerLoader);
+                                    if(res.success){
+                                        layer.close(index_edit);
+                                    //表格重载
+                                         eventHandle.tableReload();
+                                    }
+                                }, function () {
+                                    layer.close(layerLoader);
+                                    layer.msg('修改失败');//失败后提示
+                                });
+                                return false;
+                            });
+                            $('#formClose').on('click',function(){
+                                layer.close(index_edit);
+                            });
+                        }
+                    });
+                        }
+                        else{
+                            layer.alert(res.resultMessage);
+                            return false;
+                        }
+                    }, function () {
+                        layer.msg('请求失败');
+                        layer.close(layerLoader);
+                    });
+                    break;
+                case 'singleDel':
+                    layer.confirm('确定删除?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                    var layerLoader = common.layerLoader();
+                    common.fetchDelete('sysmgr/commonIndicator/commonIndicator/'+data.ccfId,function () {
+                        layer.close(layerLoader);
+                        eventHandle.tableReload();
+                        layer.msg('删除成功');
+                    }, function () {
+                        layer.close(layerLoader);
+                    });
+                    layer.close(index);
+                });
+                    break;
+                case 'check'://查看
+                    var layerLoader =common.layerLoader();
+                    common.fetchGet('sysmgr/commonIndicator/commonIndicator/'+data.ccfId,function (res) {
+                        layer.close(layerLoader);
+                        var data=res.object;
+                        if(res.success){
+                            var index_check=layer.open({
+                            offset: '10px',
+                            title:'查看目录公共指标详情',
+                            maxmin: false,
+                            type: 1,//页面层
+                            area: ['580px'],//高度自适应
+                            shadeClose: false,
+                            btn:['<i class="fa fa-check-circle"></i>确定'],
+                            yes:function(){
+                                layer.close(index_check);
+                            },
+                            content: $('.ckLayer').html(),//加载该区域的html
+                            success:function (obj) {
+                            //初始化详情表格
+                            form.render();
+                            $(obj.selector).find('input[name=ccfId]').val(data.ccfId);
+                            $(obj.selector).find('input[name=ccfName]').val(data.ccfName);
+                            $(obj.selector).find('input[name=ccfCode]').val(data.ccfCode);
+                            $(obj.selector).find('input[name=ccfFieldDigitLen]').val(data.ccfFieldDigitLen);
+                            $(obj.selector).find('input[name=ccfFieldLen]').val(data.ccfFieldLen);
+
+                            $(obj.selector).find('select[name=ccfFieldType]').val(data.ccfFieldType);
+                            $(obj.selector).find('select[name=ccfMustUse]').val(data.ccfMustUse);
+                            $(obj.selector).find('select[name=ccfRequire]').val(data.ccfRequire);
+                            form.render('select');
+                        }
+                    });
+                        }
+                        else{
+                            layer.alert(res.resultMessage);
+                            return false;
+                        }
+                    }, function () {
+                        layer.msg('请求失败');
+                        layer.close(layerLoader);
+                    });
+                    break;
+            }
+        });
+        //查询
+        form.on('submit(formSearch)',function (obj) {
+            //表格重载
+            table.reload('table1',{
+                page:{
+                    curr:1
+                },
+                where:{
+                    ccfName:obj.field.ccfName,
+                    ccfCode:obj.field.ccfCode,
+                    ccfMustUse:obj.field.ccfMustUse,
+                    ccfRequire:obj.field.ccfRequire
+                },
+            });
+            return false;
+        });
+        common.buttonLimit($("#currentMenuSmId",window.parent.document).val());
+    });
+</script>
+<!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

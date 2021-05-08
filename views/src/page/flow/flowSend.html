@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>流程发送</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../js/layui/css/layui.css"/>
+    <link href="../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script src="../../js/common/plugin.js"></script>
+
+</head>
+<style>
+    .content{
+        height:100%;
+        width:100%;
+        position:fixed;
+        background: white;
+    }
+    .white-bg {
+        background: white;
+    }
+
+    .iframe-h {
+        height: 100%;
+    }
+
+    .content-wrap {
+        padding: 10px;
+    }
+
+    .red {
+        color: red;
+        padding-left: 5px;
+    }
+
+    .hide {
+        display: none;
+    }
+
+    .layui-form-pane .layui-form-label{
+        width: 150px;
+    }
+
+    .layui-form-pane .layui-input-block{
+        margin-left: 150px;
+    }
+</style>
+
+<body>
+<!--添加按钮中的弹框-->
+<div class="userLayer">
+    <div style="padding: 15px 20px">
+        <form class="layui-form layui-form-pane" name="userLayer" id="flowSendForm">
+            <div style="height:260px;overflow-y:auto;overflow-x:hidden">
+                <input type="hidden" name="businessId" id="businessId">
+                <input type="hidden" name="piid" id="piid">
+                <input type="hidden" name="aiid" id="aiid">
+                <input type="hidden" name="userId" id="userId">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">指派环节</label>
+                            <div class="layui-input-block">
+                                <select name="transState" id="transState">
+
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">指派人员</label>
+                            <div class="layui-input-block">
+                                <select name="transUser" id="transUser">
+
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">意见</label>
+                            <div class="layui-input-block">
+                                <textarea name="opinion" id="opinion" placeholder="请输入" maxlength="60"
+                                          class="layui-textarea"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="tcenter margin-t15">
+                    <button id="formSubmit" class="layui-btn" lay-submit lay-filter="formSubmit">发送</button>
+                    <button type="button" class="layui-btn layui-btn-primary close-btn"><i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<script src="./../../js/layui/layui.js"></script>
+<script>
+    var tranStates;
+    var loadingIndex = null;
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).extend({
+        flowEngine: 'common/flowEngine'
+    }).use(['eleTree','layer','flowEngine','form','laytpl','common','element'], function () {
+        var form = layui.form;
+        var tree = layui.eleTree;
+        var common = layui.common;
+        var element = layui.element;
+        var flowEngine = layui.flowEngine;
+        element.init();
+        common.themeSet();
+        var baseUrl = '../../../';
+
+        var userTree;
+        var eventHandler={
+            //初始化表单
+            initForm:function(obj){
+                var obj = $("#flowSendForm");
+                form.render();
+                $(obj.selector).find('.close-btn').off().on('click', function () {
+                    parent.layer.close(parent.layer.index);
+                });
+                var flowparam = {
+                    ptLabel:parent.parentEnt.ptLabel,
+                    ptVersion:parent.parentEnt.ptVersion,
+                    ptCompanyId:parent.parentEnt.ptCompanyId,
+                    businessId:parent.parentEnt.caId,
+                    stateId:parent.parentEnt.stateId,
+                    piid:parent.parentEnt.piid,
+                    aiid:parent.parentEnt.activityInstanceid,
+                    catalogueId: parent.parentEnt.catalogueId,
+                    reject:parent.parentEnt.reject
+                };
+                flowEngine.init(flowparam);
+                flowEngine.transitionRequest(initTransStateSelect,null);//加载指派
+
+                form.on('submit(formSubmit)', function (obj) {
+                    var sendParams = {
+                        aiid:parent.parentEnt.activityInstanceid,
+                        businessId:parent.parentEnt.caId,
+                        piid: parent.parentEnt.processInstanceid,
+                        wiid: parent.parentEnt.workitemId,
+                        ptCompanyId: parent.parentEnt.ptCompanyId,
+                        ptLabel: parent.parentEnt.ptLabel,
+                        ptVersion: parent.parentEnt.ptVersion,
+                        reject: parent.parentEnt.reject,
+                        stateId: parent.parentEnt.stateId,
+                        opinion:obj.field.opinion,
+                        nextStates:[],
+                        tinfo:{
+                            to:obj.field.transState,
+                            name:$('#transState').find("option:selected").text(),
+                            statetype:"",
+                            reject:parent.parentEnt.reject,
+                        },
+                        msginfo:{
+                            opinion: $('#opinion').val(),
+                            opinionAction: "append",
+                            opinionid: parent.parentEnt.caId,
+                            appertain: "",
+                            opinionAvailable: null,
+                            opinionDialog: "1",
+                            opinionImg: null,
+                            opinionType: null
+                        }
+                    };
+                    var nextState = {
+                        sid:obj.field.transState,
+                        grade:0,
+                        grade:"",
+                        userList:[{
+                            text:$('#transUser').find("option:selected").text(),
+                            value:obj.field.transUser,
+                        }]
+                    };
+
+                    if(parent.parentEnt.draft === true){
+                        var flowParam = {
+                            ptLabel : parent.parentEnt.ptLabel,
+                            ptVersion: parent.parentEnt.ptVersion,
+                            ptCompanyId: parent.parentEnt.ptCompanyId,
+                            businessId : parent.parentEnt.caId,
+                            catalogueId: parent.parentEnt.catalogueId
+                        };
+                        loadingIndex = layer.load();
+                        flowEngine.init(flowParam);
+                        flowEngine.draftRequest(function(data){
+                            if(data.success){
+                                sendParams.aiid = data.object.aiid;
+                                sendParams.piid = data.object.piid;
+                                sendParams.wiid = data.object.wiid;
+                                sendParams.stateId = data.object.stateid;
+                                sendParams.nextStates.push(nextState);
+                                flowEngine.engineCoreProcess(sendParams,function(){
+                                    layer.closeAll()
+                                    parent.layer.closeAll();
+                                    parent.tableReload();
+                                });
+                            }else{
+                                layer.close(loadingIndex);
+                                layer.msg(data.resultMessage);
+                            }
+                        });//发起流程
+                    }else{
+                        sendParams.nextStates.push(nextState);
+                        loadingIndex = layer.load();
+                        flowEngine.engineCoreProcess(sendParams,function(){
+                            layer.closeAll();
+                            parent.layer.closeAll();
+                            parent.tableReload();
+                        });
+                    }
+
+                    return false;
+                });
+            }
+        }
+
+        function initTransStateSelect(data){
+
+            if(data.success){
+                if(data.object.errorCode+'' ===　'0'){
+                    for (var i = 0; i < data.object.result.length; i++) {
+                        transinfo = data.object.result[i].transinfo;
+                        $("#transState").append("<option value='"+transinfo.to+"'>"+transinfo.name+"</option>");
+                        tranStates = data.object.result[i].data;
+                        if(tranStates){
+                            for(var x=0; x<tranStates.length; x++){
+                                var state = tranStates[x];
+                                if(state.assignmentType === '1' || state.assignmentType === ''){
+                                    if(i == 0){
+                                        var users = state.children;
+                                        for (var j = 0; j < users.length; j++) {
+                                            $("#transUser").append("<option value='"+users[j].value+"'>"+users[j].text+"</option>");
+                                        }
+                                    }
+                                }else{
+                                    if(i == 0){
+                                        var orgs = state.children;
+                                        for (var j = 0; j < orgs.length; j++) {
+                                            var users = orgs[j].children;
+                                            for (var k = 0; k < users.length; k++) {
+                                                $("#transUser").append("<option value='"+users[k].value+"'>"+users[k].text+"</option>");
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+
+                    form.render('select');
+                }else{
+                    layer.msg(data.object.errorInfo);
+                    return false;
+                }
+            }else{
+                layer.msg('请求出现异常，'　+ data.resultMessage);
+                return false;
+            }
+        }
+
+        eventHandler.initForm();
+    });
+
+
+</script>
+</body>
+</html>

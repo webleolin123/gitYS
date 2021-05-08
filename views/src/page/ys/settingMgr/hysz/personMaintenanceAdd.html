@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+
+<head>
+    <meta charset="UTF-8">
+    <title>人员维护-新增/编辑</title>
+    <meta content="webkit" name="renderer" />
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../../../js/layui/css/layui.css" />
+    <link href="../../../../css/public.css?v1.01" rel="stylesheet" />
+    <link href="../../../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <script src="../../../../js/lib/jquery.1.12.3.js"></script>
+    <style>
+        .hytitle {
+            font-size: 14px;
+        }
+
+        .hylabel {
+            border: 1px solid transparent !important;
+            background: transparent !important;
+        }
+
+        .hyinput {
+            border: 1px solid transparent !important;
+            border-bottom-color: red !important;
+        }
+
+        .layui-unselect {
+            border-color: #f56c6c;
+            border-top-style: none;
+            border-right-style: none;
+            border-left-style: none;
+        }
+
+        .layui-form-select .layui-edge {
+            border-top-color: #f56c6c;
+        }
+
+        body {
+            background: #f8f8f8;
+        }
+
+        .load-btn,
+        .check-btn,
+        .right-btn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            border-radius: 3px;
+        }
+
+        .right70 {
+            right: 70px;
+        }
+
+        .relative {
+            position: relative;
+        }
+
+        .padRt64 {
+            padding-right: 64px;
+        }
+
+        li {
+            cursor: pointer;
+        }
+
+        .zsBga {
+            color: purple;
+            vertical-align: 1px;
+            opacity: 0.5;
+        }
+
+        /* 去除弹窗侧面张开按钮 */
+        a.layui-layer-ico.layui-layer-max {
+            display: none;
+        }
+
+        a.layui-layer-ico.layui-layer-max.layui-layer-maxmin {
+            display: inline-block !important;
+        }
+    </style>
+    <style>
+        .layui-card-header-custom {
+            border-bottom: 1px dashed #e6e6e6;
+        }
+    </style>
+    <style>
+        .relative {
+            position: relative;
+        }
+
+        .eleTree.ele5,
+        .eleTree.ele6,
+        .eleTree.eleBill {
+            height: 300px;
+            width: 100%;
+            display: none;
+            position: absolute;
+            top: 100%;
+            background-color: #fff;
+            z-index: 100;
+            border: 1px solid #ccc;
+        }
+
+        .marginBottom64 {
+            margin-bottom: 64px;
+        }
+    </style>
+
+</head>
+
+<body class="iframe-h">
+
+    <div class="content-wrap" style="height:800px;overflow-y: scroll;">
+        <!-- 人员维护 -->
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-header layui-card-header-custom">
+                        <span><i></i>人员维护</span>
+                    </div>
+                    <div class="layui-card-body">
+                        <form class="layui-form layui-form-pane" id="rywhForm" lay-filter="rywhForm">
+                            <div class="layui-row layui-col-space15">
+                                <div class="layui-col-md6">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label hylabel"><b class="red">*</b>姓名:</label>
+                                        <div class="layui-input-block">
+                                            <input autocomplete="off" class="layui-input hyinput" lay-verify="required"
+                                                name="memberName" placeholder="请输入" type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md6">
+                                    <div class="layui-form-item">
+                                        <!-- <label class="layui-form-label hylabel"><b class="red">*</b>职务:</label> -->
+                                        <div class="layui-input-block">
+                                            <input type="checkbox" data-id="1" class="checobox_memberAttendeeType"
+                                                name="company_leader" lay-filter="memberAttendeeType" title="公司领导"
+                                                value="company_leader">
+                                            <input type="checkbox" data-id="2" class="checobox_memberAttendeeType"
+                                                name="company_dept" lay-filter="memberAttendeeType" title="公司部门"
+                                                value="company_dept">
+                                            <input type="checkbox" data-id="3" class="checobox_memberAttendeeType"
+                                                name="internal_enterprise" lay-filter="memberAttendeeType" title="内部企业"
+                                                value="internal_enterprise">
+                                            <input type="checkbox" data-id="4" class="checobox_memberAttendeeType"
+                                                name="external_unit" lay-filter="memberAttendeeType" title="外部单位"
+                                                value="external_unit">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs12">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label hylabel">备注:</label>
+                                        <div class="layui-input-block">
+                                            <textarea class="layui-textarea hyinput" name="remark" value=""></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 公司领导 -->
+        <div class="layui-row layui-col-space15 hide" id="personLeader">
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-header layui-card-header-custom">
+                        <span><i></i>公司领导</span>
+                    </div>
+                    <div class="layui-card-body">
+                        <div class="layui-btn-container" style="padding-left: 20px;">
+                            <button class="layui-btn layui-btn-sm" id="addPostLeaderBtn">
+                                添加职务
+                            </button>
+                        </div>
+                        <form class="layui-form layui-form-pane" id="personLeaderForm" lay-filter="personLeaderForm">
+                            <div class="layui-row layusi-col-space15 memberInfoContainer" data-memberTypeId=""
+                                id="personLeaderFormContent">
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label hylabel"><b class="red">*</b>职务:</label>
+                                        <div class="layui-input-block">
+                                            <input autocomplete="off" lay-verify="required" class="layui-input hyinput"
+                                                name="jobName" placeholder="请输入" type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md2">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label hylabel"><b class="red">*</b>任总法律顾问:</label>
+                                        <div class="layui-input-block" name="legalAdviser">
+                                            <input value="0" class="layui-input" lay-filter="leader_legalAdviser0"
+                                                name="leader_legalAdviser0" type="radio" title="否" checked>
+                                            <input value="1" class="layui-input" lay-filter="leader_legalAdviser0"
+                                                name="leader_legalAdviser0" type="radio" title="是">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs3">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label hylabel"><b class="red">*</b>任职开始日期:</label>
+                                        <div class="layui-input-block">
+                                            <input class="layui-input hyinput" lay-verify="required" placeholder="请选择"
+                                                name="startDate" type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs3">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label hylabel">任职结束日期:</label>
+                                        <div class="layui-input-block">
+                                            <input class="layui-input hyinput" placeholder="请选择" name="endDate"
+                                                type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md10">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label hylabel"><b class="red">*</b>会议类型:</label>
+                                        <div class="layui-input-block" name="meetingType">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 公司部门 -->
+        <div class="layui-row layui-col-space15 hide" id="personDept">
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-header layui-card-header-custom">
+                        <span><i></i>公司部门</span>
+                    </div>
+                    <div class="layui-card-body">
+                        <div class="layui-btn-container" style="padding-left: 20px;">
+                            <button class="layui-btn layui-btn-sm" id="addPostDeptBtn">
+                                添加职务
+                            </button>
+                        </div>
+                        <form class="layui-form layui-form-pane" id="personDeptForm" lay-filter="personDeptForm">
+                            <div class="layui-row layui-col-space15 memberInfoContainer" data-memberTypeId=""
+                                id="personDeptFormContent">
+                                <div class="layui-col-md3">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label hylabel"><b class="red">*</b>职务:</label>
+                                        <div class="layui-input-block">
+                                            <input autocomplete="off" class="layui-input hyinput" name="jobName"
+                                                placeholder="请输入" type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md2">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label hylabel"><b class="red">*</b>任总法律顾问:</label>
+                                        <div class="layui-input-block" name="legalAdviser">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md3">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label hylabel"><b class="red">*</b>公司:</label>
+                                        <div class="layui-input-block" name="companyName">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md3">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label hylabel"><b class="red">*</b>部门:</label>
+                                        <div class="layui-input-block" name="departmentName">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 内部企业 -->
+        <div class="layui-row layui-col-space15 hide" id="personInnerUnit">
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-header layui-card-header-custom">
+                        <span><i></i>内部企业</span>
+                    </div>
+                    <div class="layui-card-body">
+                        <div class="layui-btn-container" style="padding-left: 20px;">
+                            <button class="layui-btn layui-btn-sm" id="addPostInnerBtn">
+                                添加职务
+                            </button>
+                        </div>
+                        <form class="layui-form layui-form-pane" id="personInnerUnitForm"
+                            lay-filter="personInnerUnitForm">
+                            <div class="layui-row layui-col-space15 memberInfoContainer" data-memberTypeId=""
+                                id="personInnerUnitFormContent">
+                                <div class="layui-col-md3">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label hylabel"><b class="red">*</b>职务:</label>
+                                        <div class="layui-input-block">
+                                            <input autocomplete="off" class="layui-input hyinput" name="jobName"
+                                                placeholder="请输入" type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md2">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label hylabel"><b class="red">*</b>任总法律顾问:</label>
+                                        <div class="layui-input-block" name="legalAdviser">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md3">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label hylabel"><b class="red">*</b>公司:</label>
+                                        <div class="layui-input-block" name="companyName">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md3">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label hylabel"><b class="red">*</b>部门:</label>
+                                        <div class="layui-input-block" name="departmentName">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 外部单位 -->
+        <div class="layui-row layui-col-space15 hide" id="personOuterUnit">
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-header layui-card-header-custom">
+                        <span><i></i>外部单位</span>
+                    </div>
+                    <div class="layui-card-body">
+                        <div class="layui-btn-container" style="padding-left: 20px;">
+                            <button class="layui-btn layui-btn-sm" id="addPostOuterBtn">
+                                添加职务
+                            </button>
+                        </div>
+                        <form class="layui-form layui-form-pane" id="personOuterUnitForm"
+                            lay-filter="personOuterUnitForm">
+                            <div class="layui-row layui-col-space15 memberInfoContainer" data-memberTypeId=""
+                                id="personOuterUnitFormContent">
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label hylabel"><b class="red">*</b>职务:</label>
+                                        <div class="layui-input-block">
+                                            <input autocomplete="off" class="layui-input hyinput" name="jobName"
+                                                placeholder="请输入" type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md3">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label hylabel"><b class="red">*</b>单位:</label>
+                                        <div class="layui-input-block">
+                                            <input autocomplete="off" class="layui-input hyinput" name="companyName"
+                                                placeholder="请输入" type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md3">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label hylabel"><b class="red">*</b>部门:</label>
+                                        <div class="layui-input-block">
+                                            <input autocomplete="off" class="layui-input hyinput" name="departmentName"
+                                                placeholder="请输入" type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="position: fixed;width: 100%;bottom: 12px;">
+        <div class="layui-card" style="margin-top: 10px">
+            <div class="layui-card-body" style="border-top: 1px solid #dfdfdf">
+                <div class="layui-form-item" style="text-align: center;">
+                    <button class="layui-btn" id="saveBtn"><i class="layui-icon">&#x1005;</i>保存</button>
+                    <button class="layui-btn layui-btn-primary" id="closeBtn"><i class="icon iconfont icon-button-cha-2"
+                            style="margin-right: 3px"></i>关闭</button>
+                    <!--<button class="layui-btn" id="formMeetingClose"><i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭</button>-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--脚垫-->
+    <div style="height: 80px;"></div>
+    <script src="./../../../../js/layui/layui.js"></script>
+    <script>
+        (function ($) {
+            $.getUrlParam = function (name) {//获取父页面参数
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+                var r = window.location.search.substr(1).match(reg);
+                if (r != null) return unescape(r[2]);
+                return null;
+            }
+            $.reloadParentPage = function () {//获取父页面dom
+                if ($(top.window.document).find('#refresh')[0]) {
+                    $(top.window.document).find('#refresh').trigger('click');
+                } else {
+                    // $($(top.window.document).find('#mainTabContent .layui-show').find('.iframe')[0].contentWindow.document).find(toModule.toModuleDom).click();
+                    $($(top.window.document).find('#menuContent').find('.iframe')[0].contentWindow.document).find('#refresh').click();
+                }
+            }
+        })(jQuery);
+        layui.config({
+            base: '../../../src/js/',
+            version: new Date().getTime()
+        }).use(['eleTree', 'layer', 'table', 'form', 'laytpl', 'common', 'element', 'laydate', 'upload'], function () {
+            var table = layui.table;
+            var form = layui.form;
+            var tree = layui.eleTree;
+            var common = layui.common;
+            var element = layui.element;
+            var laydate = layui.laydate;
+            var upload = layui.upload;
+            element.init();
+            var baseUrl = '../../../../../';
+            common.themeSet();
+            var memberAttendeeType = [];
+            var relMemberTypeList = [];
+            var memberAttendeeTypeList = [];
+            var userInfo = common.getUserInfo();
+            var editmemberId = common.getQueryVariable('memberId');
+
+            var meetingTypeList = [];//会议类型容器
+
+            var deptList = [];//所有部门容器
+            var companyList = [];//所有单位容器
+
+            var eventHandle = {
+                getLegalAdviserRender: function (field, $dom, i, name) { //获取任总法律顾问
+                    field = field || null;
+                    var tempHtml = '';
+                    if (!field || field == "0") {
+                        tempHtml +=
+                            '<input value="0" class="layui-input" lay-filter="' + name + i + '" name="' + name + i + '" type="radio" title="否" checked>' +
+                            '<input value="1" class="layui-input" lay-filter="' + name + i + '" name="' + name + i + '" type="radio" title="是">';
+                    }
+                    else {
+                        tempHtml +=
+                            '<input value="0" class="layui-input" lay-filter="' + name + i + '" name="' + name + i + '" type="radio" title="否">' +
+                            '<input value="1" class="layui-input" lay-filter="' + name + i + '" name="' + name + i + '" type="radio" title="是" checked>';
+                    }
+                    $dom.empty().html(tempHtml);
+                    form.render('radio');
+                    //任总法律顾问--公司领导
+                    form.on('radio(leader_legalAdviser0)', function (data) {
+                        $('#personLeaderForm').find('[name=leader_legalAdviser0]').val(data.value);
+                        form.render('radio');
+                    });
+                    //任总法律顾问--公司部门
+                    form.on('radio(dept_legalAdviser0)', function (data) {
+                        $('#personDeptForm').find('[name=dept_legalAdviser0]').val(data.value);
+                        form.render('radio');
+                    });
+                    //任总法律顾问--内部企业
+                    form.on('radio(inner_legalAdviser0)', function (data) {
+                        $('#personInnerUnitForm').find('[name=inner_legalAdviser0]').val(data.value);
+                        form.render('radio');
+                    });
+                },
+                getTiolMeetingTypeSelect: function (field, $dom, i) { //获取会议类型
+                    // debugger
+                    field = field || null;
+                    common.fetchPost('meetingmgr/tiolMeetingType/getTiolMeetingTypeSelect',{},function (ress) {
+                        // debugger
+                        if(ress.list&&ress.list.length>0){
+                            meetingTypeList=ress.list;
+                        }
+                    },false,false);
+                    // common.fetchPost('meetingmgr/tiolMeetingType/getTiolMeetingTypeSelect',{},function (res) {
+                    var res = {};
+                    res.list = meetingTypeList;
+                    // debugger
+                    if (res.list && res.list.length > 0) {
+
+                        var tempHtml = '';
+                        if (!field) {
+                            $.map(res.list, function (item, index) {
+                                if (index == 0) {
+                                    tempHtml += '<input class="layui-col-xs3 layui-col-md2 layui-col-lg1" lay-filter="meetingTypeId' + i + '" name="meetingTypeId' + i + '" title="' + item.meetingTypeName + '" type="radio" value="' + item.meetingType + '" checked>';
+                                }
+                                else {
+                                    tempHtml += '<input class="layui-col-xs3 layui-col-md2 layui-col-lg1" lay-filter="meetingTypeId' + i + '" name="meetingTypeId' + i + '" title="' + item.meetingTypeName + '" type="radio" value="' + item.meetingType + '">';
+                                }
+                            });
+                        } else {
+                            $.map(res.list, function (item, index) {
+                                var meetingTypeId = item.meetingType;
+                                meetingTypeId = meetingTypeId ? meetingTypeId : '';
+                                meetingTypeId = (meetingTypeId && meetingTypeId.length > 32) ? meetingTypeId.slice(0, 32) : meetingTypeId;
+                                if (meetingTypeId == field) {
+                                    tempHtml += '<input class="layui-col-xs3 layui-col-md2 layui-col-lg1" lay-filter="meetingTypeId' + i + '"  name="meetingTypeId' + i + '" title="' + item.meetingTypeName + '" type="radio" value="' + item.meetingType + '" checked>';
+                                }
+                                else {
+                                    tempHtml += '<input class="layui-col-xs3 layui-col-md2 layui-col-lg1" lay-filter="meetingTypeId' + i + '" name="meetingTypeId' + i + '" title="' + item.meetingTypeName + '" type="radio" value="' + item.meetingType + '">';
+                                }
+                            });
+                        }
+                        $dom.empty().html(tempHtml);
+                        form.render('radio');
+                        //会议类型
+                        form.on('radio(meetingTypeId0)', function (data) {
+                            $('#personLeaderForm').find('[name=meetingTypeId0]').val(data.value);
+                            form.render('radio');
+                        });
+                    } 
+                    // });
+                },
+                getTiolCompanySelect: function (fieldId, fieldName, $dom, i, moduleName) { //获取企业单位
+                    fieldId = fieldId || null;
+                    fieldName = fieldName || null;
+                    var $form;
+                    if (moduleName == 'dept') {
+                        $form = $('#personDeptForm');
+                    }
+                    else if (moduleName == 'inner') {
+                        $form = $('#personInnerUnitForm');
+                    }
+                    var tempHtml =
+                        '<input name="companyId' + i + '" value="' + fieldId + '" type="hidden"/>' +
+                        '<input autocomplete="off"  value="' + fieldName + '" class="layui-input hyinput" lay-verify="companyName' + i + '"' +
+                        '        name="companyName' + i + '" placeholder="请选择" readonly="" required="" type="text">' +
+                        '<div class="eleTree ele5 company_ele' + i + '" lay-filter="' + moduleName + i + '"></div>';
+                    $dom.empty().html(tempHtml);
+                    $form.find('input[name=companyName' + i + ']').off('click').on("click", function (e) {
+                        e.stopPropagation();
+                        var el5;
+                        if (!el5) {
+                            el5 = tree.render({
+                                elem: $form.find(".company_ele" + i),
+                                // url: baseUrl+'sysmgr/sysEnterprise/selectSysEnterpriseOrganPostTreeAllList?treeType=enterpriseTree',
+                                // method: "get",
+                                data: companyList,
+                                response: {                 // 对于后台数据重新定义名字
+                                    statusName: "success",
+                                    statusCode: "0",
+                                    dataName: "list"
+                                },
+                                defaultExpandAll: true,
+                                expandOnClickNode: false,
+                                highlightCurrent: true
+                            });
+                        }
+                        $form.find(".company_ele" + i).toggle();
+                    });
+                    tree.on('nodeClick(' + moduleName + i + ')', function (item) {
+                        $form.find('input[name=companyName' + i + ']').val(item.data.parentData.data.id != item.data.currentData.id ? (item.data.parentData.data.name + '-' + item.data.currentData.name) : item.data.currentData.name);
+                        $form.find('input[name=companyId' + i + ']').val(item.data.currentData.id);
+                        $form.find(".company_ele" + i).hide();
+                    });
+
+                    $(document).on("click", function () {
+                        $form.find(".company_ele" + i).hide();
+                        // $(".ele6").hide();
+                        // $(".eleBill").hide();
+                    });
+                },
+                getTiolDeptsSelect: function (fieldId, fieldName, $dom, i, moduleName) { //获取所有部门
+                    fieldId = fieldId || null;
+                    fieldName = fieldName || '';
+                    var $form;
+                    if (moduleName == 'dept') {
+                        $form = $('#personDeptForm');
+                    }
+                    else if (moduleName == 'inner') {
+                        $form = $('#personInnerUnitForm');
+                    }
+                    var tempHtml =
+                        '<input name="departmentId' + i + '" value="' + fieldId + '" type="hidden"/>' +
+                        '<input autocomplete="off"  value="' + fieldName + '" class="layui-input hyinput" lay-verify="departmentName' + i + '"' +
+                        '        name="departmentName' + i + '" placeholder="请选择" readonly="" required="" type="text">' +
+                        '<div class="eleTree ele5 ele' + i + '" lay-filter="' + moduleName + i + '"></div>';
+                    $dom.empty().html(tempHtml);
+                    $form.find('input[name=departmentName' + i + ']').off('click').on("click", function (e) {
+                        e.stopPropagation();
+                        var el5;
+                        if (!el5) {
+                            el5 = tree.render({
+                                elem: $form.find(".ele" + i),
+                                // url: baseUrl + 'sysmgr/sysOrgan/selectSysOrganTreeBySeId',
+                                // method: "POST",
+                                data: deptList,
+                                response: {                 // 对于后台数据重新定义名字
+                                    statusName: "success",
+                                    statusCode: "0",
+                                    dataName: "list"
+                                },
+                                defaultExpandAll: true,
+                                expandOnClickNode: false,
+                                highlightCurrent: true
+                            });
+                        }
+                        $form.find(".ele" + i).toggle();
+                    });
+                    tree.on('nodeClick(' + moduleName + i + ')', function (item) {
+                        $form.find('input[name=departmentName' + i + ']').val(item.data.parentData.data.id != item.data.currentData.id ? (item.data.parentData.data.name + '-' + item.data.currentData.name) : item.data.currentData.name);
+                        $form.find('input[name=departmentId' + i + ']').val(item.data.currentData.id);
+                        $form.find(".ele" + i).hide();
+                    });
+
+                    $(document).on("click", function () {
+                        $form.find(".ele" + i).hide();
+                        // $(".ele5").hide();
+                        // $(".eleBill").hide();
+                    });
+                },
+                personLeaderInit: function () {//公司领导
+                    var $personLeaderForm = $('#personLeaderForm');
+                    var len = $personLeaderForm.find('[name=jobName]').length;
+                    if (len > 0) {
+                        for (var i = 0; i < len; i++) {//会议类型请求
+                            var $legalAdviser = $personLeaderForm.find('[name=legalAdviser]').eq(i);
+                            var legalAdviser = $personLeaderForm.find('[name=leader_legalAdviser' + i + ']:checked').val();
+                            legalAdviser = legalAdviser ? legalAdviser : '0';
+                            eventHandle.getLegalAdviserRender(legalAdviser, $legalAdviser, i, 'leader_legalAdviser');
+                            var $meetingType = $personLeaderForm.find('[name=meetingType]').eq(i);
+                            var meetingTypeId = $personLeaderForm.find('[name=meetingTypeId' + i + ']:checked').val();
+                            meetingTypeId = meetingTypeId ? meetingTypeId : '';
+                            meetingTypeId = (meetingTypeId && meetingTypeId.length > 32) ? meetingTypeId.slice(0, 32) : meetingTypeId;
+                            eventHandle.getTiolMeetingTypeSelect(meetingTypeId, $meetingType, i);
+                        }
+                    }
+                },
+                companyDeptInit: function () {//公司部门
+                    var $personDeptForm = $('#personDeptForm');
+                    var len = $personDeptForm.find('[name=jobName]').length;
+                    if (len > 0) {
+                        for (var i = 0; i < len; i++) {
+                            var $legalAdviser = $personDeptForm.find('[name=legalAdviser]').eq(i);
+                            var legalAdviser = $personDeptForm.find('[name=dept_legalAdviser' + i + ']:checked').val();
+                            legalAdviser = legalAdviser ? legalAdviser : '0';
+                            eventHandle.getLegalAdviserRender(legalAdviser, $legalAdviser, i, 'dept_legalAdviser');
+                            // 获取所有单位
+                            var $companyName = $personDeptForm.find('[name=companyName]').eq(i);
+                            var companyId = $personDeptForm.find('[name=companyId' + i + ']').val();
+                            companyId = companyId ? companyId : userInfo.seId;
+                            var companyName = $personDeptForm.find('[name=companyName' + i + ']').val();
+                            companyName = companyName ? companyName : userInfo.seName;
+                            eventHandle.getTiolCompanySelect(companyId, companyName, $companyName, i, 'dept');
+                            // 获取所有部门
+                            var $departmentName = $personDeptForm.find('[name=departmentName]').eq(i);
+                            var departmentId = $personDeptForm.find('[name=departmentId' + i + ']').val();
+                            departmentId = departmentId ? departmentId : '001061';
+                            var departmentName = $personDeptForm.find('[name=departmentName' + i + ']').val();
+                            // departmentName=departmentName?departmentName:'中国有色集团总部';
+                            departmentName = departmentName ? departmentName : '';
+                            // departmentId=departmentId?departmentId:'001061';
+                            departmentId = departmentId ? departmentId : '';
+                            eventHandle.getTiolDeptsSelect(departmentId, departmentName, $departmentName, i, 'dept');
+                        }
+                    }
+                },
+                innerUnitInit: function () {//内部企业
+                    var $personInnerUnitForm = $('#personInnerUnitForm');
+                    var len = $personInnerUnitForm.find('[name=jobName]').length;
+                    if (len > 0) {
+                        for (var i = 0; i < len; i++) {
+                            var $legalAdviser = $personInnerUnitForm.find('[name=legalAdviser]').eq(i);
+                            var legalAdviser = $personInnerUnitForm.find('[name=inner_legalAdviser' + i + ']:checked').val();
+                            legalAdviser = legalAdviser ? legalAdviser : '0';
+                            eventHandle.getLegalAdviserRender(legalAdviser, $legalAdviser, i, 'inner_legalAdviser');
+                            // 获取所有单位
+                            var $companyName = $personInnerUnitForm.find('[name=companyName]').eq(i);
+                            var companyId = $personInnerUnitForm.find('[name=companyId' + i + ']').val();
+                            companyId = companyId ? companyId : userInfo.seId;
+                            var companyName = $personInnerUnitForm.find('[name=companyName' + i + ']').val();
+                            companyName = companyName ? companyName : userInfo.seName;
+                            eventHandle.getTiolCompanySelect(companyId, companyName, $companyName, i, 'inner');
+                            // 获取所有部门
+                            var $departmentName = $personInnerUnitForm.find('[name=departmentName]').eq(i);
+                            var departmentId = $personInnerUnitForm.find('[name=departmentId' + i + ']').val();
+                            departmentId = departmentId ? departmentId : '001061';
+                            var departmentName = $personInnerUnitForm.find('[name=departmentName' + i + ']').val();
+                            // departmentName=departmentName?departmentName:'中国有色集团总部';
+                            departmentName = departmentName ? departmentName : '';
+                            // departmentId=departmentId?departmentId:'001061';
+                            departmentId = departmentId ? departmentId : '';
+                            eventHandle.getTiolDeptsSelect(departmentId, departmentName, $departmentName, i, 'inner');
+                        }
+                    }
+                },
+                initRender: function () {
+                    //获取会议类型
+                    common.fetchPost('meetingmgr/tiolMeetingType/getTiolMeetingTypeSelect', {}, function (res) {
+                        // debugger
+                        if (res.list && res.list.length > 0) {
+                            meetingTypeList = res.list;
+                        }
+                    });
+                    //任职开始日期
+                    $('#personLeaderForm [name=startDate]').removeAttr("lay-key");
+                    laydate.render({
+                        elem: '#personLeaderForm [name=startDate]',
+                        type: 'month',
+                        format: 'yyyy-MM',
+                        trigger: 'click'
+                    });
+                    //任职结束日期
+                    $('#personLeaderForm [name=endDate]').removeAttr("lay-key");
+                    laydate.render({
+                        elem: '#personLeaderForm [name=endDate]',
+                        type: 'month',
+                        format: 'yyyy-MM',
+                        trigger: 'click'
+                    });
+                    //获取所有部门
+                    common.fetchPost('sysmgr/sysOrgan/selectSysOrganTreeBySeId', {}, function (res) {
+                        if (res.list && res.list.length > 0) {
+                            deptList = res.list;
+                        }
+                    });
+
+                    //获取所有企业单位
+                    common.fetchGet('sysmgr/sysEnterprise/selectSysEnterpriseOrganPostTreeAllList?treeType=enterpriseTree', function (res) {
+                        if (res.list && res.list.length > 0) {
+                            companyList = res.list;
+                        }
+                    });
+                },
+                domEvent: function () {// 页面元素绑定事件监听
+                    //渲染默认勾选职务类别
+                    // $('.checobox_memberAttendeeType').each(function(){
+                    //     var $tar=$(this);
+                    //     var isChecked=$tar.attr('checked');
+                    //     var value=$(this).val();
+                    //     if(isChecked){
+                    //         //勾选 显示
+                    //         switch(value){
+                    //         case 'company_leader':
+                    //                 eventHandle.personLeaderInit();
+                    //                 $('#personLeader').show();
+                    //                 break;
+                    //         case 'company_dept':
+                    //                 eventHandle.companyDeptInit();
+                    //                 $('#personDept').show();
+                    //                 break;
+                    //         case 'internal_enterprise':
+                    //                 eventHandle.innerUnitInit();
+                    //                 $('#personInnerUnit').show();
+                    //                 break;
+                    //         case 'external_unit':
+                    //                 $('#personOuterUnit').show();
+                    //                 break;
+                    //         default:
+                    //                 break;
+                    //         }
+                    //     // 保存当前选择
+                    //         memberAttendeeType.push(value);
+                    //     }
+                    //     else{
+                    //         // 去勾选 隐藏
+                    //         switch(value){
+                    //         case 'company_leader':$('#personLeader').hide();break;
+                    //         case 'company_dept':$('#personDept').hide();break;
+                    //         case 'internal_enterprise':$('#personInnerUnit').hide();break;
+                    //         case 'external_unit':$('#personOuterUnit').hide();break;
+                    //         default:break;
+                    //         }
+                    //         //保存当前选择操作
+                    //         if(memberAttendeeType.length>0){
+                    //             for (var i = 0; i < memberAttendeeType.length; i++) {
+                    //             if (memberAttendeeType[i] == value) {
+                    //                 memberAttendeeType.splice(i, 1);
+                    //                 break;
+                    //             }
+                    //             }
+                    //         }
+                    //     }
+                    // });
+                    //监听复选框 勾选职务类别
+                    form.on('checkbox(memberAttendeeType)', function (data) {
+                        var value = data.elem.value;
+                        var dataset = data.elem.dataset;
+                        if (data.elem.checked) {
+                            //勾选 显示
+                            switch (value) {
+                                case 'company_leader':
+                                    eventHandle.personLeaderInit();
+                                    $('#personLeader').show();
+                                    break;
+                                case 'company_dept':
+                                    eventHandle.companyDeptInit();
+                                    $('#personDept').show();
+                                    break;
+                                case 'internal_enterprise':
+                                    eventHandle.innerUnitInit();
+                                    $('#personInnerUnit').show();
+                                    break;
+                                case 'external_unit':
+                                    $('#personOuterUnit').show();
+                                    break;
+                                default:
+                                    break;
+                            }
+                            // 保存当前选择
+                            memberAttendeeTypeList.push({
+                                id: dataset.id,
+                                value: value,
+                            });
+                            memberAttendeeType.push(value);
+                        } else {
+                            // 去勾选 隐藏
+                            switch (value) {
+                                case 'company_leader': $('#personLeader').hide(); break;
+                                case 'company_dept': $('#personDept').hide(); break;
+                                case 'internal_enterprise': $('#personInnerUnit').hide(); break;
+                                case 'external_unit': $('#personOuterUnit').hide(); break;
+                                default: break;
+                            }
+                            //保存当前选择操作
+                            if (memberAttendeeType.length > 0) {
+                                for (var i = 0; i < memberAttendeeType.length; i++) {
+                                    if (memberAttendeeType[i] == value) {
+                                        memberAttendeeType.splice(i, 1);
+                                        memberAttendeeTypeList.splice(i, 1);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    });
+                    //添加职务 按钮
+                    // 公司领导
+                    var $addPostLeaderBtn = $('#addPostLeaderBtn');
+                    var $personLeaderForm = $('#personLeaderForm');
+                    $addPostLeaderBtn.off('click').on('click', function () {
+                        //片段渲染
+                        var html =
+                            ' <div class="layui-row layusi-col-space15 memberInfoContainer" data-memberTypeId="">' + $personLeaderForm.find('#personLeaderFormContent').html() +
+                            '  <div class="layui-col-md1">' +
+                            '    <i class="icon iconfont icon-button-sc-2 formLineDelete delete1"></i>' +
+                            '  </div>'
+                        '</div>';
+                        $personLeaderForm.append(html);
+                        var len = $personLeaderForm.find('[name=jobName]').length;
+                        if (len > 0) {
+                            for (var i = 0; i < len; i++) {
+                                var $legalAdviser = $personLeaderForm.find('[name=legalAdviser]').eq(i);
+                                var legalAdviser = $personLeaderForm.find('[name=leader_legalAdviser' + i + ']:checked').val();
+                                // var legalAdviser0=$personLeaderForm.find('[name=leader_legalAdviser0]:checked').val();//第一个值
+                                // legalAdviser=legalAdviser?legalAdviser:legalAdviser0;
+                                legalAdviser = legalAdviser ? legalAdviser : '0';
+                                eventHandle.getLegalAdviserRender(legalAdviser, $legalAdviser, i, 'leader_legalAdviser');
+                                var $meetingType = $personLeaderForm.find('[name=meetingType]').eq(i);
+                                var meetingTypeId = $personLeaderForm.find('[name=meetingTypeId' + i + ']:checked').val();
+                                // var meetingTypeId0=$personLeaderForm.find('[name=meetingTypeId0]:checked').val();//第一个值
+                                // meetingTypeId=meetingTypeId?meetingTypeId:meetingTypeId0;
+                                meetingTypeId = meetingTypeId ? meetingTypeId : '';
+                                meetingTypeId = (meetingTypeId && meetingTypeId.length > 32) ? meetingTypeId.slice(0, 32) : meetingTypeId;
+                                eventHandle.getTiolMeetingTypeSelect(meetingTypeId, $meetingType, i);
+                            }
+                            form.render('radio');
+                        }
+                        $personLeaderForm.find('[name=startDate]').each(function (index, elem) {  //任职开始日期
+                            $('#personLeaderForm [name=startDate]').removeAttr("lay-key");
+                            laydate.render({
+                                elem: elem,
+                                type: 'month',
+                                format: 'yyyy-MM',
+                                trigger: 'click'
+                            });
+                        });
+                        $personLeaderForm.find('[name=endDate]').each(function (index, elem) {  //任职结束日期
+                            $('#personLeaderForm [name=endDate]').removeAttr("lay-key");
+                            laydate.render({
+                                elem: elem,
+                                type: 'month',
+                                format: 'yyyy-MM',
+                                trigger: 'click'
+                            });
+                        });
+                    });
+                    $personLeaderForm.off('click', '.delete1');
+                    $personLeaderForm.on('click', '.delete1', function (e) {
+                        $(e.target).parent().parent().remove();
+                    });
+                    // 公司部门
+                    var $addPostDeptBtn = $('#addPostDeptBtn');
+                    var $personDeptForm = $('#personDeptForm');
+                    $addPostDeptBtn.off('click').on('click', function () {
+                        var html =
+                            ' <div class="layui-row layusi-col-space15">' + $personDeptForm.find('#personDeptFormContent').html() +
+                            '  <div class="layui-col-md1" style="padding-left:15px;">' +
+                            '    <i class="icon iconfont icon-button-sc-2 formLineDelete delete1"></i>' +
+                            '  </div>'
+                        '</div>';
+                        $personDeptForm.append(html);
+                        var len = $personDeptForm.find('[name=jobName]').length;
+                        if (len > 0) {
+                            for (var i = 0; i < len; i++) {
+                                var $legalAdviser = $personDeptForm.find('[name=legalAdviser]').eq(i);
+                                var legalAdviser = $personDeptForm.find('[name=dept_legalAdviser' + i + ']:checked').val();
+                                // var legalAdviser0=$personDeptForm.find('[name=dept_legalAdviser0]:checked').val();
+                                // legalAdviser=legalAdviser?legalAdviser:legalAdviser0;
+                                legalAdviser = legalAdviser ? legalAdviser : '0';
+                                eventHandle.getLegalAdviserRender(legalAdviser, $legalAdviser, i, 'dept_legalAdviser');
+                                // 获取所有单位
+                                var $companyName = $personDeptForm.find('[name=companyName]').eq(i);
+                                var companyId = $personDeptForm.find('[name=companyId' + i + ']').val();
+                                companyId = companyId ? companyId : userInfo.seId;
+                                var companyName = $personDeptForm.find('[name=companyName' + i + ']').val();
+                                companyName = companyName ? companyName : userInfo.seName;
+                                eventHandle.getTiolCompanySelect(companyId, companyName, $companyName, i, 'dept');
+                                // 获取所有部门
+                                var $departmentName = $personDeptForm.find('[name=departmentName]').eq(i);
+                                var departmentId = $personDeptForm.find('[name=departmentId' + i + ']').val();
+                                // departmentId=departmentId?departmentId:'001061';
+                                departmentId = departmentId ? departmentId : '';
+                                var departmentName = $personDeptForm.find('[name=departmentName' + i + ']').val();
+                                // departmentName=departmentName?departmentName:'中国有色集团总部';
+                                departmentName = departmentName ? departmentName : '';
+                                eventHandle.getTiolDeptsSelect(departmentId, departmentName, $departmentName, i, 'dept');
+                            }
+                        }
+                        form.render('select');
+                    });
+                    $personDeptForm.off('click', '.delete1');
+                    $personDeptForm.on('click', '.delete1', function (e) {
+                        $(e.target).parent().parent().remove();
+                    });
+                    // 内部企业
+                    var $addPostInnerBtn = $('#addPostInnerBtn');
+                    var $personInnerUnitForm = $('#personInnerUnitForm');
+                    $addPostInnerBtn.off('click').on('click', function () {
+                        var html =
+                            ' <div class="layui-row layusi-col-space15">' + $personInnerUnitForm.find('#personInnerUnitFormContent').html() +
+                            '  <div class="layui-col-md1" style="padding-left:15px;">' +
+                            '    <i class="icon iconfont icon-button-sc-2 formLineDelete delete1"></i>' +
+                            '  </div>'
+                        '</div>';
+                        $personInnerUnitForm.append(html);
+                        var len = $personInnerUnitForm.find('[name=jobName]').length;
+                        if (len > 0) {
+                            for (var i = 0; i < len; i++) {
+                                var $legalAdviser = $personInnerUnitForm.find('[name=legalAdviser]').eq(i);
+                                var legalAdviser = $personInnerUnitForm.find('[name=inner_legalAdviser' + i + ']:checked').val();
+                                // var legalAdviser0=$personInnerUnitForm.find('[name=inner_legalAdviser0]:checked').val();
+                                // legalAdviser=legalAdviser?legalAdviser:legalAdviser0;
+                                legalAdviser = legalAdviser ? legalAdviser : '0';
+                                eventHandle.getLegalAdviserRender(legalAdviser, $legalAdviser, i, 'inner_legalAdviser');
+                                // 获取所有单位
+                                var $companyName = $personInnerUnitForm.find('[name=companyName]').eq(i);
+                                var companyId = $personInnerUnitForm.find('[name=companyId' + i + ']').val();
+                                companyId = companyId ? companyId : userInfo.seId;
+                                var companyName = $personInnerUnitForm.find('[name=companyName' + i + ']').val();
+                                companyName = companyName ? companyName : userInfo.seName;
+                                eventHandle.getTiolCompanySelect(companyId, companyName, $companyName, i, 'inner');
+                                // 获取所有部门
+                                var $departmentName = $personInnerUnitForm.find('[name=departmentName]').eq(i);
+                                var departmentId = $personInnerUnitForm.find('[name=departmentId' + i + ']').val();
+                                // departmentId=departmentId?departmentId:'001061';
+                                departmentId = departmentId ? departmentId : '';
+                                var departmentName = $personInnerUnitForm.find('[name=departmentName' + i + ']').val();
+                                // departmentName=departmentName?departmentName:'中国有色集团总部';
+                                departmentName = departmentName ? departmentName : '';
+                                eventHandle.getTiolDeptsSelect(departmentId, departmentName, $departmentName, i, 'inner');
+                            }
+                        }
+                        form.render('select');
+                    });
+                    $personInnerUnitForm.off('click', '.delete1');
+                    $personInnerUnitForm.on('click', '.delete1', function (e) {
+                        $(e.target).parent().parent().remove();
+                    });
+                    // 外部单位
+                    var $addPostOuterBtn = $('#addPostOuterBtn');
+                    var $personOuterUnitForm = $('#personOuterUnitForm');
+                    $addPostOuterBtn.off('click').on('click', function () {
+                        var html =
+                            ' <div class="layui-row layusi-col-space15">' + $personOuterUnitForm.find('#personOuterUnitFormContent').html() +
+                            '  <div class="layui-col-md2" style="padding-left:15px;">' +
+                            '    <i class="icon iconfont icon-button-sc-2 formLineDelete delete1"></i>' +
+                            '  </div>'
+                        '</div>';
+                        $personOuterUnitForm.append(html);
+                        form.render('select');
+                    });
+                    $personOuterUnitForm.off('click', '.delete1');
+                    $personOuterUnitForm.on('click', '.delete1', function (e) {
+                        $(e.target).parent().parent().remove();
+                    });
+                    // 新增/编辑 保存
+                    $('#saveBtn').off('click').on('click', function () {
+                        var url;//请求地址
+                        var params = {};//请求参数
+                        if (editmemberId) {
+                            params.memberId = editmemberId;
+                            url = 'meetingmgr/tiolCompanyMemberV2/updateTiolCompanyMemberVo';
+                        } else {
+                            url = 'meetingmgr/tiolCompanyMemberV2/addTiolCompanyMemberVo';
+                        }
+                        //获取人员维护信息
+                        // 姓名
+                        params.memberName = $('#rywhForm').find('[name="memberName"]').val();
+                        if (params.memberName == "") {
+                            layer.msg('人员姓名必填');
+                            return false;
+                        }
+                        // 人员类型
+                        if (memberAttendeeType.length > 0) {
+                            params.memberAttendeeType = memberAttendeeType.join(',');
+
+                            var company_leader = common.indexOf(memberAttendeeType, 'company_leader');
+                            var company_dept = common.indexOf(memberAttendeeType, 'company_dept');
+                            var internal_enterprise = common.indexOf(memberAttendeeType, 'internal_enterprise');
+                            var external_unit = common.indexOf(memberAttendeeType, 'external_unit');
+                            //公司领导
+                            if (company_leader != -1) {
+                                var $personLeaderForm = $('#personLeaderForm');
+                                var len = $personLeaderForm.find('[name=jobName]').length;
+                                for (var i = 0; i < len; i++) {
+                                    var jobName = $personLeaderForm.find('[name=jobName]').eq(i).val();
+                                    if (jobName == "") {
+                                        layer.msg('职务必填');
+                                        relMemberTypeList = [];
+                                        return false;
+                                    }
+                                    var startDate = $personLeaderForm.find('[name=startDate]').eq(i).val();
+                                    if (startDate == "") {
+                                        layer.msg('任职开始日期必填');
+                                        relMemberTypeList = [];
+                                        return false;
+                                    }
+                                    var endDate = $personLeaderForm.find('[name=endDate]').eq(i).val();
+                                    // if(endDate==""){
+                                    //     layer.msg('任职结束日期必填');
+                                    //     relMemberTypeList=[];
+                                    //     return false;
+                                    // }
+                                    var meetingTypeId = $personLeaderForm.find('[name=meetingTypeId' + i + ']:checked').val();
+                                    meetingTypeId = meetingTypeId ? meetingTypeId : '';
+                                    meetingTypeId = (meetingTypeId.length > 32) ? meetingTypeId.slice(0, 32) : meetingTypeId;
+                                    var legalAdviser = $personLeaderForm.find('[name=leader_legalAdviser' + i + ']:checked').val();
+                                    legalAdviser = legalAdviser ? legalAdviser : '0';
+                                    var memberTypeId = $personLeaderForm.find('.memberInfoContainer').eq(i).attr('data-memberTypeId');
+                                    memberTypeId = memberTypeId ? memberTypeId : null;
+                                    relMemberTypeList.push({
+                                        memberAttendeeType: 'company_leader',//人员类型
+                                        jobName: jobName,//职务
+                                        memberTypeId: memberTypeId,//职务id
+                                        startDate: startDate,//任职开始时间
+                                        endDate: endDate,//任职结束时间
+                                        legalAdviser: legalAdviser,//任总法律顾问
+                                        meetingTypeId: meetingTypeId,//会议类型
+                                        departmentName: null,//部门名称
+                                        companyName: null//公司名称
+                                    });
+                                }
+                            }
+                            //公司部门
+                            if (company_dept != -1) {
+                                var $personDeptForm = $('#personDeptForm');
+                                var len = $personDeptForm.find('[name=jobName]').length;
+                                for (var i = 0; i < len; i++) {
+                                    var jobName = $personDeptForm.find('[name=jobName]').eq(i).val();
+                                    if (jobName == "") {
+                                        layer.msg('职务必填');
+                                        relMemberTypeList = [];
+                                        return false;
+                                    }
+                                    var companyId = $personDeptForm.find('[name=companyId' + i + ']').val();
+                                    if (!companyId) {
+                                        layer.msg('企业id不存在');
+                                        relMemberTypeList = [];
+                                        return false;
+                                    }
+                                    var companyName = $personDeptForm.find('[name=companyName' + i + ']').val();
+                                    if (companyName == "") {
+                                        layer.msg('公司必填');
+                                        relMemberTypeList = [];
+                                        return false;
+                                    }
+                                    var departmentName = $personDeptForm.find('[name=departmentName' + i + ']').val();
+                                    if (departmentName == "") {
+                                        layer.msg('部门必填');
+                                        relMemberTypeList = [];
+                                        return false;
+                                    }
+                                    var departmentId = $personDeptForm.find('[name=departmentId' + i + ']').val();
+                                    if (!departmentId) {
+                                        layer.msg('部门id不存在');
+                                        relMemberTypeList = [];
+                                        return false;
+                                    }
+                                    var legalAdviser = $personDeptForm.find('[name=dept_legalAdviser' + i + ']:checked').val();
+                                    legalAdviser = legalAdviser ? legalAdviser : '0';
+                                    var memberTypeId = $personDeptForm.find('.memberInfoContainer').eq(i).attr('data-memberTypeId');
+                                    memberTypeId = memberTypeId ? memberTypeId : null;
+                                    relMemberTypeList.push({
+                                        memberAttendeeType: 'company_dept',//人员类型
+                                        jobName: jobName,//职务
+                                        memberTypeId: memberTypeId,//职务id
+                                        startDate: null,//任职开始时间
+                                        endDate: null,//任职结束时间
+                                        legalAdviser: legalAdviser,//任总法律顾问
+                                        meetingTypeId: null,//会议类型
+                                        departmentId: departmentId,//部门id
+                                        departmentName: departmentName,//部门名称
+                                        companyId: companyId,//公司id
+                                        companyName: companyName//公司名称
+                                    });
+                                }
+                            }
+                            //内部企业
+                            if (internal_enterprise != -1) {
+                                var $personInnerUnitForm = $('#personInnerUnitForm');
+                                var len = $personInnerUnitForm.find('[name=jobName]').length;
+                                for (var i = 0; i < len; i++) {
+                                    var jobName = $personInnerUnitForm.find('[name=jobName]').eq(i).val();
+                                    if (jobName == "") {
+                                        layer.msg('职务必填');
+                                        return false;
+                                    }
+                                    var companyId = $personInnerUnitForm.find('[name=companyId' + i + ']').val();
+                                    if (!companyId) {
+                                        layer.msg('企业id不存在');
+                                        relMemberTypeList = [];
+                                        return false;
+                                    }
+                                    var companyName = $personInnerUnitForm.find('[name=companyName' + i + ']').val();
+                                    if (companyName == "") {
+                                        layer.msg('公司必填');
+                                        relMemberTypeList = [];
+                                        return false;
+                                    }
+                                    var departmentName = $personInnerUnitForm.find('[name=departmentName' + i + ']').val();
+                                    if (departmentName == "") {
+                                        layer.msg('部门必填');
+                                        relMemberTypeList = [];
+                                        return false;
+                                    }
+                                    var departmentId = $personInnerUnitForm.find('[name=departmentId' + i + ']').val();
+                                    if (!departmentId) {
+                                        layer.msg('部门id不存在');
+                                        relMemberTypeList = [];
+                                        return false;
+                                    }
+                                    var legalAdviser = $personInnerUnitForm.find('[name=inner_legalAdviser' + i + ']:checked').val();
+                                    legalAdviser = legalAdviser ? legalAdviser : '0';
+                                    var memberTypeId = $personInnerUnitForm.find('.memberInfoContainer').eq(i).attr('data-memberTypeId');
+                                    memberTypeId = memberTypeId ? memberTypeId : null;
+                                    relMemberTypeList.push({
+                                        memberAttendeeType: 'internal_enterprise',//人员类型
+                                        jobName: jobName,//职务
+                                        memberTypeId: memberTypeId,//职务id
+                                        startDate: null,//任职开始时间
+                                        endDate: null,//任职结束时间
+                                        legalAdviser: legalAdviser,//任总法律顾问
+                                        meetingTypeId: null,//会议类型
+                                        departmentId: departmentId,//部门id
+                                        departmentName: departmentName,//部门名称
+                                        companyId: companyId,//公司id
+                                        companyName: companyName//公司名称
+                                    });
+                                }
+                            }
+                            //外部单位
+                            if (external_unit != -1) {
+                                var $personOuterUnitForm = $('#personOuterUnitForm');
+                                var len = $personOuterUnitForm.find('[name=jobName]').length;
+                                for (var i = 0; i < len; i++) {
+                                    var jobName = $personOuterUnitForm.find('[name=jobName]').eq(i).val();
+                                    if (jobName == "") {
+                                        layer.msg('职务必填');
+                                        relMemberTypeList = [];
+                                        return false;
+                                    }
+                                    var companyName = $personOuterUnitForm.find('[name=companyName]').eq(i).val();
+                                    if (companyName == "") {
+                                        layer.msg('单位名称必填');
+                                        relMemberTypeList = [];
+                                        return false;
+                                    }
+                                    var departmentName = $personOuterUnitForm.find('[name=departmentName]').eq(i).val();
+                                    if (departmentName == "") {
+                                        layer.msg('部门必填');
+                                        relMemberTypeList = [];
+                                        return false;
+                                    }
+                                    var memberTypeId = $personOuterUnitForm.find('.memberInfoContainer').eq(i).attr('data-memberTypeId');
+                                    memberTypeId = memberTypeId ? memberTypeId : null;
+                                    relMemberTypeList.push({
+                                        memberAttendeeType: 'external_unit',//人员类型
+                                        jobName: jobName,//职务
+                                        memberTypeId: memberTypeId,//职务id
+                                        startDate: null,//任职开始时间
+                                        endDate: null,//任职结束时间
+                                        legalAdviser: null,//任总法律顾问
+                                        meetingTypeId: null,//会议类型
+                                        departmentId: null,//部门id
+                                        departmentName: departmentName,//部门名称
+                                        companyId: null,//公司id
+                                        companyName: companyName//公司名称
+                                    });
+                                }
+                            }
+                        }
+                        // 备注
+                        params.remark = $('#rywhForm').find('[name="remark"]').val();
+                        // 具体内容
+                        params.relMemberTypeList = relMemberTypeList;
+                        var layerLoader = common.layerLoader();
+                        //发送请求
+                        common.fetchPost(url, params, function (res) {
+                            layer.close(layerLoader);
+                            relMemberTypeList = [];//清空全局变量
+                            if (res.success) {
+                                parent.layer.closeAll();
+                                $.reloadParentPage();
+                                parent.layer.msg('保存成功');
+                            } else {
+                                layer.alert(res.resultMessage || '保存失败')
+                            }
+                        }, function (err) {
+                            layer.close(layerLoader);
+                            relMemberTypeList = [];//清空全局变量
+                            layer.alert(err.resultMessage || '保存失败');
+                        });
+                        return false
+                    });
+                    //关闭
+                    $('#closeBtn').off('click').on('click', function () {
+                        parent.layer.closeAll();
+                    });
+                },
+                output: function () {
+                    //初始化 事件
+                    eventHandle.initRender();
+                    //dom 事件
+                    eventHandle.domEvent();
+                    //判断是新增还是编辑
+                    if (editmemberId) {//编辑
+                        var layerLoader = common.layerLoader();
+                        //人员维护信息导入
+                        common.fetchPost('meetingmgr/tiolCompanyMemberV2/getTiolCompanyMemberVo?memberId=' + editmemberId, {}, function (res) {
+                            layer.close(layerLoader);
+                            var data = res.object;
+                            // 人员类型
+                            if (data.memberAttendeeType && data.memberAttendeeType.length > 0) {
+                                memberAttendeeType = data.memberAttendeeType.split(',') || [];
+                                //具体内容赋值
+                                if (data.relMemberTypeList && data.relMemberTypeList.length > 0) {
+                                    var company_leaderList = [];
+                                    var company_deptList = [];
+                                    var internal_enterpriseList = [];
+                                    var external_unitList = [];
+                                    $.map(data.relMemberTypeList, function (item, i) {//将数据按人员类型分组
+                                        switch (item.memberAttendeeType) {
+                                            case 'company_leader': company_leaderList.push(item); break;
+                                            case 'company_dept': company_deptList.push(item); break;
+                                            case 'internal_enterprise': internal_enterpriseList.push(item); break;
+                                            case 'external_unit': external_unitList.push(item); break;
+                                            default: break;
+                                        }
+                                    });
+                                    //公司领导
+                                    if (company_leaderList.length > 0) {
+                                        var $personLeaderForm = $('#personLeaderForm');
+                                        $.map(company_leaderList, function (item, index) {
+                                            if (index > 0) {
+                                                var html =
+                                                    ' <div class="layui-row layusi-col-space15 memberInfoContainer" data-memberTypeId="">' + $personLeaderForm.find('#personLeaderFormContent').html() +
+                                                    '  <div class="layui-col-md1">' +
+                                                    '    <i class="icon iconfont icon-button-sc-2 formLineDelete delete1"></i>' +
+                                                    '  </div>'
+                                                '</div>';
+                                                $personLeaderForm.append(html);
+                                            }
+                                        });
+                                        var len = $personLeaderForm.find('[name=jobName]').length;
+                                        for (var i = 0; i < len; i++) {
+                                            $personLeaderForm.find('[name=jobName]').eq(i).val(company_leaderList[i].jobName);
+                                            $personLeaderForm.find('.memberInfoContainer').eq(i).attr('data-memberTypeId', company_leaderList[i].memberTypeId);
+                                            $personLeaderForm.find('[name=startDate]').eq(i).val(company_leaderList[i].startDate);
+                                            $personLeaderForm.find('[name=endDate]').eq(i).val(company_leaderList[i].endDate);
+                                            var $legalAdviser = $personLeaderForm.find('[name=legalAdviser]').eq(i);
+                                            var legalAdviser = company_leaderList[i].legalAdviser ? company_leaderList[i].legalAdviser : '0';
+                                            eventHandle.getLegalAdviserRender(legalAdviser, $legalAdviser, i, 'leader_legalAdviser');
+                                            var $meetingType = $personLeaderForm.find('[name=meetingType]').eq(i);
+                                            var meetingTypeId = company_leaderList[i].meetingTypeId;
+                                            meetingTypeId = meetingTypeId ? meetingTypeId : '';
+                                            meetingTypeId = (meetingTypeId && meetingTypeId.length > 32) ? meetingTypeId.slice(0, 32) : meetingTypeId;
+                                            eventHandle.getTiolMeetingTypeSelect(meetingTypeId, $meetingType, i);
+                                        }
+                                        $personLeaderForm.find('[name=startDate]').each(function (index, elem) {  //任职开始日期
+                                            $('#personLeaderForm [name=startDate]').removeAttr("lay-key");
+                                            laydate.render({
+                                                elem: elem,
+                                                type: 'month',
+                                                format: 'yyyy-MM',
+                                                trigger: 'click'
+                                            });
+                                        });
+                                        $personLeaderForm.find('[name=endDate]').each(function (index, elem) {  //任职结束日期
+                                            $('#personLeaderForm [name=endDate]').removeAttr("lay-key");
+                                            laydate.render({
+                                                elem: elem,
+                                                type: 'month',
+                                                format: 'yyyy-MM',
+                                                trigger: 'click'
+                                            });
+                                        });
+                                    }
+                                    //公司部门
+                                    if (company_deptList.length > 0) {
+                                        var $personDeptForm = $('#personDeptForm');
+                                        $.map(company_deptList, function (item, i) {
+                                            if (i > 0) {
+                                                var html =
+                                                    ' <div class="layui-row layusi-col-space15 memberInfoContainer" data-memberTypeId="">' + $personDeptForm.find('#personDeptFormContent').html() +
+                                                    '  <div class="layui-col-md1">' +
+                                                    '    <i class="icon iconfont icon-button-sc-2 formLineDelete delete1"></i>' +
+                                                    '  </div>'
+                                                '</div>';
+                                                $personDeptForm.append(html);
+                                            }
+                                        });
+                                        var len = $personDeptForm.find('[name=jobName]').length;
+                                        for (var i = 0; i < len; i++) {
+                                            $personDeptForm.find('[name=jobName]').eq(i).val(company_deptList[i].jobName);
+                                            $personDeptForm.find('.memberInfoContainer').eq(i).attr('data-memberTypeId', company_deptList[i].memberTypeId);
+
+                                            var $legalAdviser = $personDeptForm.find('[name=legalAdviser]').eq(i);
+                                            var legalAdviser = company_deptList[i].legalAdviser ? company_deptList[i].legalAdviser : '0';
+                                            eventHandle.getLegalAdviserRender(legalAdviser, $legalAdviser, i, 'dept_legalAdviser');
+                                            // 获取所有单位
+                                            var $companyName = $personDeptForm.find('[name=companyName]').eq(i);
+                                            // var companyId=$personDeptForm.find('[name=companyId'+i+']').val();
+                                            var companyId = company_deptList[i].companyId;
+                                            companyId = companyId ? companyId : userInfo.seId;
+                                            // var companyName=$personDeptForm.find('[name=companyName'+i+']').val();
+                                            var companyName = company_deptList[i].companyName;
+                                            companyName = companyName ? companyName : userInfo.seName;
+                                            eventHandle.getTiolCompanySelect(companyId, companyName, $companyName, i, 'dept');
+                                            // 获取所有部门
+                                            var $departmentName = $personDeptForm.find('[name=departmentName]').eq(i);
+                                            // var departmentId=$personDeptForm.find('[name=departmentId'+i+']').val();
+                                            var departmentId = company_deptList[i].departmentId;
+                                            departmentId = departmentId ? departmentId : null;
+                                            // var departmentName=$personDeptForm.find('[name=departmentName'+i+']').val();
+                                            var departmentName = company_deptList[i].departmentName;
+                                            // departmentName=departmentName?departmentName:'中国有色集团总部';
+                                            departmentName = departmentName ? departmentName : null;
+                                            // departmentId=departmentId?departmentId:'001061';
+                                            eventHandle.getTiolDeptsSelect(departmentId, departmentName, $departmentName, i, 'dept');
+                                        }
+                                    }
+                                    //内部企业
+                                    if (internal_enterpriseList.length > 0) {
+                                        var $personInnerUnitForm = $('#personInnerUnitForm');
+                                        $.map(internal_enterpriseList, function (item, i) {
+                                            if (i > 0) {
+                                                var html =
+                                                    ' <div class="layui-row layusi-col-space15 memberInfoContainer" data-memberTypeId="">' + $personInnerUnitForm.find('#personInnerUnitFormContent').html() +
+                                                    '  <div class="layui-col-md1">' +
+                                                    '    <i class="icon iconfont icon-button-sc-2 formLineDelete delete1"></i>' +
+                                                    '  </div>'
+                                                '</div>';
+                                                $personInnerUnitForm.append(html);
+                                            }
+                                        });
+                                        var len = $personInnerUnitForm.find('[name=jobName]').length;
+                                        for (var i = 0; i < len; i++) {
+                                            $personInnerUnitForm.find('[name=jobName]').eq(i).val(internal_enterpriseList[i].jobName);
+                                            $personInnerUnitForm.find('.memberInfoContainer').eq(i).attr('data-memberTypeId', internal_enterpriseList[i].memberTypeId);
+
+                                            var $legalAdviser = $personInnerUnitForm.find('[name=legalAdviser]').eq(i);
+                                            var legalAdviser = internal_enterpriseList[i].legalAdviser ? internal_enterpriseList[i].legalAdviser : '0';
+                                            eventHandle.getLegalAdviserRender(legalAdviser, $legalAdviser, i, 'inner_legalAdviser');
+                                            // 获取所有单位
+                                            var $companyName = $personInnerUnitForm.find('[name=companyName]').eq(i);
+                                            // var companyId=$personInnerUnitForm.find('[name=companyId'+i+']').val();
+                                            var companyId = internal_enterpriseList[i].companyId;
+                                            companyId = companyId ? companyId : userInfo.seId;
+                                            // var companyName=$personInnerUnitForm.find('[name=companyName'+i+']').val();
+                                            var companyName = internal_enterpriseList[i].companyName;
+                                            companyName = companyName ? companyName : userInfo.seName;
+                                            eventHandle.getTiolCompanySelect(companyId, companyName, $companyName, i, 'inner');
+                                            // 获取所有部门
+                                            var $departmentName = $personInnerUnitForm.find('[name=departmentName]').eq(i);
+                                            // var departmentId=$personInnerUnitForm.find('[name=departmentId'+i+']').val();
+                                            var departmentId = internal_enterpriseList[i].departmentId;
+                                            departmentId = departmentId ? departmentId : null;
+                                            // var departmentName=$personInnerUnitForm.find('[name=departmentName'+i+']').val();
+                                            var departmentName = internal_enterpriseList[i].departmentName;
+                                            // departmentName=departmentName?departmentName:'中国有色集团总部';
+                                            departmentName = departmentName ? departmentName : null;
+                                            // departmentId=departmentId?departmentId:'001061';
+                                            eventHandle.getTiolDeptsSelect(departmentId, departmentName, $departmentName, i, 'inner');
+                                        }
+                                    }
+                                    //外部单位
+                                    if (external_unitList.length > 0) {
+                                        var $personOuterUnitForm = $('#personOuterUnitForm');
+                                        $.map(external_unitList, function (item, i) {
+                                            if (i > 0) {
+                                                var html =
+                                                    ' <div class="layui-row layusi-col-space15 memberInfoContainer" data-memberTypeId="">' + $personOuterUnitForm.find('#personOuterUnitFormContent').html() +
+                                                    '  <div class="layui-col-md1">' +
+                                                    '    <i class="icon iconfont icon-button-sc-2 formLineDelete delete1"></i>' +
+                                                    '  </div>'
+                                                '</div>';
+                                                $personOuterUnitForm.append(html);
+                                            }
+                                            $personOuterUnitForm.find('[name=jobName]').eq(i).val(item.jobName);
+                                            $personOuterUnitForm.find('.memberInfoContainer').eq(i).attr('data-memberTypeId', item.memberTypeId);
+
+                                            // 获取所有单位
+                                            $personOuterUnitForm.find('[name=companyName]').eq(i).val(item.companyName ? item.companyName : null);
+                                            // 获取所有部门
+                                            $personOuterUnitForm.find('[name=departmentName]').eq(i).val(item.departmentName ? item.departmentName : null);
+                                        });
+                                    }
+                                }
+                            }
+                            var company_leader = common.indexOf(memberAttendeeType, 'company_leader');
+                            var company_dept = common.indexOf(memberAttendeeType, 'company_dept');
+                            var internal_enterprise = common.indexOf(memberAttendeeType, 'internal_enterprise');
+                            var external_unit = common.indexOf(memberAttendeeType, 'external_unit');
+                            //公司领导
+                            if (company_leader != -1) {
+                                company_leader = true;
+                                // eventHandle.personLeaderInit();
+                                $('#personLeader').show();
+                            }
+                            else {
+                                company_leader = false;
+                                $('#personLeader').hide();
+                            }
+                            //公司部门
+                            if (company_dept != -1) {
+                                company_dept = true;
+                                $('#personDept').show();
+                            }
+                            else {
+                                company_dept = false;
+                                $('#personDept').hide();
+                            }
+                            //内部企业
+                            if (internal_enterprise != -1) {
+                                internal_enterprise = true;
+                                $('#personInnerUnit').show();
+                            }
+                            else {
+                                internal_enterprise = false;
+                                $('#personInnerUnit').hide();
+                            }
+                            //外部单位
+                            if (external_unit != -1) {
+                                external_unit = true;
+                                $('#personOuterUnit').show();
+                            }
+                            else {
+                                external_unit = false;
+                                $('#personOuterUnit').hide();
+                            }
+                            form.val('rywhForm', {
+                                "memberName": data.memberName, // 姓名
+                                "remark": data.remark, // 备注
+                                "company_leader": company_leader,
+                                "company_dept": company_dept,
+                                "internal_enterprise": internal_enterprise,
+                                "external_unit": external_unit
+                            });
+                        }, function (err) {
+                            layer.close(layerLoader);
+                            layer.msg('人员维护信息获取失败。' + err.resultMessage);
+                            return false
+                        });
+                    }
+                },
+            };
+            eventHandle.output();
+
+            //按钮权限
+            common.buttonLimit($("#currentMenuSmId", window.parent.document).val(), function (res) {
+                //输入所有可操作的按钮集合
+                var list = res['list'] ? res['list'] : [];
+
+            });
+        });
+
+    </script>
+
+    <!--[if lt IE 9]>
+
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+
+</html>

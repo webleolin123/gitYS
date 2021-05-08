@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+
+<head>
+    <meta charset="UTF-8">
+    <title>报送统计</title>
+    <meta content="webkit" name="renderer" />
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../../js/layui/css/layui.css" />
+    <link href="../../../css/public.css?v1.01" rel="stylesheet" />
+    <link href="../../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <script src="../../../js/lib/jquery.1.12.3.js"></script>
+</head>
+
+<style>
+    .layui-layer-btn-c {
+        margin-top: -20px;
+    }
+
+    span#reportNums {
+        font-weight: 900;
+        font-size: 18px;
+    }
+
+    span#reportNums i {
+        height: 20px;
+        vertical-align: -2px;
+    }
+
+    .eleTree.ele5,
+    .eleTree.ele6 {
+        height: auto;
+        width: 100%;
+        display: none;
+        position: absolute;
+        top: 100%;
+        background-color: #fff;
+        z-index: 10000;
+        border: 1px solid #ccc;
+    }
+</style>
+
+<script type="text/html" id="withdraw">
+    <div class="regulationText-add">
+        <div class="layui-card-body">
+            <form class="layui-form layui-form-pane  form-theme3" name="regulationText-add"
+                  lay-filter="ruleBack">
+                <div class="layui-row layui-col-space15"> 
+                                <div class="layui-col-xs12">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label hylabel" style="background-color:white;border:none"><b class="red">*</b>撤回意见:</label>
+                                        <div class="layui-input-block">
+                                            <textarea class="layui-textarea hyinput" name="auditOpnion" lay-verify="required"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                    <div class="layui-col-md12">
+                        <div class="layui-layer-btn layui-layer-btn-c">
+                            <button class="layui-btn" id="saveRegulationText" lay-submit lay-filter="ruleBack"
+                                    permission-btn="saveRegulationText"><i class="fa fa-check-circle"></i>确定
+                            </button>
+                            <button type="button" class="layui-btn layui-btn-primary btnClose"><i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</script>
+
+<body class="iframe-h">
+
+    <div class="content-wrap">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-xs12">
+                <div class="layui-card">
+                    <div class="layui-card-header layui-card-header-custom"><span><i></i>报送列表</span></div>
+                    <div class="layui-card-body">
+                        <form action="" class="layui-form layui-form-pane">
+                            <div class="layui-row layui-col-space10">
+                                <div class="layui-col-md4 layui-col-xs4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">生成时间</label>
+                                        <div class="layui-input-block">
+                                            <input autocomplete="off" class="layui-input" name="ggCreateDatetimeStr"
+                                                placeholder="请选择生成时间" type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md4 layui-col-xs4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">报送日期</label>
+                                        <div class="layui-input-block">
+                                            <input autocomplete="off" class="layui-input" name="reportToSasacTimeStr"
+                                                placeholder="请选择报送日期" type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="toggle-area layui-col-space10">
+                                    <div class="layui-col-md4 layui-col-xs4">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">已报国资委</label>
+                                            <div class="layui-input-block">
+                                                <select name="uploadStatus" id="uploadStatus">
+                                                    <option value="">请选择</option>
+                                                    <option value="0">否</option>
+                                                    <option value="2">是</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="" style="text-align: center;">
+                                    <div class="layui-input-inline" style="padding-left: 20px">
+                                        <button name="searchSubmit" class="layui-btn  " lay-submit=""
+                                            lay-filter="formSearch" permission-btn="bstj"><i
+                                                class="fa fa-search"></i>查询</button>
+                                        <button name="reset" lay-filter="reset" type="reset"
+                                            class="layui-btn layui-btn-primary  "><i
+                                                class="fa fa-eraser"></i>重置</button>
+                                        <a class="toggle-btn">
+                                            <span>展开</span><i class="fa fa-angle-up"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="layui-card" style="margin-top: -13px">
+                    <div class="layui-card-body">
+                        <table id="tabelSubMeetingReport" lay-filter="tabelSubMeetingReport" style="margin-top:5px;">
+                        </table>
+                        <script type="text/html" id="tableToolBar">
+                            <div class="layui-btn-container">
+                                <button class="layui-btn layui-btn-sm hide" id="refresh" lay-event="refresh">
+                                    <i class="layui-icon layui-icon-diamond"></i>
+                                    刷新
+                                </button>
+                                <button class="layui-btn layui-btn-sm layui-btn-danger" permission-btn="bstj_generate" lay-event="generate">
+                                    <i class="layui-icon">&#xe605;</i> 生成
+                                </button>
+                                <button class="layui-btn layui-btn-sm layui-btn-warm" permission-btn="bstj_delete" lay-event="delete">
+                                    <i class="layui-icon">&#xe640;</i> 删除
+                                </button>
+                                <button class="layui-btn layui-btn-sm layui-btn-warm" permission-btn="bstj_report" lay-event="report">
+                                    <i class="layui-icon">&#xe62f;</i> 报送
+                                </button>
+                                <button class="layui-btn layui-btn-sm layui-btn-warm" permission-btn="bstj_withdraw" lay-event="revoke">
+                                    <i class="layui-icon">&#xe640;</i> 撤回
+                                </button>
+                                <button class="layui-btn layui-btn-sm layui-btn-warm" permission-btn="bstj_cancel" lay-event="obsolete">
+                                    <i class="layui-icon">&#xe62f;</i> 作废报送
+                                </button>
+                                <div class="tableDes" style="font-size: 14px;margin-top: -5px">
+                                    <div style="display: inline-block">
+                                        <span>报送统计情况：</span>
+                                        <span>
+                                            <b class="primary" name="tj_seName">XXXXX企业</b>
+                                            <!--已提交监管统计<b class="primary" name="tj_submitCount">X</b>个,-->
+                                            已报送统计<b class="primary" name="tj_reportCount">X</b>个至国资委。<!--,
+                                            (
+                                                报送国资委<b class="primary" name="bsGZWNum">X</b>个,
+                                                占已报送的<b class="primary" name="bsGZRate">0.0%</b>
+                                            )。-->
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./../../../js/layui/layui.js"></script>
+    <script src="../../../js/lib/echarts-4.1.0.min.js" charset="utf-8"></script>
+    <script src="../../../js/lib/echartTheme.js" charset="utf-8"></script>
+    <script>
+
+        layui.config({
+            base: '../../../../src/js/',
+            version: new Date().getTime()
+        }).extend({
+            custom: 'common/custom'
+        }).use(['layer', 'eleTree', 'table', 'form', 'laytpl', 'element', 'custom', 'laydate', 'util'], function () {
+            var table = layui.table;
+            var form = layui.form;
+            var common = layui.common;
+            var element = layui.element;
+            var tree = layui.eleTree;
+            var laydate = layui.laydate;
+            var util = layui.util;
+            var el6;
+            var fileIframe;
+            element.init();
+            var baseUrl = '../../../../';
+
+            common.themeSet();
+            common.toggleArea($('.toggle-btn'), $('.toggle-area'));
+            var userInfo = common.getUserInfo();
+            var pageQueryUrl = baseUrl + 'meetingmgr/reportingStatistic/pageQueryReportingStatistic';
+
+
+
+            var eventHandle = {
+
+                getStatisticInfo: function () {
+                    //查询统计信息
+                    common.fetchGet('meetingmgr/reportingStatistic/getEnterpriseStatisticReportInfo?seId=' + userInfo.seId + '&includeSubEnterprise=false', function (res) {
+                        $('b[name=tj_seName]').html(res.object.seName);
+                        $('b[name=tj_reportCount]').html(res.object.reportCount);
+                        $('b[name=tj_submitCount]').html(res.object.reportCount + res.object.unReportCount);
+                    }, function () {
+                    });
+                },
+
+                tableInit: function () {
+                    table.render(common.tableInitParams({
+                        elem: '#tabelSubMeetingReport',
+                        height: 'full-170',
+                        url: pageQueryUrl,
+                        method: 'post',
+                        where: {},
+                        cols: [
+                            [
+                                { type: 'checkbox', LAY_CHECKED: false },
+                                { type: 'numbers', title: '序号', width: 60 },
+                                { field: 'trsRegulationCount', title: '决策制度数', width: 120, align: "center" },
+                                { field: 'trsMeetingCount', title: '决策会议数', width: 120, align: "center" },
+                                { field: 'trsSubjectCount', title: '审议议题数', width: 120, align: "center" },
+                                { field: 'trsExceptionCount', title: '决策异常数', width: 120, align: "center" },
+                                { field: 'trsRectificationRate', title: '整改率', width: 100, align: "center" },
+                                { field: 'trsExecutionCount', title: '议案执行数', width: 120, align: "center" },
+                                {
+                                    field: 'ggCreateDatetime', title: '生成时间', align: "center",
+                                    templet: function (rowData) {
+                                        return common.dateFormat(rowData.ggCreateDatetime);
+                                    }
+                                },
+                                {
+                                    field: 'submitGzwTime', title: '报送日期', align: "center",
+                                    templet: function (rowData) {
+                                        return rowData.uploadStatus === '6' ? '作废' : rowData.submitGzwTime ? common.dateFormat(rowData.submitGzwTime, 'yyyy-MM-dd') : "";
+                                    }
+                                },
+                                {
+                                    field: 'submitGzwTime', title: '已报国资委', align: "center",
+                                    templet: function (rowData) {
+                                        return rowData.uploadStatus === '6' ? '<span class="green3">作废</span>' : rowData.uploadStatus === '2' ? '<span class="green">是</span>' : '<span class="red">否</span>';
+                                    }
+                                },
+                                {
+                                    field: '', title: '操作', width: 80, align: "center", templet: function (rowData) {
+                                        return '<a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="viewMeeting"  permission-btn="bstj_view" >查看</a>'
+                                    }
+                                }
+                            ]
+                        ],
+                        toolbar: '#tableToolBar',
+                    }));
+                    eventHandle.getStatisticInfo();
+                },
+                tableReload: function (where) {
+                    table.reload('tabelSubMeetingReport', {
+                        url: pageQueryUrl,
+                        method: 'post',
+                        where: where
+                    });
+                    eventHandle.getStatisticInfo();
+                },
+                output: function () {
+                    //查询条件 
+                    // 生成时间
+                    laydate.render({
+                        elem: 'input[name=ggCreateDatetimeStr]',
+                        type: 'date',
+                        trigger: 'click'
+                    });
+                    // 上报国资委时间
+                    laydate.render({
+                        elem: 'input[name=reportToSasacTimeStr]',
+                        type: 'date',
+                        trigger: 'click'
+                    });
+                    // 表格渲染
+                    eventHandle.tableInit();
+                },
+                showHandleResult: function (object, defaultMsg) {
+                    if (object.fCount > 0) {
+                        layer.alert("共处理" + object.total + "条数据，失败" + object.fCount + "条。失败原因：<br>" + object.fMsg.join('<br>'));
+                    }
+                    else {
+                        layer.msg(defaultMsg || "处理成功");
+                    }
+                }
+            };
+            eventHandle.output();
+            //table监听事件
+            table.on('toolbar(tabelSubMeetingReport)', function (obj) {
+                var checkStatus = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+                    case 'generate':
+                        layer.confirm('确定生成统计数据?', { icon: 3, title: '提示', offset: '150px' }, function (index) {
+                            var layerLoader = common.layerLoader();
+                            common.fetchPost('meetingmgr/reportingStatistic/generateTiolReportingStatistic', null, function (data) {
+                                layer.close(layerLoader);
+                                eventHandle.tableReload();
+                                layer.msg('生成成功');
+                            }, function (data) {
+                                layer.close(layerLoader);
+                                layer.msg(data.resultMessage);
+                            });
+                            layer.close(index);
+                        });
+                        break;
+                    case 'delete':
+                        if (checkStatus.data.length > 0) {
+                            /*if (checkStatus.data.length > 1) {
+                                layer.msg('请选择一条数据进行操作');
+                                return false;
+                            }*/
+                            layer.confirm('确定删除选中列?', { icon: 3, title: '提示', offset: '150px' }, function (index) {
+                                var smIdArr = [];
+                                for (var i = 0; i < checkStatus.data.length; i++) {
+                                    smIdArr.push(checkStatus.data[i]['trsId'])
+                                }
+                                var layerLoader = common.layerLoader();
+                                common.fetchPost('meetingmgr/reportingStatistic/deleteTiolReportingStatistic?reportingStatisticId=' + smIdArr.join(','), null, function (data) {
+                                    layer.close(layerLoader);
+                                    eventHandle.showHandleResult(data.object);
+                                    eventHandle.tableReload();
+                                }, function (data) {
+                                    layer.close(layerLoader);
+                                    layer.msg(data.resultMessage);
+                                });
+
+                                layer.close(index);
+                            });
+                        } else {
+                            layer.msg('请选择删除列')
+                        }
+                        break;
+                    case 'report':
+                        if (checkStatus.data.length > 0) {
+                            /*if (checkStatus.data.length > 1) {
+                                layer.msg('请选择一条数据进行操作');
+                                return false;
+                            }*/
+                            layer.confirm('确定上报选中列?', { icon: 3, title: '提示', offset: '150px' }, function (index) {
+                                var smIdArr = [];
+                                for (var i = 0; i < checkStatus.data.length; i++) {
+                                    smIdArr.push(checkStatus.data[i]['trsId'])
+                                }
+                                var layerLoader = common.layerLoader();
+                                common.fetchPost('meetingmgr/reportingStatistic/reportTiolReportingStatistic?reportingStatisticId=' + smIdArr.join(','), null, function (data) {
+                                    layer.close(layerLoader);
+                                    eventHandle.showHandleResult(data.object);
+                                    eventHandle.tableReload();
+                                }, function (data) {
+                                    layer.close(layerLoader);
+                                    layer.msg(data.resultMessage);
+                                });
+
+                                layer.close(index);
+                            });
+                        } else {
+                            layer.msg('请选择上报列')
+                        }
+                        break;
+                    case 'revoke':
+                        if (checkStatus.data.length > 0) {
+                            layer.confirm('确定撤回选中列?', { icon: 3, title: '提示', offset: '150px' }, function (index) {
+                                layer.close(index)
+                                var regulationTextLayer = layer.open({
+                                    type: 1,
+                                    content: $("#withdraw").html(),
+                                    title: "撤回信息",
+                                    area: ["800px", "300px"],
+                                    success: function (obj) {
+                                        form.on('submit(ruleBack)', function (obj) {
+                                            var layerLoader = common.layerLoader();
+                                            var smIdArr = [];
+                                            for (var i = 0; i < checkStatus.data.length; i++) {
+                                                smIdArr.push(checkStatus.data[i]['trsId'])
+                                            }
+                                            var layerLoader = common.layerLoader();
+                                            common.fetchPost('meetingmgr/reportingStatistic/withdrawTiolReportingStatistic?reportingStatisticId=' + smIdArr.join(','), null, function (data) { //+ '&auditOpnion='+ obj.field.auditOpnion
+                                                layer.close(layerLoader);
+                                                eventHandle.showHandleResult(data.object);
+                                                eventHandle.tableReload();
+                                            }, function (data) {
+                                                layer.close(layerLoader);
+                                                layer.msg(data.resultMessage);
+                                            });
+                                            layer.close(regulationTextLayer);
+                                            return false;
+                                        })
+
+                                        $(".btnClose").on("click", function () {
+                                            layer.close(regulationTextLayer);
+                                        });
+                                    }
+                                })
+                                layer.close(index);
+                            });
+                        } else {
+                            layer.msg('请选择撤回列')
+                        }
+                        break;
+                    case 'obsolete':
+                        if (checkStatus.data.length > 0) {
+                            layer.confirm('确定作废报送选中列?', { icon: 3, title: '提示', offset: '150px' }, function (index) {
+                                var smIdArr = [];
+                                for (var i = 0; i < checkStatus.data.length; i++) {
+                                    smIdArr.push(checkStatus.data[i]['trsId'])
+                                }
+
+                                var layerLoader = common.layerLoader();
+                                common.fetchPost('meetingmgr/reportingStatistic/cancelTiolReportingStatistic?reportingStatisticId=' + smIdArr.join(','), null, function (data) {
+                                    layer.close(layerLoader);
+                                    eventHandle.showHandleResult(data.object);
+                                    eventHandle.tableReload();
+                                }, function (data) {
+                                    layer.close(layerLoader);
+                                    layer.msg(data.resultMessage);
+                                });
+
+                                layer.close(index);
+                            });
+                        } else {
+                            layer.msg('请选择作废列')
+                        }
+                        break;
+                    case 'refresh':
+                        eventHandle.tableReload();
+                        break;
+                }
+            });
+
+            table.on('tool(tabelSubMeetingReport)', function (obj) {
+                var data = obj.data;
+                switch (obj.event) {
+                    case 'viewMeeting':
+                        //打开会议详情
+                        var viewMeeting = top.layer.open({
+                            title: ['查看'],
+                            type: 2,
+                            content: baseUrl + 'src/page/ys/bstj/bstjView.html?statisticId=' + obj.data.trsId,
+                            maxmin: true,
+                            btn: ['<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭'],
+                            btnAlign: 'c',
+                            yes: function () {
+                                top.layer.close(viewMeeting);
+                                return false;
+                            },
+                            success: function (layero, index) {
+                            }
+                        });
+                        top.layer.full(viewMeeting);
+                        break;
+                    default: break;
+                }
+            });
+
+            form.on('submit(formSearch)', function (obj) {
+                eventHandle.tableReload(obj.field);
+                return false;
+            });
+            common.columnSide();
+        });
+
+
+    </script>
+
+    <!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+
+</html>

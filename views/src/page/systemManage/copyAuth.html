@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>角色权限</title>
+    <meta content="webkit" name="renderer" />
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../js/layui/css/layui.css" />
+    <link href="../../css/public.css?v1.01" rel="stylesheet" />
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script charset="utf-8" src="../../js/common/plugin.js"></script>
+</head>
+<style>
+    .content {
+        height: 100%;
+        width: 100%;
+        position: fixed;
+    }
+
+    .auth-right-padding {
+        padding: 0 0 0 12px;
+        height: 85%;
+    }
+</style>
+
+<body class="iframe-h">
+
+    <div class="content">
+        <div class="layui-row" id="authContainerFirstRowId" style="width:100%;height:100%; overflow-y: hidden;">
+            <!-- 左边一列 -->
+            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6  auth-right-padding" id="authTreeDivMd1">
+                <div style="height:100%;overflow-y: auto;overflow-x: hidden;">
+                    <blockquote class="layui-elem-quote">菜单按钮树</blockquote>
+                    <div class="left_menu_tree" style="padding:0px 0px 0px 6px;width: 95%;height:auto;">
+                        <ul class="eleTree ele4" id="leftTree" lay-filter="leftTree" style="overflow:hidden"></ul>
+                    </div>
+                </div>
+            </div>
+            <!-- 右边一列 -->
+            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6  auth-right-padding" id="authTreeDivMd2">
+                <div style="height: 100%;overflow-y: auto;overflow-x: hidden;">
+                    <blockquote class="layui-elem-quote">已启用角色列表</blockquote>
+                    <div class="layui-card-body">
+                        <form class="layui-form layui-form-pane">
+                            <div class="layui-row layui-col-space10">
+                                <div class="layui-col-md8">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">角色名称</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="srName" required placeholder="请输入角色名称"
+                                                autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- <div class="layui-col-md6">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">启用状态</label>
+                                    <div class="layui-input-block">
+                                        <input checked name="ggEnStatus" title="全部" type="radio"
+                                            value="">
+                                        <input name="ggEnStatus" title="启用" type="radio"
+                                            value="1">
+                                        <input name="ggEnStatus" title="禁用" type="radio"
+                                            value="0">
+                                    </div>
+                                </div>
+                            </div> -->
+                                <div class="formSearch-btnArea">
+                                    <button class="layui-btn" lay-submit lay-filter="roleNameFormSearch"><i
+                                            class="fa fa-search"></i>查询</button>
+                                    <button type="reset" class="layui-btn layui-btn-primary"><i
+                                            class="fa fa-eraser"></i>重置</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="left_menu_tree" style="padding:0px 0px 0px 6px;width: 95%;height:auto;">
+                        <!-- <ul class="eleTree ele4" id="rightTree" lay-filter="rightTree"></ul>-->
+                        <table id="rightTree" lay-filter="rightTree"></table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-col-xs10 layui-col-sm10 layui-col-md10 layui-col-md-offset1 layui-col-xs-offset1 layui-col-sm-offset1"  style="margin-top: 5px;">
+                <div class="layui-form layui-form-pane">
+                    <div class="layui-form-item">
+                        <!-- <div class="layui-input-block"> -->
+                            <label class="layui-form-label">复制模式</label>
+                            <div class="layui-input-block">
+                                <select name="copyMode">
+                                    <option value="append">追加到原有权限</option>
+                                    <option value="cover">覆盖原有权限</option>
+                                </select>
+                            </div>
+                        <!-- </div> -->
+                    </div>
+                </div>
+                
+            </div>
+            <!-- <div class="layui-form-item"> -->
+            <!-- <div class="layui-input-block" style="text-align:center;margin-left:0px;padding-top:0px;"> -->
+            <!-- <div class="layui-col-md12">
+                <label class="layui-form-label">复制模式</label>
+                <div class="layui-input-block">
+                    <select name="copyMode">
+                        <option value="append">追加到原有权限</option>
+                        <option value="cover">覆盖原有权限</option>
+                    </select>
+                </div>
+            </div> -->
+
+            <div class="layui-form-item">
+                <div class="layui-input-block" style="text-align:center;margin-left:0px;padding-top:10px;">
+                    <button class="layui-btn" id="copyAuth" permission-btn="copyAuth" title="复制"><i class="iconfont icon-SZYD-qiyong"></i> 复制</button>
+                </div>
+            </div>
+
+            <!-- </div> -->
+            <!-- </div> -->
+        </div>
+
+    </div>
+
+
+
+
+    <script src="./../../js/layui/layui.js"></script>
+    <script>
+        layui.config({
+            base: '../../../src/js/',
+            version: new Date().getTime()
+        }).use(['eleTree', 'layer', 'table', 'form', 'laytpl', 'common', 'element'], function () {
+            var table = layui.table;
+            var form = layui.form;
+            var tree = layui.eleTree;
+            var common = layui.common;
+            var element = layui.element;
+            element.init();
+            var baseUrl = '../../../';
+            var currentMenuSmId = $("#currentMenuSmId", top.window.parent.document).val();
+            common.themeSet();
+
+            var leftTree;
+            var rightTree;
+
+            var eventHandler = {
+                //菜单按钮树初始化
+                leftTreeInit: function () {
+                    leftTree = tree.render({
+                        elem: '#leftTree',
+                        url: baseUrl + 'sysmgr/menu/selectAllSysMenuButtonTreeOfRole?srId=' + parent.lineData.srId,
+                        done: function (data) {
+                            //console.debug(data.list);
+                            $('#leftTree .eleTree-node-content').each(function () {
+                                $(this).click();
+                            });
+                            //加载后展开所有节点
+                            leftTree.expandAll();
+                        },
+                        checkStrictly: false,
+                        showCheckbox: true,
+                        lazy: false,
+                        renderAfterExpand: true,
+                        //defaultExpandAll: true,
+                        load: function (data, callback) {
+                        },
+                        response: {                 // 对于后台数据重新定义名字
+                            dataName: "list"
+                        },
+                        request: {                  // 对后台返回的数据格式重新定义
+                            disabled: "nocheck",
+                        },
+                    });
+
+                },
+                //菜单按钮树重新载入
+                leftTreeReload: function () {
+
+                },
+                //企业树初始化
+                rightTreeInit: function () {
+                    rightTree = table.render(common.tableInitParams({
+                        elem: '#rightTree',
+                        page: false,
+                        url: baseUrl + 'sysmgr/sysRole/selectAllRoleName',
+                        method: 'post',
+                        height: 'full-170',
+                        defaultToolbar: [],
+                        cols: [
+                            [
+                                { type: 'checkbox' },
+                                { field: 'srName', title: '角色名称' }
+                            ]
+                        ]
+                    }));
+                },
+                //角色表重新载入
+                rightTreeReload: function (params) {
+                    if (!params) params = {};
+                    table.reload('rightTree', {
+                        where: params
+                    });
+                },
+                formInit: function () {
+                    form.on('submit(roleNameFormSearch)', function (obj) {
+                        //表格重载
+                        eventHandler.rightTreeReload({
+                            srName: obj.field.srName
+                        });
+                        return false;
+                    });
+                },
+                reloadMenu2Redis: function () {
+                    common.fetchGet('sysmgr/menu/initMenuAndButtonAuthByUrl2Redis', function (res) { }, function (ero) { });
+                }
+            };
+            $("#copyAuth").on("click", function () {
+                var menuIds = '';
+                var buttonIds = '';
+                var roleNames = '';
+                leftTree.getChecked(false, true).forEach(function (value, index, data) {
+                    //console.debug(data[index].extendAttr + ":" + value.id);
+                    if ("button" == data[index].extendAttr) {
+                        buttonIds += (buttonIds.length > 0 ? "," : "") + value.id;
+                    }
+                    else if ("menu" == data[index].extendAttr) {
+                        menuIds += (menuIds.length > 0 ? "," : "") + value.id;
+                    }
+                });
+                if (menuIds.length == 0 && buttonIds.length == 0) {
+                    layer.msg("请选择菜单按钮");
+                    return false;
+                }
+
+                var checkStatus = table.checkStatus('rightTree');
+                if (checkStatus.data.length == 0 || (menuIds.length == 0 && buttonIds.length == 0)) {
+                    layer.msg("请选择角色");
+                    return false;
+                }
+                var roleNameArray = [];
+                for (var j = 0, len = checkStatus.data.length; j < len; j++) {
+                    roleNameArray.push(checkStatus.data[j].srName);
+                }
+
+                var params = {
+                    copyMode: $('select[name=copyMode] option:selected').val(),
+                    menuIds: menuIds,
+                    buttonIds: buttonIds,
+                    roleNames: roleNameArray.join(",,,")
+                };
+
+                var loadingIndex = layer.load(1, { shade: [0.1, '#fff'] });
+                common.fetchPost('sysmgr/sysRole/copyAuthToRole', params, function (data) {
+                    layer.close(loadingIndex);
+                    if (data.success) {
+                        eventHandler.reloadMenu2Redis();//异步重新加载菜单与权限关系至Redis。
+                        layer.msg('复制成功');
+                        parent.layer.close(parent.layer.index);
+                        parent.eventHandle.tableReload();
+                    }
+                    else {
+                        layer.msg(data.resultMessage);
+                    }
+                }, function (data) {
+                    layer.close(loadingIndex);
+                    layer.msg(data.resultMessage);//失败后提示
+                });
+
+            });
+
+
+            eventHandler.leftTreeInit();
+            eventHandler.rightTreeInit();
+            eventHandler.formInit();
+            common.buttonLimit();
+        });
+
+
+    </script>
+</body>
+
+</html>

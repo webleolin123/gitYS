@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>已按类别</title>
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../js/layui/css/layui.css" />
+    <link href="../../css/public.css?v1.01" rel="stylesheet" />
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script charset="utf-8" src="../../js/common/plugin.js"></script>
+</head>
+<style>
+    .content {
+        height: 100%;
+        width: 100%;
+        position: fixed;
+        background: white;
+    }
+
+    .white-bg {
+        background: white;
+    }
+
+    .iframe-h {
+        height: 100%;
+    }
+
+    .content-wrap {
+        padding: 10px;
+    }
+
+    .red {
+        color: red;
+        padding-left: 5px;
+    }
+
+    .hide {
+        display: none;
+    }
+
+    .layui-form-pane .layui-form-label {
+        width: 150px;
+    }
+
+    .layui-form-pane .layui-input-block {
+        margin-left: 150px;
+    }
+
+    .eleTree.pType {
+        height: auto;
+        width: 100%;
+        display: none;
+        position: absolute;
+        top: 100%;
+        background-color: #fff;
+        z-index: 895;
+        border: 1px solid #ccc;
+    }
+</style>
+
+<body>
+    <div class="userLayer">
+        <div style="padding: 15px 20px">
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom">
+                    <span>
+                        <i></i>议案类别
+                    </span>
+                </div>
+            </div>
+            <div style="min-height:500px;overflow-y:auto;overflow-x:hidden">
+                <div class="layui-form-item">
+                    <form class="layui-form layui-form-pane" name="submitForm" id="submitForm">
+                        <input type="hidden" name="billId" id="billId">
+
+                        <input type="hidden" name="billPid" id="billPid">
+
+                        <div class="layui-row layui-col-space15">
+                            <div class="layui-col-md6">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label"><b class="red">*</b>所属类别</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="billPName" required="" lay-verify="required"
+                                            placeholder="请选择所属类别" readonly="" autocomplete="off"
+                                            class="layui-input hyinput">
+                                        <div class="eleTree pType" lay-filter="pType"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md6">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label"><b class="red">*</b>排序号</label>
+                                        <div class="layui-input-block">
+                                            <input type="number" name="ggSort" required lay-verify="required"
+                                                   placeholder="请输入排序号" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                        <div class="layui-row layui-col-space15">
+                            <div class="layui-col-md6">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label"><b class="red">*</b>类别名称</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="billName" required lay-verify="required"
+                                            placeholder="请输入类别名称" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md6">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">类别编码</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="billCode" placeholder="由系统自动生成" autocomplete="off" class="layui-input" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-row layui-col-space15">
+                            <div class="layui-col-md6">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">专项名称</label>
+                                    <div class="layui-input-block">
+                                        <select name="specialNameId" id="specialNameId">
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md6">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">任务来源</label>
+                                    <div class="layui-input-block">
+                                        <select name="taskSourceId" id="taskSourceId">
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-row layui-col-space15">
+                            <div class="layui-col-md6">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label"><b class="red">*</b>法律审核</label>
+                                    <div class="layui-input-block">
+                                        <select name="legalReview" id="legalReview" required lay-verify="required">
+                                            <option value="0">否</option>
+                                            <option value="1">是</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--<div class="layui-col-md6">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label"><b class="red">*</b>启用状态</label>
+                                    <div class="layui-input-block">
+                                        <select name="ggEnStatus" id="ggEnStatus" required lay-verify="required">
+                                            <option value="0">否</option>
+                                            <option value="1">是</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>-->
+                        </div>
+                        <div class="tcenter margin-t15">
+                            <button class="layui-btn" lay-submit lay-filter="submitForm"
+                                permission-btn="">保存</button>
+                            <button class="layui-btn layui-btn-primary formCloseBtn">关闭</button>
+                        </div>
+                    </form>
+                </div>
+                <!--<div class="layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-header layui-card-header-custom">
+                            <span>
+                                <i></i>审核人员
+                            </span>
+                        </div>
+                    </div>
+                    <table id="userTable" lay-filter="userTable"></table>
+                    <script type="text/html" id="userTableToolBar">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-sm layui-btn-primary" lay-event="refresh" permission-btn="">
+                                <i class="layui-icon">&#xe666;</i> 刷新
+                            </button>
+                            <button class="layui-btn layui-btn-sm" lay-event="add" permission-btn="addAuditUser">
+                                <i class="layui-icon">&#xe608;</i> 新增
+                            </button>
+                            <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete" permission-btn="delAuditUser">
+                                <i class="layui-icon">&#xe640;</i> 删除
+                            </button>
+                        </div>                                
+                    </script>
+                    <script type="text/html" id="userTableOper">
+                        <a class="layui-btn layui-btn-xs" lay-event="del" permission-btn="">删除</a>                                
+                    </script>
+                </div>-->
+            </div>
+        </div>
+
+</body>
+<script src="./../../js/layui/layui.js"></script>
+<script>
+    var request = {
+        getUrlParam: function (name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+            var r = window.location.search.substr(1).match(reg); //匹配目标参数
+            if (r != null) return unescape(r[2]);
+            return null; //返回参数值
+        },
+    };
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).use(['eleTree', 'layer', 'table', 'form', 'laytpl', 'common', 'element', 'laydate'], function (exports) {
+        var table = layui.table;
+        var form = layui.form;
+        var tree = layui.eleTree;
+        var common = layui.common;
+        var element = layui.element;
+        var laydate = layui.laydate;
+        var util = layui.util;
+        var baseUrl = '../../../';
+        var currentMenuSmId = $("#currentMenuSmId", window.parent.document).val();
+        element.init();
+        common.themeSet();
+        common.buttonLimit($("#currentMenuSmId", window.parent.document).val());
+
+        var billId = request.getUrlParam('billTypeId');
+        var billPid = request.getUrlParam('pid');
+        var updateUrl = '';
+
+        common.selectDataSet({
+            elem: $('#specialNameId'),
+            url: 'meetingmgr/tiolSpecial/selectSpecialList',
+            responseList: 'list',
+            optionText: 'name',
+            optionValue: 'code',
+            success: function(){
+                form.render("select");
+            }
+        });
+
+        common.selectDataSet({
+            elem: $('#taskSourceId'),
+            url: 'meetingmgr/tiolSource/selectSourceList',
+            responseList: 'list',
+            optionText: 'name',
+            optionValue: 'code',
+            success: function(){
+                form.render("select");
+            }
+        });
+
+        //初始加载
+        function initForm() {
+            if (billId) {
+                //更新操作
+                updateUrl = 'catalog/tiolBillType/saveTiolBillType';
+
+                var layerLoader = common.layerLoader();
+                common.fetchGet('catalog/tiolBillType/selectTiolBillTypeById?id=' + billId, function (res) {
+                    if (res.success) {
+                        var data = res.object;
+                        $('input[name=billId]').val(data.billId);
+                        $('input[name=billPid]').val(data.billPid);
+                        $('input[name=billName]').val(data.billName);
+                        $('input[name=billCode]').val(data.billCode);
+                        $('input[name=ggSort]').val(data.ggSort);
+                        $('select[name=specialNameId]').val(data.specialNameId);
+                        $('select[name=taskSourceId]').val(data.taskSourceId);
+                        $('select[name=legalReview]').val(data.legalReview);
+                        /*$('select[name=ggEnStatus]').val(data.ggEnStatus);*/
+                        form.render("select");
+                        if ($('input[name=billPid]').val() != '') {
+                            //获取当前所属议案类别名称
+                            common.fetchGet('catalog/tiolBillType/selectTiolBillTypeById?id=' + $('input[name=billPid]').val()
+                                , function (data) {
+                                    if (data.success) {
+                                        $('input[name=billPName]').val(data.object.billName)
+                                    }
+                                });
+                        }
+                    }
+                    layer.close(layerLoader);
+                }, function (res) {
+                    layer.alert(res.resultMessage);
+                    layer.close(layerLoader);
+                });
+            } else {
+                //新增操作
+                updateUrl = 'catalog/tiolBillType/insertTiolBillType';
+                billId = common.uuid();
+                if(billPid == null){
+                    billPid = "-1";
+                }
+                $('input[name=billPid]').val(billPid);
+                $('input[name=billId]').val(billId);
+
+                if ($('input[name=billPid]').val() != '') {
+                    //获取当前所属议案类别名称
+                    common.fetchGet('catalog/tiolBillType/selectTiolBillTypeById?id=' + $('input[name=billPid]').val()
+                        , function (data) {
+                            if (data.success) {
+                                $('input[name=billPName]').val(data.object.billName)
+                            }
+                        });
+                }
+            }
+
+            //议案类别树初始
+            common.fetchPost('catalog/tiolBillType/queryTiolBillTypeTreeWithRoot', {}, function (data) {
+                if (data.success) {
+                    var pType = tree.render({
+                        elem: '.pType',
+                        data: data.list,
+                        defaultExpandAll: true,
+                        expandOnClickNode: false,
+                        highlightCurrent: true
+                    });
+                } else {
+                    layer.msg('议案类别树错误');
+                }
+
+            }, function () {
+                layer.msg('议案类别树失败');//失败后提示
+            });
+
+            //审核人员//
+            //加载数据
+            table.render(common.tableInitParams({
+                elem: '#userTable',
+                url: baseUrl + 'catalog/tiolBillTypeUser/selectTiolBillTypeUserPage',
+                method: 'post',
+                toolbar: '#userTableToolBar',
+                height: 'full-430',
+                where: {
+                    billId: billId
+                },
+                cols: [
+                    [
+                        { type: 'checkbox' },
+                        { type: "numbers", "title": "序号" },
+                        { field: 'suName', title: '用户名称', sort: true },
+                        { field: 'orgName', title: '部门名称', width: 250, sort: true },
+                        { field: 'seName', title: '企业名称', width: 250, sort: true }
+                    ]
+                ],
+                done: function () {
+                    common.buttonLimit(currentMenuSmId);
+                }
+            }));
+        }
+
+        //保存
+        form.on('submit(submitForm)', function (obj) {
+            var params = {
+                billId: obj.field.billId,
+                billPid: obj.field.billPid,
+                billName: obj.field.billName,
+                billCode: obj.field.billCode,
+                ggSort: obj.field.ggSort,
+                specialNameId: obj.field.specialNameId,
+                taskSourceId: obj.field.taskSourceId,
+                legalReview: obj.field.legalReview
+            };
+            var loadingIndex = layer.load();
+            common.fetchPost(updateUrl, params, function (data) {
+                layer.close(loadingIndex);
+                if (data.success) {
+                    layer.msg('保存成功');
+                    $($(top.window.document).find('#menuContent').find('.iframe')[0].contentWindow.document).find("#refresh").click();
+                    parent.layer.closeAll();
+
+                    //表格重载
+                } else {
+                    layer.msg(data.resultMessage);
+                }
+            }, function () {
+                layer.close(loadingIndex);
+                layer.msg('保存失败');//失败后提示
+            });
+            return false;
+        });
+
+        //审核人员//
+        //表格重载
+        function tableReload() {
+            table.reload('userTable', {
+                url: baseUrl + 'catalog/tiolBillTypeUser/selectTiolBillTypeUserPage',
+                method: 'post',
+                contentType: 'application/json',
+                page: {
+                    curr: 1
+                },
+                where: {
+                    billId: billId
+                },
+                done: function () {
+                    common.buttonLimit(currentMenuSmId);
+                }
+            });
+        }
+
+        //定义页面全局方法，方便夸页面调用。
+        window.myTableReload = function () {
+            tableReload();
+        };
+
+        //选择所属类别事件 - 开始
+        $(document).on("click", function () {
+            $(".pType").hide();
+        });
+
+        $("[name='billPName']").on("click", function (e) {
+            e.stopPropagation();
+            $(".pType").toggle();
+        });
+
+        tree.on("nodeClick(pType)", function (d) {
+            $("[name='billPName']").val(d.data.currentData.name);
+            $("[name='billPid']").val(d.data.currentData.id);
+            $(".pType").hide();
+        });
+        //选择所属类别事件 - 结束
+
+        //审核人员//
+        //表格操作
+        table.on('toolbar(userTable)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch (obj.event) {
+                case 'add':
+                    var billUserWin = layer.open({
+                        //offset: '10px',
+                        id: 'billUserWin',
+                        title: '选择审核人员',
+                        maxmin: false,
+                        type: 2, //1、页面层 2、iframe
+                        area: ['100%', '100%'], //高度自适应
+                        //maxHeight: '200px',
+                        shadeClose: false,
+                        content: baseUrl + 'src/page/ys/billTypeUserEdit.html' //加载该区域的html
+                    });
+                    return false;
+                    break;
+                case 'delete':
+                    //点击删除按钮
+                    if (checkStatus.data.length > 0) {
+                        layer.confirm('确定删除选中列?', { icon: 3, tnodeClickitle: '提示', offset: '150px' }, function (index) {
+                            var selectedArray = [];
+                            for (var j = 0, len = checkStatus.data.length; j < len; j++) {
+                                selectedArray.push(checkStatus.data[j].billTypeUserId);
+                            }
+                            var layerLoader = common.layerLoader();
+                            common.fetchDelete("catalog/tiolBillTypeUser/delTiolBillTypeUser?ids=" + selectedArray.join(","), function (res) {
+                                layer.close(layerLoader);
+                                if (res.success) {
+                                    tableReload();
+                                    layer.msg('删除成功', {
+                                        time: 4000, //20s后自动关闭
+                                    });
+                                } else {
+                                    layer.msg('删除失败。' + res.resultMessage, {
+                                        time: 4000, //20s后自动关闭
+                                    });
+                                }
+                                layer.close(index);
+                            }, function (res) {
+                                layer.close(layerLoader);
+                                layer.alert(res.resultMessage);
+
+                            });
+                        });
+                    } else {
+                        layer.msg('请选择删除列')
+                    }
+                    break;
+                case 'refresh':
+                    tableReload();
+                    break;
+            }
+        });
+
+        // 关闭
+        $('.formCloseBtn').off('click').on('click', function () {
+            parent.layer.closeAll();
+        });
+
+
+        //调用表单初始加载
+        initForm();
+
+    });
+</script>
+<!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+
+</html>

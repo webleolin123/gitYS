@@ -1,0 +1,152 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"  pageEncoding="UTF-8"%>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META http-equiv=Content-Type content="text/html; charset=utf-8">
+	<%--<TITLE>配置区域职位指派</TITLE>--%>
+	<TITLE>按单位部门职位指派</TITLE>
+	<META NAME="Author" CONTENT="Witson">
+	<link rel="stylesheet" type="text/css" href="../images/style.css"/>
+	<%@include file="head.jsp" %>
+</HEAD>
+<script type="text/javascript">
+var strTem=self.location.href;
+strTem = strTem.substr(strTem.indexOf('.jsp?parVal=')+12);
+var idx=parseInt(strTem);
+
+function funOK(){
+	var sXML='';
+  /*sXML += '<assignment type="com.yirong.coa.engine.core.assignment.SubPositionAssignment">\n';*/
+  sXML += '<assignment type="com.yr.gap.engine.core.assignment.SubPositionAssignment">\n';
+  sXML += '	<arg name="encorname">'+jsfw.$('encorname').value+'</arg>\n';
+  sXML += '	<arg name="encornameText">'+jsfw.$('encornameText').value+'</arg>\n';
+  sXML += '	<arg name="department">'+jsfw.$('department').value+'</arg>\n';
+  sXML += '	<arg name="departmentText">'+jsfw.$('departmentText').value+'</arg>\n';
+  sXML += '	<arg name="position">'+jsfw.$('position').value+'</arg>\n';
+  sXML += '	<arg name="subdepartment">'+jsfw.$('subdepartment').value+'</arg>\n';
+  sXML += '</assignment>';
+	parent.addStateAssignment_After(sXML,idx);
+	parent.closeDialog(self);
+}
+function loadData(){
+	jsfw.$('divLoading').style.display = 'none';
+	jsfw.Ajax.loadHttp(parent.CST_URL_PositionAssignment, true, load_Pos);
+}
+function load_Cor(r){
+	var arr=eval(jsfw.xssFilter(r.responseText));
+	jsfw.$('td_corper').innerHTML=getSelHTML('encorname',arr);
+	hideLoading();
+}
+function load_Pos(r){
+	var arr=eval(jsfw.xssFilter(r.responseText));
+	jsfw.$('td_position').innerHTML=getSelHTMLInit('position',arr);
+	hideLoading();
+}
+
+function getSelHTMLInit(sID,arr){
+    var sHTML='<select id="'+sID+'">';
+    if(sID == 'encorname'){
+        sHTML='<select id="'+sID+'" onchange="findEncorRole()"> ';
+    }
+    for (var i=0; i<arr.length; i++){
+        sHTML += '<option value="'+arr[i][0]+'">'+arr[i][1]+'</option>';
+    }
+    sHTML += '</select>';
+    return sHTML;
+}
+
+function getSelHTML(sID,arr){
+	var sHTML='<select id="'+sID+'" >';
+	for (var i=0; i<arr.length; i++){
+	    var val = arr[i].ORG_POSITION.replace('|','');
+        sHTML += '<option value="'+val+'">'+arr[i].ORG_POSITION_NAME+'</option>';
+    }
+	sHTML += '</select>';
+	return sHTML;
+}
+
+function hideLoading(){
+	if (jsfw.$('td_corper').innerHTML=='') return;
+	if (jsfw.$('td_position').innerHTML=='') return;
+	jsfw.$('divLoading').style.display = 'none';
+	if (idx==-1) return;
+	var oNode = parent.oFlow.getCurrentObj();
+	var oNodes= oNode.selectNodes('assignment')[idx].selectNodes('arg');
+	for (var i=0; i<oNodes.length; i++){
+		try{
+			jsfw.$(oNodes[i].getAttribute('name')).value = oNodes[i].text;
+		}catch(e){}
+	}
+
+}
+function selectDept(){
+    var companyId = jt._('#encorname').value;
+    if(companyId == null || companyId == ''){
+        showMsg('先选择单位信息');
+        return;
+    }
+    funSelectTree_Org('department','departmentText',false,false,companyId);
+}
+
+//加载职位下拉框
+function loadPositionSel(orgId){
+	var orgPositionUrl = "{contextPath}/ums/positionRank/getPositionByOrgId.action?orgId=" + orgId;
+    jt.getJSON(orgPositionUrl,function(json){
+        if(json.errorCode == '0'){
+            var arr = json.data;
+            jsfw.$('td_position').innerHTML=getSelHTML('position',arr);
+		}
+    });
+}
+</script>
+
+<BODY loadWebUI="Toolbar" scroll="no" onload="loadData()">
+
+<table width="100%" style="table-layout:fixed;height:100%" border="0" cellpadding="0" cellspacing="0">
+	<tr>
+		<td height="28">
+			<div class="Toolbar" style="padding-left:10px;">
+			<xmp style="display:none">
+				<root>
+					<item text="确定" icon="../images/icon/check.gif" action="funOK();"/>
+					<item text="取消" icon="../images/icon/close.gif" action="parent.closeDialog(self);"/>
+				</root>
+			</xmp>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td valign="top" align="center" style="padding-top:5px;">
+			<table border="0" cellpadding="3" cellspacing="0">
+				<tr>
+					<td>单位</td>
+					<td id="td_corper">
+						<input type="hidden" id="encorname" />
+						<input type="text" id="encornameText" onclick="funSelectTree_Company('encorname','encornameText', false, false, 'ROOT','');" />
+					</td>
+				</tr>
+				<tr>
+					<td>部门</td>
+					<td>
+						<input type="hidden" id="department" onchange="loadPositionSel(this.value)"/>
+						<input type="text" id="departmentText" onclick="selectDept()"/>
+					</td>
+				</tr>
+				<tr style="display: none;">
+					<td>子部门</td>
+					<td><input type="text" id="subdepartment"/></td>
+				</tr>
+				<tr>
+					<td>职位</td>
+					<td id="td_position">
+						<select id="position" style="width: 140px"></select>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<div id="divLoading" style="position:absolute;width:180px;height:40px;top:40%;left:12%;padding:15px;background-color:#FFFFE1;border:1px solid black;text-align:center;">正在加载数据....</div>
+</BODY>
+</HTML>
+<script type="text/javascript" src="../jsfw/boot.js" loadClass="" loadPrototype="Array" loadWebUI="" Theme="Default"></script>

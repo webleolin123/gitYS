@@ -1,0 +1,1766 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+
+<head>
+    <meta charset="UTF-8">
+    <title>用户管理</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../js/layui/css/layui.css"/>
+    <link href="../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script charset="utf-8" src="../../js/common/plugin.js"></script>
+    <style>
+        .tip {
+            width: 300px;
+            position: absolute;
+            left: 380px;
+            top: 10px;
+        }
+    </style>
+</head>
+<!--添加按钮中的弹框-->
+<div class="userLayer hide">
+    <div style="padding: 15px 20px">
+        <form class="layui-form layui-form-pane" name="userLayer" lay-filter="userForm">
+            <!-- 部门id -->
+            <input type="hidden" name="suId" id="suId" />
+            <!-- 用户id -->
+            <input type="hidden" name="ruoId" id="ruoId">
+            <!-- 用户密码 -->
+            <input type="hidden" name="suPwd" id="suPwd" />
+            <!-- 用户类型 -->
+            <input type="hidden" name="suType" id="suType" />
+            <!-- 是否修改密码 -->
+            <input type="hidden" name="suIsUpdatepwd" id="suIsUpdatepwd" />
+
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>姓名 </label>
+                <div class="layui-input-block">
+                    <input type="text" name="suName"  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>登入账号 </label>
+                <div class="layui-input-block">
+                    <input type="text" name="suLoginCode" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input" maxlength="100">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>排序 </label>
+                <div class="layui-input-block">
+                    <input type="number" name="ggSort" required lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">手机号</label>
+                <div class="layui-input-block">
+                    <input type="text" name="suTel" placeholder="请输入" autocomplete="off" class="layui-input" maxlength="10">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">身份证</label>
+                <div class="layui-input-block">
+                    <input type="text" name="suCnid" placeholder="请输入" autocomplete="off" class="layui-input"  maxlength="18">
+                </div>
+            </div>
+            <div class="layui-form-item" style="display:none">
+                <label class="layui-form-label">工号</label>
+                <div class="layui-input-block">
+                    <input type="text" name="suCode" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">职务</label>
+                <div class="layui-input-block">
+                    <select name="suJobCode" id="suJobCode">
+                        <option value=""></option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item" style="display:none">
+                <label class="layui-form-label">是否隐藏</label>
+                <div class="layui-input-block">
+                    <select name="suHide" id="suHide">
+                        <option value=""></option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">性别</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="suSex" value="1" title="男" checked>
+                    <input type="radio" name="suSex" value="0" title="女">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">头像</label>
+                <div class="layui-input-block">
+                    <button type="button" class="layui-btn" id="test1">
+                        <i class="layui-icon">&#xe67c;</i>上传图片
+                    </button>
+                </div>
+            </div>
+            <input type="hidden" name="suHeadpic" id="suHeadpic">           
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>企业</label>
+                <div class="layui-input-block">
+                    <select name="seId" id="seId" required lay-verify="required" lay-filter="seIdSelect">
+                        <option value=""></option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"><b class="red">*</b>部门</label>
+                        <div class="layui-input-block">
+                            <select name="soId" id="soId" required lay-verify="required" lay-filter="soIdSelect">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"><b class="red">*</b>岗位</label>
+                        <div class="layui-input-block">
+                            <select name="spId" id="spId" required lay-verify="required" lay-filter="spIdSelect">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">是否主企业</label>
+                        <div class="layui-input-block">
+                            <select name="ruoIfMetr">
+                                <option value="1">是</option>
+                                <option value="0">否</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">是否主部门</label>
+                        <div class="layui-input-block">
+                            <select name="ruoIfMorg">
+                                <option value="1">是</option>
+                                <option value="0">否</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-col-space15" style="display: none">
+                <div class="layui-col-md6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">民族</label>
+                        <div class="layui-input-block">
+                            <select name="suNation">
+                                <option value="1">是</option>
+                                <option value="0">否</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">生日</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="suBirthday" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-col-space15" style="display: none">
+                <div class="layui-col-md6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">QQ号</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="suQq" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">邮箱</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="suPost" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-col-space15" style="display: none">
+                <div class="layui-col-md6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">固定电话</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="suContactPhone" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">联系邮编</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="suContactPost" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-col-space15" style="display: none">
+                <div class="layui-col-md6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">籍贯</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="suNativePlace" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">户籍所在地</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="suRegister" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-col-space15" style="display: none">
+                <div class="layui-col-md6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">现住地</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="suResidence" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">联系地址</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="suContactAddress" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item" style="display: none">
+                <label class="layui-form-label">备注</label>
+                <div class="layui-input-block">
+                    <textarea name="suRemarks" autocomplete="off" class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <input type="hidden" name="suJobName" id="suJobName">
+            <input type="hidden" name="ggEnStatus" id="ggEnStatus">
+            <input type="hidden" name="ggDelStatus" id="ggDelStatus">
+            <input type="hidden" name="ggCreateUser" id="ggCreateUser">
+            <input type="hidden" name="ggUpdateUser" id="ggUpdateUser">
+            <input type="hidden" name="ggCreateUid" id="ggCreateUid">
+            <input type="hidden" name="ggUpdateUid" id="ggUpdateUid">
+            <div class="layui-form-item adapt">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formAdd" permission-btn="saveSysUserAuth"> <i class="layui-icon">&#x1005;</i>保存</button>
+                    <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="orgLayer hide">
+    <div style="padding: 15px 20px">
+        <form class="layui-form layui-form-pane" name="orgLayer" lay-filter="orgForm">
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>企业</label>
+                <div class="layui-input-block">
+                    <select name="seId" id="orgSeId" lay-filter="orgSeIdSelect" lay-verify="required">
+                        <option value=""></option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"><b class="red">*</b>部门</label>
+                        <div class="layui-input-block">
+                            <select name="soId" id="orgSoId" lay-filter="orgSoIdSelect" lay-verify="required">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"><b class="red">*</b>岗位</label>
+                        <div class="layui-input-block">
+                            <select name="spId" id="orgSpId" lay-filter="orgSpIdSelect" lay-verify="required">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">是否主企业</label>
+                        <div class="layui-input-block">
+                            <select name="ruoIfMetr">
+                                <option value="1">是</option>
+                                <option value="0">否</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">是否主部门</label>
+                        <div class="layui-input-block">
+                            <select name="ruoIfMorg">
+                                <option value="1">是</option>
+                                <option value="0">否</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md12">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">角色</label>
+                        <div class="layui-input-block" id="roles">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" name="ruoId">
+            <input type="hidden" name="soName">
+            <input type="hidden" name="seName">
+            <input type="hidden" name="spName">
+            <input type="hidden" name="suId">
+            <input type="hidden" name="ggEnStatus">
+            <input type="hidden" name="ggCreateUser">
+            <input type="hidden" name="ggCreateUid">
+            <input type="hidden" name="ggUpdateUser">
+            <input type="hidden" name="ggUpdateUid">
+            <div class="layui-form-item adapt">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="orgFormSave" permission-btn="editResUserOrganAuthSubmit"> <i class="layui-icon">&#x1005;</i>保存</button>
+                    <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="userEditLayer hide">
+    <div style="padding: 15px 20px">
+        <form class="layui-form layui-form-pane" name="userEditLayer" lay-filter="userEditForm">
+            <!-- 部门id -->
+            <input type="hidden" name="suId"/>
+            <!-- 用户id -->
+            <input type="hidden" name="ruoId">
+            <!-- 用户密码 -->
+            <input type="hidden" name="suPwd"/>
+            <!-- 用户类型 -->
+            <input type="hidden" name="suType" />
+            <!-- 是否修改密码 -->
+            <input type="hidden" name="suIsUpdatepwd"/>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>姓名 </label>
+                <div class="layui-input-block">
+                    <input type="text" name="suName" required lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>登入账号 </label>
+                <div class="layui-input-block">
+                    <input type="text" name="suLoginCode" required lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input"  maxlength="100">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>排序 </label>
+                <div class="layui-input-block">
+                    <input type="number" name="ggSort" required lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">手机号</label>
+                <div class="layui-input-block">
+                    <input type="text" name="suTel" placeholder="请输入" autocomplete="off" class="layui-input"  maxlength="10">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">身份证</label>
+                <div class="layui-input-block">
+                    <input type="text" name="suCnid" placeholder="请输入" autocomplete="off" class="layui-input"  maxlength="18">
+                </div>
+            </div>
+            <div class="layui-form-item" style="display:none">
+                <label class="layui-form-label">工号</label>
+                <div class="layui-input-block">
+                    <input type="text" name="suCode" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">职务</label>
+                <div class="layui-input-block">
+                    <select name="suJobCode" id="editSuJobCode">
+                        <option value=""></option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item" style="display:none">
+                <label class="layui-form-label">是否隐藏</label>
+                <div class="layui-input-block">
+                    <select name="suHide">
+                        <option value=""></option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">性别</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="suSex" value="1" title="男">
+                    <input type="radio" name="suSex" value="0" title="女">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">头像</label>
+                <div class="layui-input-block">
+                    <button type="button" class="layui-btn" id="test1">
+                        <i class="layui-icon">&#xe67c;</i>上传图片
+                    </button>
+                </div>
+            </div> 
+            <input type="hidden" name="suHeadpic" id="suHeadpic">             
+            <div class="layui-row layui-col-space15" style="display: none">
+                <div class="layui-col-md6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">民族</label>
+                        <div class="layui-input-block">
+                            <select name="suNation">
+                                <option value="1">是</option>
+                                <option value="0">否</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">生日</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="suBirthday" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-col-space15" style="display: none">
+                <div class="layui-col-md6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">QQ号</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="suQq" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">邮箱</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="suPost" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-col-space15" style="display: none">
+                <div class="layui-col-md6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">固定电话</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="suContactPhone" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">联系邮编</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="suContactPost" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-col-space15" style="display: none">
+                <div class="layui-col-md6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">籍贯</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="suNativePlace" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">户籍所在地</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="suRegister" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-col-space15" style="display: none">
+                <div class="layui-col-md6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">现住地</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="suResidence" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">联系地址</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="suContactAddress" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item" style="display: none">
+                <label class="layui-form-label">备注</label>
+                <div class="layui-input-block">
+                    <textarea name="suRemarks" autocomplete="off" class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <input type="hidden" name="suJobName">
+            <input type="hidden" name="ggEnStatus">
+            <input type="hidden" name="ggDelStatus">
+            <input type="hidden" name="ggCreateUser">
+            <input type="hidden" name="ggUpdateUser">
+            <input type="hidden" name="ggCreateUid">
+            <input type="hidden" name="ggUpdateUid">
+            <div class="layui-form-item adapt" style="margin-left: 20%">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formEdit" pemission-btn="saveSysUserAuthB"> <i class="layui-icon">&#x1005;</i>保存</button>
+                    <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                </div>
+            </div>
+        </form>
+        <div id="userOrgLayer" class="layui-card" style="margin-top: 10px;">
+            <div class="layui-card-body">
+                <table id="orgTable" lay-filter="orgTable"></table>
+                <script type="text/html" id="orgTableToolBar">
+                    <div class="layui-btn-container">
+                        <button class="layui-btn layui-btn-sm" lay-event="add" permission-btn="addResUserOrganAuth">
+                            <i class="layui-icon">&#xe608;</i> 新增
+                        </button>
+                        <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete" permission-btn="delResUserOrganAuth">
+                            <i class="layui-icon">&#xe640;</i> 删除
+                        </button>
+                        <button class="layui-btn layui-btn-sm" lay-event="enable" permission-btn="enableResUserOrganAuth">
+                            <i class="layui-icon">&#x1005;</i> 启用
+                        </button>
+                        <button class="layui-btn layui-btn-sm layui-btn-warm" lay-event="disable" permission-btn="disableResUserOrganAuth">
+                            <i class="layui-icon">&#x1007;</i> 禁用
+                        </button>
+                    </div>
+                </script>
+                <script type="text/html" id="orgTableOper">
+                    <a class="layui-btn layui-btn-xs" lay-event="edit" permission-btn="editResUserOrganAuth">编辑</a>
+                    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delete" permission-btn="delResUserOrganAuth">删除</a>
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+<body class="iframe-h">
+    <div class="content-wrap">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+                <!-- layui tree-->
+                <div class="layui-card">
+                    <div class="layui-card-header layui-card-header-custom"><span><i></i>企业层级</span><div class="columnSide"><i class="fa fa-toggle-left"></i></div></div>
+                    <div class="layui-card-body">
+                        <div class="eleTree ele4" id="leftTree"  lay-filter="leftTree"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
+                <div class="layui-card">
+                    <div class="layui-card-header layui-card-header-custom"><span><i></i>用户列表</span></div>
+                    <div class="layui-card-body">
+                        <form action="" class="layui-form layui-form-pane">
+                            <div class="layui-row layui-col-space10">
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">用户名称</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="suName" placeholder="请输入" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">用户账号</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="suLoginCode" placeholder="请输入" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="toggle-area layui-col-space10">
+                                        <div class="layui-col-md4">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">手机号码</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="suTel" placeholder="请输入" autocomplete="off" class="layui-input">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="layui-col-md4">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">身份证号</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="suCnid" placeholder="请输入" autocomplete="off" class="layui-input">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="layui-col-md4">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">性别</label>
+                                                <div class="layui-input-block">
+                                                    <select name="suSex">
+                                                        <option value="">请选择</option>
+                                                        <option value="1">男</option>
+                                                        <option value="0">女</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                </div>
+                                <div class="formSearch-btnArea">
+                                    <button class="layui-btn" lay-submit lay-filter="formSearch"><i class="fa fa-search"></i>查询</button>
+                                    <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                                    <a class="toggle-btn">
+                                        <span>展开</span>
+                                        <i class="fa fa-angle-up"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="layui-card">
+                    <div class="layui-card-body" style="padding-top: 0">
+                        <table id="userTable" lay-filter="userTable"></table>
+                        <script type="text/html" id="userTableToolBar">
+                            <div class="layui-btn-container">
+                                <button class="layui-btn layui-btn-sm" lay-event="add" permission-btn="addResUserOrganAuth">
+                                    <i class="layui-icon">&#xe608;</i> 新增
+                                </button>
+                                <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete" permission-btn="delResUserOrganAuth">
+                                    <i class="layui-icon">&#xe640;</i> 删除
+                                </button>
+                                <button class="layui-btn layui-btn-sm" lay-event="enable" permission-btn="enableResUserOrganAuth">
+                                    <i class="layui-icon ">&#x1005;</i> 启用
+                                </button>
+                                <button class="layui-btn layui-btn-sm layui-btn-warm" lay-event="disable" permission-btn="disableResUserOrganAuth">
+                                    <i class="layui-icon ">&#x1007;</i> 禁用
+                                </button>
+                            </div>
+                            <div class="tip">温馨提示：重置后密码为Abcd1234#</div>
+                        </script>
+                        <script type="text/html" id="userTableOper">
+                            <a class="layui-btn layui-btn-xs" lay-event="edit" permission-btn="edituser">编辑</a>
+                            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="resetP" permission-btn="resetuserpwd">重置密码</a>
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./../../js/layui/layui.js"></script>
+    <script>
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).use(['eleTree','layer','table','form','laytpl','common','util','element','upload'],function () {
+        var table=layui.table;
+        var form=layui.form;
+        var tree=layui.eleTree;
+        var common=layui.common;
+        var util=layui.util;
+        var element = layui.element;
+        var upload = layui.upload;
+        element.init();
+        var baseUrl = '../../../';
+        //跨域通信
+        common.themeSet();
+        common.toggleArea($('.toggle-btn'),$('.toggle-area'));
+
+        var currentMenuSmId=$("#currentMenuSmId",window.parent.document).val();
+        //组织机构URL
+        var sysEnterpriseTreeUrl = "sysmgr/sysEnterprise/selectSysEnterpriseOrganPostTreeAllList?treeType=postTree";
+        //用户分页
+        var sysUserPageUrl = baseUrl + "sysmgr/sysUser/selectSysUserPage";
+        //用户删除
+        var sysUserDeleteUrl = baseUrl + "sysmgr/sysUser/deleteSysUserBySoIds";
+        //用户禁用
+        var sysUserDisableUrl = baseUrl + "sysmgr/sysUser/saveDisableSysUserByIds";
+        //用户启用
+        var sysUserEnableUrl = baseUrl + "sysmgr/sysUser/saveEnableSysUserByIds";
+        //用户新增
+        var sysUserSaveUrl = baseUrl + "sysmgr/sysUser/saveSysUserInfo";
+        //用户获取
+        var sysUserGetUrl = baseUrl + "sysmgr/sysUser/selectSysUserInfo";
+        //用户重置密码
+        var sysUserUpdatePwdUrl = baseUrl + "sysmgr/sysUser/saveSysUserPwdBySuId";
+        //用户组织
+        var sysUserOrgPageUrl = baseUrl + "sysmgr/resUserOrgan/selectResUserOrganPage";
+        //用户组织获取
+        var sysUserOrgGetUrl = baseUrl + "sysmgr/resUserOrgan/selectResUserOrganById";
+        //用户组织保存
+        var sysUserOrgSaveUrl = baseUrl + "sysmgr/resUserOrgan/saveResUserOrganInfo";
+        //用户组织删除
+        var sysUserOrgDeleteUrl = baseUrl + "sysmgr/resUserOrgan/deleteResUserOrganByIds";
+        //用户组织禁用
+        var sysUserOrgDisableUrl = baseUrl + "sysmgr/resUserOrgan/saveDisableResUserOrganByIds";
+        //用户组织启用
+        var sysUserOrgEnableUrl = baseUrl + "sysmgr/resUserOrgan/saveEnableResUserOrganByIds";
+        //用户组织角色
+        var sysUserRoleListUrl = baseUrl + "sysmgr/resUserOrgan/selectUserByRoleList";
+        //用户角色权限
+        var sysUserAuthResListUrl = baseUrl + "sysmgr/resUserOrgan/selectSysUserInfoAll";
+
+        //字典获取URL
+        var dictUrl = baseUrl + "sysmgr/dicts/selectDictListByPcode";
+        var autoCodeUrl = baseUrl + "sysmgr/autoCode/selectSysSelectDataList";
+        //分页初始参数
+        var pageInitialParam = {
+            pageNum : 1,
+            pareSize : 10,
+            curr:1
+        };
+        //字典键值类型
+        var keyValueTypeMap = {
+            "code": {
+                "url": autoCodeUrl,
+                "key": "code",
+                "value": "name",
+            },
+            "sdCode": {
+                "url": dictUrl,
+                "key": "sdCode",
+                "value": "sdName"
+            }
+        };
+        
+        //下拉字典映射
+        var selectDictMap = {
+            "suJobCode": {
+                "kvType": keyValueTypeMap.sdCode,
+                "param": {
+                    "dictPCode": "suJobCode"
+                }
+            },
+            "seId": {
+                "kvType": keyValueTypeMap.code,
+                "param": {
+                    "table": "SYS_ENTERPRISE",
+                    "codeAtt": "SE_ID",
+                    "nameAtt": "SE_NAME",
+                },
+                "where": true
+            },
+            "soId": {
+                "kvType": keyValueTypeMap.code,
+                "param": {
+                    "table": "SYS_ORGAN",
+                    "codeAtt": "SO_ID",
+                    "nameAtt": "SO_NAME",
+                },
+                "where": true
+            },
+            "spId": {
+                "kvType": keyValueTypeMap.code,
+                "param": {
+                    "table": "SYS_POST",
+                    "codeAtt": "SP_ID",
+                    "nameAtt": "SP_NAME",
+                },
+                "where": true
+            },
+            "editSuJobCode": {
+                "kvType": keyValueTypeMap.sdCode,
+                "param": {
+                    "dictPCode": "suJobCode"
+                }
+            },
+            "orgSeId": {
+                "kvType": keyValueTypeMap.code,
+                "param": {
+                    "table": "SYS_ENTERPRISE",
+                    "codeAtt": "SE_ID",
+                    "nameAtt": "SE_NAME",
+                },
+                "where": true
+            },
+            "orgSoId": {
+                "kvType": keyValueTypeMap.code,
+                "param": {
+                    "table": "SYS_ORGAN",
+                    "codeAtt": "SO_ID",
+                    "nameAtt": "SO_NAME",
+                },
+                "where": true
+            },
+            "orgSpId": {
+                "kvType": keyValueTypeMap.code,
+                "param": {
+                    "table": "SYS_POST",
+                    "codeAtt": "SP_ID",
+                    "nameAtt": "SP_NAME",
+                },
+                "where": true
+            }
+        };
+        //分页查询参数
+        var pageQueryParam = {"suName": ""};
+        var selectTreeNode = {}
+        var eleTreeId = null;
+        var eventHandle={            
+            treeInit:function () {
+                formatTree();
+                common.fetchGet(sysEnterpriseTreeUrl, function(res) {
+                    //树信息的导入
+                    if (res.success && res.list) {
+                        eleTreeId = tree.render({
+                            elem: '#leftTree',
+                            data: res.list,
+                            checkOnClickNode: true,
+                            highlightCurrent: true,    // 是否高亮当前选中节点，默认值是 false。
+                            expandOnClickNode: false,    // 是否在点击节点的时候展开或者收缩节点， 默认值为 true，如果为 false，则只有点箭头图标的时候才会展开或者收缩节点。
+                            showCheckbox: false,
+                            lazy: true,
+                            load: function(data, callback) {
+                                eventHandle.setQueryParam(data);
+                                eventHandle.treeReload(data,callback);
+                            }
+                        });
+                        tree.on("nodeClick(leftTree)", function(obj) {
+                            obj.node.select();
+                            var curTreeNode = obj.data.currentData;
+                            pageQueryParam = {"suName": ""};
+                            eventHandle.setQueryParam(curTreeNode);
+                            eventHandle.userTableReload(pageQueryParam);
+                        });
+                    } else {
+                        //不存在数据时的显示
+                    }
+                }, function() {});
+            },
+            treeReload:function (data,callback) {
+                common.fetchGet(sysEnterpriseTreeUrl + '&id=' + data.id + '&extendAttr=' + data.extendAttr, function(res) {
+                    if (res.success && res.list) {
+                        callback(res.list)
+                    }
+                }, function() {
+                    callback([])
+                });
+            },
+            tableReload:function (ele,url,param) {
+                //表格重载
+                table.reload(ele, {
+                    url: url,
+                    method: 'post',
+                    contentType: 'application/json',
+                    page: pageInitialParam,
+                    where: param,
+                    done:function(){
+                        //this.where={};
+                    }
+                });
+            },
+            initDict:function(array,parent,where,json,callback){
+
+                $.map(array,function(value){
+                    var dictId = value;
+                    var dictConfigInfo = selectDictMap[dictId];
+                    if(!dictConfigInfo) return false;
+                    var queryParam = '?';
+                    $.map(dictConfigInfo.param,function(value,key){
+                        queryParam += key + '=' + value + '&';
+                    });
+                    if(where && dictConfigInfo.where ){
+                        queryParam += "&where=" + where;
+                    }
+                    var option = {
+                        elem: parent.find('#'+dictId),
+                        url: dictConfigInfo.kvType.url + queryParam,
+                        method: 'get',
+                        responseList: 'list',
+                        optionText: dictConfigInfo.kvType.value,
+                        optionValue: dictConfigInfo.kvType.key,
+                        success: function(obj) {
+                            form.render("select");
+                            if(typeof(callback) == "function"){
+                                callback(obj);
+                            }
+                        }
+                    }
+                    if(json){
+                        var selectData = [];
+                        $.each(json,function(i){
+                            $.map(json[i],function(value,key){
+                                var data = {};
+                                data[dictConfigInfo.kvType.key] = key;
+                                data[dictConfigInfo.kvType.value] = value;
+                                selectData.push(data);
+                            })
+                        })
+                        option.loadData = selectData;
+                        option.loadSuccess = function(obj){
+
+                            if(obj && obj.length == 1){
+                                this.elem.val(obj[0][this.optionValue]);
+                                form.render();
+                            }
+                        }
+                    }
+
+                    common.selectDataSet(option);
+                });
+            },
+            execCheckBoxRowsEvent:function(data,options){
+                if (data && data.length > 0) {
+                    layer.confirm(options.confirmText, {
+                        icon: 3,
+                        title: '提示',
+                        offset: '150px'
+                    }, function(index) {
+                        var delParam = "";
+                        $.each(data,function(index){
+                            if(index){
+                                delParam +=","
+                            }
+                            delParam += data[index][options.value];
+                        });
+                        common.fetch(options.url + '?' + options.key + '=' + delParam,options.type,{suIds:delParam}, function(res) {
+                            if (res.success) {
+                                layer.msg(options.successText, {
+                                    icon: 6
+                                });
+                                options.success(res.list)
+                            }else{
+                                layer.msg(options.errorText, {
+                                    icon: 5
+                                });
+                            }
+                        }, function() {
+                            options.error([])
+                        });
+                        layer.close(index);
+                    });
+                } else {
+                    layer.msg(options.emptyText);
+                }
+            },
+            userTableReload:function(param){
+                this.tableReload('userTable',sysUserPageUrl,param)
+            },
+            orgTableReload:function(param){
+                this.tableReload('orgTable',sysUserOrgPageUrl,param)
+            },
+            setQueryParam:function(curTreeNode){
+                pageQueryParam["seId"] = curTreeNode.seId;
+                pageQueryParam["soId"] = curTreeNode.soId;
+                pageQueryParam["spId"] = curTreeNode.spId;
+                selectTreeNode["seId"] = curTreeNode.seId;
+                selectTreeNode["soId"] = curTreeNode.soId;
+                selectTreeNode["spId"] = curTreeNode.spId;
+                if(curTreeNode.extendAttr == "enterprise") {
+                    selectTreeNode["seName"] = curTreeNode.name;
+                }
+                if(curTreeNode.extendAttr == "organ"){
+                    selectTreeNode["soName"] = curTreeNode.name;
+                }
+                if(curTreeNode.extendAttr == "post"){
+                    selectTreeNode["spName"] = curTreeNode.name;
+                }
+            }
+        };
+        //初始化树
+        eventHandle.treeInit();
+        //初始化下拉列表
+        // eventHandle.initDict(['suJobCode','seId','spId','soId']);
+        // eventHandle.initDict(['editSuJobCode','orgSeId','orgSpId','orgSoId']);
+
+
+        table.render(common.tableInitParams({
+            elem: '#userTable',
+            url: sysUserPageUrl,
+            method: 'post',
+            toolbar: '#userTableToolBar',
+            height:'full-175',
+            cols: [
+                [
+                    { type: 'checkbox' },
+                    {"type":"numbers", "title":"序号"},
+                    { field: 'suName', title: '用户名称', width: 200, sort: true, },
+                    { field: 'suLoginCode', title: '用户账号', sort: true },
+                    {
+                        field: 'suSex',
+                        title: '性别',
+                        width: 80,
+                        sort: true,
+                        templet: function(rowData) {
+                            return (rowData["suSex"] === '1') ? '男' : '女';
+                        }
+                    },
+                    { field: 'suTel', title: '手机号码', sort: true },
+                    { field: 'suCnid', title: '身份证号', sort: true },
+                    {
+                        field: 'ggUpdateDatetime',
+                        title: '最后登入时间',
+                        sort: true,
+                        templet: function(rowData) {
+                            return util.toDateString(rowData['ggUpdateDatetime']);
+                        }
+                    },
+                    {
+                        field: 'ggEnStatus',
+                        title: '状态',
+                        width: 100,
+                        sort: true,
+                        templet: function(rowData) {
+                            if(rowData['ggEnStatus'] === '1'){
+                                return '<span class="layui-badge" style="background-color:#66c33a">启用</span>'
+                            }else{
+                                return '<span class="layui-badge" style="background-color:#f56c6c">禁用</span>'
+                            }
+                        }
+                    },
+                    {field: '', title: '操作', width: 150, toolbar: '#userTableOper', fixed: 'right'}
+                ]
+            ],
+            done: function () {
+                common.buttonLimit();
+            }
+        }));
+     
+        //userTable监听事件
+        table.on('toolbar(userTable)', function(obj) {
+            var checkRows = table.checkStatus(obj.config.id);
+            switch (obj.event) {
+                case 'add':
+                    //点击添加按钮
+                    //  common.clearForm($('.userLayer'));
+                    var userWin = layer.open({
+                        offset: '10px',
+                        title: '新增',
+                        maxmin: false,
+                        type: 1, //页面层
+                        area: ['580px','90%'], //高度自适应
+                        maxHeight: '200px',
+                        shadeClose: false,
+                        content: $('.userLayer').html(), //加载该区域的html
+                        // btn:['<i class="fa fa-check-circle"></i>确定','<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>取消'],
+                        success: function(obj) {
+                            //执行实例
+                            var uploadInst = upload.render({
+                                elem: "[lay-filter='userForm'] #test1" //绑定元素
+                                , url: baseUrl + 'zuul/dfsmgr/file/fileUpload' //上传接口
+                                ,data: {
+                                fiFileType: "SUBJECT",
+                                resId: "1"
+                                }
+                                ,done: function (res, index, upload) {
+                                var data = {};   
+                                
+                                // subject_Info.msSheet = res.list[0].fiId;
+                                // subject_Info.msSheetName = res.list[0].fiName + '.' + res.list[0].fiSuffix;
+                                // subject_Info.msSheetTime = new Date();                                
+                                $("[lay-filter='userForm'] #suHeadpic").val(res.list[0].fiId);
+                            }
+                            });
+                            form.val('userForm', {
+                                "suId": '',
+                                "ruoIfMorg": '0',
+                                "ruoIfMetr": '0',
+                                "suContactAddress": '',
+                                "suContactPhone": '',
+                                "suContactPost": '',
+                                "suLoginCode": '',
+                                "suName": '',
+                                "suNation": '',
+                                "suNativePlace": '',
+                                "suPost": '',
+                                "suPwd": '',
+                                "suQq": '',
+                                "suRegister": '',
+                                "suRemarks": '',
+                                "suResidence": '',
+                                "suSex": '',
+                                "suTel": '',
+                                "suType": '',
+                                "suBirthday": '',
+                                "suIsUpdatepwd": '0',
+                                "ggSort":'0',
+                                "ggEnStatus":'1',
+                                "ggDelStatus":'0',
+                                "ggCreateUser":'',
+                                //"ggCreateDatetime":'',
+                                "ggUpdateUser":'',
+                                //"ggUpdateDatetime":'',
+                                "ggCreateUid":'',
+                                "ggUpdateUid":'',
+                                "suCnid":'',
+                                "suCode":'',
+                                "suJobCode":'',
+                                "suJobName":'',
+                                //"suLastLoginTime":'',
+                                "suHide":'0',
+                                
+                            });
+                             
+                            //eventHandle.initDict(['suJobCode','seId','spId','soId'],$(obj.selector));
+                            eventHandle.initDict(['suJobCode'],$(obj.selector));
+                            if(selectTreeNode.seId){
+                                var seMap = {};
+                                seMap[selectTreeNode.seId] = selectTreeNode.seName;
+                                eventHandle.initDict(['seId'],$(obj.selector),null,[seMap]);
+                                if(selectTreeNode.soId){
+                                    var soMap = {};
+                                    soMap[selectTreeNode.soId] = selectTreeNode.soName;
+                                    eventHandle.initDict(['soId'],$(obj.selector),null,[soMap]);
+                                    if(selectTreeNode.spId){
+                                        var spMap = {};
+                                        spMap[selectTreeNode.spId] = selectTreeNode.spName;
+                                        eventHandle.initDict(['spId'],$(obj.selector),null,[spMap]);
+                                    }else{
+                                        eventHandle.initDict(['spId'],$(obj.selector),"so_id='" + selectTreeNode.soId +"'",null,function(obj){
+											if(obj.success && !(obj.list && obj.list.length)){
+												layer.msg("当前部门不存在岗位，请先添加该部门下的岗位");
+											}
+										});
+                                    }
+                                }else{
+                                    eventHandle.initDict(['soId'],$(obj.selector),"se_id='" + selectTreeNode.seId +"'",null,function(obj){
+										if(obj.success && !(obj.list && obj.list.length)){
+											layer.msg("当前企业不存在部门和岗位，请先添加该企业下的部门，再添加该部门下的岗位");
+										}
+									});
+                                }
+                            }else{
+                                eventHandle.initDict(['seId'],$(obj.selector),null,null,function(obj){
+									if(obj.success && !(obj.list && obj.list.length)){
+										layer.msg("当前不存在企业");
+									}
+								});
+                            }
+                            form.on('select(seIdSelect)',function(data){
+							    $(obj.selector).find("#soId").val('')
+								$(obj.selector).find("#soName").val('')
+								//$(obj.selector).find("#spId").empty();
+								//$(obj.selector).find("#spName").empty();
+								$(obj.selector).find("#spId").val('')
+								$(obj.selector).find("#spName").val('请选择')
+                                eventHandle.initDict(['soId'],$(obj.selector),"se_id='" + data.value +"'",null,function(obj){
+									//eventHandle.initDict(['spId'],$(obj.selector),null,null);
+									if(obj.success && !(obj.list && obj.list.length)){
+										layer.msg("当前企业不存在部门和岗位，请先添加该企业下的部门，再添加该部门下的岗位");
+									}
+								});
+                            });
+                            form.on('select(soIdSelect)',function(data){
+                                eventHandle.initDict(['spId'],$(obj.selector),"so_id='" + data.value +"'",null,function(obj){
+									if(obj.success && !(obj.list && obj.list.length)){
+										layer.msg("当前部门不存在岗位，请先添加该部门下的岗位");
+									}
+								});
+                            });
+                            form.render('select');
+                            form.on('submit(formAdd)', function (obj) {
+                                var loading = layer.msg('正在保存中.....', {
+                                    icon: 16,
+                                    shade: 0.3,
+                                    time: 5000
+                                });
+                                common.fetchPost(sysUserSaveUrl,obj.field,function(res){
+                                    layer.close(loading);
+                                    if(res.success) {
+                                        layer.msg("保存成功！", {
+                                            icon: 6
+                                        });
+                                        eventHandle.userTableReload(pageQueryParam)
+                                        layer.close(userWin);
+                                    } else {
+                                        layer.msg("保存失败！" + res.resultMessage, {
+                                            icon: 5
+                                        });
+                                    }
+                                },function(){layer.close(loading);});
+                                return false;
+                            });
+                        },
+                    });
+                    break;
+                    
+                case 'delete':
+                    //点击删除按钮
+                    var options = {
+                        url: sysUserDeleteUrl,
+                        type:'delete',
+                        key:'suIds',
+                        value:'suId',
+                        confirmText:'确定删除选中项?',
+                        emptyText:'请选择删除记录！',
+                        successText:'删除用户信息成功!',
+                        errorText:'请先删除用户的所有关联关系或预删除的用户中存在企业管理员!',
+                        success:function(obj){eventHandle.userTableReload()},
+                        error:function(obj){}
+                    };
+                    eventHandle.execCheckBoxRowsEvent(checkRows.data, options);
+                    break;
+                case 'enable':
+                    //点击启用按钮
+					var isOk=true;
+					for(var i=0;i<checkRows.data.length;i++){
+						if (checkRows.data[i]['ggEnStatus']=='1'){
+							isOk=false;
+							break;
+						}
+					}
+					if(isOk){
+						var options = {
+							url: sysUserEnableUrl,
+							type:'put',
+							key:'suIds',
+							value:'suId',
+							confirmText:'确定启用选中数据?',
+							emptyText:'请选择启用记录！',
+							successText:'启用用户信息成功!',
+							errorText:'启用用户信息失败!',
+							success:function(obj){eventHandle.userTableReload()},
+							error:function(obj){}
+						};
+						eventHandle.execCheckBoxRowsEvent(checkRows.data, options);
+                    }else{
+						layer.msg('存在选项已经启用,不可再次启用');
+					}
+					break;
+                case 'disable':
+                    //点击禁用按钮
+					var isOk=true;
+					for(var i=0;i<checkRows.data.length;i++){
+						if (checkRows.data[i]['ggEnStatus']=='0'){
+							isOk=false;
+							break;
+						}
+					}
+					if(isOk){
+						var options = {
+							url: sysUserDisableUrl,
+							type:'put',
+							key:'suIds',
+							value:'suId',
+							confirmText:'确定禁用选中数据?',
+							emptyText:'请选择禁用记录！',
+							successText:'禁用用户信息成功!',
+							errorText:'请先禁用用户的所有关联关系或预禁用的用户中存在企业管理员!',
+							success:function(obj){eventHandle.userTableReload()},
+							error:function(obj){}
+						};
+						eventHandle.execCheckBoxRowsEvent(checkRows.data, options);
+                    }else{
+						layer.msg('存在选项已经禁用,不可再次禁用');
+					}
+					break;
+            }
+			return false;
+        });
+
+        //orgTable监听事件
+        table.on('toolbar(orgTable)', function(data) {
+            var checkRows = table.checkStatus(data.config.id);
+            switch (data.event) {
+                case 'add':
+                    var index = layer.open({
+                        offset: '10px',
+                        title: '新增',
+                        maxmin: false,
+                        type: 1, //页面层
+                        area: ['580px','90%'], //高度自适应
+                        maxHeight: '200px',
+                        shadeClose: false,
+                        content: $('.orgLayer').html(), //加载该区域的html
+                        // btn:['<i class="fa fa-check-circle"></i>确定','<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>取消'],
+                        success: function(obj) {
+                            $(obj.selector).find('adapt').css('marginLeft','10%');
+                            form.val('orgForm',  {
+                                "ruoId":'',
+                                "suId": data.config.where.suId,
+                                "soName":'',
+                                "seName":'',
+                                "spName":'',
+                                "ruoIfMetr":'',
+                                "ruoIfMorg":'',
+                                "ggCreateUser":'',
+                                "ggCreateUid":'',
+                                "ggCreateDatetime":'',
+                                "ggUpdateDatetime":'',
+                                "ggUpdateUser":'',
+                                "ggUpdateUid":'',
+                                "ggEnStatus":''
+                            });
+                            eventHandle.initDict(['orgSeId'],$(obj.selector));
+                            form.on('select(orgSeIdSelect)',function(data){
+								$(obj.selector).find("#soId").val('')
+								$(obj.selector).find("#soName").val('')
+								$(obj.selector).find("#spId").val('')
+								$(obj.selector).find("#spName").val('')
+                                eventHandle.initDict(['orgSoId'],$(obj.selector),"se_id='" + data.value +"'");
+                            });
+                            form.on('select(orgSoIdSelect)',function(data){
+                                eventHandle.initDict(['orgSpId'],$(obj.selector),"so_id='" + data.value +"'");
+                            });
+                            form.render('select');
+                            form.on('submit(orgFormSave)', function (obj) {
+                                var loading = layer.msg('正在保存中.....', {
+                                    icon: 16,
+                                    shade: 0.3,
+                                    time: 5000
+                                });
+                                common.fetchPost(sysUserOrgSaveUrl,obj.field,function(res){
+                                    layer.close(loading);
+                                    if(res.success) {
+                                        layer.msg("保存成功！", {
+                                            icon: 6
+                                        });
+                                        eventHandle.orgTableReload();
+                                        eventHandle.userTableReload();
+                                        layer.close(index);
+                                    } else {
+                                        layer.msg("保存失败！" + res.resultMessage, {
+                                            icon: 5
+                                        });
+                                    }
+
+                                },function(){layer.close(loading);});
+                                return false;
+                            });
+                        },
+
+                    });
+                    break;
+                case 'delete':
+                    //点击删除按钮
+                    var options = {
+                        url: sysUserOrgDeleteUrl,
+                        type:'delete',
+                        key:'ruoIds',
+                        value:'ruoId',
+                        confirmText:'确定删除选中项?',
+                        emptyText:'请选择删除记录！',
+                        successText:'删除用户部门关联成功!',
+                        errorText:'删除用户部门关联失败!',
+                        success:function(obj){eventHandle.orgTableReload()},
+                        error:function(obj){}
+                    };
+                    eventHandle.execCheckBoxRowsEvent(checkRows.data, options);
+                    break;
+                case 'enable':
+                    //点击启用按钮
+					var isOk=true;
+                        for(var i=0;i<checkRows.data.length;i++){
+                            if (checkRows.data[i]['ggEnStatus']=='1'){
+                                isOk=false;
+                                break;
+                            }
+                        }
+                        if(isOk){
+							var options = {
+								url: sysUserOrgEnableUrl,
+								type:'put',
+								key:'ruoIds',
+								value:'ruoId',
+								confirmText:'确定启用选中数据?',
+								emptyText:'请选择启用记录！',
+								successText:'启用用户信息成功!',
+								errorText:'启用用户信息失败!',
+								success:function(obj){eventHandle.orgTableReload()},
+								error:function(obj){}
+							};
+							eventHandle.execCheckBoxRowsEvent(checkRows.data,options)
+						}else{
+							layer.msg('存在选项已经启用,不可再次启用');
+						}
+
+                    break;
+                case 'disable':
+                    //点击禁用按钮
+					var isOk=true;
+					for(var i=0;i<checkRows.data.length;i++){
+						if (checkRows.data[i]['ggEnStatus']=='0'){
+							isOk=false;
+							break;
+						}
+					}
+					if(isOk){
+						var options = {
+							url: sysUserOrgDisableUrl,
+							type:'put',
+							key:'ruoIds',
+							value:'ruoId',
+							confirmText:'确定禁用选中数据?',
+							emptyText:'请选择禁用记录！',
+							successText:'禁用用户信息成功!',
+							errorText:'请先禁用用户的所有关联关系或预禁用的用户中存在企业管理员!',
+							success:function(obj){eventHandle.orgTableReload()},
+							error:function(obj){}
+						};
+						eventHandle.execCheckBoxRowsEvent(checkRows.data, options);
+                    }else{
+						layer.msg('存在选项已经禁用,不可再次禁用');
+					}
+					break;
+            }
+        });
+
+        table.on('tool(userTable)', function(obj) {
+            var data = obj.data;
+            switch (obj.event) {
+                case 'singleDel':
+                    var selectId = obj.data.suId;
+                    layer.confirm('确定删除?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                        var layerLoader = common.layerLoader();
+                        common.fetchDelete(sysUserDeleteUrl + '?suIds='+selectId,function (res) {
+                            layer.close(layerLoader);
+                            if(res.success){
+                                eventHandle.userTableReload();
+                                layer.msg('删除成功' , {
+                                    time: 4000, //20s后自动关闭
+                                });
+                            }else{
+                                layer.msg('请先删除用户的所有关联关系或预删除的用户中存在企业管理员!', {
+                                    icon: 5
+                                });
+                            }
+                        }, function () {
+                            layer.close(layerLoader);
+                        });
+                        layer.close(index);
+                    });
+                    break;
+                case 'resetP':
+                    layer.confirm('确定重置密码?', { icon: 3, title: '提示', offset: '150px' }, function(index) {
+                        common.fetchPut(sysUserUpdatePwdUrl,{suId:data.suId}, function(res) {
+                            if (res.success) {
+                                layer.msg('重置用户密码成功!', {
+                                    icon: 6
+                                });
+                            }else{
+                                layer.msg('重置用户密码失败！', {
+                                    icon: 5
+                                });
+                            }
+                        });
+                    });
+                    break;
+                case 'edit': //编辑
+                    //原始数据导入
+                    var editWin = layer.open({
+                        offset: '10px',
+                        title: '编辑',
+                        maxmin: false,
+                        type: 1, //页面层
+                        area: ['800px','85%'], //高度自适应
+                        shadeClose: false,
+                        content: $('.userEditLayer').html(), //加载该区域的html
+                        success: function(obj) {
+                            form.val('userEditForm', data);
+                            //初始化表格
+                            eventHandle.initDict(['editSuJobCode'],$(obj.selector),null,null,function(){
+								$(obj.selector).find('#editSuJobCode').val(data.suJobCode);
+                                form.render('select');                        
+                            //执行实例
+                            var uploadInst = upload.render({
+                                elem: "[lay-filter='userEditForm'] #test1" //绑定元素
+                                , url: baseUrl + 'zuul/dfsmgr/file/fileUpload' //上传接口
+                                ,data: {
+                                fiFileType: "SUBJECT",
+                                resId: "1"
+                                }
+                                ,done: function (res, index, upload) {
+                                var data = {};   
+                                
+                                // subject_Info.msSheet = res.list[0].fiId;
+                                // subject_Info.msSheetName = res.list[0].fiName + '.' + res.list[0].fiSuffix;
+                                // subject_Info.msSheetTime = new Date();                                
+                                $("[lay-filter='userEditForm'] #suHeadpic").val(res.list[0].fiId);
+                            }
+                        })
+                            });
+                        
+                            if (data.suHide=="1") {
+                                $(obj.selector).find('#userOrgLayer').hide();
+                            }else{
+                                table.render(common.tableInitParams({
+                                elem: $(obj.selector).find('#orgTable'),
+                                url: sysUserOrgPageUrl,
+                                method: 'post',
+                                height: 'full-200',
+                                toolbar: '#orgTableToolBar',
+                                where: {suId: data.suId},
+                                cols: [
+                                    [
+                                        { type: 'checkbox' },
+                                        { field: 'seName', title: '企业', width: 120, sort: true, },
+                                        { field: 'soName', title: '部门', width:120, sort: true },
+                                        { field: 'spName', title: '岗位',  width: 80, sort: true},
+                                        {
+                                            field: 'ruoIfMetr',
+                                            title: '是否主企业',
+                                            sort: true,
+                                            templet: function(rowData) {
+                                                return (rowData['ruoIfMetr'] === '1') ? '是' : '否';
+                                            }
+                                        },
+                                        {
+                                            field: 'ruoIfMorg',
+                                            title: '是否主部门',
+                                            sort: true,
+                                            templet: function(rowData) {
+                                                return (rowData['ruoIfMorg'] === '1') ? '是' : '否';
+                                            }
+                                        },
+                                        {
+                                            field: 'ggEnStatus',
+                                            title: '状态',
+                                            width: 80,
+                                            sort: true,
+                                            templet: function(rowData) {
+                                                if(rowData['ggEnStatus'] === '1'){
+                                                    return '<span class="layui-badge" style="background-color:#66c33a">启用</span>'
+                                                }else{
+                                                    return '<span class="layui-badge" style="background-color:#f56c6c">禁用</span>'
+                                                }
+                                            }
+                                        },
+                                        {field: '', title: '操作', width: 130, toolbar: '#orgTableOper', fixed: 'right'}
+                                    ]
+                                ]
+                            }));
+                            }
+                            
+                            form.on('submit(formEdit)', function (obj) {
+                                var loading = layer.msg('正在保存中.....', {
+                                    icon: 16,
+                                    shade: 0.3,
+                                    time: 5000
+                                });
+
+                                common.fetchPost(sysUserSaveUrl,obj.field,function(res){
+                                    layer.close(loading);
+                                    if(res.success) {
+                                        layer.alert("修改成功。", {
+                                            icon: 6
+                                        });
+                                        eventHandle.userTableReload();
+                                        layer.close(editWin);
+                                    } else {
+                                        layer.msg("保存失败！"  + res.resultMessage, {
+                                            icon: 5
+                                        });
+                                    }
+
+                                },function(){layer.close(loading);});
+                                return false;
+                            });
+                        }
+                    });
+                    break;
+            }
+        });
+
+        table.on('tool(orgTable)', function(obj) {
+            var data = obj.data;
+            switch (obj.event) {
+                case 'edit': //编辑
+                    var index = layer.open({
+                        offset: '10px',
+                        title: '编辑',
+                        maxmin: false,
+                        type: 1, //页面层
+                        area: ['800px','85%'], //高度自适应
+                        shadeClose: false,
+                        content: $('.orgLayer').html(), //加载该区域的html
+                        success: function(obj) {
+                            common.fetchGet(sysUserAuthResListUrl + "?suId=" + data.suId, function(dataResAuthUserList){
+                                common.fetchGet(sysUserRoleListUrl + "?seId=" + data.seId, function(res){
+                                    var rauIdArr = [];
+                                    for(var i=0; i<dataResAuthUserList.list.length; i++){
+                                        var dataResAuthUserItem = dataResAuthUserList.list[i];
+                                        rauIdArr.push(dataResAuthUserItem.rauId);
+                                    }
+                                    if (res && res.list){
+                                        //将所有角色进行填充并渲染
+                                        for(var i=0; i<res.list.length; i++){
+                                            var item = res.list[i];
+                                            rauIdStr = rauIdArr.join(",");
+                                            if (rauIdStr.indexOf(item.srId) > -1){
+                                                $(obj.selector).find("#roles").append("<input type=checkbox name=roleIds value=" + item.srId + " title=" + item.srName + " checked>");
+                                            }else{
+                                                $(obj.selector).find("#roles").append("<input type=checkbox name=roleIds value=" + item.srId + " title=" + item.srName + ">");
+                                            }
+                                        }
+                                        form.render("checkbox");
+                                    }
+                                }, function(err){
+
+                                });
+                            },function(e){
+
+                            });
+                            form.val('orgForm', data);
+                            // eventHandle.initDict(['orgSeId','orgSpId','orgSoId'],$(obj.selector));
+
+
+                            form.on('select(orgSeIdSelect)',function(data){
+                                eventHandle.initDict(['orgSoId'],$(obj.selector),"se_id='" + data.value +"'");
+                            });
+                            form.on('select(orgSoIdSelect)',function(data){
+                                eventHandle.initDict(['orgSpId'],$(obj.selector),"so_id='" + data.value +"'");
+                            });
+                            //初始化表格
+                            form.render();
+                            var seMap = {};
+                            seMap[data.seId] = data.seName;
+                            eventHandle.initDict(['orgSeId'],$(obj.selector),null,[seMap]);
+                            if(data.soId){
+                                var soMap = {};
+                                soMap[data.soId] = data.soName;
+                                eventHandle.initDict(['orgSoId'],$(obj.selector),null,[soMap]);
+                                if(data.spId){
+                                    var spMap = {};
+                                    spMap[data.spId] = data.spName;
+                                    eventHandle.initDict(['orgSpId'],$(obj.selector),null,[spMap]);
+                                }else{
+                                    eventHandle.initDict(['orgSpId'],$(obj.selector),"so_id='" + data.soId +"'");
+                                }
+                            }else{
+                                eventHandle.initDict(['orgSoId'],$(obj.selector),"se_id='" + data.seId +"'");
+                            }
+                            form.on('submit(orgFormSave)', function (obj) {
+                                var loading = layer.msg('正在保存中.....', {
+                                    icon: 16,
+                                    shade: 0.3,
+                                    time: 5000
+                                });
+                                var roleIds = [];
+                                var allRoleIds = [];
+                                //获取勾选复选框
+                                $("input[name=roleIds]:checked").each(function(){
+                                    roleIds.push($(this).val());
+                                });
+                                //获取全部复选框
+                                $("input[name=roleIds]").each(function(){
+                                    allRoleIds.push($(this).val());
+                                });
+
+                                obj.field.roleIds = roleIds.join(",");
+                                obj.field.allRoleIds = allRoleIds.join(",");
+
+                                common.fetchPost(sysUserOrgSaveUrl,obj.field,function(res){
+                                    layer.close(loading);
+                                    if(res.success) {
+                                        layer.alert("修改成功。", {
+                                            icon: 6
+                                        });
+                                        eventHandle.orgTableReload();
+                                        eventHandle.userTableReload();
+                                        layer.close(index);
+                                    } else {
+                                        layer.msg("保存失败！"  + res.resultMessage, {
+                                            icon: 5
+                                        });
+                                    }
+                                },function(){layer.close(loading);});
+                                return false;
+                            });
+
+                        }
+                    });
+                    break;
+				case 'delete':
+                    //点击删除按钮
+					var ruoId = obj.data.ruoId;
+                    layer.confirm('确定删除?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                        var layerLoader = common.layerLoader();
+                        common.fetchDelete(sysUserOrgDeleteUrl + '?ruoIds='+ruoId,function (res) {
+                            layer.close(layerLoader);
+                            if(res.success){
+								eventHandle.orgTableReload();
+                                layer.msg('删除成功' , {
+                                    time: 4000, //20s后自动关闭
+                                });
+                            }else{
+
+                            }
+                        }, function () {
+                            layer.close(layerLoader);
+                        });
+                        layer.close(index);
+                    });
+                    break;
+
+            }
+        });
+
+        form.on('submit(formSearch)',function (obj) {
+            var params= {
+                suName:obj.field.suName,
+                suCnid:obj.field.suCnid,
+                suLoginCode:obj.field.suLoginCode,
+                suSex:obj.field.suSex,
+                suTel:obj.field.suTel
+            };
+            eventHandle.userTableReload(params);
+            return false;
+        });
+
+        common.buttonLimit();
+        common.columnSide();
+    });
+
+    /**
+     * 格式化树形控件
+     */
+     function formatTree(){
+        var cacluHeight = $(document).height() - $("#mainMenuTab").height() - $(".layui-card-header").height() - 77;
+        $("#leftTree").css({
+            "height": cacluHeight + "px",
+            "overflow-y": "auto"
+        });
+    }
+
+    
+    </script>
+    <!--[if lt IE 9]>
+    <script src="../../js/lib/html5.min.js"></script>
+    <script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+
+</html>

@@ -1,0 +1,102 @@
+.jsfw_ToolbarBig{
+	padding-left:10px;
+	padding-top:1px;
+	background-image: url('BG.gif');
+	background-repeat: repeat-x;
+	height:27px;
+	/*overflow:hidden;*/
+}
+.jsfw_ToolbarBig xmp{
+	display:none;
+}
+.ToolbarBig xmp{
+	display:none;
+}
+
+.jsfw_ToolbarBigBtn_Split{
+	float:left;
+	height:24px;
+	width:6px;
+	background-image: url('Split.gif');
+	background-repeat: no-repeat;
+	BACKGROUND-POSITION:50% 50%;
+}
+.jsfw_ToolbarBigBtn{
+	float:left;
+	height:24px;
+	cursor:default;
+}
+.jsfw_ToolbarBigBtn_disabled{
+	float:left;
+	height:24px;
+	cursor:default;
+	color:gray;
+	filter:gray() alpha(opacity=50); /* IE */ 
+	-moz-opacity:0.5; /* Moz + FF */
+	opacity: 0.5; /* 支持CSS3的浏览器（FF 1.5也支持）*/ 
+}
+.jsfw_ToolbarBigBtn_Over{
+	float:left;
+	height:24px;
+	border:1px solid #0A246A;
+	background-color:#B5BED6;
+	cursor:default;
+}
+
+.jsfw_ToolbarBigBtn_left{
+	padding-left:3px;
+	padding-right:3px;
+}
+.jsfw_ToolbarBigBtn_center{
+	padding-left:0px;
+	/*padding-right:4px;*/
+	padding-right:21px;
+}
+.jsfw_ToolbarBigBtn_right, .jsfw_ToolbarBigBtn_right0{
+	cursor:default;
+	width:10px;
+	background-image: url('Arrow_Down.gif');
+	background-repeat: no-repeat;
+	BACKGROUND-POSITION:0 45%;
+	height:20px;
+}
+
+.jsfw_ToolbarBigBtn_Over .jsfw_ToolbarBigBtn_left{
+	padding-left:2px;
+	padding-right:2px;
+}
+.jsfw_ToolbarBigBtn_Over .jsfw_ToolbarBigBtn_center{
+	padding-left:1px;
+	/*padding-right:3px;*/
+	padding-right:20px;
+}
+.jsfw_ToolbarBigBtn_Over .jsfw_ToolbarBigBtn_right{
+	width:9px;
+	border-left:1px solid #0A246A;
+}
+.jsfw_ToolbarBigBtn_Over .jsfw_ToolbarBigBtn_right0{
+	width:10px;
+	BACKGROUND-POSITION:1 45%;
+}
+
+.jsfw_ToolbarBig_More{
+	float:right;
+	height:24px;
+	width:10px;
+	background-image: url('More.gif');
+	background-repeat: no-repeat;
+	BACKGROUND-POSITION:50% 50%;
+}
+
+.jsfw_ToolbarBig_MoreSel{
+	border:1px solid #0A246A;
+	background-color:#D4D5D8;
+	float:right;
+	height:20px !important;
+	height:24px;
+	width:8px !important;
+	width:10px;
+	background-image: url('More.gif');
+	background-repeat: no-repeat;
+	BACKGROUND-POSITION:50% 50%;
+}

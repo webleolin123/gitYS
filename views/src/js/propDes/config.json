@@ -1,0 +1,467 @@
+{
+  "components": [
+    {
+      "components": [],
+      "prop": {
+        "plugin": "tree",
+        "name": "a",
+        "treeUrl":"../../../sysmgr/sysEnterprise/selectSysEnterpriseOrganPostTreeAllList?treeType=enterpriseTree",
+        "lazy":true,
+        "nextParam": [{"key": "id", "value": "data.id", "type": "var"}, { "key": "extendAttr", "value": "data.extendAttr", "type": "var" }]
+      }
+    },
+    {
+      "components": [
+        {
+          "components": [],
+          "prop": {
+            "name": "b1",
+            "plugin": "searchTable",
+            "title" : "查询条件",
+            "field": [
+              {
+                "theme": "2",
+                "toggleLine": true,
+                "form":[
+                  {
+                    "type":"input",
+                    "required":false,
+                    "label":"名称",
+                    "name":"smName",
+                    "col":12
+                  }
+                ],
+                "isOriginOper":false,
+                "operation":[
+                  {
+                    "type":"submit",
+                    "label":"查询",
+                    "name":"searchSubmit",
+                    "event":{
+                      "toModule":"b2"
+                    }
+                  },
+                  {
+                    "label":"重置",
+                    "name":"reset",
+                    "type": "reset"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "components": [],
+          "prop": {
+            "name": "b2",
+            "plugin": "table",
+            "getDataUrl":"sysmgr/menu/selectSysMenuPage",
+            "toolbarBtn":[
+              {
+                "name":"add_1",
+                "text":"新增一级节点",
+                "icon":true,
+                "event":"add",
+                "iconType":"add",
+                "form":[
+                  {
+                    "type":"input",
+                    "required":"true",
+                    "label":"名称",
+                    "name":"smName",
+                    "col":12
+
+                  }
+                ],
+               "url" :""
+              },
+              {
+                "name":"add_2",
+                "iconType":"add",
+                "text":"新增二级节点",
+                "icon":true,
+                "event":"add"
+              },
+              {
+                "name":"delete_1",
+                "text":"删除",
+                "event":"delete",
+                "conformTip":"确定删除选定项?",
+                "tipWidth":"150",
+                "successTip":"删除成功",
+                "failTip":"删除失败",
+                "url":"sysmgr/menu/deleteSysMenuByIds",
+                "deleteParam":"smIds",
+                "tableRowIndex":"smId",
+                "successEvent":[
+                  {
+                    "module":"a",
+                    "plugin":"tree"
+                  },
+                  {
+                    "module":"b2",
+                    "plugin":"table"
+                  }
+                ]
+              }
+            ],
+            "rowBtn":[
+
+            ],
+            "cols": [[
+              {"type":"checkbox"},
+              {"field": "ggSort", "title": "排序","width":80, "sort": true},
+              {"field": "smName", "title": "按钮名称","sort":true},
+              {"field": "smIcon", "title": "按钮编号", "width":120,"sort":true},
+              {"field": "smType", "title": "类型", "width":120,"sort":true}
+            ]]
+          }
+        }
+      ],
+      "prop": {
+        "name": "b"
+      }
+    },
+    {
+      "components": [],
+      "prop": {
+        "plugin": "form",
+        "name": "c",
+        "field": [
+          {
+            "theme":"1",
+            "type":"1",
+            "title": {
+              "name": "field区域"
+            },
+            "form":[
+              {
+                "name":"a1",
+                "label":"默认输入框",
+                "required":true,
+                "placeholder":"请输入名称",
+                "type":"input",
+                "col":6
+              },
+              {
+                "name":"a2",
+                "label":"number输入框",
+                "required":true,
+                "type":"input",
+                "inputType":"number",
+                "col":6
+              },
+              {
+                "name":"11a",
+                "label":"inline块",
+                "inline": true,
+                "type": "input",
+                "col":6
+              },
+              {
+                "name":"a3",
+                "label":"异步下拉",
+                "type":"select",
+                "url":"sysmgr/dicts/selectDictListByPcode?dictPCode=LOG_OPERTYPE",
+                "method":"get",
+                "responseList":"list",
+                "optionText":"sdName",
+                "optionValue":"sdCode",
+                "col":4
+              },
+              {
+                "name":"a4",
+                "label":"普通下拉",
+                "type":"select",
+                "data":[
+                  {
+                    "text":"系统",
+                    "value":"system"
+                  },
+                  {
+                    "text":"业务",
+                    "value":"business"
+                  }
+                ],
+                "col":4
+              },
+              {
+                "name":"a5",
+                "label":"搜索下拉",
+                "type":"select",
+                "isSearch":true,
+                "url":"sysmgr/dicts/selectDictListByPcode?dictPCode=LOG_OPERTYPE",
+                "method":"get",
+                "responseList":"list",
+                "optionText":"sdName",
+                "optionValue":"sdCode",
+                "col":4
+              },
+              {
+                "name":"a6",
+                "label":"单选框",
+                "type":"radio",
+                "data":[
+                  {
+                    "text":"男",
+                    "value":"男",
+                    "checked":true
+                  },
+                  {
+                    "text":"女",
+                    "value":"女"
+                  },
+                  {
+                    "text":"不可选",
+                    "value":"不可选个",
+                    "disabled":true
+                  }
+                ],
+                "col":12
+              },
+              {
+                "name":"a7",
+                "label":"复杂复选框",
+                "type":"checkbox",
+                "data":[
+                  {
+                    "text":"选择一",
+                    "value":"1",
+                    "checked":true
+                  },
+                  {
+                    "text":"选择二",
+                    "value":"女"
+                  },
+                  {
+                    "text":"不可选",
+                    "value":"不可选",
+                    "disabled":true
+                  }
+                ],
+                "col":6
+              },
+              {
+                "name":"a8",
+                "label":"简单复选框",
+                "type":"checkbox",
+                "theme":2,
+                "data":[
+                  {
+                    "text":"选择一",
+                    "value":"1",
+                    "checked":true
+                  },
+                  {
+                    "text":"选择二",
+                    "value":"女"
+                  },
+                  {
+                    "text":"不可选",
+                    "value":"不可选",
+                    "disabled":true
+                  }
+                ],
+                "col":6
+              },
+              {
+                "name":"switch",
+                "label":"开关",
+                "type":"switch",
+                "checked":true
+              },
+              {
+                "name":"password",
+                "label":"密码",
+                "type":"input",
+                "inputType":"password"
+              },
+              {
+                "name":"sdd",
+                "label":"文本域",
+                "isLabelFull":true,
+                "type":"textarea",
+                "col":12
+              }
+            ],
+            "isOriginOper":true,
+            "operation": [
+              {
+                "label":"提交",
+                "name":"submit",
+                "type": "submit",
+                "event":{
+                  "url":"api/json",
+                  "request":{
+
+                  },
+                  "toModule":[
+                    {
+                      "name": " " ,
+                      "eventType": " "
+                    }
+                  ]
+
+                }
+              },
+              {
+                "label":"重置",
+                "name":"reset",
+                "type": "reset"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "components": [],
+      "tempId": "dfdfdf",
+      "prop": {
+        "plugin": "form",
+        "name": "c1",
+        "field": [
+          {
+            "theme":"1",
+            "type":"1",
+            "title": {
+              "name": "表单校验"
+            },
+            "form":[
+              {
+                "name":"c1",
+                "label":"手机",
+                "verify": "phone",
+                "placeholder":"请输入手机号码",
+                "type":"input",
+                "col":4
+              },
+              {
+                "name":"c2",
+                "label":"邮箱",
+                "verify": "email",
+                "placeholder":"请输入邮箱号",
+                "type":"input",
+                "col":4
+              },
+              {
+                "name":"c3",
+                "label":"网址",
+                "verify": "url",
+                "placeholder":"请输入网址",
+                "type":"input",
+                "col":4
+              },
+              {
+                "name":"c3",
+                "label":"数字",
+                "verify": "number",
+                "placeholder":"请输入数字",
+                "type":"input",
+                "col":4
+              },
+              {
+                "name":"c3",
+                "label":"日期",
+                "verify": "date",
+                "placeholder":"请输入日期",
+                "type":"input",
+                "col":4
+              },
+              {
+                "name":"c3",
+                "label":"身份证",
+                "verify": "identity",
+                "placeholder":"请输入身份证号码",
+                "type":"input",
+                "col":4
+              }
+            ],
+            "isOriginOper":true,
+            "operation": [
+              {
+                "label":"提交",
+                "name":"submit121",
+                "type": "submit",
+                "event":{
+                  "url":"api/json",
+                  "request":{
+
+                  },
+                  "toModule":[
+                    {
+                      "name": " " ,
+                      "eventType": " "
+                    }
+                  ]
+
+                }
+              },
+              {
+                "label":"重置",
+                "name":"reset",
+                "type": "reset"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "components": [],
+      "prop": {
+        "plugin": "date",
+        "name": "d1",
+        "id": "d1",
+        "format":"yyyy年MM月dd日",
+        "value":"2019年05月17日"
+      }
+
+    },
+    {
+      "components": [],
+      "prop": {
+        "plugin": "",
+        "name": "d2"
+      }
+
+    },
+    {
+      "components": [],
+      "prop": {
+        "plugin": "upload",
+        "name": "d3",
+        "id": "d3",
+        "text": "选择文件",
+        "chooseToModule" :"d2",
+        "accept": "file",
+        "fileId": "fileTest",
+        "multiple": true,
+        "number": 0,
+        "auto":true,
+        "bindAction": "#button3",
+        "url": "sysmgr/sysVersion/uploadPatchFile"
+      }
+
+    }
+  ],
+  "prop": {
+    "name": "root",
+    "moduleName": [["a", {"b": ["b1", "b2"]}], ["c","c1"],["d1","d2","d3"]],
+    "theme": {
+      "menuTheme":"light",
+      "primaryColor":"gray"
+    },
+    "layoutHeight": false,
+    "layoutWidth":[[2,{"col10":[12,12]}],[12,12],[4,4,4]],
+    "script": {
+      "url": [],
+      "des": "alert(123)"
+    },
+    "style": {
+      "link": [],
+      "des": ""
+    }
+  }
+}

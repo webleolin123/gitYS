@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html  class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>新增模板</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../js/layui/css/layui.css"/>
+    <link href="../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script charset="utf-8" src="../../js/common/plugin.js"></script>
+</head>
+
+<!--按钮信息中的弹框-->
+<body class="iframe-h" style="background: white">
+    <input type="hidden" id="label">
+    <input type="hidden" id="version">
+    <input type="hidden" id="name">
+    <input type="hidden" id="orgId">
+    <div class="content-wrap" style="background: white">
+        <div class="layui-row layui-col-space15" style="position: relative">
+            <div class="layui-col-xs3"
+                 style="position: absolute;left: 0;top: 2px;width: 256px;z-index: 1;border-right: 1px solid #e7eaf0;">
+            <!-- layui tree-->
+            <div class="layui-card">
+                <div class="layui-card-body" style="padding: 0">
+                    <div class="custom-title">业务流程列表</div>
+                    <div class="layuiTree eleTree ele4" style="min-height: 500px;" id="leftTree" lay-filter="leftTree"
+                         style="height:430px;overflow-y: auto;"></div>
+                    <!--<ul id="leftTree" class="layuiTree"></ul>-->
+                </div>
+            </div>
+        </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="padding-left: 255px;z-index: 0">
+                <iframe border="0" class="" frameborder="0" height="450px" id="flowIFrame" width="100%"></iframe>
+        </div>
+    </div>
+</div>
+<script src="./../../js/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).extend({}).use(['eleTree', 'layer', 'table', 'form', 'laytpl', 'common', 'element', 'util'], function () {
+
+        var table=layui.table;
+        var form=layui.form;
+        var tree=layui.eleTree;
+        var common=layui.common;
+        var element = layui.element;
+        var util = layui.util;
+        element.init();
+        var baseUrl='../../../';
+        common.themeSet();
+        common.toggleArea($('.toggle-btn'),$('.toggle-area'));//查询条件面版收缩
+
+        // $('#flowIFrame').css('height',$(top.window).height()-60+'px');
+        // $('#leftTree').css('height',$(top.window).height()-60+'px');
+
+        //按钮权限
+        // common.buttonLimit($("#currentMenuSmId",window.parent.document).val(),function (res) {
+            //输入所有可操作的按钮集合
+            // var list=res['list']?res['list']:[];
+
+        // });
+
+
+        var businessTypeId = getUrlParam("businessTypeId");
+        var eleTreeId;
+        var currentEnterpriseId=null;//用于保存当前table的ID
+        var currentPid=null;//用于保存当前table的ID
+        var pageInitialParam = {
+            pageNum : 1,
+            pareSize : 10,
+            curr:1
+        };
+
+        var userInfo = common.getUserInfo();
+        var label = '';
+        var version = '';
+        var orgId = '';
+        var eventHandle={
+            treeInit: function () {
+
+                common.fetchPost('sasprocessmgr/businessEngineModuleConfig/selectBusinessEngineModuleConfig',{},function (res) {
+                    //树信息的导入
+                    if(res.success && res.list){
+                        var dataList = [];
+                        for(var i=0;i<res.list.length;i++){
+                            var sobj = res.list[i];
+                            res.list[i]['id'] = sobj.bemcId;
+                            res.list[i]['name'] = sobj.businessTypeName;
+                            res.list[i]['bType'] = sobj.businessTypeId;
+                            res.list[i]['bTypeName'] = sobj.businessTypeName;
+                            res.list[i]['nType'] = 'business';
+                            if(businessTypeId){
+                                if(businessTypeId == sobj.businessTypeId){
+                                    dataList.push(sobj);
+                                }else{
+                                    continue;
+                                }
+                            }else{
+                                dataList.push(sobj);
+                            }
+
+                        }
+                        eleTreeId = tree.render({
+                            elem: '#leftTree',
+                            data: dataList,
+                            showCheckbox: false,
+                            lazy: true,
+                            highlightCurrent: true,
+                            checkOnClickNode: true,
+                            load: function(data, callback) {
+                                if(data.nType === "flow") return;
+                                var buinessTypeName  = data.name;
+                                var buinessTypeId = data.bType
+                                common.fetchPost('flowEngine/engineTemplate/queryProcessTemplateList',{
+                                    business:data.bType,
+                                    orgId:userInfo.seId
+                                }, function (res) {
+                                    if (res.success && res.list) {
+                                        for(var i=0;i<res.list.length;i++){
+                                            var sobj = res.list[i];
+                                            var dataId = res.list[i]['label'] + '@' + res.list[i]['version']  + '@' + res.list[i]['orgId'];
+                                            res.list[i]['id'] = dataId;
+                                            res.list[i]['nType'] = 'flow';
+                                            res.list[i]["isLeaf"] = true;
+                                            res.list[i]['bType'] = buinessTypeId;
+                                            res.list[i]['bTypeName'] = buinessTypeName;
+                                        }
+                                        callback(res.list);
+                                        if(!label){
+                                            if (res.list && res.list[0] && res.list[0]['label']) {
+                                                var dataId = res.list[0]['label'] + '@' + res.list[0]['version'] + '@' + res.list[0]['orgId'];
+                                                $("#leftTree").find("div[data-id='" + dataId + "']").find(".eleTree-node-content").click();
+                                            }
+
+                                        }
+                                    }
+                                }, function () {
+                                    callback([])
+                                });
+                            }
+                        });
+                        tree.on("nodeClick(leftTree)",function(obj) {
+                            if(obj.data.currentData.nType=='flow'){
+                                label = obj.data.currentData.label;
+                                version = obj.data.currentData.version;
+                                orgId = obj.data.currentData.orgId;
+
+                                $("#label").val(label);
+                                $("#version").val(version);
+                                $("#orgId").val(orgId);
+                                $("#name").val(obj.data.currentData.name);
+                                paramData = '&label=' + label + '&version=' + version + '&orgId=' + orgId
+                                $("#flowIFrame")[0].src = "template/procesDisplay.html?" + paramData;
+                            }
+                        });
+
+                        $("#leftTree").find(".eleTree-node-content")[0].click();
+
+                    }else{
+                        //不存在数据时的显示
+                    }
+
+
+                },function () {});
+
+            },
+        };
+
+        //初始化树
+        // eventHandle.treeInit();
+
+        //查询
+        // common.columnSide();
+    });
+
+    function getCheckFlowInfo(){
+        var flowInfo = {
+            label:$("#label").val(),
+            version:$("#version").val(),
+            orgId:$("#orgId").val(),
+            name:$("#name").val()
+        };
+        return flowInfo;
+    }
+
+    function getUrlParam(paraName) {
+        var url = document.location.toString();
+        var arrObj = url.split("?");
+        if (arrObj.length > 1) {
+            var arrPara = arrObj[1].split("&");
+            var arr;
+            for (var i = 0; i < arrPara.length; i++) {
+                arr = arrPara[i].split("=");
+                if (arr != null && arr[0] == paraName) {
+                    return arr[1];
+                }
+            }
+            return "";
+        }else {
+            return "";
+        }
+    }
+</script>
+
+<!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

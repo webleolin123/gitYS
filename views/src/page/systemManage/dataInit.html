@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html  class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>数据初始化</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../js/layui/css/layui.css"/>
+    <link href="../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+
+    <script charset="utf-8" src="../../js/common/plugin.js"></script>
+    <style>
+        .jz-btn{
+            margin: 15px 50%;
+        }
+        .iframe-h{
+            height: 100%;
+        }
+        .content-wrap{
+            padding: 10px;
+        }
+    </style>
+</head>
+<body class="iframe-h">
+
+<div class="content-wrap">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+            <div class="layui-collapse white-bg">
+               <div class="layui-form-item">
+                    <div class="layui-input-block jz-btn">
+                        <button id="dataInit-btn" class="layui-btn" lay-submit lay-filter="formSearch">数据初始化</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="./../../js/layui/layui.js"></script>
+<script>
+
+    /*layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).extend({
+        userManage:'module/systemManage/userManage'
+    }).use('userManage',layui.factory('userManage'))*/
+
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).extend({
+    }).use(['tree','layer','table','form','laytpl','common','element'],function () {
+        var table=layui.table;
+        var form=layui.form;
+        var util = layui.util;
+        var common = layui.common;
+        var element = layui.element;
+        element.init();
+        common.themeSet();
+        //table
+        var tableData={
+            "msg": "成功",
+            "code": 0,
+            "data": [
+                {
+              "logId":"b4a55fd676f04c6083baeeec1af1ac77",
+                "opType":0,
+                "opDec":"新增组织信息",
+                "isSuccess":"成功",
+                "errorMsg":null,
+                "loginIp":"192.168.161.1",
+                "opDate":1557656642000,
+                "opPerson":"2765f2a7eb384766bac6468ebe11b8e1",
+                "opEnterprise":"54f5033105bf46e5b6d075b78857f5c2",
+                "opPersonCh":"wyx2",
+                "opEnterpriseCh":"wyx",
+                "requestParams":"{}",
+                "tails":{
+                }
+                },
+                {
+             "logId":"47b2af0f44e1457b91f8ee94f9463fbe",
+            "opType":3,
+            "opDec":"分页查询系统组织",
+            "isSuccess":"成功",
+            "errorMsg":null,
+            "loginIp":"192.168.161.1",
+            "opDate":1557656642000,
+            "opPerson":"2765f2a7eb384766bac6468ebe11b8e1",
+            "opEnterprise":"54f5033105bf46e5b6d075b78857f5c2",
+            "opPersonCh":"wyx2",
+            "opEnterpriseCh":"wyx",
+            "requestParams":"{soPidAll=0aee44366e5247ba833b33e3ca6f1352, limit=20, seId=, soName=, page=1}",
+            "tails":{
+            }
+                },
+                {
+             "logId":"f14a8fe88f7c4b0ea75c5704309535b0",
+            "opType":3,
+            "opDec":"查询水印信息",
+            "isSuccess":"成功",
+            "errorMsg":null,
+            "loginIp":"192.168.0.195",
+            "opDate":1557656640000,
+            "opPerson":"bcc5572564704e8f83700b160bc8609b",
+            "opEnterprise":"e80a1e8b42d64045b60265e9c5637d6e",
+            "opPersonCh":"王荣生",
+            "opEnterpriseCh":"中国XXX有限公司 ",
+            "requestParams":"{}",
+            "tails":{
+            }
+                },
+            ],
+            "count": 3
+        };
+        table.render({
+            elem: '#table1',
+            height:  'full-200',
+            // url: '/s',
+            data:tableData.data,
+            toolbar:'#tableToolBar',
+            cols: [
+                [
+                    {type:'checkbox'},
+                    {field: 'opType', title: '操作类型', sort: true},
+                    {field: 'opDec', title: '操作描述', width:120,sort:true},
+                    {field: 'isSuccess', title: '是否成功', width:120,sort:true},
+                    {field: 'loginIp', title: '登陆IP', width:120,sort:true},
+                    {field: 'opDate', title: '操作时间',  sort: true,templet:function (rowData) {
+                        return util.toDateString(rowData['opDate']);
+                    }},
+                    {field: 'opPersonCh', title: '操作用户名', width:120,sort:true},
+                    {field: 'opEnterpriseCh', title: '用户所属企业', width:120,sort:true},
+                    {field: '', title: '操作', width: 150, toolbar:'#tableOper',fixed: 'right'},
+                ]
+            ],
+            page: true,
+            done: function () {
+                common.buttonLimit();
+            }
+        });
+
+        //监听行工具事件
+        table.on('tool(test)', function(obj){
+            var data = obj.data;
+            //console.log(obj)
+            if(obj.event === 'del'){
+                layer.confirm('真的删除行么', function(index){
+                    obj.del();
+                    layer.close(index);
+                });
+            } else if(obj.event === 'edit'){
+                layer.prompt({
+                    formType: 2
+                    ,value: data.email
+                }, function(value, index){
+                    obj.update({
+                        email: value
+                    });
+                    layer.close(index);
+                });
+            }
+        });
+
+        $('#dataInit-btn').click(function(){
+            layer.confirm('你确定要初始化?', function(index){
+                layer.close(index);
+                 layer.msg("已初始化");
+            });
+        })
+
+    });
+
+</script>
+
+<!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

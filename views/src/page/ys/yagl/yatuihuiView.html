@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html  class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>议案列表-退回信息查看</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../../js/layui/css/layui.css"/>
+    <link href="../../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../../js/lib/jquery.1.12.3.js"></script>
+    <style>
+        .hytitle{
+            font-size: 14px;
+        }
+        .hylabel{
+            border: 1px solid transparent!important;
+            background: transparent!important;
+        }
+        .hyinput{
+            border: 1px solid transparent!important;
+            border-bottom-color: red!important;
+        }
+
+        .layui-unselect {
+            border-color: #f56c6c;
+            border-top-style: none;
+            border-right-style: none;
+            border-left-style: none;
+        }
+        .layui-form-select .layui-edge{
+            border-top-color: #f56c6c;
+        }
+        body{
+            background:#f8f8f8;
+        }
+        .load-btn,.check-btn,.right-btn{
+            position: absolute;
+            top:0;
+            right:0;
+            border-radius: 3px;
+        }
+        .right70{
+            right:70px;
+        }
+        .relative{
+            position: relative;
+        }
+        .padRt64{
+            padding-right: 64px;
+        }
+        li{
+            cursor: pointer;
+        }
+        .zsBga{
+            color:purple;
+            vertical-align: 1px;
+            opacity: 0.5;
+        }
+        .eleTree.ele5,
+        .eleTree.ele6{
+            height: auto;
+            width: 100%;
+            display: none;
+            position: absolute;
+            top:100%;
+            background-color: #fff;
+            z-index: 100;
+            border: 1px solid #ccc;
+        }
+        /* 去除弹窗侧面张开按钮 */
+        a.layui-layer-ico.layui-layer-max{
+            display: none;
+        }
+        a.layui-layer-ico.layui-layer-max.layui-layer-maxmin{
+            display:inline-block!important;
+        }
+    </style>
+    <style>
+        .layui-card-header-custom{
+            border-bottom: 1px dashed #e6e6e6;
+        }
+    </style>
+
+</head>
+<body class="iframe-h">
+
+<div class="content-wrap">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+             <!-- 议案信息 -->
+            <div class="layui-card">
+                <div class="layui-card-body">
+                    <form class="layui-form layui-form-pane" name="motionaLayer" lay-filter="motionaForm">
+                        <input type="hidden" name="motionId">
+                        <div class="layui-card">
+                            <div class="layui-card-header layui-card-header-custom">
+                                <span>
+                                    <i></i>议案信息
+                                </span>
+                            </div>
+                            <div class="layui-card-body">
+                                <div class="layui-row layui-col-space15">
+                                    <div class="layui-col-xs12">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label hylabel"><b class="red">*</b>议案名称:</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="motionName" lay-verify="required" placeholder="请输入"
+                                                    autocomplete="off"
+                                                    class="layui-input hyinput"
+                                                    value="关于XXX议案">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-row layui-col-space15">
+                                    <div class="layui-col-xs6">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label hylabel"><b class="red">*</b>提出部门:</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="soName" required="" lay-verify="required"
+                                                    placeholder="请选择" readonly="" autocomplete="off"
+                                                    class="layui-input hyinput" value="办公厅">
+                                                <!-- <div class="eleTree ele5" lay-filter="data5"></div> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="soId">
+                                    <div class="layui-col-xs6">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label hylabel"><b class="red">*</b>议案类别:</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="motionTypeName" required="" lay-verify="required"
+                                                        placeholder="请选择" readonly="" autocomplete="off"
+                                                        class="layui-input hyinput" value="公司治理-公司章程">
+                                                <!-- <div class="eleTree ele6" lay-filter="data6"></div> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="motionType">
+                                </div>
+                                <div class="layui-row layui-col-space15">
+                                    <div class="layui-col-xs6">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label hylabel"><b class="red">*</b>上会类型:</label>
+                                            <div class="layui-input-block">
+                                                <!-- <select name="" id="">
+                                                    <option value="">请选择</option>
+                                                    <option value="1">党委会</option>
+                                                    <option value="2">总经理办公会</option>
+                                                    <option value="3">董事会</option>
+                                                    <option value="4">其他会议</option>
+                                                </select> -->
+                                                <input type="text" name="motionTypeName" required="" lay-verify="required"
+                                                        placeholder="请选择" readonly="" autocomplete="off"
+                                                        class="layui-input hyinput" value="董事会">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-col-xs6">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label hylabel"><b class="red">*</b>审议类型:</label>
+                                            <div class="layui-input-block">
+                                                <!-- <select name="" id="">
+                                                    <option value="">请选择</option>
+                                                    <option value="1">决策类</option>
+                                                    <option value="2">讨论类</option>
+                                                    <option value="3">通知类</option>
+                                                </select> -->
+                                                <input type="text" name="motionTypeName" required="" lay-verify="required"
+                                                placeholder="请选择" readonly autocomplete="off"
+                                                class="layui-input hyinput" value="决策类" >
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-row layui-col-space15">
+                                    <div class="layui-col-xs6">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label hylabel"><b class="red">*</b>创建日期:</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="motionCreateTime" class="layui-input hyinput" id="cjsj"
+                                                        lay-verify="required" placeholder="请选择" value="2018-10-14" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-col-xs6">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label hylabel" style="width:150px;"><b class="red">*</b>三重一大:</label>
+                                            <div class="layui-input-block">
+                                                <input type="radio" name="tiolFlag" value="0" lay-filter="tiolFlag" title="否"
+                                                        checked readonly>
+                                                <input readonly type="radio" name="tiolFlag" value="1" lay-filter="tiolFlag" title="是">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-row layui-col-space15">
+                                    <div class="layui-col-xs12">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label hylabel">主要内容:</label>
+                                            <div class="layui-input-block">
+                                                <textarea placeholder="建议200个字,最长仅支持2000字" name="motionContemt"
+                                                        class="layui-textarea hyinput" readonly></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-col-xs12" style="display: none">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label hylabel" style="width:150px;"><b class="red">*</b>需报上级单位:</label>
+                                            <!--                                    <div class="layui-input-block" style="margin-left:150px;">-->
+                                            <!--                                        <select name="reportSuperior" id="reportSuperior" class="hyinput" lay-verify="required">-->
+                                            <!--                                        </select>-->
+                                            <!--                                    </div>-->
+                                            <div class="layui-input-block">
+                                                <input type="radio" name="reportSuperior" value="0" lay-verify="reportSuperior"
+                                                    title="否" checked>
+                                                <input type="radio" name="reportSuperior" value="1" lay-verify="reportSuperior"
+                                                    title="是">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+             <!-- 退回情况 -->
+            <div class="layui-card">
+                <div class="layui-card-body">
+                    <form class="layui-form layui-form-pane" name="motionaLayer" lay-filter="motionaForm">
+                        <input type="hidden" name="motionId">
+                        <div class="layui-card">
+                            <div class="layui-card-header layui-card-header-custom">
+                                <span>
+                                    <i></i>退回情况
+                                </span>
+                            </div>
+                            <div class="layui-card-body">
+                                <div class="layui-row layui-col-space15">
+                                            <div class="layui-col-md6">
+                                                <div class="layui-form-item">
+                                                    <label class="layui-form-label hylabel"><b class="red">*</b>退回操作单位</label>
+                                                    <div class="layui-input-block">
+                                                        <input autocomplete="off" class="layui-input hyinput" name="entName"
+                                                               placeholder="请输入" type="text" value="关于XXXX公司" readonly
+                                                        >
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="layui-col-md6">
+                                                <div class="layui-form-item">
+                                                    <label class="layui-form-label hylabel"><b class="red">*</b>退回操作部门</label>
+                                                    <div class="layui-input-block">
+                                                        <input autocomplete="off" class="layui-input hyinput" name="entCode"
+                                                               placeholder="事项编码自动生成" type="text" readonly value="XXX部门"
+                                                        >
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="layui-col-md6">
+                                                <div class="layui-form-item">
+                                                    <label class="layui-form-label hylabel"><b class="red">*</b>退回操作人</label>
+                                                    <div class="layui-input-block">
+                                                        <input autocomplete="off" class="layui-input hyinput" name="scperson"
+                                                                placeholder="请输入" type="text" value="张某" readonly
+                                                        >
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="layui-col-md6">
+                                                <div class="layui-form-item">
+                                                    <label class="layui-form-label hylabel"><b class="red">*</b>退回时间</label>
+                                                    <div class="layui-input-block">
+                                                        <input autocomplete="off" class="layui-input hyinput" name="sctime"
+                                                                placeholder="请输入" readonly type="text" value="2019-01-01 11:11:11"
+                                                        >
+                                                    </div>
+                                                </div>
+                                            </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="position: fixed;width: 100%;bottom: 12px;">
+    <div class="layui-card" style="margin-top: 10px">
+        <div class="layui-card-body">
+            <div class="layui-form-item" style="text-align: center;">
+                <button class="layui-btn layui-btn-sm layui-btn-primary" id="closeBtn">
+                    <i class="icon iconfont icon-button-cha-2"></i><i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="./../../../js/layui/layui.js"></script>
+<script>
+
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).use(['eleTree','layer','table','form','laytpl','common','element','laydate','upload'],function () {
+        var table=layui.table;
+        var form=layui.form;
+        var tree=layui.eleTree;
+        var common=layui.common;
+        var element = layui.element;
+        var laydate = layui.laydate;
+        var upload = layui.upload;
+        element.init();
+        var baseUrl='../../../../';
+        common.themeSet();
+        //按钮权限
+        common.buttonLimit($("#currentMenuSmId",window.parent.document).val(),function (res) {
+            //输入所有可操作的按钮集合
+            var list=res['list']?res['list']:[];
+
+        });
+        $('#closeBtn').off('click').on('click',function(){//关闭当前页面
+            parent.layer.closeAll();
+        });
+    });
+
+</script>
+
+<!--[if lt IE 9]>
+
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>元数据管理</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../js/layui/css/layui.css"/>
+    <link href="../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script src="../../js/common/plugin.js"></script>
+</head>
+
+<!-- 新增/编辑组件弹窗 -->
+<div class="dsLayer hide">
+    <div>
+        <form class="layui-form layui-form-pane" lay-filter="addForm">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md4">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><b class="red">*</b>名称</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="szMc" placeholder="请输入" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md4">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><b class="red">*</b>编码</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="szBm" placeholder="请输入" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md4">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><b class="red">*</b>是否人工填报</label>
+                            <div class="layui-input-block">
+                                <select name="szSftb">
+                                    <option value="1">是</option>
+                                    <option value="0">否</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md4">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><b class="red">*</b>是否必填</label>
+                            <div class="layui-input-block">
+                                <select name="szSfbt">
+                                    <option value="1">是</option>
+                                    <option value="0">否</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md4">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><b class="red">*</b>是否列展示</label>
+                            <div class="layui-input-block">
+                                <select name="szSflzs">
+                                    <option value="1">是</option>
+                                    <option value="0">否</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md4">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><b class="red">*</b>是否查询条件</label>
+                            <div class="layui-input-block">
+                                <select name="szSfcxtj">
+                                    <option value="1">是</option>
+                                    <option value="0">否</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md4">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><b class="red">*</b>是否模糊查询</label>
+                            <div class="layui-input-block">
+                                <select name="szSfmhsx">
+                                    <option value="1">是</option>
+                                    <option value="0">否</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md4">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><b class="red">*</b>组件类型</label>
+                            <div class="layui-input-block">
+                                <select name="szZjlx">
+                                    <option value="0">下拉框</option>
+                                    <option value="1">时间框(年月日时分秒)</option>
+                                    <option value="2">时间框(年月日)</option>
+                                    <option value="3">隐藏域</option>
+                                    <option value="4">文本域</option>
+                                    <option value="5">整型数字框</option>
+                                    <option value="6">输入框</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md4">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">下拉框编码</label>
+                            <div class="layui-input-block">
+                                <select name="szXlkbm" disabled placeholder="请选择下拉框编码">
+                                    <!-- <option value="1">是</option>
+                                    <option value="0">否</option> -->
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-col-space15">
+                        <div class="layui-col-md4">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">正则表达式</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="szZzbds" placeholder="输入正则表达式" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-md4">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">错误提示信息</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="szCwtsxx" placeholder="输入错误提示信息" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-md4">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label"><b class="red">*</b>字段类型</label>
+                                <div class="layui-input-block">
+                                    <select name="szZdlx">
+                                        <option value="0">varchar2</option>
+                                        <option value="1">integer</option>
+                                        <option value="2">long</option>
+                                        <option value="3">date</option>
+                                        <option value="4">blob</option>
+                                        <option value="5">clob</option>
+                                        <option value="6">char</option>
+                                        <!-- <option value="0">string</option> -->
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+                <div class="layui-row layui-col-space15">
+                        <div class="layui-col-md4">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">字段长度</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="szZdcd" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-md4">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">字段小数长度</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="szZdxscd"  autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-md4">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">字段所属库</label>
+                                <div class="layui-input-block">
+                                    <select name="szZdssk">
+                                        <option value="0">前置库专用字段</option>
+                                        <option value="1">通用业务字段</option>
+                                        <option value="2">标准库专用字段</option>
+                                        <option value="3">业务库专用字段</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            <div class="layui-form-item adapt">
+                <div class="layui-input-block">
+                    <button class="layui-btn " lay-submit lay-filter="formSavue"><i class="fa fa-check-circle"></i>确定</button>
+                    <button class="layui-btn layui-btn-primary" id="formClose"><i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="copyHeadLayer hide">
+    <div style="padding: 15px 20px">
+        <form class="layui-form layui-form-pane">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"><b class="red">*</b>表名称</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="copyTableName" name="copyTableName" required lay-verify="required" placeholder="请输入"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"><b class="red">*</b>表编码</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="copyTableCode" name="copyTableCode" required lay-verify="required" placeholder="请输入"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item adapt">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="copyFormSubmit"> <i class="layui-icon">&#x1005;</i>保存</button>
+                    <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="catalogueLayer hide">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+            <!-- layui tree-->
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>目录分类树</span><div class="columnSide"><i class="fa fa-toggle-left"></i></div></div>
+                <div class="layui-card-body">
+                    <div class="layuiTree eleTree ele4" id="categoryTree" lay-filter="categoryTree"></div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
+            <div class="layui-collapse white-bg">
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title white-bg">查询条件</h2>
+                    <div class="layui-colla-content">
+                        <form class="layui-form layui-form-pane">
+                            <div class="layui-row layui-col-space10">
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">名称</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="qCiName" placeholder="请输入" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="formSearch-btnArea">
+                                <div class="layui-input-block">
+                                    <button class="layui-btn" lay-submit lay-filter="formSearchCatalogue"><i class="fa fa-search"></i>查询</button>
+                                    <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-card" style="margin-top: 10px">
+                <div class="layui-card-body">
+                    <table id="catalogueTable" lay-filter="catalogueTable"></table>
+                </div>
+            </div>
+            <script type="text/html" id="catalogueTableToolBar">
+                <div class="layui-btn-container">
+                    <button class="layui-btn layui-btn-sm" lay-event="bindCatalogue">绑定</button>
+                </div>
+            </script>
+        </div>
+    </div>
+</div>
+<body class="iframe-h">
+<div class="content-wrap">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+            <!-- layui tree-->
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>数据资源树</span><div class="columnSide"><i class="fa fa-toggle-left"></i></div></div>
+                <div class="layui-card-body">
+                    <ul id="leftTree" lay-filter="leftTree" class="eleTree">
+                        <li>
+                            <i class="fa fa-bar-chart"></i>
+                            dataSouce
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>数据资源树</span></div>
+                <div class="layui-card-body">
+                    <form class="layui-form layui-form-pane">
+                        <div class="layui-row layui-col-space10">
+                            <div class="layui-col-md4">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">表名称</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="qchTableName" placeholder="请输入" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md4">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">表编码</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="qchTableCode" placeholder="请输入" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md4">
+                                <button class="layui-btn" lay-submit lay-filter="formSearch"><i class="fa fa-search"></i>查询</button>
+                                <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+            <div class="layui-card" >
+                <div class="layui-card-body" style="padding-top: 0">
+                    <table id="table1" lay-filter="table1"></table>
+                    <script type="text/html" id="tableToolBar">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-sm" lay-event="init" permission-btn="initCatalogueHead">
+                             初始化表
+                            </button>
+                            <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete" permission-btn="deleteCatalogueHead">
+                                <i class="layui-icon">&#xe640;</i> 删除
+                            </button>
+                            <!-- <button class="layui-btn layui-btn-sm" lay-event="refresh">
+                                <i class="layui-icon ">&#xe669;</i> 更新缓存
+                            </button> -->
+                        </div>
+                    </script>
+                    <script type="text/html" id="tableOper">
+                        <a class="layui-btn layui-btn-xs" lay-event="edit" permission-btn="toEditCatalogueHead">
+                            <i class="layui-icon layui-icon-edit"></i> 编辑
+                        </a>
+                        <a class="layui-btn layui-btn-xs" lay-event="bind" permission-btn="bindCatalogue">
+                            <i class="layui-icon layui-icon-link"></i> 绑定
+                        </a>
+                        <a class="layui-btn layui-btn-xs" lay-event="generateTable" permission-btn="generateTableBtn">
+                            <i class="layui-icon layui-icon-table"></i>生成表
+                        </a>
+                        <a class="layui-btn layui-btn-xs" lay-event="copyHead" permission-btn="copyCatalogueHead">
+                            <i class="layui-icon layui-icon-theme"></i> 复制
+                        </a>
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="./../../js/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).extend({
+    }).use(['layer','table','form','laytpl','common','element','eleTree',],function () {
+        var table=layui.table;
+        var form=layui.form;
+        var common=layui.common;
+        var element = layui.element;
+        var tree = layui.eleTree;
+        element.init();
+        var baseUrl='../../../';
+
+        common.themeSet();
+        var currentMenuSmId = $("#currentMenuSmId", window.parent.document).val();
+
+        var eleTreeId;
+        var curDsId = null;
+        head = null;
+        var eventHandle = {
+            treeInit:function () {
+                formatTree($("#leftTree"));
+                var treeData = [{"id":"-1", "name":"DataSource", "type":"root", "label":"DataSource", disabled: true}];
+                eleTreeId = tree.render({
+                    elem: '#leftTree',
+                    data: treeData,
+                    lazy: true,
+                    highlightCurrent: true,
+                    showCheckbox: true,
+                    load: function(data, callback) {
+                        if(data.type == 'root'){
+                            common.fetchPost('sysmgr/datasource/validDataSource/', {}, function (res) {
+                                if(res.success && res.list){
+                                    var myArray = [];
+                                    for ( var i = 0; i <res.list.length; i++){
+                                        myArray.push({"id":res.list[i].dsId, "type":"dataSource", "name":res.list[i].dsName, "label":res.list[i].dsName, disabled: true});
+                                    }
+                                    callback(myArray);
+                                }
+                            }, function(res){
+                                callback([]);
+                            });
+                        }
+                        else if(data.type == 'dataSource'){
+                            common.fetchGet('sysmgr/catalogueTable/selectTableOfDataSource?dsId='+data.id, function (res) {
+                                if(res.success && res.list){
+                                    var myArray = [];
+                                    for ( var i = 0; i <res.list.length; i++){
+                                        myArray.push({"id":res.list[i].tablename, "isLeaf":"1", "type":"table", "extendAttr":data.id, "name":res.list[i].tablename, "label":res.list[i].tablename});
+                                    }
+                                    callback(myArray);
+                                }
+                                //data.name = data.name+" ...连接成功";
+                                //eleTreeId.updateKeySelf(data.id, data);
+                                $("#leftTree").find("[data-id='"+data.id+"']").children("div.eleTree-node-content").children("span.eleTree-node-content-label").css("color","green");
+                            }, function(res){
+                                if(res.resultCode=='CONNECT_DATASOURCE_ERROR'){
+                                    //data.name = data.name+" ...连接失败";
+                                    //eleTreeId.updateKeySelf(data.id, data);
+                                    $("#leftTree").find("[data-id='"+data.id+"']").children("div.eleTree-node-content").children("span.eleTree-node-content-label").css("color","red");
+                                }
+                                callback([]);
+                            });
+                        }
+                    }
+                });
+                tree.on("nodeClick(leftTree)", function(obj) {
+                    if(obj.data.currentData.type == 'root'){
+                        curDsId = null;
+                        eventHandle.tableReload({"dsId":curDsId});
+                    }
+                    else if(obj.data.currentData.type == 'dataSource'){
+                        curDsId = obj.data.currentData.id;
+                        eventHandle.tableReload({"dsId":curDsId});
+                    }
+                });
+            },
+
+            tableInit: function(){
+                table.render(common.tableInitParams({
+                elem: '#table1',
+                height:  'full-200',
+                url: baseUrl+'sysmgr/catalogueTable/pageQueryCatalogueTable',
+                toolbar:'#tableToolBar',
+                where: {"showBindInfo":"1", "showGenerateInfo":"1"},
+                cols: [
+                    [
+                        {type:'checkbox'},
+                        {"type":"numbers", "title":"序号"},
+                        {field: 'chTableName', title: '表名称', sort: true},
+                        {field: 'chTableCode', title: '表编码',sort:true},
+                        {field: 'tails', title: '是否已绑定目录',sort:true,
+                            templet: function(rowData) {
+                                return '<span>'+(rowData['tails']['catalogueBind'] == 1?'是':'否')+'</span>'
+                            }
+                        },
+                        {field: 'tails', title: '是否生成表', sort: true,
+                            templet: function(rowData) {
+                                    return '<span>'+(rowData['tails']['tableGenerated']== -1?'无法连接数据源':(rowData['tails']['tableGenerated']== 1?'是':'否'))+'</span>'
+                            }
+                        },
+                        /*{field: 'ggCreateDatetime', title: '创建时间', sort: true},*/
+                        {field: '', title: '操作', width:'33%', toolbar:'#tableOper',fixed: 'right'},
+                    ]
+                ],
+                done: function(){
+                    common.buttonLimit(currentMenuSmId);
+                },
+                page:true
+            }));
+
+            //table监听事件
+                table.on('toolbar(table1)',function (obj) {
+                var checkStatus = table.checkStatus(obj.config.id);
+                switch(obj.event) {
+                    case 'delete':
+                        //点击删除按钮
+                        if (checkStatus.data.length > 0) {
+                            layer.confirm('确定删除选中列?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                                var tIdArr = [];
+                                for (var i = 0; i < checkStatus.data.length; i++) {
+                                    tIdArr.push(checkStatus.data[i]['chId'])
+                                }
+                                var layerLoader = common.layerLoader();
+                                common.fetchDelete('sysmgr/catalogueTable/deleteCatalogueHead?ids=' + tIdArr.join(','),function (res) {
+                                    layer.close(layerLoader);
+                                    if(res.success){
+                                        eventHandle.tableReload();
+                                    }
+                                }, function (res) {
+                                    layer.close(layerLoader);
+                                    layer.alert(res.resultMessage);
+                                });
+                                layer.close(index);
+                            });
+                        } else {
+                            layer.msg('请选择删除列')
+                        }
+                        break;
+                    case 'init':
+                        var selectAllDate = eleTreeId.getChecked(true, false);
+                        if(selectAllDate.length == 0){
+                            layer.msg('请选择表');
+                            return;
+                        }
+                        else{
+                            var selectedArray = [];
+                            for (var i = 0; i < selectAllDate.length; i++) {
+                                selectedArray.push({chTableCode:selectAllDate[i].id, dsId:selectAllDate[i].extendAttr});
+                            }
+                            var layerLoader =common.layerLoader();
+                            common.fetchPost("sysmgr/catalogueTable/generateHead", selectedArray ,function (data) {
+                                layer.close(layerLoader);
+                                eventHandle.tableReload();
+                                layer.msg('初始化表成功');
+                            },function (data) {
+                                layer.close(layerLoader);
+                                layer.msg(data.resultMessage);
+                            });
+                        }
+                        break;
+                }
+            });
+
+            // table row 监听事件
+                table.on('tool(table1)', function(obj){
+                var data = obj.data;
+                    head = data;
+                switch(obj.event){
+                    case 'edit'://编辑
+                        var index_edit=layer.open({
+                            //offset: '10px',
+                            title:'编辑数据资源信息',
+                            maxmin: false,
+                            type: 2,//页面层
+                            area: ['100%', '100%'],//高度自适应
+                            shadeClose: false,
+                            content: baseUrl+'src/page/dataRsManage/dataInitEdit.html',//加载该区域的html
+                        });
+                        break;
+                    case 'bind'://绑定
+                        var catalogueIndex = layer.open({
+                            //offset: '10px',
+                            title: '绑定目录信息',
+                            maxmin: false,
+                            type: 1,//页面层
+                            area: ['100%', '100%'],//高度自适应
+                            shadeClose: false,
+                            content: $('.catalogueLayer').html(),//加载该区域的html
+                            success: function (obj) {
+                                element.init();
+                                var catalogueLayerCategoryTreeId;
+                                var catalogueLayerEventHandler = {
+                                    treeInit:function () {
+                                        formatTree($(obj.selector).find('#categoryTree'));
+                                        common.fetchGet('sysmgr/contentCatagory/contentCategoryTree',function (res) {
+                                            //树信息的导入
+                                            if(res.success && res.list){
+                                                catalogueLayerCategoryTreeId = tree.render({
+                                                    elem: $(obj.selector).find('#categoryTree'),
+                                                    data: res.list,
+                                                    showCheckbox: false,
+                                                    lazy: true,
+                                                    highlightCurrent: true,
+                                                    load: function(data, callback) {
+                                                        common.fetchGet('sysmgr/contentCatagory/contentCategoryTree?pid=' + data.id, function (res) {
+                                                            if (res.success && res.list) {
+                                                                callback(res.list)
+                                                            }
+                                                        }, function () {
+                                                            callback([])
+                                                        });
+                                                    }
+                                                });
+                                                tree.on("nodeClick(categoryTree)",function(obj) {
+                                                    catalogueLayerEventHandler.tableReload({ccId:obj.data.currentData.id});
+                                                });
+                                            }else{
+                                                //不存在数据时的显示
+
+                                            }
+
+                                        },function () {});
+                                    },
+                                    treeReload:function () {
+                                        common.fetchGet('sysmgr/contentCatagory/contentCategoryTree',function (res) {
+                                            if(res.success && res.list){
+                                                catalogueLayerCategoryTreeId.reload({data:res.list});
+                                            }
+                                        });
+                                    },
+                                    tableReload:function(params) {
+                                        if(!params) params={};
+                                        table.reload('catalogueTable',{
+                                            url: baseUrl+'sysmgr/catalogue/pageQueryUnbindHeadCatalogue',
+                                            method:'post',
+                                            contentType:'application/json',
+                                            page:{
+                                                curr:1
+                                            },
+                                            where:params
+                                        });
+                                    },
+                                    formInit: function(){
+                                        form.on('submit(formSearchCatalogue)',function (obj) {
+                                            //表格重载
+                                            catalogueLayerEventHandler.tableReload({ciName:obj.field.qCiName});
+                                            return false;
+                                        });
+                                    }
+                                }
+
+                                catalogueLayerEventHandler.treeInit();
+                                catalogueLayerEventHandler.formInit();
+
+                                table.render(common.tableInitParams({
+                                    elem: $(obj.selector).find('#catalogueTable'),
+                                    url: baseUrl+'sysmgr/catalogue/pageQueryUnbindHeadCatalogue',
+                                    toolbar:'#catalogueTableToolBar',
+                                    method: "post",
+                                    cols: [
+                                        [
+                                            {type: 'checkbox'},
+                                            {field: 'ciName', title: '目录名称'},
+                                            {field: 'ciCode', title: '目录编码'}
+                                        ]
+                                    ],
+                                    done:function (res) {
+                                    }
+                                }));
+                                table.on('toolbar(catalogueTable)',function (obj) {
+                                    var checkStatus = table.checkStatus(obj.config.id);
+                                    switch(obj.event) {
+                                        case 'bindCatalogue':
+                                            if(checkStatus.data.length==0){
+                                                layer.msg('请选择要绑定的目录');
+                                            }
+                                            else{
+                                                layer.confirm('确定绑定选中目录?', {icon: 3, title:'提示',offset: '150px'}, function(index){
+                                                    layer.close(index);
+                                                    var selectedArray = [];
+                                                    for(var j = 0,len = checkStatus.data.length; j < len; j++){
+                                                        selectedArray.push({ciId:checkStatus.data[j].ciId});
+                                                    }
+                                                    var layerLoader =common.layerLoader();
+                                                    common.fetchPost("sysmgr/catalogueTable/bindCatalogue?headId="+data.chId, selectedArray ,function (data) {
+                                                        layer.close(layerLoader);
+                                                        layer.close(catalogueIndex);
+                                                        eventHandle.tableReload();
+                                                        layer.msg('绑定成功');
+                                                    },function (data) {
+                                                        layer.close(layerLoader);
+                                                        layer.msg(data.resultMessage);
+                                                    });
+
+                                                });
+                                            }
+                                            break;
+                                    }
+                                });
+                            }
+                        });
+                        break;
+                    case 'generateTable'://生成表
+                        if(data.tails.tableGenerated){
+                            layer.msg('表已生成');
+                            return;
+                        }
+                        var layerLoader =common.layerLoader();
+                        common.fetchGet('sysmgr/catalogueTable/generateTable?tableId='+data.chId, function (data) {
+                            layer.close(layerLoader);
+                            eventHandle.tableReload();
+                            layer.msg('操作成功');
+                        }, function (data) {
+                            layer.close(layerLoader);
+                            layer.msg(data.resultMessage);//失败后提示
+                        });
+                        break;
+                    case 'copyHead'://复制
+                        var pIndex = layer.open({
+                            offset: '10px',
+                            title: '生成表属性',
+                            maxmin: false,
+                            type: 1,//页面层
+                            area: ['80%', '30%'],//高度自适应
+                            shadeClose: false,
+                            content: $('.copyHeadLayer').html(),//加载该区域的html
+                            success: function (obj) {
+                                form.on('submit(copyFormSubmit)',function (obj) {
+                                    var loadingIndex = layer.load();
+                                    common.fetchGet('sysmgr/catalogueTable/copyCatalogueHead?headId='+ data.chId+"&headName="+obj.field.copyTableName+"&headCode="+obj.field.copyTableCode, function (data) {
+                                        layer.close(loadingIndex);
+                                        layer.close(pIndex);
+                                        eventHandle.tableReload();
+                                        layer.msg('操作成功');
+                                    }, function (data) {
+                                        layer.close(loadingIndex);
+                                        layer.msg(data.resultMessage);
+                                    });
+                                    return false;
+                                });
+                                return false;
+                            }
+                        });
+                        break;
+                }
+               });
+            },
+            tableReload:function (params) {
+                if(!params) params={};
+                table.reload('table1',{
+                    url: baseUrl+'sysmgr/catalogueTable/pageQueryCatalogueTable',
+                    method:'post',
+                    contentType:'application/json',
+                    page:{
+                        curr:1
+                    },
+                    where:params
+                });
+                common.buttonLimit(currentMenuSmId);
+            },
+            formInit: function(){
+                form.on('submit(formSearch)',function (obj) {
+                    //表格重载
+                    eventHandle.tableReload({showBindInfo:1, showGenerateInfo:1, dsId:curDsId, chTableCode:obj.field.qchTableCode, chTableName:obj.field.qchTableName});
+                    return false;
+                });
+            }
+        };
+         //初始化树
+        eventHandle.treeInit();
+        //初始表格
+        eventHandle.tableInit();
+        //初始化查询表单
+        eventHandle.formInit();
+
+        common.buttonLimit(currentMenuSmId);
+
+        function formatTree(obj){
+            var cacluHeight = $(document).height() - $("#mainMenuTab").height() - $(".layui-card-header").height() - 77;
+            $(obj).css({
+                "height": cacluHeight + "px",
+                "overflow-y": "auto"
+            });
+        }
+    });
+</script>
+<!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

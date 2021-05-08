@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>添加接口</title>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link href="../../js/layui/css/layui.css" rel="stylesheet"/>
+    <link href="../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script charset="utf-8" src="../../js/common/plugin.js"></script>
+</head>
+
+<body class="iframe-h">
+
+
+<div class="methodTmp" style="display: none">
+    <div class="padding-10">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs6">
+                <div class="globalTip">
+                    <i class="fa fa-info-circle"></i>
+                    <span>点击目录分类列表 选择对应目录列表</span>
+                </div>
+
+                <div class="dataBaseTreeLoad"
+                     style="width: 100%;text-align: center;margin-top: 120px;position: absolute">
+                    <i class="fa fa-spinner fa-pulse"></i>
+                </div>
+
+                <div class="layui-row layui-col-space10">
+                    <div class="layui-col-xs6 baseTreeBox">
+                        <div class="custom-title">目录分类列表</div>
+                        <div class="eleTree ele4" id="menuTypeTree" lay-filter="menuTypeTree"
+                             style="overflow: auto; padding-bottom: 20px"></div>
+                    </div>
+                    <div class="layui-col-xs6 baseTreeBox">
+                        <div class="custom-title">目录信息</div>
+                        <div class="eleTree ele4" id="menuListTree" lay-filter="menuListTree"
+                             style="overflow: auto; padding-bottom: 20px"></div>
+                    </div>
+                </div>
+
+
+                <div class="menuTipArea">
+                    <span>目录分类：</span>
+                    <span class="menu1" style="padding-right: 20px">无</span>
+                    <span>对应绑定目录：</span>
+                    <span class="menu2">无</span>
+                </div>
+            </div>
+            <div class="layui-col-xs6">
+                <div class="tableTip" style="left: 30px"><i class="fa fa-info-circle"></i>点击单选框选中公用方法接口</div>
+                <table id="methodTmp" lay-filter="methodTmp"></table>
+            </div>
+        </div>
+        <div class="" style="text-align: center;padding: 10px;margin-top: 30px">
+            <button class=" layui-btn" id="savePublicMethod" style="width: 200px"><i class="fa fa-check-circle"></i>确定</button>
+        </div>
+    </div>
+</div>
+
+<div class="content-wrap">
+    <input id="editData" type="hidden">
+    <!--<div class="backHead">
+        <div class="backArea">
+            <i class="fa fa-mail-reply"></i>
+            <span>放回接口管理列表</span>
+        </div>
+        <div class="otherArea">
+            <button class="layui-btn" id="saveBtn"> <i class="layui-icon">&#x1005;</i>保存</button>
+        </div>
+    </div>-->
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs12">
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>基础信息</span></div>
+                <div class="layui-card-body">
+                    <div action="" class="layui-form layui-form-pane">
+                        <div class="layui-row layui-col-space10">
+                            <div class="layui-col-md4">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">接口名称</label>
+                                    <div class="layui-input-block">
+                                        <input autocomplete="off" class="layui-input"
+                                               name="portName" placeholder="请输入名称" type="text">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md4">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">接口版本</label>
+                                    <div class="layui-input-block">
+                                        <input autocomplete="off" class="layui-input"
+                                               name="portVer" placeholder="请输入版本" type="text">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md4">
+                                <div class="layui-form-item" style="position: relative">
+                                    <label class="layui-form-label">接口图标</label>
+                                    <div class="layui-input-block">
+                                        <input autocomplete="off" class="layui-input" id="icon123" name="smIcon"
+                                               placeholder="请点击选择" style="padding-right: 50px;" type="text">
+                                        <span class="icon-btn" id="icon-choose"><i class="layui-icon layui-icon-more"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md8">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label"><b class="red">*</b>公共方法导入</label>
+                                    <div class="layui-input-block">
+                                        <input autocomplete="off" class="layui-input" lay-verify="required"
+                                               name="methodName" placeholder="请选择" readonly required type="text">
+                                        <span class="icon-btn" id="port-choose"><i class="layui-icon layui-icon-more"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md4">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">返回格式</label>
+                                    <div class="layui-input-block">
+                                        <select name="returnType">
+                                            <option value="JSON">JSON</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-space10">
+                                <input name="infoJmtId" type="hidden">
+                                <input name="paramId" type="hidden">
+                                <input name="intfInfoId" type="hidden">
+                                <div class="layui-col-md12">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">接口地址</label>
+                                        <div class="layui-input-block">
+                                            <input class="layui-input" name="portUrl" readonly type="text">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">方法名</label>
+                                        <div class="layui-input-block">
+                                            <input class="layui-input" name="portMethod" readonly type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">返回类型</label>
+                                        <div class="layui-input-block">
+                                            <input class="layui-input" name="portType" readonly type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">返回参数名</label>
+                                        <div class="layui-input-block">
+                                            <input class="layui-input" name="jmtReturnparamname" readonly type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="layui-col-md3">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label ">本地接口URL：</label>
+                                    <div class="layui-input-block ">
+                                        <select name="intfMethod">
+                                            <option value="post">post</option>
+                                            <option value="get">get</option>
+                                            <option value="put">put</option>
+                                            <option value="delete">delete</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md9">
+                                <input class="layui-input" name="retireUrl" placeholder="本地完整URL，含http/https">
+                            </div>
+                            <div class="layui-col-md12">
+                                <div class="layui-form-item layui-form-text">
+                                    <label class="layui-form-label ">接口描述：</label>
+                                    <div class="layui-input-block ">
+                                        <textarea class="layui-textarea" name="portMemo"
+                                                  placeholder="请输入接口描述"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs12">
+            <div class="layui-card">
+                <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+                    <ul class="layui-tab-title">
+                        <li class="layui-this">Header参数</li>
+                        <li>请求参数</li>
+                        <li>自定义SQL</li>
+                    </ul>
+                    <div class="layui-tab-content">
+                        <div class="layui-tab-item layui-show">
+
+                            <form action="" class="layui-form" id="headerForm">
+                                <div class="layui-row layui-col-space15">
+                                    <div class="layui-col-xs3">
+                                        名称
+                                    </div>
+                                    <div class="layui-col-xs3">
+                                        参数值
+                                    </div>
+                                    <div class="layui-col-xs3">
+                                        描述
+                                    </div>
+                                </div>
+                                <div class="layui-row layui-col-space15">
+                                    <div class="layui-col-xs3">
+                                        <input class="layui-input header1" placeholder="Content-Type" type="text">
+                                    </div>
+                                    <div class="layui-col-xs3">
+                                        <input class="layui-input header2" placeholder="application/json" type="text">
+                                    </div>
+                                    <div class="layui-col-xs3">
+                                        <input class="layui-input header3" placeholder="描述" type="text">
+                                    </div>
+                                    <div class="layui-col-xs-3">
+                                        <i class="fa fa-plus-square formLineAdd add1"></i>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="layui-tab-item">
+                            <div class="layui-form">
+                                <input checked lay-filter="form-row" name="form-row" title="Form-data" type="radio"
+                                       value="form">
+                                <input lay-filter="form-row" name="form-row" title="Row" type="radio" value="row">
+                            </div>
+                            <div class="form-data-box">
+                                <div style="padding: 10px">
+                                    <form action="" class="layui-form" id="bodyForm">
+                                        <div class="layui-row layui-col-space15">
+                                            <div class="layui-col-xs5">
+                                                参数名
+                                            </div>
+                                            <div class="layui-col-xs5">
+                                                参数值
+                                            </div>
+                                        </div>
+                                        <div class="layui-row layui-col-space15">
+                                            <div class="layui-col-xs5">
+                                                <input class="layui-input body1" placeholder="参数名" type="text">
+                                            </div>
+                                            <div class="layui-col-xs5">
+                                                <input class="layui-input body2" placeholder="参数值" type="text">
+                                            </div>
+                                            <div class="layui-col-xs-2">
+                                                <i class="fa fa-plus-square formLineAdd add2"></i>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="row-box" style="width: 100%;padding: 10px 0;display: none">
+                                <textarea class="layui-textarea" name="bodyRow"></textarea>
+                            </div>
+                        </div>
+                        <div class="layui-tab-item">
+                            <textarea class="layui-textarea" cols="30" name="customSql" rows="10"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs12">
+            <div class="layui-card">
+                <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+                    <ul class="layui-tab-title">
+                        <li class="layui-this">状态码</li>
+                        <li>错误码</li>
+                    </ul>
+                    <div class="layui-tab-content">
+                        <div class="layui-tab-item layui-show">
+                            <form action="" class="layui-form" id="statusCode">
+                                <div class="layui-row layui-col-space15">
+                                    <div class="layui-col-xs5">
+                                        状态码
+                                    </div>
+                                    <div class="layui-col-xs5">
+                                        描述
+                                    </div>
+                                </div>
+                                <div class="layui-row layui-col-space15">
+                                    <div class="layui-col-xs5">
+                                        <input class="layui-input status1" placeholder="状态码" type="text">
+                                    </div>
+                                    <div class="layui-col-xs5">
+                                        <input class="layui-input status22" placeholder="描述" type="text">
+                                    </div>
+                                    <div class="layui-col-xs-2">
+                                        <i class="fa fa-plus-square formLineAdd add3"></i>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="layui-tab-item" style="margin: 0 auto">
+                            <form action="" class="layui-form" id="errorCode">
+                                <div class="layui-row layui-col-space15">
+                                    <div class="layui-col-xs5">
+                                        错误码
+                                    </div>
+                                    <div class="layui-col-xs5">
+                                        描述
+                                    </div>
+                                </div>
+                                <div class="layui-row layui-col-space15">
+                                    <div class="layui-col-xs5">
+                                        <input class="layui-input error1" placeholder="错误码" type="text">
+                                    </div>
+                                    <div class="layui-col-xs5">
+                                        <input class="layui-input error2" placeholder="描述" type="text">
+                                    </div>
+                                    <div class="layui-col-xs-2">
+                                        <i class="fa fa-plus-square formLineAdd add4"></i>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs12">
+            <div class="layui-card">
+                <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+                    <ul class="layui-tab-title">
+                        <li class="layui-this">成功示例</li>
+                        <li>失败示例</li>
+                    </ul>
+                    <div class="layui-tab-content">
+                        <div class="layui-tab-item layui-show">
+                            <textarea class="layui-textarea successSample" cols="30" name="successSample" rows="10"></textarea>
+                        </div>
+                        <div class="layui-tab-item" style="margin: 0 auto">
+                            <textarea class="layui-textarea failSample" cols="30" name="failSample" rows="10"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item ">
+            <div class="layui-input-block" style="text-align: center;margin: 0 auto">
+                <button class="layui-btn" id="saveBtn" lay-submit style="width: 200px"> <i class="layui-icon">&#x1005;</i>保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="./../../js/layui/layui.js"></script>
+<script src="./../../js/module/addPort.js"></script>
+
+<!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

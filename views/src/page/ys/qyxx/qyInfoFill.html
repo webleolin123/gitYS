@@ -1,0 +1,1433 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+
+<head>
+    <meta charset="UTF-8">
+    <title>企业信息-信息完善</title>
+    <meta content="webkit" name="renderer" />
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../../js/layui/css/layui.css" />
+    <link href="../../../css/public.css?v1.01" rel="stylesheet" />
+    <link href="../../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <script src="../../../js/lib/jquery.1.12.3.js"></script>
+    <style>
+        .hytitle {
+            font-size: 14px;
+        }
+
+        .hylabel {
+            border: 1px solid transparent !important;
+            background: transparent !important;
+        }
+
+        .hyinput {
+            border: 1px solid transparent !important;
+            border-bottom-color: red !important;
+        }
+
+        .layui-unselect , .layui-select-title .layui-input{
+            border-color: #f56c6c;
+            border-top-style: none;
+            border-right-style: none;
+            border-left-style: none;
+        }
+
+        .layui-form-select .layui-edge {
+            border-top-color: #f56c6c;
+        }
+
+        body {
+            background: #f8f8f8;
+        }
+
+        .load-btn,
+        .check-btn,
+        .right-btn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            border-radius: 3px;
+        }
+
+        .right70 {
+            right: 70px;
+        }
+
+        .relative {
+            position: relative;
+        }
+
+        .padRt64 {
+            padding-right: 64px;
+        }
+
+        li {
+            cursor: pointer;
+        }
+
+        .zsBga {
+            color: purple;
+            vertical-align: 1px;
+            opacity: 0.5;
+        }
+
+        .eleTree.ele5,
+        .eleTree.ele6 {
+            height: auto;
+            width: 100%;
+            display: none;
+            position: absolute;
+            top: 100%;
+            background-color: #fff;
+            z-index: 100;
+            border: 1px solid #ccc;
+        }
+
+        .layui-table-body {
+            margin: 0;
+        }
+
+        .layui-icon-ok {
+            position: relative !important;
+            top: -5px !important;
+        }
+
+        /* 去除弹窗侧面张开按钮 */
+        a.layui-layer-ico.layui-layer-max {
+            display: none;
+        }
+
+        a.layui-layer-ico.layui-layer-max.layui-layer-maxmin {
+            display: inline-block !important;
+        }
+    </style>
+    <style>
+        .layui-card-header-custom {
+            border-bottom: 1px dashed #e6e6e6;
+        }
+        .layui-table{
+            border-bottom: 1px solid #e6e6e6 !important;
+
+        }
+        .layui-none{
+            border-bottom: 1px solid #e6e6e6 !important;
+            margin: 0;
+        }
+        .layui-table-main{
+            margin: 0;
+        }
+    </style>
+
+</head>
+<script type="text/html" class="changeShareholderLayer hide">
+    <div style="padding: 15px 20px">
+        <div class="layui-row layui-col-space15">
+            <input type="hidden" id="newShareholderName" value="">
+            <input type="hidden" id="newShareholderId" value="">
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <!-- layui tree-->
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <ul id="changeShareholderTree" lay-filter="changeShareholderTree" class="eleTree"
+                            style="overflow: hidden;"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<body class="iframe-h">
+    <!-- 关联境内股东弹窗 -->
+    <div class="jngd-add" style="display: none;">
+        <div class="layui-card-body">
+            <form class="layui-form layui-form-pane  form-theme3" name="regulationName-add"
+                lay-filter="regulationName-add">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-xs12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label hylabel" style="background-color:white;border:none"><b
+                                    class="red">*</b>企业名称:</label>
+                            <div class="layui-input-block">
+                                <input autocomplete="off" name="teeShareholderId" type="hidden" id="hideSeId">
+                                <input autocomplete="off" class="layui-input hyinput" name="teeShareholderName" id="seNameSelect"
+                                    lay-verify="required" readonly placeholder="弹出法人层级组织机构树，单击选择" type="text">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-xs12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label hylabel" style="background-color:white;border:none"><b
+                                    class="red">*</b>持股比例:</label>
+                            <div class="layui-input-block">
+                                <input autocomplete="off" class="layui-input" name="tesProportion" lay-verify="required"
+                                    placeholder="请输入百份数，例如持股60%，请输入60" type="number">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-xs12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label hylabel"
+                                style="background-color:white;border:none">持股数量:</label>
+                            <div class="layui-input-block">
+                                <input autocomplete="off" class="layui-input" name="tesControllingQuantity"
+                                    placeholder="请输入持股数，单位为股，若为1万股，请输入10000" type="number">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-xs12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label hylabel"
+                                style="background-color:white;border:none">认缴资金:</label>
+                            <div class="layui-input-block">
+                                <input autocomplete="off" class="layui-input" name="tesSubscribedCapital"
+                                    placeholder="请输入持股数，请输入认缴金额，单位为元人民币" type="number">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md12">
+                    <div class="layui-layer-btn layui-layer-btn-c">
+                        <button class="layui-btn" lay-submit lay-filter="regulationNameSave"><i class="fa fa-check-circle"></i>确定
+                        </button>
+                        <button type="button" class="layui-btn layui-btn-primary btnClose"><i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>取消</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- 新增境外股东弹窗 -->
+    <div class="jwgd-add" style="display: none;">
+        <div class="layui-card-body">
+            <form class="layui-form layui-form-pane  form-theme3" name="regulationName-add" lay-filter="jwgd-add">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-xs12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label hylabel" style="background-color:white;border:none"><b
+                                    class="red">*</b>企业名称:</label>
+                            <div class="layui-input-block">
+                                <input autocomplete="off" placeholder="请输入企业名称" class="layui-input hyinput" name="teeShareholderName"
+                                    lay-verify="required" type="text">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-xs12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label hylabel" style="background-color:white;border:none"><b
+                                    class="red">*</b>持股比例:</label>
+                            <div class="layui-input-block">
+                                <input autocomplete="off" class="layui-input" name="tesProportion" lay-verify="required"
+                                    placeholder="请输入百份数，例如持股60%，请输入60" type="text">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-xs12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label hylabel"
+                                style="background-color:white;border:none">持股数量:</label>
+                            <div class="layui-input-block">
+                                <input autocomplete="off" class="layui-input" name="tesControllingQuantity"
+                                    placeholder="请输入持股数，单位为股，若为1万股，请输入10000" type="number">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-xs12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label hylabel"
+                                style="background-color:white;border:none">认缴资金:</label>
+                            <div class="layui-input-block">
+                                <input autocomplete="off" class="layui-input" name="tesSubscribedCapital"
+                                    placeholder="请输入持股数，请输入认缴金额，单位为元人民币" type="number">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md12">
+                    <div class="layui-layer-btn layui-layer-btn-c">
+                        <button class="layui-btn" lay-submit lay-filter="jwgdSave"><i class="fa fa-check-circle"></i>确定
+                        </button>
+                        <button type="button" class="layui-btn layui-btn-primary btnClose"><i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>取消</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="content-wrap">
+        <form action="" class="layui-form layui-form-pane">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                    <!-- 议案信息 -->
+                    <div class="layui-card">
+                        <div class="layui-card-body">
+                            <div class="layui-card">
+                                <div class="layui-card-header layui-card-header-custom">
+                                    <span>
+                                        <i></i>企业信息
+                                    </span>
+                                </div>
+                                <div class="layui-card-body">
+                                    <div class="layui-row layui-col-space15">
+                                        <div class="layui-col-xs12">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label hylabel"><b
+                                                        class="red">*</b>企业名称:</label>
+                                                <div class="layui-input-block">
+                                                    <input id="teeId" name="teeId" type="hidden">
+                                                    <input id="teeSeId" name="teeSeId" type="hidden">
+                                                    <input type="text" name="seName" lay-verify="required"
+                                                        placeholder="请输入" autocomplete="off" class="layui-input hyinput"
+                                                        value="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-row layui-col-space15">
+                                        <div class="layui-col-xs6">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label hylabel"><b
+                                                        class="red">*</b>企业简称:</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="seShortName" lay-verify="required"
+                                                        placeholder="请输入" autocomplete="off" class="layui-input hyinput"
+                                                        value="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="layui-col-xs6">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label hylabel">&nbsp;国资编码:</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="teeSaCode" placeholder="请输入"
+                                                        autocomplete="off" class="layui-input hyinput" value="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-row layui-col-space15">
+                                        <div class="layui-col-xs6">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label hylabel">&nbsp;行政区划:</label>
+                                                <div class="layui-input-block">
+                                                    <input name="seOutsideFlag" type="hidden">
+                                                    <select name="seNation" id="seNation" lay-filter="nationChanged" lay-search>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="layui-col-xs4">
+                                            <div class="layui-form-item">
+                                                <div class="layui-input-block" style="margin-left: 40px;">
+                                                    <!--<select name="seAreaId" id="seAreaId">
+                                                        <option value="">请选择区划</option>
+                                                    </select>-->
+                                                    <input id="seAreaId" name="seAreaId" type="hidden">
+                                                    <input autocomplete="off" class="layui-input hyinput"
+                                                        placeholder="所在区划" name="seAreaName" type="text" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="layui-col-xs12">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label hylabel">&nbsp;&#x3000;&#x3000;地址:</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="seAddr" placeholder="请选择"
+                                                        autocomplete="off" class="layui-input hyinput" value="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-row layui-col-space15">
+                                        <div class="layui-col-xs12">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label hylabel">&nbsp;&#x3000;&#x3000;备注:</label>
+                                                <div class="layui-input-block">
+                                                    <textarea placeholder="建议200个字,最长仅支持2000字" name="seRmark"
+                                                        class="layui-textarea hyinput"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 法人层级 -->
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-body">
+                            <input type="hidden" name="motionId">
+                            <div class="layui-card">
+                                <div class="layui-card-header layui-card-header-custom">
+                                    <span>
+                                        <i></i>法人层级
+                                    </span>
+                                </div>
+                                <div class="layui-card-body">
+                                    <div class="layui-row layui-col-space15">
+                                        <div class="layui-col-md6">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label hylabel"><b class="red">*</b>治理结构:</label>
+                                                <div class="layui-input-block">
+                                                    <select name="seCorporateGov" id="seCorporateGov"
+                                                        lay-verify="required">
+                                                        <option value="">请选择</option>
+                                                        <option value="S01">已规范法人决策主体</option>
+                                                        <option value="S02">未规范法人决策主体</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="layui-col-md6">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label hylabel"><b class="red">*</b>控股股东:</label>
+                                                <div class="layui-input-block">
+                                                    <input autocomplete="off" type="hidden" name="teePid" />
+                                                    <input autocomplete="off" class="layui-input hyinput"
+                                                        name="teePidName" lay-varify="required" readonly
+                                                        placeholder="弹出法人层级组织机构树,单击选择" type="text">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="layui-row layui-col-space15">
+
+                                        <div class="layui-col-md6">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label hylabel"><b class="red">*</b>控股比例:</label>
+                                                <div class="layui-input-block">
+                                                    <!-- <input autocomplete="off" type="hidden" name="teePid"/> -->
+                                                    <input autocomplete="off" class="layui-input hyinput"
+                                                        name="tesProportion" lay-verify="required"
+                                                        placeholder="请输入百份数，例如持股60%，请输入60" type="number">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="layui-col-md6">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label hylabel">&nbsp;控股数量:</label>
+                                                <div class="layui-input-block">
+                                                    <input autocomplete="off" class="layui-input hyinput"
+                                                        name="tesControllingQuantity"
+                                                        placeholder="请输入持股数，单位为股，若为1万股，请输入10000" type="number">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="layui-row layui-col-space15">
+                                        <div class="layui-col-md6">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label hylabel">&nbsp;认缴资金:</label>
+                                                <div class="layui-input-block">
+                                                    <input autocomplete="off" class="layui-input hyinput"
+                                                        name="tesSubscribedCapital" placeholder="请输入认缴金额，单位为元人民币"
+                                                        type="number">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="layui-row layui-col-space15">
+                                        <div class="layui-col-md12">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label hylabel" style="padding-right: 11px;">集团内股东:</label>
+                                                <div style="padding-left: 130px;padding-top: 8px;"
+                                                    class="layui-card-body">
+                                                    <table id="shareholderInGroup" lay-filter="shareholderInGroup">
+                                                    </table>
+                                                    <script id="shareholderInGroupToolBar" type="text/html">
+                                                        <div class="layui-btn-container">
+                                                                <a class="layui-btn layui-btn-sm"  lay-event="relat" id="shareholderRelat" permission-btn=""><i class="layui-icon">&#xe608;</i>关联</a>
+                                                                <a class="layui-btn layui-btn-sm layui-btn-warm" lay-event="del" permission-btn=""><i class="fa fa-trash"></i>删除</a>
+                                                        </div>
+                                                    </script>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="layui-row layui-col-space15">
+                                        <div class="layui-col-md12">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label hylabel" style="padding-right: 11px;">集团外股东:</label>
+                                                <div style="padding-left: 130px;padding-top: 8px;">
+                                                    <table id="shareholderOutGroup" lay-filter="shareholderOutGroup">
+                                                    </table>
+                                                    <script id="shareholderOutGroupToolBar" type="text/html">
+                                                        <div class="layui-btn-container">
+                                                                <a class="layui-btn layui-btn-sm"  lay-event="add" permission-btn=""><i class="layui-icon">&#xe608;</i>新增</a>
+                                                                <a class="layui-btn layui-btn-sm layui-btn-warm" lay-event="del" permission-btn=""><i class="fa fa-trash"></i>删除</a>
+                                                        </div>
+                                                    </script>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 管理层级 -->
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-body">
+                            <input type="hidden" name="motionId">
+                            <div class="layui-card">
+                                <div class="layui-card-header layui-card-header-custom">
+                                    <span>
+                                        <i></i>管理层级
+                                    </span>
+                                </div>
+                                <div class="layui-card-body">
+                                    <div class="layui-row layui-col-space15">
+                                        <div class="layui-col-md6">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label hylabel"><b class="red">*</b>上级企业:</label>
+                                                <div class="layui-input-block">
+                                                    <input autocomplete="off" name="sePid" type="hidden">
+                                                    <input autocomplete="off" class="layui-input hyinput"
+                                                        name="sePidName" readonly placeholder="弹出管理层级组织机构树,单击选择"
+                                                        type="text">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 境外企业 -->
+            <div class="layui-row layui-col-space15" id="div_jw">
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-body">
+                            <div class="layui-card">
+                                <div class="layui-card-header layui-card-header-custom">
+                                    <span>
+                                        <i></i>境外企业
+                                    </span>
+                                </div>
+                                <div class="layui-card-body">
+                                    <div class="layui-row layui-col-space15">
+                                        <div class="layui-col-md6">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label hylabel"><b class="red">*</b>英文名称</label>
+                                                <div class="layui-input-block">
+                                                    <input autocomplete="off" class="layui-input hyinput jwInp"
+                                                        name="seEnName" lay-verify="required" placeholder="请输入英文名称"
+                                                        type="text" value="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="layui-col-md6">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label hylabel"><b class="red">*</b>企业编码</label>
+                                                <div class="layui-input-block">
+                                                    <input autocomplete="off" class="layui-input hyinput jwInp"
+                                                        name="seUnitcode" lay-verify="required" placeholder="请输入企业编码"
+                                                        type="text">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="layui-col-md6">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label hylabel">&nbsp;特殊要求:</label>
+                                                <div class="layui-input-block">
+                                                    <select name="seOverseasSpeReq" id="seOverseasSpeReq">
+                                                        <option value="">请选择</option>
+                                                        <option value="C01">境外环境具备报送条件</option>
+                                                        <option value="C02">不具备</option>
+                                                        <option value="C03">驻在地法律法规有特殊规定</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 境内企业 -->
+            <div class="layui-row layui-col-space15" id="div_jn">
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-body">
+                            <input type="hidden" name="motionId">
+                            <div class="layui-card">
+                                <div class="layui-card-header layui-card-header-custom">
+                                    <span>
+                                        <i></i>境内企业
+                                    </span>
+                                </div>
+                                <div class="layui-card-body">
+                                    <div class="layui-row layui-col-space15">
+                                        <div class="layui-col-md6">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label hylabel" style="padding-right: 18px;"><b
+                                                        class="red">*</b>社会信用代码:</label>
+                                                <div class="layui-input-block">
+                                                    <input autocomplete="off" class="layui-input hyinput jnInp"
+                                                        name="seComcode" required lay-verify="required"
+                                                        placeholder="请输入社会信用代码" type="text" value="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 企业类型 -->
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-body">
+                            <div class="layui-card">
+                                <div class="layui-card-header layui-card-header-custom">
+                                    <span>
+                                        <i></i>企业类型
+                                    </span>
+                                </div>
+                                <div class="layui-card-body">
+                                    <div class="layui-row layui-col-space15">
+                                        <div class="layui-col-md12">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label hylabel">&nbsp;企业类型:</label>
+                                                <div class="layui-input-block">
+                                                    <input type="radio" name="teeEType" value="0" lay-filter="teeEType"
+                                                        title="实体企业" checked>
+                                                    <input type="radio" name="teeEType" value="1" lay-filter="teeEType"
+                                                        title="平台公司">
+                                                    <input type="radio" name="teeEType" value="2" lay-filter="teeEType"
+                                                        title="壳公司">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-row layui-col-space15" id="stqy">
+                                        <div class="layui-col-md6">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label hylabel">&nbsp;经营状态:</label>
+                                                <div class="layui-input-block">
+                                                    <select name="teeOperationState" id="teeOperationState">
+                                                        <option value="">请选择</option>
+                                                        <option value="1">续存</option>
+                                                        <option value="2">在业</option>
+                                                        <option value="3">吊销</option>
+                                                        <option value="4">注销</option>
+                                                        <option value="5">迁入</option>
+                                                        <option value="6">迁出</option>
+                                                        <option value="7">停业</option>
+                                                        <option value="8">清算</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="layui-col-md6">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label hylabel" style="padding-right: 18px;">经营活动情况:</label>
+                                                <div class="layui-input-block">
+                                                    <select name="seBusinessActivities" id="seBusinessActivities">
+                                                        <option value="">请选择</option>
+                                                        <option value="M01">实际开展经营活动</option>
+                                                        <option value="M02">未实际开展经营活动</option>
+                                                        <option value="M03">计划股权转让</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-row layui-col-space15 hide" id="kgs">
+                                        <div class="layui-col-md6">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label hylabel">&nbsp;格式类型:</label>
+                                                <div class="layui-input-block">
+                                                    <select name="teeFormatType" id="teeFormatType">
+                                                        <option value="">请选择</option>
+                                                        <option value="1">特殊目的的公司</option>
+                                                        <option value="2">非空壳公司</option>
+                                                        <option value="3">历史遗留问题公司</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- 保存 关闭按钮 -->
+                                <div class="layui-card-body" style="border-top: 1px solid #dfdfdf">
+                                    <div class="layui-form-item" style="text-align: center;">
+                                        <button class="layui-btn" lay-submit lay-filter="saveBtn" id="saveBtn"
+                                            permission-btn="qyxx_qyxx_save"> <i class="layui-icon">&#x1005;</i>保存</button>
+                                        <button class="layui-btn layui-btn-primary" id="closeBtn" style="display: none">
+                                            <i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script src="./../../../js/layui/layui.js"></script>
+    <script>
+
+        layui.config({
+            base: '../../../src/js/',
+            version: new Date().getTime()
+        }).use(['eleTree', 'layer', 'table', 'form', 'laytpl', 'common', 'element', 'laydate', 'upload'], function () {
+            var table = layui.table;
+            var form = layui.form;
+            var tree = layui.eleTree;
+            var common = layui.common;
+            var element = layui.element;
+            var laydate = layui.laydate;
+            var upload = layui.upload;
+            element.init();
+            var baseUrl = '../../../../';
+            common.themeSet();
+
+            var seId = common.getQueryVariable('seId');
+            var fromList = common.getQueryVariable('fromList');
+            var url = 'meetingmgr/enterpriseExtend/getLoginEnterpriseInfo';
+            if (seId) {
+                url = 'meetingmgr/enterpriseExtend/getSelectedEnterpriseInfo?seId=' + seId;
+            }
+            var shareholder = {
+                shareholderInGroupInit: function () {
+                    table.render(common.tableInitParams({
+                        elem: '#shareholderInGroup',
+                        height: 'full-165',
+                        url: baseUrl + 'meetingmgr/enterpriseShareholder/selectInGroupTiolEnterpriseShareholderList',
+                        method: 'post',
+                        toolbar: '#shareholderInGroupToolBar',
+                        defaultToolbar: [],
+                        page: false,
+                        height: false,
+                        where: {teeId: seId},
+                        cols: [
+                            [
+                                { type: 'checkbox' },
+                                { type: "numbers", title: "序号", width: 60, },
+                                { field: 'teeShareholderName', title: '股东名称' },
+                                { field: 'tesProportion', title: '控股比例' },
+                                { field: 'tesSubscribedCapital', title: '认缴资本' }
+                            ]
+                        ],
+                        done: function () {
+
+                        }
+                    }));
+                    table.on('toolbar(shareholderInGroup)', function (obj) {
+                        switch (obj.event) {
+                            case 'relat':
+                                var layerAdd = layer.open({
+                                    title: '<i class="iconfont icon-SZYD-xitongcaidanguanli"></i>新增',
+                                    area: ['600px', '400px'],//高度自适应
+                                    type: 1,//页面层
+                                    zIndex: 891,
+                                    content: $('.jngd-add').html(),//加载该区域的html
+                                    success: function (obj) {
+                                        // 关联股东
+                                        var parent = $(obj.selector);
+                                        parent.find('#seNameSelect').on("click", function (e) {
+                                            var changeSLayer = layer.open({
+                                                type: 1,
+                                                title: "选择上级企业",
+                                                content: $(".changeShareholderLayer").html(),
+                                                area: ['400px', '500px'],
+                                                btnAlign: "c",
+                                                btn: ['<i class="fa fa-check-circle"></i>确定', '<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭'],
+                                                yes: function (index, layero) {
+                                                    if (parent.find('#seNameSelect').val() == "") {
+                                                        layer.msg("请选择股东");
+                                                        return;
+                                                    }
+                                                    layer.close(changeSLayer)
+
+                                                },
+                                                btn2: function (index, layero) {
+                                                    layer.close(index);
+                                                },
+                                                success: function (layero, index) {
+                                                    common.fetchGet('sysmgr/sysEnterprise/selectAllDescendantNodeFromRootNode?treeType=enterpriseTree&rootId=-1', function (res) {
+                                                        var eleTreeId = tree.render({
+                                                            showLine: true,
+                                                            elem: '#changeShareholderTree',
+                                                            "expandOnClickNode": true,
+                                                            data: common.arrayToTreeJson(res.list || [], "id", "pid", "children"),
+                                                            // defaultExpandAll: true,
+                                                            request: {
+                                                                name: "title",
+                                                                key: "id",
+                                                                children: "children",
+                                                                checked: "checked",
+                                                                disabled: "disabled",
+                                                                isLeaf: "isLeaf",
+                                                                extendAttr: "extendAttr"
+                                                            },
+                                                            lazy: false,
+                                                            response: {// 对于后台数据重新定义名字
+                                                                dataName: "list"
+                                                            },
+                                                            searchNodeMethod: function (value, data) {
+                                                                if (!value) return true;
+
+                                                                return data.title.indexOf(value) !== -1;
+                                                            }
+                                                        });
+                                                        $('#changeShareholderTree').find('.eleTree-node-content-label').eq(0).trigger('click');
+                                                    }, false, false);
+
+                                                    tree.on("nodeClick(changeShareholderTree)", function (obj) {
+                                                        parent.find('#hideSeId').val(obj.data.currentData.id);
+                                                        parent.find('#seNameSelect').val(obj.data.currentData.name);
+                                                    });
+                                                }
+                                            });
+                                        });
+
+                                        form.render('select');
+                                        $(obj.selector).find('.btnClose').off().on('click', function () {
+                                            layer.close(layerAdd);
+                                        });
+                                        form.on("submit(regulationNameSave)", function (obj) {
+                                            obj.field.tesShareholderInGroup='1';
+                                            obj.field.tesControllingQuantity='0';
+                                            var layerLoader = common.layerLoader();
+                                            common.fetchPost('meetingmgr/enterpriseShareholder/addTiolEnterpriseShareholder', obj.field, function (res) {
+                                                layer.close(layerLoader);
+                                                if (res.success) {
+                                                    layer.close(layerAdd);
+                                                    layer.alert('新增成功');
+                                                    shareholder.shareholderInGroupReload();
+                                                } else {
+                                                    layer.close(layerAdd);
+                                                    layer.alert(res.resultMessage);
+                                                }
+                                            }, function (err) {
+                                                layer.close(layerLoader);
+                                                layer.close(layerAdd);
+                                                layer.alert(err.resultMessage);
+                                            });
+                                            return false;
+                                        })
+                                    },
+                                    // btn: false
+                                });
+                                break;
+                            case 'del':
+                                var checkStatus = table.checkStatus(obj.config.id);
+                                var data = checkStatus.data;
+                                if (data.length == 0) {
+                                    layer.msg('请选择数据');
+                                    return false;
+                                }
+                                var ids = [];
+                                for(var i=0;i<data.length;i++){
+                                    ids.push(data[i].tesId);
+                                }
+
+                                var layerLoader = common.layerLoader();
+                                layer.confirm('确定删除?', function (index) {
+                                    common.fetchGet('meetingmgr/enterpriseShareholder/deleteTiolEnterpriseShareholder?tesIds='+ids.join(','), function (res) {
+                                        layer.close(layerLoader);
+                                        if (res.success) {
+                                            layer.close(index);
+                                            layer.alert('删除成功');
+                                            shareholder.shareholderInGroupReload();
+                                        } else {
+                                            layer.close(index);
+                                            layer.alert(res.resultMessage);
+                                        }
+                                    }, function (err) {
+                                        layer.close(layerLoader);
+                                        layer.close(index);
+                                        layer.alert(err.resultMessage);
+                                    })
+                                });
+                            break;
+                        }
+                    });
+                },
+                shareholderInGroupReload: function(params){
+                    params = params || {};
+                    table.reload('shareholderInGroup', {
+                        url: baseUrl + 'meetingmgr/enterpriseShareholder/selectInGroupTiolEnterpriseShareholderList',
+                        method: 'post',
+                        contentType: 'application/json',
+                        where: params
+                    });
+                },
+                shareholderOutGroupInit: function () {
+                    table.render(common.tableInitParams({
+                        elem: '#shareholderOutGroup',
+                        url: baseUrl + 'meetingmgr/enterpriseShareholder/selectUnGroupTiolEnterpriseShareholderList',
+                        method: 'post',
+                        toolbar: '#shareholderOutGroupToolBar',
+                        defaultToolbar: [],
+                        page: false,
+                        height: false,
+                        where: {teeId: seId},
+                        cols: [
+                            [
+                                { type: 'checkbox' },
+                                { type: "numbers", title: "序号", width: 60, },
+                                { field: 'teeShareholderName', title: '股东名称' },
+                                { field: 'tesProportion', title: '控股比例' },
+                                { field: 'tesSubscribedCapital', title: '认缴资本' }
+                            ]
+                        ],
+                        done: function () {
+
+                        }
+                    }));
+                    table.on('toolbar(shareholderOutGroup)', function (obj) {
+
+                        switch (obj.event) {
+
+                            case 'add':
+                                var layerAdd = layer.open({
+                                    title: '<i class="iconfont icon-SZYD-xitongcaidanguanli"></i>新增',
+                                    area: ['600px', '400px'],//高度自适应
+                                    type: 1,//页面层
+                                    zIndex: 891,
+                                    content: $('.jwgd-add').html(),//加载该区域的html
+
+                                    success: function (obj) {
+                                        // 关联股东
+                                        var parent = $(obj.selector);
+
+                                        form.render('select');
+                                        $(obj.selector).find('.btnClose').off().on('click', function () {
+                                            layer.close(layerAdd);
+                                        });
+                                        form.on("submit(jwgdSave)", function (obj) {
+                                            var layerLoader = common.layerLoader();
+                                            obj.field.tesShareholderInGroup='0';
+                                            obj.field.tesControllingQuantity='0';
+                                            common.fetchPost('meetingmgr/enterpriseShareholder/addTiolEnterpriseShareholder', obj.field, function (res) {
+                                                layer.close(layerLoader);
+                                                if (res.success) {
+                                                    layer.close(layerAdd);
+                                                    layer.alert('新增成功');
+                                                    shareholder.shareholderOutGroupReload();
+                                                } else {
+                                                    layer.close(layerAdd);
+                                                    layer.alert(res.resultMessage);
+                                                }
+                                            }, function (err) {
+                                                layer.close(layerLoader);
+                                                layer.close(layerAdd);
+                                                layer.alert(err.resultMessage);
+                                            });
+                                            return false;
+                                        })
+                                    },
+                                    // btn: false
+                                });
+                                break;
+                            case 'del':
+                                var checkStatus = table.checkStatus(obj.config.id);
+                                var data = checkStatus.data;
+                                if (data.length == 0) {
+                                    layer.msg('至少选择一条数据');
+                                    return false;
+                                }
+                                var ids = [];
+                                for(var i=0;i<data.length;i++){
+                                    ids.push(data[i].tesId);
+                                }
+
+                                var layerLoader = common.layerLoader();
+                                layer.confirm('确定删除?', function (index) {
+                                    common.fetchGet('meetingmgr/enterpriseShareholder/deleteTiolEnterpriseShareholder?tesIds='+ids.join(','), function (res) {
+                                        if (res.success) {
+                                            layer.close(layerLoader);
+                                            layer.close(index);
+                                            layer.alert('删除成功');
+                                            shareholder.shareholderOutGroupReload();
+                                        } else {
+                                            layer.close(layerLoader);
+                                            layer.close(index);
+                                            layer.alert(res.resultMessage);
+                                        }
+                                    }, function (err) {
+                                        layer.close(layerLoader);
+                                        layer.close(index);
+                                        layer.alert(err.resultMessage);
+                                    })
+                                });
+                            break;
+
+                        }
+                    });
+                },
+                shareholderOutGroupReload: function(params){
+                    params = params || {};
+                    table.reload('shareholderOutGroup', {
+                            url: baseUrl + 'meetingmgr/enterpriseShareholder/selectUnGroupTiolEnterpriseShareholderList',
+                            method: 'post',
+                            contentType: 'application/json',
+                        where: params
+                    });
+                }
+            };
+            shareholder.shareholderInGroupInit();
+            shareholder.shareholderOutGroupInit();
+
+            function initForm() {
+                var layerLoader = common.layerLoader();
+                common.fetchGet(url, function (res) {
+                    layer.close(layerLoader);
+                    if (res.success) {
+                        var data = res.object;
+                        if (data.seOutsideFlag === "0") {//注：seOutsideFlag字段0表示境外，1表示境内
+                            $('#div_jw').show();
+                            $('#div_jn').hide();
+                            $('.jwInp').attr("lay-verify", "required");
+                            $('.jnInp').removeAttr("lay-verify");
+                        } else {
+                            $('#div_jw').hide();
+                            $('#div_jn').show();
+                            $('.jnInp').attr("lay-verify", "required");
+                            $('.jwInp').removeAttr("lay-verify");
+                        }
+
+                        $('input[name=teeId]').val(data.teeId);
+                        $('input[name=teeSeId]').val(data.teeSeId);
+                        $('input[name=seName]').val(data.seName);
+                        $('input[name=seShortName]').val(data.seShortName);
+                        $('input[name=teeSaCode]').val(data.teeSaCode);
+                        $('input[name=seAddr]').val(data.seAddr);
+                        $('textarea[name=seRmark]').val(data.seRmark);
+                        $('input[name=sePid]').val(data.sePid);
+                        $('input[name=sePidName]').val(data.sePidName);
+                        $('input[name=teePid]').val(data.teePid);
+                        $('input[name=teePidName]').val("-1"==data.teePid? "国务院国资委": data.teePidName);
+                        $('input[name=seEnName]').val(data.seEnName);
+                        $('input[name=seUnitcode]').val(data.seUnitcode);
+                        $('input[name=seComcode]').val(data.seComcode);
+                        $('input[name="teeEType"][value=' + data.teeEType + ']').prop("checked", true);
+                        $('input[name=seAreaId]').val(data.seAreaId);
+                        $('input[name=seAreaName]').val(data.seAreaName);
+                        $('input[name=seOutsideFlag]').val(data.seOutsideFlag);
+                        $('input[name=tesProportion]').val(data.tesProportion);
+                        $('input[name=tesControllingQuantity]').val(data.tesControllingQuantity);
+                        $('input[name=tesSubscribedCapital]').val(data.tesSubscribedCapital);
+
+                        $('select[name=seNation]').val(data.seNation);
+                        //$('select[name=seAreaId]').val(data.seAreaId);
+                        $('select[name=seCorporateGov]').val(data.seCorporateGov);
+                        $('select[name=seOverseasSpeReq]').val(data.seOverseasSpeReq);
+                        $('select[name=teeOperationState]').val(data.teeOperationState);
+                        $('select[name=seBusinessActivities]').val(data.seBusinessActivities);
+                        $('select[name=teeFormatType]').val(data.teeFormatType);
+
+                        //如果国家信息为空，则不显示区划信息
+                        if ($('select[name=seNation]').val() === null || $('select[name=seNation]').val() === '') {
+                            $('input[name=seAreaId]').val('');
+                            $('input[name=seAreaName]').val('');
+                        }
+
+
+                        teeETypeChange(data.teeEType);
+                        form.render('radio');
+
+                        form.render("select");
+
+                        form.render();
+                    }
+
+                }, function (res) {
+                    layer.close(layerLoader);
+                    layer.alert(res.resultMessage);
+                });
+
+                $("[name='seAreaName']").on("click", function (e) {
+                    if ($('select[name=seNation]').val() === null || $('select[name=seNation]').val() === '') {
+                        layer.msg('请先选择国家');
+                        return false;
+                    }
+
+                    $("#newShareholderId").val('');
+                    $("#newShareholderName").val('');
+                    var changeSLayer = layer.open({
+                        type: 1,
+                        title: "选择区划",
+                        content: $(".changeShareholderLayer").html(),
+                        area: ['400px', '500px'],
+                        btnAlign: "c",
+                        btn: ['<i class="fa fa-check-circle"></i>确定', '<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭'],
+                        yes: function (index, layero) {
+                            if ($("#newShareholderId").val() == "") {
+                                layer.msg("请选择区划");
+                                return;
+                            }
+                            $("input[name=seAreaId]").val($("#newShareholderId").val());
+                            $("input[name=seAreaName]").val($("#newShareholderName").val());
+                            layer.close(changeSLayer);
+                        },
+                        btn2: function (index, layero) {
+                            layer.close(index);
+                        },
+                        success: function (layero, index) {
+                            var eleTreeId = tree.render({
+                                elem: '#changeShareholderTree',
+                                url: baseUrl + 'sysmgr/sysArea/selectSysAreaTree?id=' + $('select[name=seNation]').val(),
+                                lazy: true,
+                                load: function (data, callback) {
+                                    common.fetchGet(baseUrl + 'sysmgr/sysArea/selectSysAreaTree' + '?id=' + data.id, function (res) {
+                                        if (res.success && res.list) {
+                                            callback(res.list);
+                                        }
+                                    }, function () {
+                                        callback([])
+                                    });
+
+                                },
+                                response: {// 对于后台数据重新定义名字
+                                    dataName: "list"
+                                },
+                            });
+                            tree.on("nodeClick(changeShareholderTree)", function (obj) {
+                                $("#newShareholderId").val(obj.data.currentData.id);
+                                $("#newShareholderName").val(obj.data.currentData.name);
+                            });
+                        }
+                    });
+                });
+
+                $("[name='teePidName']").on("click", function (e) {
+                    $('#newShareholderName').val('');
+                    $('#newShareholderId').val('');
+                    var changeSLayer = layer.open({
+                        type: 1,
+                        title: "选择控股股东",
+                        content: $(".changeShareholderLayer").html(),
+                        area: ['400px', '500px'],
+                        btnAlign: "c",
+                        btn: ['<i class="fa fa-check-circle"></i>确定', '<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭'],
+                        yes: function (index, layero) {
+                            if ($("#newShareholderId").val() == "") {
+                                layer.msg("请选择控股股东");
+                                return;
+                            }
+
+                            if ($("input[name=teePid]").val() != $("#newShareholderId").val()) {
+                                layer.confirm('点击确定按钮将后修改立即生效。确定要修改控股股东为[' + $("#newShareholderName").val() + ']？', {
+                                    icon: 3,
+                                    title: '提示',
+                                    offset: '150px'
+                                }, function (index) {
+                                    //调后台改变企业层级接口
+                                    var sURL = baseUrl + "meetingmgr/enterpriseExtend/changeShareholder";
+                                    var param = {};
+                                    param.teeId = $("input[name=teeId]").val();
+                                    param.teePid = $("#newShareholderId").val();
+                                    var loadingIndex = common.layerLoader();
+                                    common.fetchPost(sURL, param, function (obj) {
+                                        layer.close(loadingIndex);
+                                        layer.close(changeSLayer);
+                                        if ($("input[name=teePid]") !== $("#newShareholderId").val()) {
+                                            $('input[name=tesProportion]').val('');
+                                            $('input[name=tesControllingQuantity]').val('');
+                                            $('input[name=tesSubscribedCapital]').val('');
+                                        }
+                                        $("input[name=teePid]").val($("#newShareholderId").val());
+                                        $("input[name=teePidName]").val($("#newShareholderName").val());
+                                        layer.msg("改变控股股东成功");
+                                    }, function (obj) {
+                                        layer.close(loadingIndex);
+                                        layer.msg(obj.resultMessage);
+                                    })
+                                });
+
+                            } else {
+                                layer.close(changeSLayer);
+                            }
+                        },
+                        btn2: function (index, layero) {
+                            layer.close(index);
+                        },
+                        success: function (layero, index) {
+                            common.fetchGet('meetingmgr/enterpriseExtend/selectShareholderTree?rootId=-1', function (res) {
+                                for(var i=0; i<res.list.length;i++){
+                                    if(res.list[i].id=='-1'){
+                                        res.list[i].title = '国务院国资委';
+                                        res.list[i].name = '国务院国资委';
+                                        break;
+                                    }
+                                }
+
+
+                                var eleTreeId = tree.render({
+                                    showLine: true,
+                                    elem: '#changeShareholderTree',
+                                    "expandOnClickNode": true,
+                                    data: common.arrayToTreeJson(res.list || [], "id", "pid", "children"),
+                                    defaultExpandAll: true,
+                                    request: {
+                                        name: "title",
+                                        key: "id",
+                                        children: "children",
+                                        checked: "checked",
+                                        disabled: "disabled",
+                                        isLeaf: "isLeaf",
+                                        extendAttr: "extendAttr"
+                                    },
+                                    lazy: false,
+                                    response: {// 对于后台数据重新定义名字
+                                        dataName: "list"
+                                    },
+                                    searchNodeMethod: function (value, data) {
+                                        if (!value) return true;
+
+                                        return data.title.indexOf(value) !== -1;
+                                    }
+                                });
+                                //$('#changeShareholderTree').find('.eleTree-node-content-label').eq(0).trigger('click');
+                            }, false, false);
+
+                            tree.on("nodeClick(changeShareholderTree)", function (obj) {
+                                $("#newShareholderId").val(obj.data.currentData.id);
+                                $("#newShareholderName").val(obj.data.currentData.name);
+                            });
+                        }
+                    });
+                });
+
+                $("[name='sePidName']").on("click", function (e) {
+                    $('#newShareholderName').val('');
+                    $('#newShareholderId').val('');
+                    var changeSLayer = layer.open({
+                        type: 1,
+                        title: "选择上级企业",
+                        content: $(".changeShareholderLayer").html(),
+                        area: ['400px', '500px'],
+                        btnAlign: "c",
+                        btn: ['<i class="fa fa-check-circle"></i>确定', '<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭'],
+                        yes: function (index, layero) {
+                            if ($("#newShareholderId").val() == "") {
+                                layer.msg("请选择控股股东");
+                                return;
+                            }
+
+                            if ($("input[name=sePid]").val() != $("#newShareholderId").val()) {
+                                layer.confirm('点击确定按钮将后修改立即生效。确定要修改上级企业为[' + $("#newShareholderName").val() + ']？', {
+                                    icon: 3,
+                                    title: '提示',
+                                    offset: '150px'
+                                }, function (index) {
+                                    //调后台改变企业层级接口
+                                    var sURL = baseUrl + "sysmgr/sysEnterprise/changeParentEnterprise";
+                                    var param = {};
+                                    param.seId = $("input[name=teeSeId]").val();
+                                    param.sePid = $("#newShareholderId").val();
+                                    var loadingIndex = common.layerLoader();
+                                    common.fetchPost(sURL, param, function (obj) {
+                                        layer.close(loadingIndex);
+                                        layer.close(changeSLayer);
+                                        $("input[name=sePid]").val($("#newShareholderId").val());
+                                        $("input[name=sePidName]").val($("#newShareholderName").val());
+                                        layer.msg("改变上级企业成功");
+                                    }, function (obj) {
+                                        layer.close(loadingIndex);
+                                        layer.msg(obj.resultMessage);
+                                    })
+                                });
+
+                            } else {
+                                layer.close(changeSLayer);
+                            }
+                        },
+                        btn2: function (index, layero) {
+                            layer.close(index);
+                        },
+                        success: function (layero, index) {
+                            common.fetchGet('sysmgr/sysEnterprise/selectAllDescendantNodeFromRootNode?treeType=enterpriseTree&rootId=-1', function (res) {
+                                var eleTreeId = tree.render({
+                                    showLine: true,
+                                    elem: '#changeShareholderTree',
+                                    "expandOnClickNode": true,
+                                    data: common.arrayToTreeJson(res.list || [], "id", "pid", "children"),
+                                    defaultExpandAll: true,
+                                    request: {
+                                        name: "title",
+                                        key: "id",
+                                        children: "children",
+                                        checked: "checked",
+                                        disabled: "disabled",
+                                        isLeaf: "isLeaf",
+                                        extendAttr: "extendAttr"
+                                    },
+                                    lazy: false,
+                                    response: {// 对于后台数据重新定义名字
+                                        dataName: "list"
+                                    },
+                                    searchNodeMethod: function (value, data) {
+                                        if (!value) return true;
+
+                                        return data.title.indexOf(value) !== -1;
+                                    }
+                                });
+                                //$('#changeShareholderTree').find('.eleTree-node-content-label').eq(0).trigger('click');
+                            }, false, false);
+
+                            tree.on("nodeClick(changeShareholderTree)", function (obj) {
+                                $("#newShareholderId").val(obj.data.currentData.id);
+                                $("#newShareholderName").val(obj.data.currentData.name);
+                            });
+                        }
+                    });
+                });
+
+                form.on('select(nationChanged)', function (data) {
+                    $('input[name=seAreaId]').val('');
+                    $('input[name=seAreaName]').val('');
+
+                    if (data.value === 'CHN') {
+                        $('input[name=seOutsideFlag]').val('1');//境内。注：seOutsideFlag字段0表示境外，1表示境内
+                        $('#div_jw').hide();
+                        $('#div_jn').show();
+                        $('.jnInp').attr("lay-verify", "required");
+                        $('.jwInp').removeAttr("lay-verify");
+                    }
+                    else {
+                        $('input[name=seOutsideFlag]').val('0');//境外。注：seOutsideFlag字段0表示境外，1表示境内
+                        $('#div_jw').show();
+                        $('#div_jn').hide();
+                        $('.jwInp').attr("lay-verify", "required");
+                        $('.jnInp').removeAttr("lay-verify");
+                    }
+                });
+            }
+
+            common.selectDataSet({
+                elem: $('[name=seNation]'),
+                url: 'sysmgr/sysArea/selectSysAreaTree?id=-1',
+                responseList: 'list',
+                method: 'get',//默认为get
+                optionText: 'name',
+                optionValue: 'id',
+                success: function (data) {
+                    form.render('select');
+                }
+            });
+
+            function teeETypeChange(teeEType) {
+                if (teeEType == 2) {
+                    $('#kgs').show();
+                    $('#stqy').hide();
+                } else if (teeEType == 0) {
+                    $('#kgs').hide();
+                    $('#stqy').show();
+                } else {
+                    $('#kgs').hide();
+                    $('#stqy').hide();
+                }
+            }
+
+            form.on('radio(teeEType)', function (data) {
+                teeETypeChange(data.value);
+                form.render('radio');
+            });
+
+            initForm();
+
+            form.on('submit(saveBtn)', function (obj) {
+                var url = 'meetingmgr/enterpriseExtend/saveTiolEnterpriseExtend';
+                var params = {};
+                /*if(obj.seOutsideFlag === '0'){//境外
+                    obj.seComcode = null;
+                }
+                else{//境内
+                    obj.seEnName = null;
+                    obj.seUnitcode = null;
+                    obj.seOverseasSpeReq = null;
+                }*/
+
+                $.extend(params, obj.field);
+                var loadingIndex = common.layerLoader();
+                common.fetchPost(url, params, function (res) {
+                    layer.close(loadingIndex);
+                    if (res.success) {
+                        layer.msg('保存成功');
+                        
+                        setTimeout(function () { 
+                            
+                            parent.layer.closeAll();
+                         },1000);
+                        
+                    } else {
+                        layer.alert(res.resultMessage || '保存失败');
+                    }
+                }, function (err) {
+                    layer.close(loadingIndex);
+                    layer.alert(err.resultMessage || '保存失败');
+                });
+                return false;
+            });
+
+            if (fromList) {
+                $('#closeBtn').show();
+                $("#closeBtn").off('click').on("click", function () {
+                    parent.layer.closeAll();
+                    return false;
+                });
+            }
+            else{
+                $('#saveBtn').attr('permission-btn', 'qyxx_xxws_save');
+            }
+
+            //按钮权限
+            common.buttonLimit($("#currentMenuSmId", window.parent.document).val(), function (res) {
+                //输入所有可操作的按钮集合
+                var list = res['list'] ? res['list'] : [];
+
+            });
+        });
+
+    </script>
+
+    <!--[if lt IE 9]>
+
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+
+</html>

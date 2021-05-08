@@ -1,0 +1,1709 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<meta http-equiv="X-UA-Compatible" content="IE=6">
+	<META http-equiv=Content-Type content="text/html; charset=utf-8">
+	<TITLE>流程</TITLE>
+	<META NAME="Author" CONTENT="Witson">
+	<link rel="stylesheet" type="text/css" href="../../../js/flow/images/style.css"/>
+	<link rel="stylesheet" type="text/css" href="../../../js/flow/themes/flat/style.css" />
+    <script type="text/javascript" src="../../../js/flow/jt.js"></script>
+	<script type="text/javascript" src="../../../js/lib/jquery.1.9.1.js"></script>
+	<SCRIPT type="text/javascript" src="../../../js/flow/jquery.form.js"></SCRIPT>
+	<SCRIPT src="../../../js/flow/common.js" type="text/javascript"></SCRIPT>
+	<script type="text/javascript" src="../../../js/flow/flowEdit.js"></script>
+	<script type="text/javascript" src="../../../js/flow/flowFun.js"></script>
+	<style>
+		v\:* { behavior: url(#default#VML) }
+		.ToolItem{display:inline;padding:3px 10px;width:90}
+		.pro_sub{background-color:#EEEEEE; text-align:center;}
+		.pro_cap{background-color:#F5F5F5; text-align:right;}
+		.pro_val{background-color:white;padding-top:0px;padding-bottom:0px}
+		.pro_input{width:100%;border:none;}
+		.pro_select{width:102%;margin:-2;margin-left:-4;}
+		.pro_BtnSel{border:1px solid gray;width:30px;height:16px;}
+	</style>
+</HEAD>
+<script type="text/javascript">
+    mxBasePath = '../../../js/lib/mxgraph/';
+</script>
+<script type="text/javascript" src="../../../js/lib/mxgraph/js/mxClient.js"></script>
+<script type="text/javascript">
+    moveTo(-4,-4);
+    resizeTo(screen.availWidth+8,screen.availHeight+8);
+    // var param  = '<%=param%>';
+    // var paramA = param.split("@");
+    // //  选择记录后传递过来记录字段属性值
+    // var CST_version=paramA[0];//版本
+    // var CST_label=paramA[1];//标识
+    // var CST_org_id=paramA[2];//组织id
+	// var CST_name=paramA[3];//名称
+
+	var searchObj = searchParse();
+	var CST_version = searchObj["version"]; //版本
+	var CST_label = searchObj["label"]; //标识
+	var CST_org_id = searchObj["orgId"]; //组织id
+	var CST_name = searchObj["name"];//名称
+
+	function searchParse() {
+		var resultObj = {};
+		var search = window.location.search;
+		if (search && search.length > 1) {
+			var search = search.substring(1);
+			var items = search.split('&');
+			for (var index = 0; index < items.length; index++) {
+				if (!items[index]) {
+					continue;
+				}
+				var kv = items[index].split('=');
+				resultObj[kv[0]] = typeof kv[1] === "undefined" ? "" : kv[1];
+			}
+		}
+		return resultObj;
+	}
+</script>
+<script type="text/javascript">
+    var baseUrl='../../../../flowEngine'
+    var CST_URL_RoleAssignment = baseUrl+'/engine/TemplateAction?method=getRoles&orgId='+CST_org_id+'&tmp=' +(new Date()).valueOf();
+    var CST_URL_SubRoleAssignment = baseUrl+'/engine/TemplateAction?method=getRoles&tmp=' +(new Date()).valueOf();
+    var CST_URL_FlowDraftRole = baseUrl+'/engine/TemplateAction?method=getRoles&orgId='+CST_org_id+'&tmp=' +(new Date()).valueOf();
+    var CST_URL_FlowDraftOrg = baseUrl+'/engine/TemplateAction?method=getOrgs&orgId='+CST_org_id+'&tmp=' +(new Date()).valueOf();
+    var CST_URL_Flow = baseUrl+'/engine/TemplateAction?method=getTemplate&tableName=T_ENGINE_MODEL_TEMPLATE&label='+CST_label+'&version='+CST_version+'&orgId='+CST_org_id+'&tmp=' +(new Date()).valueOf();
+    var CST_URL_FlowCorpers = baseUrl+'/engine/TemplateAction?method=getCorpers&tmp=' +(new Date()).valueOf();
+	var CST_URL_DepartmentAssignment = '../template/flowStateAssignment_department.txt';
+	var CST_URL_CompanyAssignment = '../template/flowStateAssignment_company.txt';
+    var CST_URL_PositionAssignment = '../template/flowStateAssignment_position.txt';
+    var CST_URL_UserAssignment = '../template/flowStateAssignment_user.txt';
+    var CST_URL_FlowConfig = '../config.xml';
+</script>
+
+<BODY loadWebUI="Flow,Toolbar,Window,PopupMenu,TabMenu2,Tip,Validate" onclick="Body_Click()" ondblclick="winProperty.show();" scroll1="no">
+<div id="divLoadingMain" style="position:absolute;width:180px;height:40px;top:45%;left:43%;padding:15px;background-color:#FFFFE1;border:1px solid black;text-align:center;">正在加载数据....</div>
+<div id="divLoading" style="position:absolute;z-index:100;width:180px;right:10;top:3;padding:2px;background-color:#FFFFE1;border:1px solid black;text-align:center;display:none;">正在处理，请稍候....</div>
+<div id="divModified" style="position:absolute;right:10;top:8;font-weight:bold;color:red;display:none;">流程已被修改</div>
+<input type="text" id="sel" name="sel" style="position:absolute;top:-1000"/>
+<table width="100%" style="table-layout:fixed" border="0" cellpadding="0" cellspacing="0">
+	<tr>
+		<td height="28" bgcolor="#D4E1F9">
+			<div id="divToolbar" class="Toolbar" style="padding-left:10px;">
+			<xmp style="display:none;">
+				<root>
+					<item text="关闭" icon="../../../js/flow/images/icon/close.gif" action="self.close();"/>
+					<item text=""/>
+					<item text="保存" icon="../../../js/flow/images/icon/save.gif" action="funSave()"/>
+					<item text="另存为" icon="../../../js/flow/images/icon/save-as.gif" action="saveAsTool.show()"/>
+					<item text="打印" icon="../../../js/flow/images/icon/print.gif" action="printFlow()"/>
+					<item text=""/>
+					<item text="部署" icon="../../../js/flow/images/icon/add.gif" action="deployTemplate('false');" >
+					<!-- 	 <item text="部署" icon="../../../js/flow/images/icon/add.gif" action="deployTemplate('true');"/>
+						 <item text="仅部署到工作流" icon="../../../js/flow/images/icon/add.gif" action="deployTemplate('false');"/>
+ -->					</item>
+
+					<item text="删除流程" icon="../../../js/flow/images/icon/delete.gif" action="if (confirm('确实想删除？')) delTemplate();"/>
+					<item text="导出" icon="../../../js/flow/images/icon/export.gif" action="exportTemplate();"/>
+					<item text=""/>
+					<item text="流程源码" icon="../../../js/flow/images/icon/xml.gif" action="reloadEngineSource();showXMLDialog();"/>
+					<item text="工具栏" icon="../../../js/flow/images/icon/add.gif" action="winTool.showHide();"/>
+					<item text="属性" icon="../../../js/flow/images/icon/add.gif" action="winProperty.showHide();"/>
+				</root>
+			</xmp>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			<!--<div style="height:100%;overflow1:auto;padding-bottom:10px;"></div>-->
+			<div id="divFlow" class="Flow" mode="Edit" style="margin-left:50;margin-top:40;width:1000px"></div>
+		</td>
+	</tr>
+</table>
+<div id="divxml" style="text-align: center;margin:0 auto;position:relative;">
+</div>
+<!-- -------------------------  工具栏[Begin]  ---------------------------- -->
+<div id="divWinTool" style="background-color:#F5F5F5;display:none;">
+	<div class="ToolItem"><a href="javascript:oFlow.act_AddNode('start-state');void(0);"><img src="../../../js/flow/images/icon/flow-start-state.gif" align="absmiddle"> 开始环节</a></div>
+	<div class="ToolItem"><a href="javascript:oFlow.act_AddNode('end-state');void(0);"><img src="../../../js/flow/images/icon/flow-end-state.gif" align="absmiddle"> 结束环节</a></div>
+	<div class="ToolItem"><a href="javascript:oFlow.act_AddNode('state');void(0);"><img src="../../../js/flow/images/icon/flow-node-state.gif" align="absmiddle"> 普通环节</a></div>
+	<div class="ToolItem"><a href="javascript:oFlow.act_AddNode('serial-exe-state');void(0);"><img src="../../../js/flow/images/icon/serial-exe-state.gif" align="absmiddle"> 串行环节</a></div>
+	<div class="ToolItem"><a href="javascript:oFlow.act_AddNode('join-state');void(0);"><img src="../../../js/flow/images/icon/flow-node-join-state.gif" align="absmiddle"> 汇合环节</a></div>
+	<div class="ToolItem"><a href="javascript:oFlow.act_AddNode('compete-exe-state');void(0);"><img src="../../../js/flow/images/icon/flow-node-compete-exe-state.gif" align="absmiddle"> 竞争环节</a></div>
+	<div class="ToolItem"><a href="javascript:oFlow.act_AddNode('compete-join-state');void(0);"><img src="../../../js/flow/images/icon/flow-node-compete-join-state.gif" align="absmiddle"> 竞争汇合</a></div>
+	<div class="ToolItem"><a href="javascript:oFlow.act_AddNode('subprocess-state');void(0);"><img src="../../../js/flow/images/icon/subprocess-state.gif" align="absmiddle"> 子流程</a></div>
+	<div class="ToolItem"><a href="javascript:oFlow.act_AddNode('junction');void(0);"><img src="../../../js/flow/images/icon/flow-node-junction.gif" align="absmiddle"> 并发迁移</a></div>
+	<div class="ToolItem"><a href="javascript:graph.setConnectable(true);void(0);"><img src="../../../js/flow/images/icon/flow-line.gif" align="absmiddle"> 普通迁移</a></div>
+</div>
+<!-- -------------------------  工具栏[End]  ---------------------------- -->
+<!-- -------------------------  属性[Begin]  ---------------------------- -->
+<div id="divWinProperty" style="background-color:#F5F5F5;display:none;">
+	<!-- ---------------  节点属性  ----------------- -->
+	<div id="divProNode" style="padding-top:10px;">
+		<div class="TabMenu2">
+			<fieldset style="padding:3px;"><legend>基本属性</legend>
+				<table width="100%" border="1" bordercolor="#AAAAAA" cellspacing="0" cellpadding="2" style="border-collapse:collapse;table-layout:fixed;">
+					<COL width="32" class="pro_sub">
+					<COL width="120" class="pro_cap">
+					<COL class="pro_val">
+					<script type="text/javascript">
+						writeAttr('环节序号','sequence','string','',[],'基本属性','4'); //writeAttr('stateType','stateType','string');
+						writeAttr('环节名称','name','string');
+						writeAttr('环节标识','sid','string','环节的唯一ID');
+						writeAttr('环节类型','execType','select','描述环节的执行类型，如4001表示处理（默认）；4002表示阅读',[['4001','4001.处理'],['4002','4002.传阅']]);
+
+						writeAttr('分组名称','groupName','string','',[],'分组属性','3');
+						writeAttr('分组标识','groupId','string');
+						writeAttr('是否关键环节','key','boolean');
+
+						writeAttr('是否可撤办','csTarget','boolean','',[],'撤办属性','2');
+						writeAttr('可撤办环节','statescanbecanceled','dialog','',['flowStatesSel',450,300]);
+					</script>
+				</table>
+				<table id="tabNodeProperty_join" width="100%" border="1" bordercolor="#AAAAAA" cellspacing="0" cellpadding="2" style="border-collapse:collapse;margin-top:-1px;margin-bottom:-1px;table-layout:fixed;">
+					<COL width="32" class="pro_sub">
+					<COL width="120" class="pro_cap">
+					<COL class="pro_val">
+					<script type="text/javascript">
+						writeAttr('汇合前必完成环节','statesmustbefinished','dialog','',['flowStatesSel',450,300],'汇合属性','2');
+						writeAttr('提交条件','submitCondition','select','',[['1','1.当前环节所有人后续的待办返回'],['2','2.当前处理人后续的待办返回']]);
+					</script>
+				</table>
+				<table id="tabNodeProperty_exe" width="100%" border="1" bordercolor="#AAAAAA" cellspacing="0" cellpadding="2" style="border-collapse:collapse;margin-top:-1px;margin-bottom:-1px;table-layout:fixed;">
+					<COL width="32" class="pro_sub">
+					<COL width="120" class="pro_cap">
+					<COL class="pro_val">
+					<script type="text/javascript">
+						writeAttr('竞争策略','competeType','select','',[['5001','5001.所有候选人竞争'],['5002','5002.部门内竞争']],'竞争属性','1');
+					</script>
+				</table>
+				<table id="tabNodeProperty_subprocess" width="100%" border="1" bordercolor="#AAAAAA" cellspacing="0" cellpadding="2" style="border-collapse:collapse;margin-top:-1px;margin-bottom:-1px;table-layout:fixed;">
+					<COL width="32" class="pro_sub">
+					<COL width="120" class="pro_cap">
+					<COL class="pro_val">
+					<script type="text/javascript">
+						writeAttr('类型','subprocess_type','select','',[['0','本地'],['1','跨区域']],'子流程','5');
+						writeAttr('单位编码','subprocess_company','string');
+						writeAttr('标识','subprocess_sid','string');
+						writeAttr('版本','subprocess_version','string');
+						writeAttr('返回类型','subprocess_return_type','select','选择子流程返回类型',[['1','1.不返回'],['2','2.只要有一个返回就往下继续'],['3','3.全部返回才往下继续']]);
+					</script>
+				</table>
+				<table width="100%" border="1" bordercolor="#AAAAAA" cellspacing="0" cellpadding="2" style="border-collapse:collapse;table-layout:fixed;margin-top:-1px;">
+					<COL width="32" class="pro_sub">
+					<COL width="120" class="pro_cap">
+					<COL class="pro_val">
+					<script type="text/javascript">
+						writeAttr('应用接口参数','fields','string','',[],'应用接口','1');
+
+						writeAttr('是否知会','needNotify','boolean','是否知会被选择的环节处理人员',[],'其它属性','9');
+						writeAttr('允许补发','resubmitAllowed','boolean','标志是否该环节允许补发');
+						writeAttr('自动路径计算','calDefaultPath','boolean','true对当前环节应用自动路径计算；false对当前环节按顺序显示路径');
+						writeAttr('候选人员组别名','othername','string','候选人员组别名');
+						writeAttr('环节排序','sNo','string','环节排序');
+						writeAttr('待办合并环节','workitemMergeNode','string','同一文档同一人接收到不同环节多条待办合并处理：step20,step30');
+						writeAttr('待办区别提示','workitemDiffTip','string','同一文档同一人接收到多条待办不能合并处理的提示信息');
+						writeAttr('环节待办超期规则','workitemrule','string','环节待办超期规则，如：空|16,普通|16,急件|6,特急|3,特提|2，单位小时');
+                        writeAttr('环节意见显示过滤','workitemOpinionShow','boolean','true显示在办环节之前的信息；false显示所有意见');
+
+					</script>
+				</table>
+			</fieldset>
+			<fieldset>
+				<legend>环节控制</legend>
+				<table width="100%" border="1" bordercolor="#AAAAAA" cellspacing="0" cellpadding="2" style="border-collapse:collapse;table-layout:fixed;">
+					<COL width="100" class="pro_sub">
+					<COL width="100" class="pro_cap">
+					<COL  class="pro_val" >
+					<tr>
+						<td>是否填写附言：</td>
+						<td colspan="2">
+							<input type="radio" name="state_notes" id="state_notes1" onclick="setStateDoc('notes','1')"/><label for="state_notes1">填写附言&nbsp;</label>
+							<input type="radio" name="state_notes" id="state_notes0" onclick="setStateDoc('notes','0')"/><label for="state_notes0">不填写附言&nbsp;</label>
+						</td>
+					</tr>
+
+					<tr>
+						<td>默认勾选消息：</td>
+						<td colspan="2">
+							<table width="100%" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<td><input name="checkedMsg" AttrType="dialog" class="pro_input" id="checkedmsgState" readonly="readonly"/></td>
+									<td width="30"><button class="pro_BtnSel" onclick="showDialog('winCheckedMsg', '环节默认勾选消息','flowDocDlg.jsp?parVal=checkedmsgState,checkedMsg',700,500);">...</button></td>
+								</tr></table>
+						</td>
+					</tr>
+					<tr>
+						<td rowspan="6">应用属性：</td>
+						<td>环节表单(WEB):</td>
+						<td>
+						<span style="position:relative; overflow:hidden;width:100%">
+						<select  class="pro_select" id="sel_state_form" onchange="afterStateSelForm(this.value,'WEB');setStateDoc('form',this.value);">
+						</select>
+						</span>
+						</td>
+					</tr>
+					<tr>
+						<td>环节状态(WEB):</td>
+						<td>
+						<span style="position:relative; overflow:hidden;width:100%">
+						<select  class="pro_select" id="sel_state_formstate" onchange="setStateDoc('formstate',this.value);">
+						</select>
+						</span>
+						</td>
+
+					</tr>
+					<tr>
+						<td>可用操作(WEB):</td>
+						<td>
+							<table width="100%" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<td id="td_state_operations"> </td>
+									<td width="30"><input type="button" class="button" value="选取" onclick="showDialog('winFlowStateDocoperations','选取可用操作','flowStateDoc.htm?parVal=operations',400,300);"/></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<!--添加app端表单和状态-->
+					<tr>
+						<td>环节表单(APP)：</td>
+						<td>
+						<span style="position:relative; overflow:hidden;width:100%">
+						<select  class="pro_select" id="sel_state_form_app" onchange="afterStateSelForm(this.value,'APP');setStateDoc('appform',this.value);">
+						</select>
+						</span>
+						</td>
+					</tr>
+					<tr>
+						<td>环节状态(APP)：</td>
+						<td>
+						<span style="position:relative; overflow:hidden;width:100%">
+						<select  class="pro_select" id="sel_state_formstate_app" onchange="setStateDoc('appformstate',this.value);">
+						</select>
+						</span>
+						</td>
+					</tr>
+					<tr>
+						<td>可用操作(APP)：</td>
+						<td>
+							<table width="100%" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<td id="td_state_operations_app"> </td>
+									<td width="30"><input type="button" class="button" value="选取" onclick="showDialog('winFlowStateDocoperations','选取可用操作','flowStateDoc.htm?parVal=appoperations',400,300);"/></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>环节触发控制：</td>
+						<td colspan="2">
+						<table width="100%" border="0" cellpadding="0" cellspacing="0">
+						<tr>
+						<td><input name="action" AttrType="dialog" class="pro_input"/></td>
+						<td width="30"><button class="pro_BtnSel" onclick="parent.showDialog('winStateAction', '环节触发控制','flowDocDlg.jsp?parVal=action,stateControl',700,500);">...</button></td>
+						</tr></table>
+						</td>
+					</tr>
+				</table>
+			</fieldset>
+			<fieldset style="overflow: auto;height: 380px;"><legend>环节意见</legend>
+				<table border="0" cellpadding="3" cellspacing="0">
+					<tr>
+						<td colspan="2">
+							<input type="radio" name="stateNotion_availabel" id="stateNotion_availabel0" value="0" onclick="setStateNotion('availabel',this.value)"/><label for="stateNotion_availabel0">不可填写意见</label> &nbsp;&nbsp;
+							<input type="radio" name="stateNotion_availabel" id="stateNotion_availabel1" value="1" onclick="setStateNotion('availabel',this.value)"/><label for="stateNotion_availabel1">必须填写意见</label> &nbsp;&nbsp;
+							<input type="radio" name="stateNotion_availabel" id="stateNotion_availabel2" value="2" onclick="setStateNotion('availabel',this.value)"/><label for="stateNotion_availabel2">不限制</label>
+						</td>
+					</tr>
+					<tr>
+						<td>意见时间：</td>
+						<td>
+							<input type="radio" name="stateNotion_haveTime" id="stateNotion_haveTime1" value="0" onclick="setStateNotion('haveTime',this.value)" checked/><label for="stateNotion_haveTime1">不显示</label>
+							<input type="radio" name="stateNotion_haveTime" id="stateNotion_haveTime2" value="1" onclick="setStateNotion('haveTime',this.value)"/><label for="stateNotion_haveTime2">显示</label>
+						</td>
+					</tr>
+					<tr>
+						<td>意见是否回填：</td>
+						<td>
+							<input type="radio" name="stateNotion_fillBack" id="stateNotion_fillBack0" value="0" onclick="setStateNotion('fillBack',this.value)" checked/><label for="stateNotion_fillBack1">不回填</label>
+							<input type="radio" name="stateNotion_fillBack" id="stateNotion_fillBack1" value="1" onclick="setStateNotion('fillBack',this.value)"/><label for="stateNotion_fillBack2">回填</label>
+						</td>
+					</tr>
+					<!--<tr>
+						<td><input type="button" class="button" value="意见配置" onclick="showDialog('winFlowStateNotion','意见配置','flowStateNotion.htm',400,300);"/></td>
+					</tr>-->
+				</table>
+
+				<fieldset id="fldStateNotion" style="margin:5px;display:none;"><legend><b>意见配置</b></legend>
+						默认意见：<input type="text" name="stateNotion_opinionDefaultValue" id="stateNotion_opinionDefaultValue" value="" onchange="setStateNotion('opinionDefaultValue',this.value)"/>
+					<fieldset style="border-right:none; border-left:none; border-bottom:none; margin-top:5px; padding:4px;"><legend>默认显示</legend>
+						<table border="0" cellpadding="3" cellspacing="0">
+							<tr>
+								<td>
+									<input type="radio" name="stateNotion_opinionDeFaultMode" id="stateNotion_opinionDeFaultMode1" value="1" onclick="setStateNotion('opinionDeFaultMode',this.value)"/><label for="stateNotion_opinionDeFaultMode1">我的意见</label> &nbsp;&nbsp;
+									<input type="radio" name="stateNotion_opinionDeFaultMode" id="stateNotion_opinionDeFaultMode2" value="2" onclick="setStateNotion('opinionDeFaultMode',this.value)"/><label for="stateNotion_opinionDeFaultMode2">公用意见</label> &nbsp;&nbsp;
+									<input type="radio" name="stateNotion_opinionDeFaultMode" id="stateNotion_opinionDeFaultMode3" value="3" checked onclick="setStateNotion('opinionDeFaultMode',this.value)"/><label for="stateNotion_opinionDeFaultMode3">组合意见</label>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<input type="radio" name="stateNotion_opinionDeFaultLevel" id="stateNotion_opinionDeFaultLevel0" value="0" onclick="setStateNotion('opinionDeFaultLevel',this.value)"/><label for="stateNotion_opinionDeFaultLevel0">公司</label> &nbsp;&nbsp;
+									<input type="radio" name="stateNotion_opinionDeFaultLevel" id="stateNotion_opinionDeFaultLevel1" value="1" checked onclick="setStateNotion('opinionDeFaultLevel',this.value)"/><label for="stateNotion_opinionDeFaultLevel1">所处部门</label> &nbsp;&nbsp;
+									<input type="radio" name="stateNotion_opinionDeFaultLevel" id="stateNotion_opinionDeFaultLevel3" value="3" checked onclick="setStateNotion('opinionDeFaultLevel',this.value)"/><label for="stateNotion_opinionDeFaultLevel1">所处处室</label> &nbsp;&nbsp;
+									<input type="radio" name="stateNotion_opinionDeFaultLevel" id="stateNotion_opinionDeFaultLevel2" value="2" onclick="setStateNotion('opinionDeFaultLevel',this.value)"/><label for="stateNotion_opinionDeFaultLevel2">指定部门处室ID</label>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									默认部门处室ID：<input type="text" name="stateNotion_opinionDeFaultDeptID" id="stateNotion_opinionDeFaultDeptID" value="" onchange="setStateNotion('opinionDeFaultDeptID',this.value)" size="40"/>
+								</td>
+							</tr>
+						</table>
+					</fieldset>
+					<fieldset
+							style="border-right:none; border-left:none; border-bottom:none; margin-top:5px; padding:4px;">
+					<table border="0" cellpadding="3" cellspacing="0">
+						<tr>
+							<td>意见必须填写：</td>
+							<td id="stateNotion_divDraftMustWritePos"></td>
+						</tr>
+					</table>
+					</fieldset>
+
+					<fieldset
+							style="border-right:none; border-left:none; border-bottom:none; margin-top:5px; padding:4px;">
+					<table border="0" cellpadding="3" cellspacing="0">
+						<tr>
+							<td>意见标签：</td>
+							<td id="stateNotion_divLabel"></td>
+							<td>意见类型：</td>
+							<td id="stateNotion_divOpinionType">
+								<select id="stateNotion_opinionType" name="stateNotion_opinionType" onchange="setStateNotion('opinionType',this.value)" style="width: 120px">
+									<option value="" selected="true"></option>
+									<option value="1">拟办意见</option>
+									<option value="2">领导意见</option>
+								</select>
+							</td>
+						</tr>
+					</table>
+					</fieldset>
+					<fieldset style="border-right:none; border-left:none; border-bottom:none; margin-top:5px; padding:4px;"><legend>显示选项</legend>
+						<table width="100%" border="0" cellpadding="0" cellspacing="0">
+							<tr valign="top">
+								<td>
+									<input type="checkbox" name="stateNotion_highlight" id="stateNotion_highlight" onclick="setStateNotion('highlight',this.checked?'1':'0')"/><label for="stateNotion_highlight">突出显示</label>
+									<input type="checkbox" name="stateNotion_withOrg" id="stateNotion_withOrg" onclick="setStateNotion('withOrg',this.checked?'1':'0')"/><label for="stateNotion_withOrg">携带部门</label>
+									<input type="checkbox" name="stateNotion_withSignature" id="stateNotion_withSignature" onclick="setStateNotion('withSignature',this.checked?'1':'0')"/><label for="stateNotion_withSignature">携带签名</label>
+								</td>
+							</tr>
+							<tr>
+								<td style="padding-top:5px;">意见查看方式
+									<input type="radio" name="stateNotion_otherOrg" id="stateNotion_otherOrg2" value="2" onclick="setStateNotion('otherOrg',this.value)"/><label for="stateNotion_otherOrg2">查看所有意见</label>
+									<input type="radio" name="stateNotion_otherOrg" id="stateNotion_otherOrg3" value="3" onclick="setStateNotion('otherOrg',this.value)"/><label for="stateNotion_otherOrg3">查看最近意见</label>
+								</td>
+							</tr>
+						</table>
+					</fieldset>
+					<fieldset style="border-right:none; border-left:none; border-bottom:none; margin-top:5px; padding:4px;"><legend>发送对话框是否处理意见</legend>
+						<input type="radio" name="stateNotion_dialog" id="stateNotion_dialog0" value="0" onclick="setStateNotion('dialog',this.value)"/><label for="stateNotion_dialog0">不可填写意见</label>
+						<input type="radio" name="stateNotion_dialog" id="stateNotion_dialog1" value="1" onclick="setStateNotion('dialog',this.value)"/><label for="stateNotion_dialog1">填写意见</label>
+						<input type="radio" name="stateNotion_dialog" id="stateNotion_dialog2" value="2" onclick="setStateNotion('dialog',this.value)"/><label for="stateNotion_dialog2">自动生成意见</label>
+					</fieldset>
+					<fieldset style="border-right:none; border-left:none; border-bottom:none; margin-top:5px; padding:4px;"><legend>意见代替签名</legend>
+						代替签名：<input type="text" name="stateNotion_signReplacedByOpinion" id="stateNotion_signReplacedByOpinion" value="" onchange="setStateNotion('signReplacedByOpinion',this.value)"/>
+					</fieldset>
+
+					<fieldset style="border-right:none; border-left:none; border-bottom:none; margin-top:5px; padding:4px;"><legend>领导意见</legend>
+						<table>
+							<tr>
+								<td>
+									<center>
+									自动提取领导意见</center>
+									<input type="radio" name="stateNotion_leaderOpinion" id="stateNotion_leaderOpinion0" checked value="0" onclick="setStateNotion('leaderOpinionFlag',this.value)"/><label for="stateNotion_leaderOpinion0">不提取</label>
+									<input type="radio" name="stateNotion_leaderOpinion" id="stateNotion_leaderOpinion1" value="1" onclick="setStateNotion('leaderOpinionFlag',this.value)"/><label for="stateNotion_leaderOpinion1">根据字数</label>
+									<input type="radio" name="stateNotion_leaderOpinion" id="stateNotion_leaderOpinion2" value="2" onclick="setStateNotion('leaderOpinionFlag',this.value)"/><label for="stateNotion_leaderOpinion2">根据过滤信息</label>
+									<input type="radio" name="stateNotion_leaderOpinion" id="stateNotion_leaderOpinion3" value="3" onclick="setStateNotion('leaderOpinionFlag',this.value)"/><label for="stateNotion_leaderOpinion3">根据过滤信息和字数</label>
+								<td>
+							<tr>
+							<tr>
+								<td>
+									意见字数大于N提取：<input type="text" name="stateNotion_leaderOpinionLen" id="stateNotion_leaderOpinionLen" value="" onchange="setStateNotion('leaderOpinionLen',this.value)"/>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<label for="stateNotion_leaderOpinionCondition" title='备注：|表示或，&表示且，!表示非样例："!已阅&同意|批示"表示：意见包含批示或者包含同意且不包含已阅的提取意见'>意见提取信息内容规则：</label><input type="text" name="stateNotion_leaderOpinionCondition" id="stateNotion_leaderOpinionCondition" value="" onchange="setStateNotion('leaderOpinionCondition',this.value)" size="50"/>
+								</td>
+							</tr>
+
+						</table>
+						<fieldset style="border-right:none; border-left:none; border-bottom:none; margin-top:5px; padding:4px;"><legend>通过人员公式（配合“领导意见”使用</legend>
+							<table>
+								<tr>
+									<td>
+										<table>
+									<tr>
+										<td>
+											<label for="stateNotion_wfStateLeaderOpinion_0" title='为流程环节id(目标环节)。如step20'>路径：</label>
+										</td>
+										<td>
+											<input id="stateNotion_wfStateLeaderOpinion_0" type="text" value=""/>
+										</td>
+									</tr>
+
+									<tr>
+										<td>
+											对象类别：
+										</td>
+										<td>
+											<select id="stateNotion_wfStateLeaderOpinion_1" onchange="if (this.value=='1' || this.value=='2') document.getElementById('stateNotion_wfStateLeaderOpinion_2') .disabled=true; else document.getElementById('stateNotion_wfStateLeaderOpinion_2').disabled=false;">
+
+												<option value="0">表单域</option>
+												<option value="1">用户角色</option>
+												<option value="2">组织机构</option>
+												<option value="3">用户名称</option>
+											</select>
+										</td>
+									<tr>
+										<td>
+											<label title='【注】选择表单域和用户名称时候生效'>对象属性：</label>
+										</td>
+										<td>
+											<select id="stateNotion_wfStateLeaderOpinion_2">
+
+												<option value="0">用户标识</option>
+												<option value="1">用户姓名</option>
+											</select>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<label for="stateNotion_wfStateLeaderOpinion_3" title='【注】如表单域值、角色ID号、组织机构ID、用户名称（多值以";"区分）'>对象条件：</label>
+										</td>
+										<td>
+											<input type="text" id="stateNotion_wfStateLeaderOpinion_3" value=""/>
+
+										</td>
+									</tr>
+
+									<tr>
+										<td>
+											<label for="stateNotion_wfStateLeaderOpinion_4" title='【注】配合用户角色指派用，可以为空。选择以下值："总收发"、"本部门文书"、"单位"、"部门"、"处室"、"科室"、"班组"'>对象其他标识：</label>
+										</td>
+										<td>
+											<input id="stateNotion_wfStateLeaderOpinion_4" value=""/>
+
+										</td>
+									</tr>
+
+									<tr>
+										<td colspan="2" align="center">
+											<input class="button" onclick="funNotionWfLeaderConditionAdd();"
+												   type="button" value="新增"/>
+											<input class="button" onclick="funNotionWfLeaderConditionEdit();"
+												   type="button" value="修改"/>
+											<input type="button" class="button" value="删除" onclick="funNotionWfLeaderConditionDel();"/>
+										</td>
+									</tr>
+								</table>
+									</td>
+									<td id="td_StateNotion_wfLeader_Condition">
+
+									</td>
+								</tr>
+							</table>
+						</fieldset>
+					</fieldset>
+					<fieldset style="border-right:none; border-left:none; border-bottom:none; margin-top:5px; padding:4px;"><legend>自动意见生成规则</legend>
+						<input type="radio" name="stateNotion_opinionAuto" id="stateNotion_opinionAuto0" value="0" onclick="setStateNotion('opinionAuto',this.value)" checked/><label for="stateNotion_opinionAuto0">不生成意见</label>
+						<input type="radio" name="stateNotion_opinionAuto" id="stateNotion_opinionAuto1" value="1" onclick="setStateNotion('opinionAuto',this.value)"/><label for="stateNotion_opinionAuto1">自动生成意见</label>
+						<fieldset style="border-right:none; border-left:none; border-bottom:none; margin-top:5px; padding:4px;"><legend><label title='【备注：综合意见样例】：1、step10~UserAlias~~请~{99}~办理。--->请X总、Y总办理。2、step10~UserDept1~~请~{1}商|{2}办理|并{99}处理~-->请办公厅商发展部、财务部办理并XX部、YY部、ZZ部处理3、step10~UserAlias~~请~{99}~审批，$step20~UserDept1~并~请~{1}商|{99}~办理-->请X总、Y总审批，并请办公厅商发展部、财务部办理'>自动意见综合公式</label></legend>
+							<table>
+								<tr>
+									<td>
+								<table>
+									<tr>
+										<td>
+											<label title='不可为空，为下一个环节id' for="stateNotion_opinionAllFormula0">环节id</label>
+										</td>
+										<td>
+											<input type="text" id="stateNotion_opinionAllFormula0" value=""/>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<label title='备注：用户简称取人员组织库的用户简称，如果没有配置将取姓名。' for="stateNotion_opinionAllFormula1">流程角色</label>
+										</td>
+										<td>
+											<select id="stateNotion_opinionAllFormula1">
+
+												<option value="UserAlias">用户简称</option>
+												<option value="UserName">用户姓名</option>
+												<option value="UserDept1">一级部门</option>
+												<option value="UserDept2">二级部门</option>
+												<option value="UserDept3">三级部门</option>
+												<option value="UserDept4">四级部门</option>
+												<option value="UserNull">空值或者固定值</option>
+											</select>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<label title='如"另"或"并"，可为空' for="stateNotion_opinionAllFormula2">连接词</label>
+										</td>
+										<td>
+											<input type="text" id="stateNotion_opinionAllFormula2" value=""/>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<label title='如"送"或"请"，可为空' for="stateNotion_opinionAllFormula3">前置词</label>
+										</td>
+										<td>
+											<input type="text" id="stateNotion_opinionAllFormula3" value=""/>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<label title='1、环节单个、多人同情况办理：【送{N人}处理】----->如：送{99}处理2、环节多人多情况办理：【请{第1人}商{第2、3人}办理，送{其他人}处理】---->如：请{1}商|{2}办理，|送{99}处理备注：如果多人多情况办理，需用"|"来分割不同办理情况；且最后一个分割符"|"后面必须包含较大数字来结束意见规则，如：{99}；' for="stateNotion_opinionAllFormula4">人员格式</label>
+										</td>
+										<td>
+											<input type="text" id="stateNotion_opinionAllFormula4" value=""/>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<label title='如"办理"或"处理"，可为空' for="stateNotion_opinionAllFormula5">后置词</label>
+										</td>
+										<td>
+											<input type="text" id="stateNotion_opinionAllFormula5" value=""/>
+										</td>
+									</tr>
+									<tr>
+										<td colspan="2" align="center">
+											<input class="button" onclick="funNotionOpinionAllFormulaConditionAdd();"
+												   type="button" value="新增"/>
+											<input class="button" onclick="funNotionOpinionAllFormulaConditionEdit();"
+												   type="button" value="修改"/>
+											<input type="button" class="button" value="删除" onclick="funNotionOpinionAllFormulaConditionDel();"/>
+										</td>
+									</tr>
+								</table>
+									</td>
+									<td id="td_StateNotion_opinionAllFormula">
+
+									</td>
+								</tr>
+							</table>
+						</fieldset>
+					</fieldset>
+				</fieldset>
+			</fieldset>
+			<fieldset><legend>环节指派</legend>
+				<table width="97%" border="1" bordercolor="#AAAAAA" cellspacing="0" cellpadding="2" style="border-collapse:collapse;table-layout:fixed;margin:5px;">
+					<COL width="32" class="pro_sub">
+					<COL width="120" class="pro_cap">
+					<COL class="pro_val">
+					<script type="text/javascript">
+						writeAttr('指派类别','assignmentType','select','多组后续处理人选择条件时，描述人员集合的关系',[['2','2.并集'],['1','1.交集']],'指派属性','5');
+						writeAttr('指派控制','assignmentOption','select','描述流程中候选人员的选择方法',[['2','2.多人'],['1','1.限选一人'],['3','3.每部门一人']]);
+						writeAttr('返回格式','assignmentDisplay','select','描述返回人员信息的格式',[['1','1.只显示用户ID'],['2','2.显示人员和完整组织机构'],['3','3.显示ID和部门'],['4','4.显示ID和部门下机构'],['5','5.显示ID和直属机构'],['7','7.显示ID和处室全机构'],['8','8.只显示组织机构'],['9','9.显示单位人员']]);
+						writeAttr('默认环节侯选人','defaultfield','string','填写表单域的name，如果需要默认选择所有人，请填写“全部”');
+						writeAttr('默认环节侯选人类型','defaultfieldtype','select','',[['21','21.根据起草人部门设置默认主管该部门的公司领导'],['22','22.根据起草人处室设置默认主管该处室的部门领导'],['31','31.根据提交人部门设置默认主管该部门的公司领导'],['32','32.根据提交人处室设置默认主管该处室的部门领导']]);
+					</script>
+				</table>
+				<table border="0" cellpadding="1" cellspacing="0">
+					<tr>
+						<td id="td_state_assignment"></td>
+						<td valign="top">
+							<input type="button" class="button" value="添加职位指派" onclick="addStateAssignment('PositionAssignment')"/><br>
+							<input type="button" class="button" value="添加角色指派" onclick="addStateAssignment('RoleAssignment',500,400)"/><br>
+							<input type="button" class="button" value="添加群组指派" onclick="addStateAssignment('GroupAssignment',500,400)"/><br>
+							<input type="button" class="button" value="添加用户指派" onclick="addStateAssignment('UserAssignment')"/><br>
+							<!--  -->
+							<input type="button" class="button" value="添加跨单位职位指派" onclick="addStateAssignment('SubPositionAssignment',500,400)"/><br>
+							<input type="button" class="button" value="添加跨单位角色指派" onclick="addStateAssignment('SubRoleAssignment',500,400)"/><br>
+							<input type="button" class="button" value="添加所有单位指派" onclick="addStateAssignment('UnitAssignment')" title="全组织树选择人员" /><br>
+							<!--  -->
+							<input type="button" class="button" value="添加单位全员指派" onclick="addStateAssignment('DeptAssignment')"/><br>
+							<input type="button" class="button" value="添加步骤指派" onclick="addStateAssignment('StepAssignment')"/><br>
+							<input type="button" class="button" value="添加排除指派" onclick="addStateAssignment('RemoveAssignment')"/><br>
+							<input type="button" class="button" value="  移除指派  " onclick="delStateAssignment()"/>
+						</td>
+					</tr>
+				</table>
+			</fieldset>
+			<fieldset><legend>流程控制</legend>
+				<table width="100%" border="0" cellpadding="0" cellspacing="0">
+					<tr valign="top">
+						<td style="padding-top:3px">
+							<table width="100%" border="0" cellpadding="2" cellspacing="0">
+								<tr>
+									<td align="right">控制条件</td>
+									<td><input type="" id="processControl_0" size="30"/></td>
+								</tr>
+								<tr>
+									<td align="right">提示语</td>
+									<td><input type="" id="processControl_1" size="30"/></td>
+								</tr>
+								<tr>
+									<td align="right">控制方式</td>
+									<td>
+										<input type="radio" name="processControl_2" id="processControl_20"/><label for="processControl_20">强制控制</label>
+										<input type="radio" name="processControl_2" id="processControl_21"/><label for="processControl_21">提示</label>
+										<input type="radio" name="processControl_2" id="processControl_22"/><label for="processControl_22">调用JS函数</label>
+									</td>
+								</tr>
+								<tr>
+									<td align="right">操作方式</td>
+									<td>
+										<input type="checkbox" name="processControl_30" id="processControl_30"/><label for="processControl_30">发送</label>
+										<input type="checkbox" name="processControl_31" id="processControl_31"/><label for="processControl_31">退回</label>
+										<input type="checkbox" name="processControl_32" id="processControl_32"/><label for="processControl_32">转发</label>
+										<input type="checkbox" name="processControl_33" id="processControl_33"/><label for="processControl_33">结束</label>
+									</td>
+								</tr>
+								<tr>
+									<td align="right">控制点</td>
+									<td>
+										<input type="radio" name="processControl_4" id="processControl_40"/><label for="processControl_40">环节</label>
+										<input type="radio" name="processControl_4" id="processControl_41"/><label for="processControl_41">路径</label>
+									</td>
+								</tr>
+								<tr>
+									<td align="right">路径名称</td>
+									<td><input type="" id="processControl_5" size="30"/></td>
+								</tr>
+								<tr>
+									<td align="right">JS函数名称</td>
+									<td><input type="" id="processControl_6" size="30"/></td>
+								</tr>
+								<tr>
+									<td align="center" colspan="2">
+										<input class="button" onclick="funProcessControlAdd();" type="button"
+											   value="添加"/>
+										<input class="button" onclick="funProcessControlEdit();" type="button"
+											   value="修改"/>
+										<input type="button" class="button" value="删除" onclick="funProcessControlDel();"/>
+									</td>
+								</tr>
+							</table>
+						</td>
+						<td id="td_StateProcessControl" style="padding-top:3px"></td>
+					</tr>
+				</table>
+			</fieldset>
+			<fieldset><legend>知会</legend>
+				<table width="100%" border="0" cellpadding="3" cellspacing="0">
+					<tr>
+						<td>
+							<table>
+								<tr>
+									<td colspan="2">
+										<input type="radio" name="stateNotify_notifyOpinionControl" value="0" id="stateNotify_notifyOpinionControl0" checked onclick="setStateNotify('notifyOpinionControl',this.value)"/><label for="stateNotify_notifyOpinionControl0">满足触发条件即知会</label>
+										<input type="radio" name="stateNotify_notifyOpinionControl" value="1" id="stateNotify_notifyOpinionControl1" onclick="setStateNotify('notifyOpinionControl',this.value)"/><label for="stateNotify_notifyOpinionControl1">根据字数知会</label>
+										<input id="stateNotify_notifyOpinionControl2"
+											   name="stateNotify_notifyOpinionControl"
+											   onclick="setStateNotify('notifyOpinionControl',this.value)" type="radio"
+											   value="2"/><label
+											for="stateNotify_notifyOpinionControl2">根据过滤信息知会</label>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2">
+										<input type="radio" name="stateNotify_notifyOpinionControl" value="3" id="stateNotify_notifyOpinionControl3" onclick="setStateNotify('notifyOpinionControl',this.value)"/><label for="stateNotify_notifyOpinionControl3">根据过滤信息和字数知会</label>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<label for="stateNotify_notifyOpinionLen">意见字数大于N知会：</label>
+									</td>
+									<td>
+										<input id="stateNotify_notifyOpinionLen" value="" onchange="setStateNotify('notifyOpinionLen',this.value)"/>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<label title='备注：|表示或，&表示且，!表示非样例："!已阅&同意|批示"表示：意见包含批示或者包含同意且不包含已阅的知会' for="stateNotify_notifyOpinionCondition">意见过滤信息：</label>
+									</td>
+									<td>
+										<input id="stateNotify_notifyOpinionCondition" value="" size="36" onchange="setStateNotify('notifyOpinionCondition',this.value)"/>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+
+					<tr valign="top">
+						<td>
+							<fieldset style="border-right:none; border-left:none; border-bottom:none; margin-top:5px; padding:4px;"><legend>知会配置结果</legend>
+								<table>
+									<tr>
+										<td>
+											<table border="0" cellpadding="2" cellspacing="0">
+												<tr>
+													<td>触发类别</td>
+													<td>
+														<select id="notifyCondition_0">
+															<option value="0">应用端</option>
+															<option value="1">流程引擎</option>
+															<option value="2">两者</option>
+														</select>
+													</td>
+												</tr>
+												<tr>
+													<td><label title="可以写相关的Ｄｏｎｉｎｏ公式或者为空" for="notifyCondition_1">触发条件</label></td>
+													<td><input id="notifyCondition_1" value=""/></td>
+												</tr>
+												<tr>
+													<td><label title='为流程环节id(目标环节)。如step20' for="notifyCondition_3">路径</label></td>
+													<td><input id="notifyCondition_2" value=""/></td>
+												</tr>
+												<tr>
+													<td><label title='提示语或者提示语加上{意见}、{时间}、{意见人}、{标题}。\n例子："{意见人}：{意见}　{时间}，请查阅该文件《{标题}》"' for="notifyCondition_2">消息</label></td>
+													<td><input id="notifyCondition_3" value=""/></td>
+												</tr>
+												<tr>
+													<td>人员类别</td>
+													<td>
+														<select id="notifyCondition_4">
+															<option value="0">表单域</option>
+															<option value="1">角色</option>
+															<option value="2">机构</option>
+															<option value="3">用户名称</option>
+														</select>
+													</td>
+												</tr>
+												<tr>
+													<td>对象属性</td>
+													<td>
+														<select id="notifyCondition_5">
+															<option value="0">ID</option>
+															<option value="1">名称</option>
+														</select>
+													</td>
+												</tr>
+												<tr>
+													<td><label title='【注】如表单域值、角色ID号、组织机构ID、用户名称（多值以";"区分）' for="notifyCondition_6">对象条件</label></td>
+													<td><input id="notifyCondition_6" value=""/></td>
+												</tr>
+												<tr>
+													<td><label title='通知对象其它标识【注】配合用户角色指派用，可以为空。选择以下值："总收发"、"本部门文书"、"单位"、"部门"、"处室"、"科室"、"班组"' for="notifyCondition_7">对象其他标识</label></td>
+													<td><input id="notifyCondition_7" value=""/></td>
+												</tr>
+												<tr>
+													<td colspan="2" align="center">
+														<input class="button" onclick="funNotifyConditionAdd();"
+															   type="button" value="添加"/>
+														<input class="button" onclick="funNotifyConditionEdit();"
+															   type="button" value="修改"/>
+														<input type="button" class="button" value="删除" onclick="funNotifyConditionDel();"/>
+													</td>
+												</tr>
+											</table>
+										</td>
+										<td id="td_StateNotifyCondition"></td>
+									</tr>
+								</table>
+							</fieldset>
+						</td>
+					</tr>
+				</table>
+			</fieldset>
+			<fieldset style="overflow: auto;height: 380px;"><legend>信息映射</legend>
+
+				<table width="100%" border="0" cellpadding="3" cellspacing="0">
+					<tr>
+						<td>
+							<fieldset style="border-right:none; border-left:none; border-bottom:none; margin-top:5px; padding:4px;"><legend>表单信息映射到流程环节默认人员规则配置</legend>
+								<table>
+									<tr>
+										<td>
+											<table>
+												<tr>
+													<td>
+														流程路径默认人员规则说明：
+													</td>
+													<td>
+														<input type="text" id="formMapFlow_wfStateDefaultRuleDesc" size="40" onchange="setStateFormMapFlow('wfStateDefaultRuleDesc',this.value);"/>
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<fieldset style="border-right:none; border-left:none; border-bottom:none; margin-top:5px; padding:4px;"><legend><label title='提取默认人员触发条件+"~"+提取默认人员路径+"~"+提取默认人员规则'>流程路径默认人员规则</label></legend>
+												<table>
+													<tr>
+														<td>
+															<table>
+																<tr>
+																	<td>
+																		<label title='可以写相关的Ｄｏｎｉｎｏ公式或者为空' for="formMapFlow_wfStateDefaultRule_0">触发条件：</label>
+																	</td>
+																	<td>
+																		<input type="text" value="" id="formMapFlow_wfStateDefaultRule_0"/>
+																	</td>
+																</tr>
+																<tr>
+																	<td>
+																		<label title='为流程环节id(目标环节)。如step20' for="formMapFlow_wfStateDefaultRule_1">路径：</label>
+																	</td>
+																	<td>
+																		<input type="text" value="" id="formMapFlow_wfStateDefaultRule_1"/>
+																	</td>
+																</tr>
+																<tr>
+																	<td colspan="2">
+																		<fieldset style="border-right:none; border-left:none; border-bottom:none;">
+																			<legend align="center"><label title='可以为多条规则，每条规则以"^"连接（如：规则一+"^"+规则二）。单条规则格式说明如下：【单条规则格式】表单信息类别+"$"+表单信息类别属性+"$"+表单域或指定值+"$"+表单域取值规则+"$"+角色规则辅助信息+"$"+提取默认值类型'>提取默认人员的规则</label></legend>
+																		</fieldset>
+																	</td>
+																</tr>
+																<tr>
+																	<td>
+																		表单信息类别：
+																	</td>
+																	<td>
+																		<select id="formMapFlow_wfStateDefaultRule_df_0">
+																			<option value="0">表单域</option>
+																			<option value="1">指定值</option>
+																			<option value="2">当前用户</option>
+																		</select>
+																	</td>
+																</tr>
+																<tr>
+																	<td>
+																		表单信息类别属性：
+																	</td>
+																	<td>
+																		<select id="formMapFlow_wfStateDefaultRule_df_1">
+																			<option value="0">人员id</option>
+																			<option value="1">人员名称</option>
+																			<option value="2">部门id</option>
+																		</select>
+																	</td>
+																</tr>
+																<tr>
+																	<td colspan="2">
+																		<label title='注：指定表单域或者指定值【多值用#分割，信息类别为"当前用户"时可为空，其他不能为空】' for="formMapFlow_wfStateDefaultRule_df_1">表单域或指定值：</label>
+																	</td>
+
+																</tr>
+																<tr>
+																	<td colspan="2">
+																		<input id="formMapFlow_wfStateDefaultRule_df_2" value="" size="36"/>
+																	</td>
+																</tr>
+																<tr>
+																	<td colspan="2">
+																		表单域取值规则：
+																	</td>
+																</tr>
+																<tr>
+																	<td colspan="2">
+																		<select id="formMapFlow_wfStateDefaultRule_df_3">
+																			<option value="0">域值、指定值、当前用户类别属性</option>
+																			<option value="1">人员、部门的分管领导</option>
+																			<option value="2">人员、部门的所属角色群组</option>
+																		</select>
+																	</td>
+																</tr>
+																<tr>
+																	<td colspan="2">
+																		<label title='注：表单域取值规则为"角色群组"时候有效，格式为"类型*层次*角色群组id"类型值为R或者G；R代表角色,G代表群组层次值分别为-1、0、1、2、3、4；代表无层次、单位、一级部门、二级部门、三级部门、四级部门。角色群组id值为系统的角色id或者群组类型。角色id为系统的角色id；群组类型为系统群组类型（GroupKind），如"L"、"S"、"Z"等' for="formMapFlow_wfStateDefaultRule_4">角色规则辅助信息：</label>
+																	</td>
+
+																</tr>
+																<tr>
+																	<td colspan="2">
+																		<input id="formMapFlow_wfStateDefaultRule_df_4" value="" size="36"/>
+																	</td>
+																</tr>
+																<tr>
+																	<td nowrap>
+																		提取默认值类型：
+																	</td>
+																	<td>
+																		<select id="formMapFlow_wfStateDefaultRule_df_5">
+																			<option value="0">人员ID</option>
+																			<option value="1">部门ID</option>
+																		</select>
+																	</td>
+																</tr>
+																<tr>
+																	<td colspan="2" id="td_formMapFlow_wfStateDefaultRule_default">
+																	</td>
+																</tr>
+																<tr>
+																	<td colspan="2" align="center">
+																		<input class="button"
+																			   onclick="funFormMapFlowWfStateDefaultRuleDefaultConditionAdd();"
+																			   type="button" value="添加"/>
+																		<input class="button"
+																			   onclick="funFormMapFlowWfStateDefaultRuleDefaultConditionEdit();"
+																			   type="button" value="修改"/>
+																		<input type="button" class="button" value="删除" onclick="funFormMapFlowWfStateDefaultRuleDefaultConditionDel();"/>
+																	</td>
+																</tr>
+																<tr>
+																	<td colspan="2">
+																		<hr/>
+																	</td>
+																</tr>
+
+																<tr>
+																	<td colspan="2" align="center">
+																		<input class="button"
+																			   onclick="funFormMapFlowWfStateDefaultRuleConditionAdd();"
+																			   type="button" value="添加"/>
+																		<input class="button"
+																			   onclick="funFormMapFlowWfStateDefaultRuleConditionEdit();"
+																			   type="button" value="修改"/>
+																		<input type="button" class="button" value="删除" onclick="funFormMapFlowWfStateDefaultRuleConditionDel();"/>
+																	</td>
+																</tr>
+															</table>
+														</td>
+														<td>
+															<table>
+
+																<tr>
+																	<td id="td_formMapFlow_wfStateDefaultRule">
+																	</td>
+																</tr>
+															</table>
+														</td>
+													</tr>
+												</table>
+											</fieldset>
+										</td>
+									</tr>
+								</table>
+							</fieldset>
+							<fieldset style="border-right:none; border-left:none; border-bottom:none; margin-top:5px; padding:4px;"><legend><label title='流程信息回填触发条件+"~"+流程信息回填员路径+"~"+流程信息回填规则'>流程信息映射到表单信息规则配置</label></legend>
+								<table>
+									<tr>
+										<td>
+											<label>流程信息回填规则说明：</label>
+										</td>
+										<td>
+											<input id="flowMapForm_wfStateBackFillRuleDesc" value="" onchange="setStateFormMapFlow('wfStateBackFillRuleDesc', this.value)"/>
+										</td>
+									</tr>
+									<tr>
+										<td colspan="2">
+											<fieldset style="border-right:none; border-left:none; border-bottom:none; margin-top:5px; padding:4px;"><legend><label title='流程信息回填触发条件+"~"+流程信息回填员路径+"~"+流程信息回填规则其中：有且只有包含2个~分割符号'>流程信息回填规则</label></legend>
+												<table>
+													<tr>
+														<td>
+															<table>
+																<tr>
+																	<td>
+																		<label>触发条件：</label>
+																	</td>
+																	<td>
+																		<input id="flowMapForm_wfStateBackFillRule_0" value=""/>
+																	</td>
+																</tr>
+																<tr>
+																	<td>
+																		<label>路径：</label>
+																	</td>
+																	<td>
+																		<input id="flowMapForm_wfStateBackFillRule_1" value=""/>
+																	</td>
+																</tr>
+																<tr>
+																	<td>
+																		<label>规则：</label>
+																	</td>
+																	<td>
+																		<select id="flowMapForm_wfStateBackFillRule_2"  style="width:160" size="10" onchange="funFlowMapFormWfStateBackFillRule_contentShow();">
+																		</select>
+																	</td>
+																</tr>
+																<tr>
+																	<td colspan="2" align="center">
+																		<input class="button"
+																			   onclick="funShowDialogFlowMapFormWfStateBackFillRule();"
+																			   type="button" value="回填规则"/>
+																	</td>
+																</tr>
+																<tr>
+																	<td colspan="2" align="center">
+																		<input class="button"
+																			   onclick="funFlowMapFormWfStateBackFillRuleAdd();"
+																			   type="button" value="添加"/>
+																		<input class="button"
+																			   onclick="funFlowMapFormWfStateBackFillRuleEdit();"
+																			   type="button" value="修改"/>
+																		<input type="button" class="button" value="删除" onclick="funFlowMapFormWfStateBackFillRuleDel();"/>
+																	</td>
+																</tr>
+															</table>
+														</td>
+														<td id="td_flowMapForm_wfStateBackFillRule">
+
+														</td>
+													</tr>
+
+												</table>
+											</fieldset>
+										</td>
+									</tr>
+								</table>
+							</fieldset>
+							<fieldset style="border-right:none; border-left:none; border-bottom:none; margin-top:5px; padding:4px;"><legend><label title='意见流程联动触发条件+"~"+意见流程联动路径+"~"+意见流程联动内容其中：有且只有包含2个~分割符号'>意见信息映射到流程信息规则配置</label></legend>
+								<table>
+									<tr>
+										<td>
+											<label>意见与流程联动规则说明：</label>
+										</td>
+										<td>
+											<input id="optionMapFlow_wfOpinionFlowRuleDesc" value="" onchange="setStateFormMapFlow('wfOpinionFlowRuleDesc', this.value)"/>
+										</td>
+									</tr>
+									<tr>
+										<td colspan="2">
+											<fieldset style="border-right:none; border-left:none; border-bottom:none; margin-top:5px; padding:4px;"><legend><label title='意见流程联动触发条件+"~"+意见流程联动路径+"~"+意见流程联动内容其中：有且只有包含2个~分割符号'>意见与流程联动规则</label></legend>
+												<table>
+													<tr>
+														<td>
+															<table>
+																<tr>
+																	<td>
+																		<label for="optionMapFlow_wfOpinionFlowRule_0" title='可以写相关的Ｄｏｎｉｎｏ公式或者为空'>触发条件：</label>
+																	</td>
+																	<td>
+																		<input id="optionMapFlow_wfOpinionFlowRule_0" value=""/>
+																	</td>
+																</tr>
+																<tr>
+																	<td>
+																		<label for="optionMapFlow_wfOpinionFlowRule_1" title='为流程环节id(目标环节)。如step20'>路径：</label>
+																	</td>
+																	<td>
+																		<input id="optionMapFlow_wfOpinionFlowRule_1" value=""/>
+																	</td>
+																</tr>
+																<tr>
+																	<td>
+																		<label for="optionMapFlow_wfOpinionFlowRule_2" title='可以为多条内容规则，每条规则以"$"连接（如：内容规则一+"$"+内容规则二）。单条规则格式说明如下：【单条规则格式】意见值属性+意见值内容意见值属性：（单选）部门值|D、人员值|U意见值内容：数据格式为"{0#99}",前一个数字为下标，后一个数字为个数'>内容：</label>
+																	</td>
+																	<td>
+																		<select size="10" style="width:160" id="optionMapFlow_wfOpinionFlowRule_2" onchange="funOtionMapFlowRuleContextShow();">
+																		</select>
+																	</td>
+																</tr>
+																<tr>
+																	<td colspan="2" align="center">
+																		<input class="button"
+																			   onclick="funShowDialogOtionMapFlowRuleContext();"
+																			   type="button" value="内容规则"/>
+																	</td>
+																</tr>
+																<tr>
+																	<td colspan="2" align="center">
+																		<input class="button"
+																			   onclick="funOtionMapFlowRuleAdd();"
+																			   type="button" value="添加"/>
+																		<input class="button"
+																			   onclick="funOtionMapFlowRuledEdit();"
+																			   type="button" value="修改"/>
+																		<input type="button" class="button" value="删除" onclick="funOtionMapFlowRuleDel();"/>
+																	</td>
+																</tr>
+															</table>
+														</td>
+														<td id="td_optionMapFlow_wfOpinionFlowRule">
+
+														</td>
+													</tr>
+												</table>
+											</fieldset>
+										</td>
+									</tr>
+								</table>
+							</fieldset>
+							<fieldset style="border-right:none; border-left:none; border-bottom:none; margin-top:5px; padding:4px;"><legend><label>意见信息映射到基本信息规则配置</label></legend>
+								<table>
+									<tr>
+										<td>
+											<label>意见信息交互规则说明：</label>
+										</td>
+										<td>
+											<input id="optionMapBase_wfOpinionBackFillRuleDesc" value="" onchange="setStateFormMapFlow('wfOpinionBackFillRuleDesc', this.value)"/>
+										</td>
+									</tr>
+									<tr>
+										<td colspan="2">
+											<fieldset style="border-right:none; border-left:none; border-bottom:none; margin-top:5px; padding:4px;"><legend><label title='意见信息交互触发条件+"~"+意见信息交互规则其中：有且只有包含1个~分割符号'>意见信息交互规则</label></legend>
+												<table>
+													<tr>
+														<td>
+															<table>
+																<tr>
+																	<td>
+																		<label for="optionMapBase_wfOpinionBackFillRule_0">触发条件：</label>
+																	</td>
+																	<td>
+																		<input id="optionMapBase_wfOpinionBackFillRule_0"/>
+																	</td>
+																</tr>
+																<tr>
+																	<td>
+																		<label for="optionMapBase_wfOpinionBackFillRule_1">触发条件：</label>
+																	</td>
+																	<td>
+																		<select size="10" style="width:160" id="optionMapBase_wfOpinionBackFillRule_1" onchange="funShowDialogOptionMapBaseWfobfrContextShow();">
+																		</select>
+																	</td>
+																</tr>
+																<tr>
+																	<td colspan="2" align="center">
+																		<input class="button"
+																			   onclick="funShowDialogOptionMapBaseWfobfrContext();"
+																			   type="button" value="交互规则"/>
+																	</td>
+																</tr>
+																<tr>
+																	<td colspan="2" align="center">
+																		<input class="button"
+																			   onclick="funOptionMapBaseWfOpinionBackFillRuleAdd();"
+																			   type="button" value="添加"/>
+																		<input class="button"
+																			   onclick="funOptionMapBaseWfOpinionBackFillRuleEdit();"
+																			   type="button" value="修改"/>
+																		<input type="button" class="button" value="删除" onclick="funOptionMapBaseWfOpinionBackFillRuleDel();"/>
+																	</td>
+																</tr>
+															</table>
+														</td>
+														<td id="td_optionMapBase_wfOpinionBackFillRule">
+
+														</td>
+													</tr>
+												</table>
+											</fieldset>
+										</td>
+									</tr>
+								</table>
+							</fieldset>
+						</td>
+					</tr>
+				</table>
+
+			</fieldset>
+		</div>
+	</div>
+	<!-- ---------------  节点属性[开始结束]  ----------------- -->
+	<div id="divProNode_SE" style="padding-top:10px;">
+		<div class="TabMenu2">
+			<fieldset style="padding:3px;"><legend>基本属性</legend>
+				<table width="100%" border="1" bordercolor="#AAAAAA" cellspacing="0" cellpadding="2" style="border-collapse:collapse;table-layout:fixed;">
+					<COL width="32" class="pro_sub">
+					<COL width="120" class="pro_cap">
+					<COL class="pro_val">
+					<script type="text/javascript">
+						writeAttr('标识','sid','string','环节的唯一ID',[],'环节属性','2',null,'1');
+						writeAttr('名称','name','string');
+					</script>
+					<tr class="flowEnd">
+					<td rowspan="4">
+						表单属性
+					</td>
+						<td>办毕表单(WEB)：</td>
+						<td>
+						<span style="position:relative; overflow:hidden;width:100%"  class="flowEnd">
+						<select  class="pro_select " id="sel_flow_form" name="form" onchange="afterSelFlowForm(this.value,'WEB');setCurrentObjAttr(this);">
+						</select>
+						</span>
+						</td>
+					</tr>
+					<tr class="flowEnd">
+						<td>办毕状态(WEB)：</td>
+						<td>
+						<span style="position:relative; overflow:hidden;width:100%"  class="flowEnd">
+						<select  class="pro_select" id="sel_flow_formstate" name="formstate" onchange="setCurrentObjAttr(this);">
+						</select>
+						</span>
+						</td>
+					</tr>
+					<tr class="flowEnd">
+						<td>办毕表单(APP)：</td>
+						<td>
+						<span style="position:relative; overflow:hidden;width:100%"  class="flowEnd">
+						<select  class="pro_select " id="sel_flow_form_app" name="appform" onchange="afterSelFlowForm(this.value,'APP');setCurrentObjAttr(this);">
+						</select>
+						</span>
+						</td>
+					</tr>
+					<tr class="flowEnd">
+						<td>办毕状态(APP)：</td>
+						<td>
+						<span style="position:relative; overflow:hidden;width:100%"  class="flowEnd">
+						<select  class="pro_select" id="sel_flow_formstate_app" name="appformstate" onchange="setCurrentObjAttr(this);">
+						</select>
+						</span>
+						</td>
+					</tr>
+				</table>
+			</fieldset>
+		</div>
+	</div>
+	<!-- ---------------  线条属性  ----------------- -->
+	<div id="divProLine" style="padding-top:10px;">
+		<div class="TabMenu2">
+			<fieldset style="padding:3px;"><legend>基本属性</legend>
+				<table width="100%" border="1" bordercolor="#AAAAAA" cellspacing="0" cellpadding="2" style="border-collapse:collapse;table-layout:fixed;">
+					<COL width="32" class="pro_sub">
+					<COL width="120" class="pro_cap">
+					<COL class="pro_val">
+					<script type="text/javascript">
+						writeAttr('迁移名称','name','string','',[],'基本属性','4');
+						writeAttr('是否返回','returnBack','boolean');
+						writeAttr('是否退回','rejectBack','boolean');
+						writeAttr('启用接口操作','dominoAction','dialog');
+						writeAttr('是否折线','zLine','boolean','',[],'其它属性','1');
+					</script>
+				</table>
+			</fieldset>
+			<fieldset style="padding:3px;"><legend>迁移控制</legend>
+				<div id="div_LineAttr_Other"></div>
+				<div style="text-align:right;padding:3px;"><input type="button" class="button" value="添加参数" onclick="showLineActDlg('','')"/></div>
+			</fieldset>
+			<fieldset style="padding:3px;"><legend>按钮配置</legend>
+				<div id="div_LineAttr_Button"></div>
+				<div style="text-align:right;padding:3px;"><input type="button" class="button" value="添加配置" onclick="showButtonConfigDlg('')"/></div>
+			</fieldset>
+		</div>
+	</div>
+	<!-- ---------------  流程属性  ----------------- -->
+	<div id="divProDoc" style="padding-top:10px;">
+		<div class="TabMenu2" id="tabProDoc">
+			<fieldset style="padding:3px;"><legend>基本属性</legend>
+				<table width="100%" border="1" bordercolor="#AAAAAA" cellspacing="0" cellpadding="2" style="border-collapse:collapse;table-layout:fixed;">
+					<COL width="32" class="pro_sub">
+					<COL width="120" class="pro_cap">
+					<COL class="pro_val">
+					<script type="text/javascript">
+						writeAttr('流程序号','sequence','string','标识业务流程的字符串，如GSFW',[],'基本属性','6');
+						writeAttr('流程类别','category','string');
+						writeAttr('流程名称','name','string','描述业务流程的名称，如公司发文流程');
+						writeAttr('流程标识','label','string');
+						writeAttr('流程版本','version','string','描述当前业务流程的版本号，格式为X.X.0');
+						writeAttr('流程描述','description','string','业务流程的相关描述信息');
+						//流程应用模块
+						//writeAttr('流程应用模块','modules','select','',getXMLDocModules(),'应用属性','4');
+						//writeAttr('流程启用表单','form','select','',getXMLDocForm());
+					</script>
+					<tr>
+					<td rowspan="8">应用属性</td>
+					<td>流程应用模块</td>
+						<td>
+						<span style="position:relative; overflow:hidden;width:100%">
+						<select  class="pro_select" id="sel_Doc_modules" onchange="afterSelModules(this.value);oFlow.setAttr('','modules',this.value)">
+						</select>
+						</span>
+						</td>
+					</tr>
+					<tr>
+						<td>流程应用业务</td>
+						<td>
+						<span style="position:relative; overflow:hidden;width:100%">
+						<select  class="pro_select" id="sel_Doc_business" onchange="afterSelBusiness(this.value);oFlow.setAttr('','business',this.value)">
+						</select>
+						</span>
+						</td>
+					</tr>
+					<tr>
+						<td>全局默认表单(WEB)</td>
+						<td>
+						<span style="position:relative; overflow:hidden;width:100%">
+						<select  class="pro_select" id="sel_Doc_form" onchange="afterSelForm(this.value,'WEB');oFlow.setAttr('','form',this.value)">
+						</select>
+						</span>
+						</td>
+					</tr>
+					<tr>
+						<td>全局默认状态(WEB)</td>
+						<td>
+						<span style="position:relative; overflow:hidden;width:100%">
+						<select  class="pro_select" id="sel_Doc_formstate" onchange="oFlow.setAttr('','formstate',this.value)" value="">
+						</select>
+						</span>
+						</td>
+					</tr>
+					<tr>
+						<td>流程可用操作(WEB)</td>
+						<td>
+							<table width="100%" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<td>
+										<div style="display: none"><input type="text" name="operationsAll" /></div>
+										<input name="operations" AttrType="dialog" class="pro_input" onchange="setCurrentObjAttr(this)"/>
+									</td>
+									<td width="30"><button class="pro_BtnSel" onclick="showDialog('winFormState', '表单状态','flowDocDlg.html?parVal=operations,operation',700,500);">...</button></td>
+								</tr></table>
+						</td>
+					</tr>
+					<tr>
+						<td>全局默认表单(APP)</td>
+						<td>
+						<span style="position:relative; overflow:hidden;width:100%">
+						<select  class="pro_select" id="sel_Doc_form_app" onchange="afterSelForm(this.value,'APP');oFlow.setAttr('','appform',this.value)">
+						</select>
+						</span>
+						</td>
+					</tr>
+					<tr>
+						<td>全局默认状态(APP)</td>
+						<td>
+						<span style="position:relative; overflow:hidden;width:100%">
+						<select  class="pro_select" id="sel_Doc_formstate_app" onchange="oFlow.setAttr('','appformstate',this.value)" value="">
+						</select>
+						</span>
+						</td>
+					</tr>
+
+					<tr>
+						<td>流程可用操作(APP)</td>
+						<td>
+							<table width="100%" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<td><input name="appoperations" AttrType="dialog" class="pro_input" onchange="setCurrentObjAttr(this)"/></td>
+									<td width="30"><button class="pro_BtnSel" onclick="showDialog('winFormState', '表单状态','flowDocDlg.html?parVal=appoperations,operation',700,500);">...</button></td>
+								</tr></table>
+						</td>
+					</tr>
+					<script type="text/javascript">
+						//writeAttr('流程可用操作','operations','dialog');
+						//writeAttr('流程控制域','domains','dialog');
+						//getXMLDocModules();
+					</script>
+				</table>
+			</fieldset>
+			<fieldset style="padding:3px;"><legend>流程意见</legend>
+				<div id="divFlowNotion" style="width:100%;overflow:auto;height:200"></div>
+				<table width="100%" border="0" cellpadding="2" cellspacing="0">
+					<tr>
+						<td><input type="checkbox" id="chkIsSort" onclick="oFlow.setAttr('/notion','isSort',(this.checked?'true':'false'));"/><label for="chkIsSort">排序</label></td>
+						<td align="right">
+							<input type="button" name="" value="添加" class="button" onclick="editFlowNotion(-1);"/>
+							<input type="button" name="" value="选取" class="button" onclick="selFlowNotion();"/>
+							<input type="button" name="" value="排序" class="button" onclick="orderFlowNotion();"/>
+						</td>
+
+					</tr>
+				</table>
+			</fieldset>
+			<fieldset style="padding:3px;"><legend>流程权限</legend>
+				<table border="0" cellpadding="3" cellspacing="0">
+					<tr>
+						<td><input type="radio" name="privilege" id="privilege0" value="0" onclick="oFlow.setAttr('/privilege','type',this.value)"/><label for="privilege0">直接提供此文件给用户起草</label></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><input type="radio" name="privilege" id="privilege1" value="1" onclick="oFlow.setAttr('/privilege','type',this.value)"/><label for="privilege1">根据条件设置提供此文件给用户起草</label></td>
+						<td><input type="button" class="button" value="条件设置" onclick="showDialog('winFlowDocDraft','条件设置','flowDocDraft.jsp',500,400);"/></td>
+					</tr>
+					<tr>
+						<td><input type="radio" name="privilege" id="privilege2" value="2" onclick="oFlow.setAttr('/privilege','type',this.value)"/><label for="privilege2">暂时封闭此文件</label></td>
+						<td></td>
+					</tr>
+				</table>
+			</fieldset>
+			<fieldset style="padding:3px;"><legend>全局配置</legend>
+				<table width="100%" border="1" bordercolor="#AAAAAA" cellspacing="0" cellpadding="2" style="border-collapse:collapse;table-layout:fixed;">
+					<COL width="32" class="pro_sub">
+					<COL width="120" class="pro_cap">
+					<COL class="pro_val">
+					<script type="text/javascript">
+						writeAttr('流程超期规则','instancerule','string','流程超期规则，如：空|5,普通|5,急件|4,特急|2,特提|1，单位天',[],'全局配置','6');
+						writeAttr('流程待办超期规则','workitemrule','string','流程待办超期规则，如：空|16,普通|16,急件|6,特急|3,特提|2，单位小时');
+					</script>
+					<tr>
+					<tr>
+						<td>默认勾选消息：</td>
+						<td>
+							<table width="100%" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<td><input name="checkedMsg" AttrType="dialog" class="pro_input" id="checkedmsgFlow" onchange="setCurrentObjAttr(this)" readonly="readonly"/></td>
+									<td width="30"><button class="pro_BtnSel" onclick="showDialog('winCheckedMsgFlow', '环节默认勾选消息','flowDocDlg.jsp?parVal=checkedmsgFlow,checkedMsg',700,500);">...</button></td>
+								</tr></table>
+						</td>
+					</tr>
+				</table>
+			</fieldset>
+		</div>
+	</div>
+</div>
+<div id="divFlowNotionInput" style="background-color:#F5F5F5;display:none;">
+	<table width="100%" border="0" cellpadding="3" cellspacing="0">
+		<form class="Validate" onsubmit="editFlowNotion_After(this.txtFlowNotionInput_id.value,this.txtFlowNotionInput.value);winFlowNotionInput.hide();return false;">
+		<tr>
+			<td>请输入新值：</td>
+		</tr>
+		<tr>
+			<td align="center"><input id="txtFlowNotionInput" name="txtFlowNotionInput" class="input" size="30" ErrEmpty="输入值不允许为空！"/><input id="txtFlowNotionInput_id" type="hidden" name="txtFlowNotionInput_id"/></td>
+		</tr>
+		<tr>
+			<td align="center">
+				<input type="submit" value=" 确定 " class="button"/>
+				<input type="button" value=" 取消 " class="button" onclick="winFlowNotionInput.hide();"/>
+			</td>
+		</tr>
+		</form>
+	</table>
+</div>
+<div id="divFlowNotionOrder" style="background-color:#F5F5F5;display:none;padding:13px;">
+	<table width="100%" border="0" cellpadding="3" cellspacing="0">
+		<tr>
+			<td></td>
+		</tr>
+		<tr>
+			<td align="center" id="tdFlowNotionOrder"></td>
+		</tr>
+		<tr>
+			<td align="center">
+				<input type="button" value="上移" class="button" onclick="selMoveUp(jsfw.$('selFlowNotionOrder'));"/>
+				<input type="button" value="下移" class="button" onclick="selMoveDown(jsfw.$('selFlowNotionOrder'));"/>
+			</td>
+		</tr>
+		<tr>
+			<td align="center">
+				<input type="button" value=" 确定 " class="button" onclick="orderFlowNotion_After();"/>
+				<input type="button" value=" 取消 " class="button" onclick="winFlowNotionOrder.hide();"/>
+			</td>
+		</tr>
+		</form>
+	</table>
+</div>
+<!-- -------------------------  属性[End]  ---------------------------- -->
+
+<!-- -------------------------  右键菜单[Begin]  ---------------------------- -->
+<div id="divPopupMenu" class="PopupMenu" style="background-color:#F5F5F5;">
+	<xmp style="display:none">
+		<root>
+			<item text="删除" action="oFlow.delItem('');" icon="../../../js/flow/images/icon/delete2.gif"/>
+			<item text="取消选择" action="oFlow.selItem('');" icon1="../../../js/flow/images/icon/delete2.gif"/>
+		</root>
+	</xmp>
+</div>
+<!-- -------------------------  右键菜单[End]  ---------------------------- -->
+
+<input type="button" id="btnTest" name="" value="Test" onclick="self.location.hash='XXX'" onclick1="xxy.innerText=oFlow.getFlowXML()" style="display:none;"/>
+<xmp id="xxy"></xmp>
+
+<iframe name="ifrmSave" src="about:blank" style="display:none;"></iframe>
+<FORM name="frmMainSave" id="frmMainSave" METHOD="POST" ACTION="" target="ifrmSave" style="display:none;">
+	<input type="" name="name" value=""/>
+	<input type="" name="label" value=""/>
+	<input type="" name="version" value=""/>
+	<input type="" name="fcover" value=""/>
+	<input type="" name="fsend" value="true"/>
+	<input type="" name="orgId" value=""/>
+	<input type="" name="type" value="0"/>
+	<input type="" name="loadingCache" value="0"/>
+	<input name="org_id" type="" value=""/>
+
+	<input type="" name="module" value=""/>
+	<input type="" name="business" value=""/>
+	<input type="" name="labelold" value=""/>
+	<input type="" name="versionold" value=""/>
+	<input type="" name="nameold" value=""/>
+	<textarea name="content"></textarea>
+</FORM>
+
+
+
+<div id="saveAsWindow" style="background-color:#F5F5F5;display:none;">
+	<form class="Validate" id="saveasForm" method="post" name="saveasForm" onsubmit="return saveAs();">
+		     <input type="hidden" name="labelold"/>
+             <input type="hidden" name="versionold"/>
+		<input name="orgId" type="hidden"/>
+             <div style="margin-left:20px;margin-top:10px;">流程名称：<input id="name1" name="name"  type="text" ErrEmpty="流程名称不允许为空。"/></div>
+             <div style="margin-left:20px;margin-top:10px;">流程标识：<input id="label1" name="label" type="text" ErrCheck="^[A-Za-z]+$" ErrCaption="请以英文命名"  ErrEmpty="流程标签不允许为空。"/><I>注：须以英文命名</I></div>
+             <div style="margin-left:20px;margin-top:10px;">流程版本：<input id="version1" name="version" type="text"  ErrCheck="^(\d|\.)+$" ErrCaption="请用“.”与数字组合命名" value="1.0.0" ErrEmpty="流程版本不允许为空。"/></div>
+           <div style="margin-left:20px;margin-top:10px;">
+			   <input Class="Button" type="submit" value="确定"/>
+             <input type="button" Class="Button" onclick="cancel();" value="取消"/>
+           </div>
+         </form>
+ </div>
+</BODY>
+</HTML>
+<script type="text/javascript" src="../../../js/lib/jsfw/boot.js" loadClass="" loadPrototype="Array,String" loadWebUI="PopMsg" Theme="Default"></script>
+<script type="text/javascript">
+
+    var graph;
+    var nodeParent;
+    var nodeArray={};
+
+    var orginMoveCells = mxGraphHandler.prototype.moveCells
+
+	mxGraphHandler.prototype.moveCells = function(cells, dx, dy, clone, target, evt)
+	{
+	    resultCell = [];
+	    for(var k=0; k<cells.length;k++){
+            var curCell = cells[k]; //当前移动的Cell
+            if(!curCell.edge){ //移动时排除连线
+                resultCell.push(curCell)
+                var oNode =  oFlow.findNode(curCell.stepId);
+                oFlow.modified=true;
+                oFlow.setAttr(oNode,'xlocation', parseInt(curCell.getGeometry().x) + parseInt(dx));
+                oFlow.setAttr(oNode,'ylocation', parseInt(curCell.getGeometry().y) + parseInt(dy));
+            }
+		}
+		orginMoveCells.apply(this,[resultCell, dx, dy, clone, target, evt])
+	}
+
+
+    mxVertexHandler.prototype.livePreview = true;
+    mxVertexHandler.prototype.rotationEnabled = true;
+		// mxGraphHandler.prototype.moveCells
+    var orginConnect = mxConnectionHandler.prototype.connect;
+    mxConnectionHandler.prototype.connect = function(source, target, evt, dropTarget){
+        if (source!=null &&target!=null){
+
+            //orginConnect.apply(this,[source, target, evt, dropTarget])
+            graph.getModel().beginUpdate();
+            try{
+                oFlow.addLine(source.stepId,target.stepId);
+            }
+            finally{
+                graph.getModel().endUpdate();
+            }
+
+        }
+	}
+    var orginMouseUp = mxConnectionHandler.prototype.mouseUp;
+
+    mxConnectionHandler.prototype.mouseUp = function(sender, me)
+    {
+        orginMouseUp.apply(this,[sender, me])
+        // graph.setConnectable(false);
+    };
+
+    var orginLayout = mxParallelEdgeLayout.prototype.layout;
+    mxParallelEdgeLayout.prototype.layout = function(parallels){
+        var edge = parallels[0];
+        var view = graph.getView();
+        var model = graph.getModel();
+        var src = model.getGeometry(view.getVisibleTerminal(edge, true));
+        var trg = model.getGeometry(view.getVisibleTerminal(edge, false));
+        if(src == null || trg == null){
+            return;
+        }
+        orginLayout.apply(this,[parallels])
+    }
+
+
+    function main(container)
+    {
+        // Checks if the browser is supported
+        if (!mxClient.isBrowserSupported())
+        {
+            // Displays an error message if the browser is not supported.
+            mxUtils.error('Browser is not supported!', 200, false);
+        }
+        else
+        {
+            // Disables the built-in context menu
+            mxEvent.disableContextMenu(container);
+
+            // Creates the graph inside the given container
+            graph = new mxGraph(container);
+            graph.setCellsCloneable(true);
+            graph.setTooltips(true);
+            graph.setHtmlLabels(true);
+            graph.setPanning(true);
+            graph.centerZoom = false;
+            graph.setCellsResizable(false)
+            graph.setMultigraph(false);
+            // graph.setConnectable(true);
+            // graph.setEnabled(false);
+            // Enables rubberband selection
+            // new mxRubberband(graph);
+            var layout = new mxParallelEdgeLayout(graph);
+            var layoutMgr = new mxLayoutManager(graph);
+
+            layoutMgr.getLayout = function(cell)
+            {
+                if (cell.getChildCount() > 0)
+                {
+                    return layout;
+                }
+            };
+
+            // Installs a handler for double click events in the graph
+            // that shows an alert box
+            graph.addListener(mxEvent.DOUBLE_CLICK, function(sender, evt)
+            {
+                winProperty.show()
+                evt.consume();
+            });
+
+            // Gets the default parent for inserting new cells. This
+            // is normally the first child of the root (ie. layer 0).
+            nodeParent = graph.getDefaultParent();
+
+            // Adds cells to the model in a single step
+            graph.getModel().beginUpdate();
+            try
+            {
+				oFlow.loadFromURL(CST_URL_Flow);
+                initDocument();
+            }
+            finally
+            {
+                // Updates the display
+                graph.getModel().endUpdate();
+
+            }
+        }
+    };
+
+
+
+function Body_Click(){
+	if (self.event.srcElement.nodeName=='BODY') oFlow.selItem(''); //取消选择
+}
+
+function reloadEngineSource(){
+    if (/msie/i.test(navigator.userAgent)){
+    }else{
+        if(jsfw.WebUI.Window.findWindow("winXMLSrc")){
+            $("iframe[name=" +jsfw.WebUI.Window.findWindow("winXMLSrc").IFrameName+"]")[0].contentWindow.location.reload(true);
+        }
+    }
+}
+
+//扩展函数
+Array.prototype.toString2 = function(){
+	var rs='';
+	for (var i=0; i<this.length; i++){
+		if (i>0) rs+=';';
+		rs += this[i];
+	}
+	return rs;
+}
+
+var oFlow=jsfw.$('divFlow');
+main(document.getElementById('divxml'));
+
+
+document.title = oFlow.getAttr(oFlow.getRoot(),'name') + '  [' + oFlow.getAttr(oFlow.getRoot(),'label') +  '  v' +oFlow.getAttr(oFlow.getRoot(),'version') + ']  - 流程建模';
+CST_name = oFlow.getAttr(oFlow.getRoot(),'name');
+//另存为窗口
+var saveAsTool = jsfw.WebUI.Window.newWindow('saveAsTool','另存为',jsfw.$('saveAsWindow'),319,200,0,0,true);
+jsfw.WebUI.Window.findWindow(saveAsTool).hide();
+
+
+setInterval(function(){
+	try{
+		//xxy.innerText=oFlow.getFlowXML()
+		document.getElementById('divModified').style.display = oFlow.modified?'':'none';
+	}catch(e){}
+},1000);
+jsfw.$('sel_Doc_modules').value = oFlow.getAttr('','modules');
+</script>

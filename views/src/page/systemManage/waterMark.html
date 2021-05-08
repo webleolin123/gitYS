@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html  class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>水印设置</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../js/layui/css/layui.css"/>
+    <link href="../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script charset="utf-8" src="../../js/common/plugin.js"></script>
+</head>
+<body class="iframe-h">
+
+<div class="content-wrap">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" >
+               <!--layui-form-pane-->
+            <form action="" class="layui-form layui-form-pane" lay-filter="watermarkForm" style="background: white;padding: 20px">
+                  <div class="layui-form-item">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">开关</label>
+                            <div class="layui-input-block">
+                                <input type="radio" name="switch" lay-filter="switch" value="1" title="ON">
+                                <input type="radio" name="switch" lay-filter="switch" value="0" title="OFF">
+                            </div>
+                        </div>
+                  </div>
+                  <div class="layui-form-item">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">自定义</label>
+                            <div class="layui-input-block">
+                                <input type="radio" name="zdySwitch" lay-filter="zdySwitch" value="1" title="ON">
+                                <input type="radio" name="zdySwitch" lay-filter="zdySwitch" value="0" title="OFF">
+                            </div>
+                        </div>
+                  </div>
+                  <div class="layui-form-item">
+                      <label class="layui-form-label">水印内容</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="title" id="title"  placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                  </div>
+                  <div class="layui-form-item ">
+<!--                    <label class="layui-form-label">复选框</label>-->
+                    <div class="layui-input-block">
+                        <input type="checkbox" name="companyName" title="企业名称">
+                        <input type="checkbox" name="userName" title="用户名称" >
+                    </div>
+                  </div>
+                  <div class="layui-form-item">
+                    <div class="layui-input-block" style="text-align: center;margin-left: 0">
+                        <button class="layui-btn" lay-submit lay-filter="formSave" permission-btn="waterMarkSave"> <i class="layui-icon">&#x1005;</i>保存</button>
+                    </div>
+                 </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+<script src="./../../js/layui/layui.js"></script>
+<script>
+
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).extend({
+    }).use(['form','common','element'],function () {
+        var form = layui.form;
+        var common = layui.common;
+        var element = layui.element;
+        element.init();
+        common.themeSet();
+        //监听复选框
+        form.on('checkbox()', function (data) {
+            var watermark = $("#title").val();
+            if (data.elem.checked) {
+                if(data.elem.name=='userName'){
+                    if(watermark != ""){
+                        watermark = watermark+"-{用户名称}";
+                    }else{
+                        watermark = "{用户名称}";
+                    }
+                }else{
+                    if(watermark != ""){
+                        watermark = watermark+"-{企业名称}";
+                    }else{
+                        watermark = "{企业名称}";
+                    }
+                }
+                form.val('watermarkForm', {
+                    "title": watermark
+                });
+            } else {
+                if(data.elem.name=='userName'){
+                    watermark = watermark.replace(/-{用户名称}/g, '');
+                    watermark = watermark.replace(/{用户名称}/g, '');
+                }else{
+                    watermark = watermark.replace(/-{企业名称}/g, '');
+                    watermark = watermark.replace(/{企业名称}/g, '');
+                }
+                if(watermark.indexOf("-")==0){
+                    watermark = watermark.substring(1, watermark.length);
+                }
+                form.val('watermarkForm', {
+                    "title": watermark
+                });
+            }
+        });
+
+        form.on('radio(zdySwitch)', function (data) {
+            // debugger;
+            if(data.value==1){
+                if($("#title")[0].disabled == true){
+                    form.val('watermarkForm', {
+                        "title": "",
+                        "companyName": '',
+                        "userName": ''
+                    });
+                    $("#title")[0].disabled = false;
+                }
+            }else{
+                if($("#title")[0].disabled == false){
+                    form.val('watermarkForm', {
+                        "title": "",
+                        "companyName": '',
+                        "userName": ''
+                    });
+                    $("#title")[0].disabled = true;
+                }
+            }
+        });
+
+
+        //初始化表格
+
+        common.fetchGet('sysmgr/dicts/findWaterMarkMsg',function (res) {
+
+            if(res.success && res.object) {
+                var formData =res.object;
+                if (formData.close == ''||formData.close == null) {
+                    layer.alert("查询水印信息失败,请去数据字典中配置！", {
+                        icon: 5
+                    });
+                    return false;
+                }else {
+                    if(formData.zdy=='1'){
+                        $("#title")[0].disabled = false;
+                    }
+                    form.val('watermarkForm', {
+                        "zdySwitch": formData.zdy,
+                        "switch": formData.close,
+                        "companyName" :formData.seName,
+                        "userName" :formData.suName,
+                        "title":formData.watermark
+                    });
+                    form.render();
+                }
+            }
+        });
+
+        //监听 表单提交
+        form.on('submit(formSave)', function(data){
+            layer.open({
+                content: '您确定要保存?',
+                offset: '10px',
+                btn: ['<i class="fa fa-check-circle"></i>确定', '<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>取消'],
+                yes: function (index, layero) {
+                    var loading = layer.msg('正在保存中...', {
+                        icon: 16,
+                        shade: 0.3,
+                        time: 30000
+                    });
+
+                    var title = data.field.title;
+                    var close = data.field.switch;
+                    if(data.field.switch!=="0"||data.field.zdySwitch!=="0"){
+                        var watermark = $("#title").val();
+                        if(watermark==""){
+                            layer.msg('请输入水印内容');
+                            return false;
+                        }
+                    }
+                    var parma = {
+                        close:data.field.switch,
+                        zdy:data.field.zdySwitch,
+                        seName:data.field.companyName,
+                        suName:data.field.userName,
+                        watermark: data.field.title
+                    };
+                    common.fetchPut('sysmgr/dicts/updateWaterMarkMsg',parma, function (res) {
+                        if (res){
+                            layer.close(loading);
+                            var object = res.object;
+                            if (object==null||object.result != 'success') {
+                                layer.alert("更新水印信息失败！", {
+                                    icon: 5
+                                });
+                                return false;
+                            } else {
+                                layer.alert("保存成功！", {
+                                    icon: 6
+                                });
+
+                                //水印设置功能
+                                // common.waterMark({'watermark_txt':object['waterMarkName']});
+
+                                //并且刷新页面
+                                top.window.location.reload();
+
+
+                            }
+                        }else {
+                            layer.close(loading);
+                        }
+
+
+                    });
+                }
+            });
+            return false;
+        });
+        common.buttonLimit();
+    });
+
+</script>
+
+<!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

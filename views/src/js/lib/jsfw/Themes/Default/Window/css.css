@@ -1,0 +1,98 @@
+/******************** jsfw_Window [Begin] ********************/
+.jsfw_Window{
+	POSITION: absolute;
+/*	filter:Shadow(color=#999999,direction=135,strength=4);
+	padding-right:4px;
+	padding-bottom:4px;*/
+}
+.jsfw_Window_noShadow{
+	POSITION: absolute;
+/*	filter:Shadow(color=#999999,direction=135,strength=4);
+	padding-right:0px;
+	padding-bottom:0px;*/
+}
+td.jsfw_Window_Title{
+	text-align:left;
+	font-weight:bold;
+	cursor:default;
+	padding-left:10px;
+	padding-top:3px;
+	-moz-user-select: none;
+	color:white;
+}
+span.jsfw_Window_Title{
+	white-space: nowrap;
+	width:70%; 
+	text-decoration:none; 
+	text-overflow:ellipsis; 
+	overflow:hidden; 
+}
+.jsfw_Window_SysBtn{
+	width:57px;
+	height:26px;
+}
+.jsfw_Window_Close{
+	width:19px;
+	height:26px;
+	cursor:hand;
+	background: url('BG.gif') no-repeat 0px -90px;
+}
+.jsfw_Window_Hide{
+	width:19px;
+	height:26px;
+	cursor:hand;
+	background: url('BG.gif') no-repeat 0px -90px;
+}
+.jsfw_Window_Refresh{
+	width:19px;
+	height:26px;
+	cursor:hand;
+	background: url('BG.gif') no-repeat 0px -130px;
+}
+.jsfw_Window_Max{
+	width:19px;
+	height:26px;
+	cursor:hand;
+	background: url('BG.gif') no-repeat 0px -110px;
+}
+.jsfw_Window_0_0{
+	width:4px;
+	height:26px;
+	background: url('BG.gif') no-repeat 0px -30px;
+}
+.jsfw_Window_0_1{
+	height:26px;
+	background: url('BG.gif') repeat-x 0px -0px #4786D3;
+}
+.jsfw_Window_0_2{
+	width:4px;
+	height:26px;
+	background: url('BG.gif') no-repeat 0px -60px;
+}
+.jsfw_Window_1_0{
+	width:4px;
+	background: url('BGY.gif') repeat-y 0px -0px;
+}
+.jsfw_Window_1_1{
+	background-color:white;
+	/*padding:3px;*/
+}
+.jsfw_Window_1_2{
+	width:4px;
+	background: url('BGY.gif') repeat-y -10px 0px;
+}
+.jsfw_Window_2_0{
+	width:4px;
+	height:4px;
+	background: url('BG.gif') no-repeat 0px -170px;
+}
+.jsfw_Window_2_1{
+	height:4px;
+	background: url('BG.gif') repeat-x 0px -160px;
+}
+.jsfw_Window_2_2{
+	width:4px;
+	height:4px;
+	background: url('BG.gif') no-repeat 0px -180px;
+}
+/******************** jsfw_Window [End] ********************/

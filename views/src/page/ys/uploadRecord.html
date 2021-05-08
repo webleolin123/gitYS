@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>上传记录</title>
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../js/layui/css/layui.css" />
+    <link href="../../css/public.css?v1.01" rel="stylesheet" />
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script charset="utf-8" src="../../js/common/plugin.js"></script>
+</head>
+<style>
+    .white-bg {
+        background: white;
+    }
+
+    .iframe-h {
+        height: 100%;
+    }
+
+    .content-wrap {
+        padding: 10px;
+    }
+
+    .hide {
+        display: none;
+    }
+
+    .layui-form-pane .layui-form-label {
+        width: 150px;
+    }
+
+    .layui-form-pane .layui-input-block {
+        margin-left: 150px;
+    }
+
+    .eleTree.pType {
+        height: auto;
+        width: 100%;
+        display: none;
+        position: absolute;
+        top: 100%;
+        background-color: #fff;
+        z-index: 895;
+        border: 1px solid #ccc;
+    }
+
+    .layui-none {
+        border-bottom: 1px solid rgb(228, 219, 219);
+    }
+
+    h3 {
+        font-weight: 900;
+        margin-top: 20px;
+    }
+</style>
+
+<body>
+
+    <div class="userLayer" style="height: 100%;">
+        <div style="padding: 15px 10px;height: 100%;">
+            <div style="height: 100%;">
+                <div class="layui-row layui-col-space10">
+                    <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+                        <!-- layui tree-->
+                        <div class="layui-card">
+                            <div class="layui-card-header layui-card-header-custom">
+                                <span><i></i>企业层级</span>
+                            </div>
+                            <div class="layui-card-body">
+
+                                <div class="layuiTree eleTree ele4" id="leftTree" lay-filter="leftTree"
+                                    style="overflow-y: auto;margin-top: 10px"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
+
+                        <div class="layui-card">
+                            <div class="layui-card-header layui-card-header-custom">
+                                <span><i></i>补传文件记录列表</span>
+                            </div>
+                            <div class="layui-card-body">
+                                <table id="hisTable" lay-filter="hisTable"></table>
+                            
+                            </div>
+                        </div>
+
+                        
+                    </div>
+                </div>
+
+
+            </div>
+
+</body>
+<script src="./../../js/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).use(['eleTree', 'layer', 'table', 'form', 'laytpl', 'common', 'element', 'laydate', 'upload'], function (exports) {
+        var table = layui.table;
+        var form = layui.form;
+        var tree = layui.eleTree;
+        var common = layui.common;
+        var element = layui.element;
+        var laydate = layui.laydate;
+        var util = layui.util;
+        var upload = layui.upload;
+        var baseUrl = '../../../';
+        element.init();
+        common.themeSet();
+        var sysEnterpriseTreeUrl = "sysmgr/sysEnterprise/selectSysEnterpriseOrganPostTreeAllList?treeType=enterpriseTree";
+
+        var seId;
+        var param = {"seId":seId};
+
+        var eventHandle = {
+            treeInit: function () {
+                formatTree();
+                common.fetchGet(sysEnterpriseTreeUrl, function (res) {
+
+                    //树信息的导入
+                    if (res.success && res.list) {
+                        eleTreeId = tree.render({
+                            elem: '#leftTree',
+                            data: res.list,
+                            checkOnClickNode: true,
+                            highlightCurrent: true,    // 是否高亮当前选中节点，默认值是 false。
+                            expandOnClickNode: true,    // 是否在点击节点的时候展开或者收缩节点， 默认值为 true，如果为 false，则只有点箭头图标的时候才会展开或者收缩节点。
+                            showCheckbox: false,
+                            lazy: true,
+                            load: function (data, callback) {
+                                eventHandle.treeReload(data, callback);
+                            }
+                        });
+
+                        tree.on("nodeClick(leftTree)", function (obj) {
+                            obj.node.select();
+                            var curTreeNode = obj.data.currentData;
+                            seId = curTreeNode.seId
+                            param.seId = curTreeNode.seId
+                            eventHandle.tableInit();
+                        });
+                        $('#leftTree').find('.eleTree-node-content-label').eq(0).trigger('click');
+                    } else {
+                        //不存在数据时的显示
+                    }
+                }, function () { });
+            },
+            treeReload: function (data, callback) {
+                common.fetchGet(sysEnterpriseTreeUrl + '&id=' + data.id + '&extendAttr=' + data.extendAttr, function (res) {
+                    if (res.success && res.list) {
+                        callback(res.list)
+                    }
+                }, function () {
+                    callback([])
+                });
+            },
+            tableInit: function () {
+                table.render(common.tableInitParams({
+                    elem: '#hisTable',
+                    url: baseUrl + 'meetingmgr/attachmentReUpload/selectReUploadAttachmentLog',
+                    method: 'post',
+                    defaultToolbar: [],
+                    page: true,
+                    height: 'full-114',
+                    where:param,
+                    cols: [
+                        [
+                            { type: 'numbers', title: '序号' },
+                            { field: 'originalFileName', title: '文件名称' },
+                            { field: 'fileSize', title: '文件大小(单位byte)', minWidth: 180 },
+                            {
+                                field: 'ggCreateDatetime', title: '上传时间', templet: function (rowData) {
+                                    return common.toDateString(rowData.ggCreateDatetime);
+                                }
+                            },
+                            {
+                                field: '', title: '处理状态', width: 130, align: "center", templet: function (rowData) {
+                                    return rowData.tails.alreadyRemoved ? '<span class="red">已处理</span>' : '<span class="green">未处理</span>';
+                                }
+                            }
+                        ]
+                    ]
+                }));
+            }
+
+
+
+        };
+
+
+
+
+        eventHandle.treeInit();
+        // eventHandle.tableInit();
+
+
+        function formatTree() {
+            var cacluHeight = $(document).height() - $("#mainMenuTab").height() - $(".layui-card-header").height() - 80;
+            $("#leftTree").css({
+                "height": cacluHeight + "px",
+                "overflow-y": "auto"
+            });
+        }
+
+
+
+    });
+</script>
+<!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+
+</html>

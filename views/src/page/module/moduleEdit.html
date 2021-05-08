@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html  class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>模块管理</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../js/layui/css/layui.css"/>
+    <link href="../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+</head>
+<body class="iframe-h">
+
+<script id="addForm" type="text/html">
+<form class="layui-form" lay-filter="addForm" style="padding:10px">
+    <div class="layui-row layui-col-space15">
+            <div class="layui-row">
+                <label class="layui-form-label">序号</label>
+                <div class="layui-input-block">
+                    <input type="text" name="sort" autocomplete="off" class="layui-input" value="0" lay-verify="required">
+                </div>
+            </div>
+            <div class="layui-row">
+                <label class="layui-form-label">字段名称</label>
+                <div class="layui-input-block">
+                    <input type="hidden" name="moduleId">
+                    <input type="hidden" name="fieldId">
+                    <input type="text" name="fieldName" autocomplete="off" class="layui-input" lay-verify="required">
+                </div>
+            </div>
+            <div class="layui-row">
+                <label class="layui-form-label">字段类型</label>
+                <div class="layui-input-block">
+                    <select name="fieldType" lay-filter="fieldType" lay-verify="required">
+                        <option value="">--请选择--</option>
+                        <option value="VARCHAR2">字符串</option>
+                        <option value="DATE">日期型</option>
+                        <option value="NUMBER">数值型</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-row" field="fieldLength">
+                <label class="layui-form-label">字段长度</label>
+                <div class="layui-input-block">
+                    <input type="text" name="fieldLength" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-row" field="digitNum">
+                <label class="layui-form-label">小数位数</label>
+                <div class="layui-input-block">
+                    <input type="text" name="digitNum" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-row">
+                <label class="layui-form-label">字段默认值</label>
+                <div class="layui-input-block">
+                    <input type="text" name="defaultValue" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-row">
+                <label class="layui-form-label">备注</label>
+                <div class="layui-input-block">
+                    <textarea name="remark" placeholder="请输入内容" class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div class="layui-row layui-layer-btn-c">
+                <button class="layui-btn" lay-submit lay-filter="addFormSubmit">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary btn-close"><i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭</button>
+            </div>
+        </div>
+    </div>
+</form>
+</script>
+
+<div class="content-wrap">
+    <div class="layui-row layui-col-space15 layui-form" lay-filter="form">
+        <div class="layui-col-xs12 layui-col-sm12 layui-col-md2">
+            <i class="icon" style="height:167px;width:200px"></i>
+        </div>
+        <div class="layui-col-xs12 layui-col-sm12 layui-col-md10">
+            <div class="layui-row">
+                <label class="layui-form-label">业务模块</label>
+                <div class="layui-input-block">
+                    <input type="hidden" name="moduleId">
+                    <input type="text" readonly name="moduleName" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-row">
+                <label class="layui-form-label">业务类型</label>
+                <div class="layui-input-block">
+                    <input type="text" readonly name="moduleType" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-row">
+                <label class="layui-form-label">扩展表名</label>
+                <div class="layui-input-block">
+                    <input type="text" readonly name="extTableName" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-row">
+                <label class="layui-form-label">状　　态</label>
+                <div class="layui-input-block">
+                    <input type="text" readonly name="status" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-row layui-col-space15">
+        <table id="mainTable" lay-filter="mainTable"></table>
+        <script type="text/html" id="tableOper">
+            {{# if(d.status == 0){ }}
+            <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+            <a class="layui-btn layui-btn-xs" lay-event="generate">生成</a>
+            <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delete">删除</a>
+            {{# } }}
+        </script>
+        <script type="text/html" id="tableToolBar">
+            <div class="layui-btn-container">
+                <button class="layui-btn layui-btn-sm" lay-event="add">
+                    <i class="layui-icon">&#xe608;</i> 新增
+                </button>
+                <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete">
+                    <i class="layui-icon">&#xe640;</i> 删除
+                </button>
+            </div>
+        </script>
+
+    </div>
+</div>
+<script src="./../../js/layui/layui.js"></script>
+<script>
+
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).use(['layer','table','form','laytpl','common','element','laydate','eleTree'],function () {
+        var table=layui.table;
+        var form=layui.form;
+        var common=layui.common;
+        var element = layui.element;
+        var laydate = layui.laydate;
+        var tree = layui.eleTree;
+        var util = layui.util;
+        element.init();
+        var baseUrl='../../../';
+        var moduleId = common.getQueryVariable("moduleId");
+
+        common.themeSet();
+        common.toggleArea($('.toggle-btn'),$('.toggle-area'));
+
+        //获取表单数据
+        var sURL = baseUrl + "compmgr/module/info?id=" + moduleId;
+        common.fetchGet(sURL, function(data){
+            var dataObj = data.object;
+            dataObj.status = dataObj.status == 0 ? "未生成" : "已生成";
+            $(".icon").addClass(dataObj.icon);
+            form.val("form", dataObj);
+        }, false);
+
+        //模块列表
+        table.render(common.tableInitParams({
+            elem: '#mainTable',
+            url: baseUrl+'compmgr/module/field/list',
+            where: {"moduleId":moduleId},
+            method: "post",
+            height: 'full-170',
+            toolbar:'#tableToolBar',
+            cols: [
+                [
+                    {type: 'checkbox', field: 'fieldId'},
+                    {field: 'sort', title: '序号', width: '4%', align: 'center'},
+                    {field: 'fieldName', title: '字段名称'},
+                    {field: 'fieldType', title: '字段类型', templet: function(rowdata){
+                        var result = "";
+                        if(rowdata.fieldType == "VARCHAR2"){
+                            result = "字符型";
+                        }else if(rowdata.fieldType == "DATE"){
+                            result = "日期型";
+                        }else if(rowdata.fieldType == "NUMBER"){
+                            result = "数值型";
+                        }
+                        return result;
+                    }},
+                    {field: 'fieldLength', title: '字段长度', width: '7%'},
+                    {field: 'digitNum', title: '小数位数', width: '7%'},
+                    {field: 'defaultValue', title: '默认值'},
+                    {field: 'status', title: '状态', templet: function(rowdata){
+                        return rowdata.status == 0 ? "未生成" : "已生成";
+                    }},
+                    {field: 'remark', width: '20%', title: '备注'},
+                    {field: '', title: '操作', toolbar:'#tableOper',fixed: 'right'}
+                ]
+            ],
+            done: function(){
+                //按钮权限
+                common.buttonLimit();
+            }
+        }));
+
+        //头部按钮事件
+        table.on('toolbar(mainTable)', function(obj){
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch(obj.event){
+                case 'add':
+                    var addLayer = layer.open({
+                        title: "新增字段",
+                        type: 1,
+                        area: ['60%', '70%'],
+                        content: $("#addForm").html(),
+                        closeBtn: 0,
+                        success: function(layero, index){
+                            $("input[name=moduleId]").val(moduleId);
+                            //默认禁用字段长度和小数位数
+                            $("input[name=fieldLength]").attr("disabled", true);
+                            $("input[name=digitNum]").attr("disabled", true);
+
+                            form.render("addForm");
+                            form.render("select");
+
+                            $(".btn-close").on("click", function(){
+                                layer.close(addLayer);
+                            });
+
+                            form.on('select(fieldType)', function(data){
+                                if(data.value == "NUMBER"){
+                                    $("input[name=fieldLength]").attr("disabled", false);
+                                    $("input[name=digitNum]").attr("disabled", false);
+                                }else if(data.value == "VARCHAR2"){
+                                    $("input[name=fieldLength]").attr("disabled", false);
+                                    $("input[name=digitNum]").attr("disabled", true).val("");
+                                }else{
+                                    $("input[name=fieldLength]").attr("disabled", true).val("");
+                                    $("input[name=digitNum]").attr("disabled", true).val("");
+                                }
+                            });
+                        }
+                    });
+
+                    form.on("submit(addFormSubmit)", function(data){
+                        var sURL = baseUrl + "compmgr/module/field/save";
+                        common.fetchPost(sURL, data.field, function(obj){
+                            if(obj.success){
+                                layer.msg("保存成功");
+                                layer.close(addLayer);
+                                table.reload("mainTable");
+                            }else{
+                                layer.msg(obj.resultMessage);
+                            }
+                        },function(obj){
+                            layer.msg(obj.resultMessage);
+                        });
+                        return false;
+                    });
+                    break;
+                case 'delete':
+                    layer.confirm("确认删除所选字段吗？", function(index){
+
+                        var ids = [];
+                        var checkData = checkStatus.data;
+                        checkData.forEach((item, index, array)=>{
+                            ids.push(item.fieldId);
+                        });
+
+                        var sURL = baseUrl + "compmgr/module/field/delete?ids=" + ids.join(",");
+                        common.fetchDelete(sURL, function(obj){
+                            layer.msg("删除成功");
+                            table.reload("mainTable");
+                            layer.close(index);
+                        },function(obj){
+                            layer.msg(obj.resultMessage);
+                            layer.close(index);
+                        });
+                    });
+                    break;
+            }
+        });
+
+        //制度列表 table 监听事件
+        table.on('tool(mainTable)', function(obj){
+            var data = obj.data;
+            switch(obj.event){
+                case 'edit'://编辑
+                    var editLayer=layer.open({
+                        title:['编辑模块'],
+                        type: 1,
+                        area: ['60%', '70%'],
+                        content: $("#addForm").html(),
+                        closeBtn: 0,
+                        success: function(layero, index){
+                            form.val("addForm", data);
+                            form.render("addForm");
+                            form.render("select");
+
+                            $(".btn-close").on("click", function(){
+                                layer.close(editLayer);
+                            });
+
+                            if(data.fieldType == "NUMBER"){
+                                $("input[name=fieldLength]").attr("disabled", false);
+                                $("input[name=digitNum]").attr("disabled", false);
+                            }else if(data.fieldType == "VARCHAR2"){
+                                $("input[name=fieldLength]").attr("disabled", false);
+                                $("input[name=digitNum]").attr("disabled", true).val("");
+                            }else{
+                                $("input[name=fieldLength]").attr("disabled", true).val("");
+                                $("input[name=digitNum]").attr("disabled", true).val("");
+                            }
+
+                            form.on('select(fieldType)', function(data){
+                                if(data.value == "NUMBER"){
+                                    $("input[name=fieldLength]").attr("disabled", false);
+                                    $("input[name=digitNum]").attr("disabled", false);
+                                }else if(data.value == "VARCHAR2"){
+                                    $("input[name=fieldLength]").attr("disabled", false);
+                                    $("input[name=digitNum]").attr("disabled", true).val("");
+                                }else{
+                                    $("input[name=fieldLength]").attr("disabled", true).val("");
+                                    $("input[name=digitNum]").attr("disabled", true).val("");
+                                }
+                            });
+                        }
+                    });
+
+                    form.on("submit()", function(data){
+                        var sURL = baseUrl + "compmgr/module/field/update";
+                        common.fetchPost(sURL, data.field, function(obj){
+                            if(obj.success){
+                                layer.msg("修改成功");
+                                table.reload("mainTable");
+                                layer.close(editLayer);
+                            }else{
+                                layer.msg(obj.resultMessage);
+                            }
+                        },function(obj){
+                            layer.msg(obj.resultMessage);
+                        });
+                        return false;
+                    });
+                    break;
+                case 'generate'://生成
+                    layer.confirm("确定生成扩展字段 "+data.fieldName+" 吗？", 
+                        function(index){
+                            var sURL = baseUrl + "compmgr/module/field/generate?ids=" + data.fieldId;
+                            common.fetchGet(sURL, function(data){
+                                if(data.success){
+                                    table.reload("mainTable");
+                                }else{
+                                    layer.msg(data.resultMessage);
+                                }
+                            }, function(data){
+                                layer.msg(data.resultMessage);
+                            }, false);
+                            layer.close(index);
+                        }
+                    );
+                    break;
+                case 'delete'://删除
+                    var ids = [];
+                    var confirmLayer = layer.confirm("确认删除"+data.fieldName+"字段吗？", function(index){
+                        var sURL = baseUrl + "compmgr/module/field/delete?ids=" +data.fieldId;
+                        common.fetchDelete(sURL, function(obj){
+                            layer.msg("删除成功");
+                            table.reload("mainTable");
+                            layer.close(index);
+                        },function(obj){
+                            layer.msg(obj.resultMessage);
+                            layer.close(index);
+                        });
+                    });
+                    break;
+            }
+        });
+    });
+
+</script>
+
+<!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

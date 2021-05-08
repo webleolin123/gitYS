@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>企业管理-编辑</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../js/layui/css/layui.css"/>
+    <link href="../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script charset="utf-8" src="../../js/common/plugin.js"></script>
+</head>
+<style>
+    .content{
+        height:100%;
+        width:100%;
+        position:fixed;
+        background: white;
+    }
+    .white-bg {
+        background: white;
+    }
+
+    .iframe-h {
+        height: 100%;
+    }
+
+    .content-wrap {
+        padding: 10px;
+    }
+
+    .red {
+        color: red;
+        padding-left: 5px;
+    }
+
+    .hide {
+        display: none;
+    }
+
+    .layui-form-pane .layui-form-label{
+        width: 150px;
+    }
+
+    .layui-form-pane .layui-input-block{
+        margin-left: 150px;
+    }
+</style>
+
+<body>
+<!--添加按钮中的弹框-->
+<div class="userLayer">
+    <div style="padding: 15px 20px">
+        <form class="layui-form layui-form-pane" name="userLayer" id="seForm">
+            <div style="height:500px;overflow-y:auto;overflow-x:hidden">
+                <input type="hidden" name="seId" id="seId">
+                <input type="hidden" name="sePid" id="sePid">
+                <input type="hidden" name="seAllPid" id="seAllPid">
+                <input type="hidden" name="ggDelStatus" id="ggDelStatus">
+                <input type="hidden" name="ggEnStatus" id="ggEnStatus">
+                <input type="hidden" name="seAreaId" id="seAreaId">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><b class="red">*</b>单位全称</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="seName" required lay-verify="required" placeholder="请输入"
+                                       autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md6">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><b class="red">*</b>单位简称</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="seShortName" required lay-verify="required" placeholder="请输入"
+                                       autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">英文名称</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="seEnName" placeholder="请输入" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md6">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><b class="red">*</b>社会信用代码</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="seComcode" required lay-verify="required" placeholder="请输入"
+                                       autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><b class="red">*</b>组织机构代码</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="seUnitcode" required lay-verify="required" placeholder="请输入"
+                                       autocomplete="off" class="layui-input" maxlength="10">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md6">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">境外标志</label>
+                            <div class="layui-input-block">
+                                <select name="seOutsideFlag" id="seOutsideFlag">
+                                    <option value="">请选择</option>
+                                    <option value="0">境外</option>
+                                    <option value="1">境内</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">国家名称</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="seNation" placeholder="请输入" autocomplete="off"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md6">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">洲代码</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="seState" placeholder="请输入" autocomplete="off"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><b class="red">*</b>序号</label>
+                    <div class="layui-input-block">
+                        <input type="number" required lay-verify="required" name="ggSort" placeholder="请输入"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">地址</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="seAddr" placeholder="请输入" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width:100%">备注</label>
+                    <div class="layui-input-block" style="margin-left:0;left:0">
+                        <textarea name="seRmark" placeholder="请输入" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">区域名称</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="seAreaName" placeholder="请在下面树选择" autocomplete="off"
+                                       class="layui-input" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md6">
+                        <div class="layui-form-item" >
+                            <ul id="areaTree" lay-filter="areaTree" class="eleTree ele4"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="tcenter margin-t15">
+                    <button id="formSubmit" class="layui-btn" lay-submit lay-filter="formSubmit" permission-btn="saveSysEnterpriseAuth"> <i class="layui-icon">&#x1005;</i>保存</button>
+                    <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<script src="./../../js/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).use(['eleTree','layer','table','form','laytpl','common','element'], function () {
+        var table = layui.table;
+        var form = layui.form;
+        var tree = layui.eleTree;
+        var common = layui.common;
+        var element = layui.element;
+        element.init();
+        common.themeSet();
+        var baseUrl = '../../../';
+
+
+        var areaTree;
+
+        var eventHandler={
+            //初始化表单
+            initForm:function(obj){
+                var obj = $("#seForm");
+                form.render();
+                $(obj.selector).find('input[name=seId]').val(parent.parentEnt.seId);
+                $(obj.selector).find('input[name=sePid]').val(parent.parentEnt.sePid);
+                $(obj.selector).find('input[name=ggDelStatus]').val(parent.parentEnt.ggDelStatus);
+                $(obj.selector).find('input[name=seAllPid]').val(parent.parentEnt.seAllPid);
+                $(obj.selector).find('input[name=seAreaId]').val(parent.parentEnt.seAreaId);
+                $(obj.selector).find('input[name=seName]').val(parent.parentEnt.seName);
+                $(obj.selector).find('input[name=seShortName]').val(parent.parentEnt.seShortName);
+                $(obj.selector).find('input[name=seComcode]').val(parent.parentEnt.seComcode);
+                $(obj.selector).find('input[name=seUnitcode]').val(parent.parentEnt.seUnitcode);
+                $(obj.selector).find('input[name=seEnName]').val(parent.parentEnt.seEnName);
+                $(obj.selector).find('input[name=seNation]').val(parent.parentEnt.seNation);
+                $(obj.selector).find('input[name=seState]').val(parent.parentEnt.seState);
+                $(obj.selector).find('input[name=seAddr]').val(parent.parentEnt.seAddr);
+                $(obj.selector).find('textarea[name=seRmark]').val(parent.parentEnt.seRmark);
+                $(obj.selector).find('input[name=ggSort]').val(parent.parentEnt.ggSort);
+                $(obj.selector).find('input[name=seAreaName]').val(parent.parentEnt.seAreaName);
+                $(obj.selector).find('#seOutsideFlag').val(parent.parentEnt.seOutsideFlag);
+                form.render('select');
+
+
+                form.on('submit(formSubmit)', function (obj) {
+                    var params = {
+                        seId: $('input[name=seId]').val(),
+                        sePid: $('input[name=sePid]').val(),
+                        ggDelStatus: "0",
+                        ggEnStatus: "0",
+                        seName: $('input[name=seName]').val(),
+                        seShortName: $('input[name=seShortName]').val(),
+                        seEnName: $('input[name=seEnName]').val(),
+                        seComcode: $('input[name=seComcode]').val(),
+                        seUnitcode: $('input[name=seUnitcode]').val(),
+                        seOutsideFlag: $('#seOutsideFlag').val(),
+                        seNation: $('input[name=seNation]').val(),
+                        seState: $('input[name=seState]').val(),
+                        ggSort: $('input[name=ggSort]').val(),
+                        seAddr: $('input[name=seAddr]').val(),
+                        seRmark: $('textarea[name=seRmark]').val(),
+                        seAreaName: $('input[name=seAreaName]').val()
+                    };
+                    var loadingIndex = layer.load();
+                    common.fetchPost('sysmgr/sysEnterprise/saveSysEnterpriseInfo', params, function (data) {
+                        layer.close(loadingIndex);
+                        if(data.success){
+                            parent.parent.layer.msg('保存成功' , {
+                                time: 4000, //20s后自动关闭
+                            });
+                            parent.layer.closeAll();
+                        }else{
+                            parent.layer.msg('保存失败' , {
+                                time: 4000, //20s后自动关闭
+                            });
+                        }
+                    }, function () {
+                        layer.close(loadingIndex);
+                        parent.layer.msg('保存失败' , {
+                            time: 4000, //20s后自动关闭
+                        });
+                    });
+                    return false;
+                });
+            },
+
+            //菜单按钮树初始化
+            areaTreeInit: function() {
+                areaTree = tree.render({
+                    elem: '#areaTree',
+                    url: baseUrl+'sysmgr/sysArea/selectSysAreaTree',
+                    lazy: true,
+                    load: function(data,callback) {
+                        common.fetchGet(baseUrl+'sysmgr/sysArea/selectSysAreaTree' + '?id=' + data.id,function (res) {
+                            if(res.success && res.list){
+                                callback(res.list);
+                            }
+                        },function () {
+                            callback([])
+                        });
+
+                    },
+                    response: {// 对于后台数据重新定义名字
+                        dataName: "list"
+                    },
+                });
+                tree.on("nodeClick(areaTree)", function (obj) {
+                    //表格重载
+                    var nodeId = obj.data.currentData.id;
+                    var nodeName = obj.data.currentData.name;
+                    $('input[name=seAreaId]').val(nodeId);
+                    $('input[name=seAreaName]').val(nodeName);
+                });
+            }
+        }
+
+        eventHandler.initForm();
+        eventHandler.areaTreeInit();
+        common.buttonLimit();
+    });
+
+
+</script>
+<!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

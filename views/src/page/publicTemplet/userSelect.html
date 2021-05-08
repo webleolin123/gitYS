@@ -1,0 +1,194 @@
+<!--人员选择面板-->
+<div class="userSelectPanel">
+    <div class="layui-tab layui-tab-card gloBg" lay-filter="meetingTab" style="box-shadow: none;border: none;">
+        <ul class="layui-tab-title">
+            <li class="layui-this">最近</li>
+            <li>组织架构</li>
+            <li>常用群组</li>
+            <li>高级搜索</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <div class="" style="height: 300px">
+                    <div class="searchBar clearFix">
+                        <div style="float: left">
+                            <div style="color: #999;line-height: 36px">
+                                <span>最近联系人:</span>
+                                <span class="primary" id="cleanRePer" style="cursor: pointer">清空联系人</span>
+                            </div>
+                        </div>
+                        <!-- <div class="searchBar" style="float: right">
+                            <input class="layui-input" placeholder="请输入关键字" style="width: 200px;display: inline-block"
+                                   type="text">
+
+                            <span class="icon-btn"><i class="fa fa-search"></i></span>
+                        </div> -->
+
+                    </div>
+                    <div class="userList" id="userList" style="margin-top: 10px;border: none">
+                        <ul class="clearFix">
+                            <!--<li userid="1" username="张三">
+                                <div class="item">
+								<span class="checkArea">
+								<i class="fa fa-circle-o"></i>
+								<i class="fa fa-check-circle green"></i>
+								</span>
+                                    <div class="userHeader">
+                                        <img alt="" src="../../../images/defaultHead.png">
+                                    </div>
+                                    <div class="userDes">
+                                        <p class="userName">
+                                            张三
+                                        </p>
+                                        <p class="userText">
+                                            <span class="text">开发部</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </li>-->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-tab-item">
+                <div class="moduleBox" style="height: 285px;padding: 10px 0">
+                    <!--组织架构-->
+                    <div class="searchBar clearFix">
+                        <div style="float: left">
+                            <div style="color: #999;line-height: 36px">
+                                <span>组织架构</span>
+                            </div>
+                        </div>
+                        <div style="float: right">
+                            <input class="layui-input" placeholder="请输入关键字" style="width: 200px;display: inline-block"
+                                   type="text">
+                            <button class="layui-btn" style="display: inline-block;margin-left: 10px"><i class="fa fa-search"></i>查询</button>
+                        </div>
+                    </div>
+                    <div class="orangeUserBox">
+                        <div class="layui-row layui-col-space10">
+                            <div class="layui-col-xs6">
+                                <div class="padding-10" style="border-right: 1px solid #dfdfdf;">
+                                    <ul class="eleTree" id="organTree" lay-filter="organTree"
+                                        style="height: 235px;overflow-y: auto">
+                                    </ul>
+                                </div>
+
+                            </div>
+                            <div class="layui-col-xs6">
+                                <!---->
+                                <div class="userList organUserList" id="organUserList"
+                                     style="height: 235px;overflow-y: auto">
+                                    <ul class="clearFix">
+                                        <!-- <li userid="1" username="张三">
+                                             <div class="item">
+                                             <span class="checkArea">
+                                             <i class="fa fa-circle-o"></i>
+                                             <i class="fa fa-check-circle green"></i>
+                                             </span>
+                                                 <div class="userHeader">
+                                                     <img alt="" src="../../../images/defaultHead.png">
+                                                 </div>
+                                                 <div class="userDes">
+                                                     <p class="userName">
+                                                         张三
+                                                     </p>
+                                                     <p class="userText">
+                                                         <span class="text">开发部</span>
+                                                     </p>
+                                                 </div>
+                                             </div>
+                                         </li>-->
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-tab-item">
+                <div class="moduleBox" style="height: 285px">
+                    <div class="commonGroup" style="border: 1px solid #dfdfdf;">
+                        <div class="layui-row layui-col-space10">
+                            <div class="layui-col-xs6">
+                                <div class="padding-10" style="border-right: 1px solid #dfdfdf;">
+                                    <ul class="eleTree" id="commonGroupTree" lay-filter="commonGroupTree"
+                                        style="height: 280px;overflow-y: auto">
+                                    </ul>
+                                </div>
+
+                            </div>
+                            <div class="layui-col-xs6">
+                                <!---->
+                                <div class="userList  organUserList" id="commonGroupList"
+                                     style="height: 235px;overflow-y: auto">
+                                    <ul class="clearFix">
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-tab-item">
+                <div class="moduleBox" style="height: 285px">
+                    <div class="searchBar clearFix">
+                        <div style="width: 100%;text-align: center">
+                            <input class="layui-input" name="searchAllInput" placeholder="请输入关键字"
+                                   style="width: 60%;display: inline-block" type="text">
+                            <button class="layui-btn" id="searchAllBtn" style="display: inline-block;margin-left: 10px">
+                                查询
+                            </button>
+                        </div>
+                    </div>
+                    <div class="userList" id="searchUserList">
+                        <ul class="clearFix" style="overflow-y: auto">
+                            <!--    <li userid="1" username="张三">
+                                    <div class="item">
+                                    <span class="checkArea">
+                                    <i class="fa fa-circle-o"></i>
+                                    <i class="fa fa-check-circle green"></i>
+                                    </span>
+                                        <div class="userHeader">
+                                            <img alt="" src="../../../images/defaultHead.png">
+                                        </div>
+                                        <div class="userDes">
+                                            <p class="userName">
+                                                张三
+                                            </p>
+                                            <p class="userText">
+                                                <span class="text">开发部</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </li>-->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="selectedUser clearFix">
+        <!--<div class="custom-title">-->
+        <!---->
+        <!--</div>-->
+        <div class="selectedUserList">
+            <div class="selectedTitle" style="padding: 10px 0 0 10px;">已选人员</div>
+            <ul class="clearFix">
+                <!--<li>
+                <div class="userHeader">
+                    <img alt="" src="../../../images/defaultHead.png">
+                </div>
+                <div class="userName">
+                    张三
+                </div>
+                <div class="userDeleteBtn">
+                    <i class="fa fa-close"></i>
+                </div>
+                </li>
+                -->
+            </ul>
+        </div>
+    </div>
+</div>

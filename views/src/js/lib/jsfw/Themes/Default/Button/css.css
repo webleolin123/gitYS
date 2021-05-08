@@ -1,0 +1,48 @@
+.jsfw_Button{
+	display:inline;
+	height:23px;
+}
+.jsfw_Button_Over{
+	display:inline;
+	height:23px;
+}
+.jsfw_Button_L{
+	width:3px;
+	height:23px;
+}
+.jsfw_Button_R{
+	width:3px;
+	height:23px;
+}
+
+.jsfw_Button .Button{
+	background-image: url('Button_M.gif');
+	background-repeat: repeat-x;
+	border:none;
+	height:23px;
+	margin:0px;
+}
+.jsfw_Button .jsfw_Button_L{
+	background-image: url('Button_L.gif');
+	background-repeat: no-repeat;
+}
+.jsfw_Button .jsfw_Button_R{
+	background-image: url('Button_R.gif');
+	background-repeat: no-repeat;
+}
+
+.jsfw_Button_Over .Button{
+	background-image: url('Button_M_Over.gif');
+	background-repeat: repeat-x;
+	border:none;
+	height:23px;
+	margin:0px;
+}
+.jsfw_Button_Over .jsfw_Button_L{
+	background-image: url('Button_L_Over.gif');
+	background-repeat: no-repeat;
+}
+.jsfw_Button_Over .jsfw_Button_R{
+	background-image: url('Button_R_Over.gif');
+	background-repeat: no-repeat;
+}

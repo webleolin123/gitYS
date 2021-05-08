@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>接口管理</title>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link href="../../js/layui/css/layui.css" rel="stylesheet"/>
+    <link href="../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script charset="utf-8" src="../../js/common/plugin.js"></script>
+</head>
+<body class="iframe-h">
+<div class="content-wrap">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>接口管理列表</span></div>
+                <div class="layui-card-body">
+                    <form action="" class="layui-form layui-form-pane">
+                        <div class="layui-row layui-col-space10">
+                            <div class="layui-col-xs4">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">接口名称：</label>
+                                    <div class="layui-input-block">
+                                        <input autocomplete="off" class="layui-input"
+                                               name="intfName" placeholder="请输入名称" type="text">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-xs4">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">接口版本</label>
+                                    <div class="layui-input-block">
+                                        <input autocomplete="off" class="layui-input"
+                                               name="intfVer" placeholder="请输入接口版本" type="text">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="toggle-area layui-col-space10">
+                                <div class="layui-col-xs4">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">接口状态</label>
+                                            <div class="layui-input-block">
+                                                <select id="" name="intfStatus">
+                                                    <option value="">请选择</option>
+                                                    <option value="enable">启用</option>
+                                                    <option value="disable">禁用</option>
+                                                    <option value="save">保存</option>
+                                                    <option value="publish">已发布</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                </div>
+                            </div>
+                            <div class="formSearch-btnArea">
+                                <button class="layui-btn" lay-filter="formSearch" lay-submit><i class="fa fa-search"></i>查询</button>
+                                <button class="layui-btn layui-btn-primary" type="reset"><i class="fa fa-eraser"></i>重置</button>
+                                <a class="toggle-btn">
+                                    <span>展开</span>
+                                    <i class="fa fa-angle-up"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="layui-card">
+                <div class="layui-card-body" style="padding-top: 0">
+                    <table id="table1" lay-filter="table1"></table>
+                    <script id="tableToolBar" type="text/html">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-sm layui-btn-primary" lay-event="refresh"
+                                    id="refreshBtn">
+                                <i class="layui-icon">&#xe669;</i> 刷新
+                            </button>
+                            <button class="layui-btn layui-btn-sm" lay-event="add">
+                                <i class="layui-icon">&#xe608;</i> 新增
+                            </button>
+                            <!-- <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete">
+                                 <i class="layui-icon">&#xe640;</i> 删除
+                            </button> -->
+                        </div>
+                    </script>
+
+                    <script id="tableOper" type="text/html">
+                        <a class="layui-btn layui-btn-xs" lay-event="monitor">监控</a>
+                        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                        <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="singleDel">删除</a>
+                        <!--<a class="layui-btn layui-btn-xs layui-btn-primary" lay-event="addVersion">添加版本</a>-->
+                        <a class="layui-btn layui-btn-xs layui-btn-primary" lay-event="publish"
+                           style="display: {{d.intfStatus==='save'?'inline-block':'none'}} ">发布</a>
+                        <a class="layui-btn layui-btn-xs layui-btn-primary" lay-event="depublish"
+                           style="display: {{d.intfStatus==='save'?'none':'inline-block'}} ">取消发布</a>
+                    </script>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="./../../js/layui/layui.js"></script>
+<script>
+
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).use(['layer', 'table', 'form', 'laytpl', 'common', 'element', 'util'], function () {
+        var table = layui.table;
+        var form = layui.form;
+        var common = layui.common;
+        var element = layui.element;
+        var util = layui.util;
+        element.init();
+        var baseUrl = '../../../';
+        common.themeSet();
+        common.toggleArea($('.toggle-btn'),$('.toggle-area'));
+
+        var eventHandle = {
+            tableReload: function () {
+                table.reload('table1', {
+                    url: baseUrl + 'intfmgr/intfInfo/list',
+                    method: 'post',
+                    contentType: 'application/json',
+                    page: {
+                        curr: 1
+                    }
+                });
+            }
+        };
+
+        table.render(common.tableInitParams({
+            elem: '#table1',
+            url: baseUrl + 'intfmgr/intfInfo/list',
+            method: 'post',
+            height: 'full-180',
+            toolbar: '#tableToolBar',
+            cols: [
+                [
+                    {type: 'checkbox'},
+                    {"type": "numbers", "title": "序号"},
+                    {field: 'intfName', title: '接口名称', sort: true},
+                    {field: 'intfVer', title: '版本', ort: true},
+                    {field: 'retireUrl', title: 'URL', sort: true},
+                    {field: 'ggCreateUser', title: '创建人', sort: true},
+                    {
+                        field: 'ggCreateDatetime', title: '创建时间', sort: true,
+                        templet: function (rowData) {
+                            return rowData['ggCreateDatetime'] ? util.toDateString(rowData['ggCreateDatetime']) : '-';
+                        }
+                    },
+                    {
+                        field: 'intfStatus', title: '状态', sort: true, width: 80,
+                        templet: function (rowData) {
+                            if (rowData['intfStatus'] === 'enable') {
+                                return '<span class="layui-badge layui-bg-green">启用</span>';
+                            } else if (rowData['intfStatus'] === 'save') {
+                                return '<span class="layui-badge layui-bg-blue" >保存</span>';
+                            } else if (rowData['intfStatus'] === 'publish') {
+                                return '<span class="layui-badge layui-bg-cya" >已发布</span>';
+                            } else if (rowData['intfStatus'] === 'disable') {
+                                return '<span class="layui-badge" style="background-color:red">禁用</span>';
+                            }
+                        }
+                    },
+                    {field: '', title: '操作', width: 400, toolbar: '#tableOper', fixed: 'right'},
+                ]
+            ]
+        }));
+
+        //table监听事件
+        table.on('toolbar(table1)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch (obj.event) {
+                case 'refresh':
+                    table.reload('table1', {
+                        page: {
+                            curr: 1
+                        }
+                    });
+                    break;
+                case 'add':
+                    var addLayer = top.layer.open({
+                        title: '新增接口',
+                        maxmin: false,
+                        type: 2,
+                        area: ['580px'],//高度自适应
+                        shadeClose: false,
+                        content: './../../../src/page/portMgr/addPort.html',
+                        success: function () {
+
+                        }
+                    });
+                    top.layer.full(addLayer);
+                    break;
+                case 'delete':
+                    //点击删除按钮
+                    if (checkStatus.data.length > 0) {
+                        layer.confirm('确定删除选中列?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                            var smIdArr = [];
+
+                            for (var i = 0; i < checkStatus.data.length; i++) {
+                                smIdArr.push(checkStatus.data[i]['intfInfoId'])
+                            }
+                            var layerLoader = common.layerLoader();
+                            common.fetchDelete('intfmgr/intfInfo/delete/' + smIdArr.join(','), null, function () {
+                                layer.close(layerLoader);
+                                eventHandle.tableReload();
+                                layer.msg('删除成功');
+                            }, function () {
+                                layer.close(layerLoader);
+                            });
+
+                            layer.close(index);
+                        });
+                    } else {
+                        layer.msg('请选择删除列')
+                    }
+                    break;
+                case 'start':
+                    //点击启动按钮
+                    if (checkStatus.data.length > 0) {
+                        var isOk = true;
+                        for (var i = 0; i < checkStatus.data.length; i++) {
+                            if (checkStatus.data[i]['ggEnStatus'] == '0') {
+                                isOk = false;
+                                break;
+                            }
+                        }
+                        if (isOk) {
+                            layer.confirm('确定启动选择项？', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                                var smIdArr = [];
+
+                                for (var i = 0; i < checkStatus.data.length; i++) {
+                                    smIdArr.push(checkStatus.data[i]['spIds'])
+                                }
+                                var layerLoader = common.layerLoader();
+                                common.fetchPost('sysmgr/sysPath/saveEnableSysPathByIds?spIds=' + smIdArr.join(','), null, function () {
+                                    layer.close(layerLoader);
+                                    eventHandle.tableReload();
+                                    layer.msg('启动成功');
+                                }, function () {
+                                    layer.close(layerLoader);
+                                });
+
+                                layer.close(index);
+                            });
+                        } else {
+                            layer.msg('存在选项已经启用,不可再次启用');
+                        }
+
+                    } else {
+                        layer.msg('请选择启动项')
+                    }
+                    break;
+                case 'forbid':
+                    //点击禁用按钮
+                    if (checkStatus.data.length > 0) {
+                        var isOk = true;
+                        for (var i = 0; i < checkStatus.data.length; i++) {
+                            if (checkStatus.data[i]['ggEnStatus'] == '0') {
+                                isOk = false;
+                                break;
+                            }
+                        }
+                        if (isOk) {
+                            layer.confirm('确定禁用选择项？', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                                var smIdArr = [];
+
+                                for (var i = 0; i < checkStatus.data.length; i++) {
+                                    smIdArr.push(checkStatus.data[i]['spIds'])
+                                }
+                                var layerLoader = common.layerLoader();
+                                common.fetchPost('sysmgr/sysPath/saveDisableSysPathByIds?spIds=' + smIdArr.join(','), null, function () {
+                                    layer.close(layerLoader);
+                                    eventHandle.tableReload();
+                                    layer.msg('禁用成功');
+                                }, function () {
+                                    layer.close(layerLoader);
+                                });
+
+                                layer.close(index);
+                            });
+                        } else {
+                            layer.msg('存在选项已经禁用,不可再次禁用');
+                        }
+
+                    } else {
+                        layer.msg('请选择禁用项')
+                    }
+                    break;
+            }
+        });
+
+        // table row 监听事件
+        table.on('tool(table1)', function (obj) {
+            var data = obj.data;
+            switch (obj.event) {
+                case 'monitor'://监控
+                    var edit = top.layer.open({
+                        title: '运行监控',
+                        maxmin: false,
+                        type: 2,
+                        area: ['580px'],//高度自适应
+                        shadeClose: false,
+                        content: './../../../src/page/portMgr/portMonitor.html',
+                        success: function (layero, index) {
+                            //获取单页面的所有配置内容 传入compId
+                            $("#portData", layero.find("iframe")[0].contentWindow.document).text(data['intfInfoId']);
+                        }
+                    });
+                    top.layer.full(edit);
+                    break;
+                case 'edit'://编辑
+                    var edit = top.layer.open({
+                        title: '编辑接口',
+                        maxmin: false,
+                        type: 2,
+                        area: ['580px'],//高度自适应
+                        shadeClose: false,
+                        content: './../../../src/page/portMgr/addPort.html',
+                        success: function (layero, index) {
+                            //获取单页面的所有配置内容 传入compId
+                            $("#editData", layero.find("iframe")[0].contentWindow.document).text(data['intfInfoId']);
+
+                        }
+                    });
+                    top.layer.full(edit);
+                    break;
+                case 'singleDel':
+                    var selectId = obj.data.intfInfoId;
+                    layer.confirm('确定删除?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                        var layerLoader = common.layerLoader();
+                        common.fetchDelete("intfmgr/intfInfo/delete/" + selectId, function (res) {
+                            layer.close(layerLoader);
+                            if (res.success) {
+                                eventHandle.tableReload();
+                                layer.msg('删除成功', {
+                                    time: 4000, //20s后自动关闭
+                                });
+                            } else {
+                                layer.alert(res.resultMessage);
+                            }
+                        }, function () {
+                            layer.close(layerLoader);
+                        });
+                        layer.close(index);
+                    });
+                    break;
+
+                case 'publish': //发布
+                    // obj.data.intfInfoId;
+                    layer.confirm('确定发布?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                        var layerLoader = common.layerLoader();
+                        common.fetchGet("intfmgr/intfInfo/publish/" + obj.data.intfInfoId, function (res) {
+                            layer.close(layerLoader);
+                            if (res.success) {
+                                eventHandle.tableReload();
+                                layer.msg('发布成功', {
+                                    time: 4000, //20s后自动关闭
+                                });
+                            } else {
+                                layer.alert(res.resultMessage);
+                            }
+                        }, function () {
+                            layer.close(layerLoader);
+                        });
+                        layer.close(index);
+                    });
+                    break;
+                case 'depublish': //取消发布
+                    layer.confirm('确定取消发布?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                        var layerLoader = common.layerLoader();
+                        common.fetchGet("intfmgr/intfInfo/depublish/" + obj.data.intfInfoId, function (res) {
+                            layer.close(layerLoader);
+                            if (res.success) {
+                                eventHandle.tableReload();
+                                layer.msg('取消发布成功', {
+                                    time: 4000 //20s后自动关闭
+                                });
+                            } else {
+                                layer.alert(res.resultMessage);
+                            }
+                        }, function () {
+                            layer.close(layerLoader);
+                        });
+                        layer.close(index);
+                    });
+            }
+
+        });
+
+        //查询
+        form.on('submit(formSearch)', function (obj) {
+            //表格重载
+            table.reload('table1', {
+                page: {
+                    curr: 1
+                },
+                where: obj.field
+            });
+            return false;
+        });
+
+
+        //按钮权限
+        common.buttonLimit($("#currentMenuSmId", window.parent.document).val());
+    });
+
+</script>
+
+<!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

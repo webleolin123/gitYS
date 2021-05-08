@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html  class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>议案列表-异常情况</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../../js/layui/css/layui.css"/>
+    <link href="../../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../../js/lib/jquery.1.12.3.js"></script>
+</head>
+
+<style>
+    .layui-layer-btn-c {
+        margin-top: -20px;
+    }
+    span#reportNums {
+        font-weight:900;
+        font-size:18px;
+    }
+     span#reportNums i{
+         height:20px;
+         vertical-align:-2px;
+     }
+     .eleTree.ele5,
+        .eleTree.ele6{
+            height: auto;
+            width: 100%;
+            display: none;
+            position: absolute;
+            top:100%;
+            background-color: #fff;
+            z-index: 10000;
+            border: 1px solid #ccc;
+        }
+</style>
+<body class="iframe-h">
+
+<div class="content-wrap">
+     <!-- 页面刷新按钮 -->
+    <div id="refresh" style="display: none"></div>
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs12 layui-col-sm12 layui-col-xs12">
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>异常列表</span></div>
+                <div class="layui-card-body">
+                    <form action="" class="layui-form layui-form-pane">
+                        <div class="layui-row layui-col-space10">
+                            <div class="layui-col-md4">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">议案名称</label>
+                                    <div class="layui-input-block">
+                                        <input autocomplete="off" class="layui-input" name="motionName" placeholder="请输入"
+                                                type="text">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">提出部门</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="soName"
+                                                placeholder="请选择" readonly="" autocomplete="off"
+                                                class="layui-input hyinput">
+                                                <input type="hidden" name="soId">
+                                            <div class="eleTree ele5" lay-filter="data5"></div>
+                                        </div>
+                                    </div>
+                            </div>
+                            <div class="toggle-area layui-col-space10">
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">异常类型</label>
+                                        <div class="layui-input-block">
+                                            <select name="exceptionDescript" id="exceptionDescript">
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">异常生成时间</label>
+                                        <div class="layui-input-block">
+                                            <input class="layui-input" name="exceptionTime" placeholder="请选择" type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">解决状态</label>
+                                        <div class="layui-input-block">
+                                            <select name="confirmFlag" id="confirmFlag">
+                                                <option value="">请选择</option>
+                                                <option value="abnormal">异常</option>
+                                                <option value="resolved">已解决</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="" style="text-align: center;">
+                                    <div class="layui-input-inline" style="padding-left: 20px">
+                                        <button name="searchSubmit" class="layui-btn  " lay-submit="" lay-filter="formSearch" ><i class="fa fa-search"></i>查询</button>
+                                        <button  id="resetBtn" name="reset" class="layui-btn layui-btn-primary  "><i class="fa fa-eraser"></i>重置</button>
+                                        <a class="toggle-btn">
+                                        <span>展开</span><i class="fa fa-angle-up"></i></a>
+                                    </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="layui-card" style="margin-top: -13px">
+                    <div class="layui-card-body">
+                        <table id="table1" lay-filter="table1" style="margin-top:5px;"></table>
+                        <script type="text/html" id="tableToolBar">
+                            <div class="layui-btn-container">
+                                <button class="layui-btn layui-btn-sm" permission-btn="MotionExceptionCheck" lay-event="check"><i class="fa fa-eye"></i>
+                                     检查
+                                </button>
+                            </div>
+                        </script>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="./../../../js/layui/layui.js"></script>
+<script src="../../../js/lib/echarts-4.1.0.min.js" charset="utf-8"></script>
+<script src="../../../js/lib/echartTheme.js" charset="utf-8"></script>
+<script>
+
+    layui.config({
+        base: '../../../../src/js/',
+        version: new Date().getTime()
+    }).extend({
+        custom:'common/custom'
+    }).use(['layer', 'eleTree', 'table', 'form', 'laytpl', 'element', 'custom', 'laydate', 'util'], function () {
+        var table=layui.table;
+        var form=layui.form;
+        var common=layui.common;
+        var element = layui.element;
+        var tree = layui.eleTree;
+        var laydate = layui.laydate;
+        var util = layui.util;
+        var el6;
+        var fileIframe;
+        element.init();
+        var baseUrl='../../../../';
+
+        common.themeSet();
+        common.toggleArea($('.toggle-btn'),$('.toggle-area'));
+        common.columnSide();
+
+        var eventHandle={
+            domEvent:function(){
+            //刷新列表
+                 $('#refresh').off('click').on('click',function(){
+                    eventHandle.tableInit();
+                })
+            //查询
+                form.on('submit(formSearch)', function (obj) {
+                    var params=obj.field;
+                    //表格重载
+                    eventHandle.tableReload(params);
+                    return false;
+                });
+            //重置
+                $('#resetBtn').off('click').on('click',function(){
+                    $('[name=motionName]').val('');//议案名称
+                    $('[name=soName]').val('');//提出部门名称
+                    $('[name=soId]').val('');//提出部门Id
+                    $('[name=exceptionTime]').val('');//退回日期
+                    $('[name=exceptionDescript]').val('');
+                    $('[name=confirmFlag]').val('');
+                    form.render('select');
+                    return false
+                });
+                //异常列表-检查
+                table.on('toolbar(table1)',function (obj) {
+                    var checkStatus = table.checkStatus(obj.config.id);
+                    switch(obj.event){
+                        case 'check':
+                            if (checkStatus.data.length > 0) {
+                                layer.confirm('确定检查选中列?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                                    var motionIds = [];
+
+                                    for (var i = 0; i < checkStatus.data.length; i++) {
+                                        motionIds.push(checkStatus.data[i]['motionId']);
+                                    }
+                                    var layerLoader = common.layerLoader();
+                                    common.fetchPost("motionmgr/motiona/checkMotionByIds", { motionIds: motionIds }, function () {
+                                        layer.close(layerLoader);
+                                        eventHandle.tableReload();
+                                        layer.msg('检查成功');
+                                    }, function () {
+                                        layer.close(layerLoader);
+                                    });
+
+                                    layer.close(index);
+                                });
+                            } else {
+                                layer.msg('请选择检查列')
+                            }
+                            break;
+                        default:break;
+                    }
+                });
+                //异常列表-查看
+                table.on('tool(table1)',function (obj) {
+                    var data = obj.data;
+                    switch(obj.event){
+                        case 'viewMeeting':
+                            var viewMeeting = top.layer.open({
+                                title: ['查看'],
+                                type: 2,
+                                content: baseUrl + 'src/page/ys/yagl/yaListReportedView.html?motionId=' 
+                                    + data.motionId + "&meetingTypeName=" + data.meetingTypeName+
+                                    '&statusType='+data.statusType,
+                                maxmin: true,
+                                btn: ['<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭'],
+                                    btnAlign: 'c',
+                                    btn2: function () {
+                                        layer.close(viewMeeting);
+                                    }
+                            });
+                            top.layer.full(viewMeeting);
+                            break;
+                        default:break;
+                    }
+                });
+            },
+            initRender:function(){
+            // 会议日期
+                laydate.render({
+                    elem: 'input[name=exceptionTime]',
+                    type: 'date',
+                    range:true,
+                    trigger: 'click'
+                });
+            // 提出部门
+                var el5;
+                if (!el5) {
+                    common.fetchPost('sysmgr/sysOrgan/selectSysOrganTreeBySeId', {}, function (data) {
+                        if (data.success) {
+                            el5 = tree.render({
+                                elem: '.ele5',
+                                data: data.list,
+                                defaultExpandAll: true,
+                                expandOnClickNode: false,
+                                highlightCurrent: true
+                            });
+                        } else {
+                            layer.msg('查询部门树失败');
+                        }
+
+                    }, function () {
+                        layer.msg('查询部门树失败');//失败后提示
+                    });
+                }
+                $("[name='soName']").on("click", function (e) {
+                    e.stopPropagation();
+
+                    $(".ele5").toggle();
+                });
+                tree.on("nodeClick(data5)", function (d) {
+                    $("[name='soName']").val(d.data.parentData.data.id != d.data.currentData.id ? (d.data.parentData.data.name + '-' + d.data.currentData.name) : d.data.currentData.name);
+                    $("[name='soId']").val(d.data.currentData.id);
+                    $(".ele5").hide();
+                });
+                $(document).on("click", function () {
+                    $(".ele5").hide();
+                });
+                //异常类型
+                common.selectDataSet({
+                    elem: $('#exceptionDescript'),
+                    url: 'sysmgr/dicts/selectDictListByPcode?dictPCode=MOTION_EXCEPTION_TYPE',
+                    responseList: 'list',
+                    optionText: 'sdName',
+                    optionValue: 'sdName',
+                    success: function () {
+                        form.render("select");
+                    }
+                });
+            },
+            tableInit:function(){
+                table.render(common.tableInitParams({
+                    elem: '#table1',
+                    height: 'full-170',
+                    url: baseUrl+'motionmgr/motiona/selectMotionExceptionPage',
+                    method:'post',
+                    cols: [
+                        [
+                            {type: 'checkbox', LAY_CHECKED: false},
+                            {type: 'numbers',align:'center', title: '序号', width: 60},
+                            {field: 'motionName',title: '议案名称',minWidth:150, sort: true, templet:function(rowData){
+                                    return '<span title="' + (rowData.motionName?rowData.motionName:'-') + '">' + (rowData.motionName?rowData.motionName:'-') + '</span>'
+                                }},
+                            {
+                                field: 'meetingName', title: '会议名称', minWidth:120, templet:function(rowData){
+                                    return '<span title="' + (rowData.meetingName?rowData.meetingName:'-') + '">' + (rowData.meetingName?rowData.meetingName:'-') + '</span>'
+                                }
+                            },
+                            { field: 'meetingTypeName', title: '会议类型', align: 'center',width:120, templet:function(rowData){
+                                    return '<span title="' + (rowData.meetingTypeName?rowData.meetingTypeName:'-') + '">' + (rowData.meetingTypeName?rowData.meetingTypeName:'-') + '</span>'
+                                } },
+                            {field: 'exceptionDescript', title: '异常类型',minWidth:150, templet:function(rowData){
+                                    return '<span title="' + (rowData.exceptionDescript?rowData.exceptionDescript:'-') + '">' + (rowData.exceptionDescript?rowData.exceptionDescript:'-') + '</span>'
+                                }},
+                            {field: 'exceptionCause',align:'center', title: '异常信息',minWidth:200, templet:function(rowData){
+                                    return '<span title="' + (rowData.exceptionCause?rowData.exceptionCause:'-') + '">' + (rowData.exceptionCause?rowData.exceptionCause:'-') + '</span>'
+                                }},
+                            {field: 'ggCreateDatetime',align:'center', title: '异常生成时间',width:200,
+                                templet: function(rowData) 
+                                {
+                                    return rowData["ggCreateDatetime"]?(common.timestampToTime(rowData["ggCreateDatetime"],'date')):'-';
+                                }
+                            },
+                            {field: 'confirmFlag',align:'center', title: '状态',width:80,
+                                templet:function(rowData){
+                                    var html='';
+                                    switch(rowData['confirmFlag']){
+                                        case 'abnormal':html='<span class="red">异常</span>';break;
+                                        case 'resolved':html='<span class="green1">已解决</span>';break;
+                                        default:break;
+                                    }
+                                    return html;
+                                }
+                            },
+                            {field: '', align:'center',title: '操作', fixed: 'right',width: 80,templet:function(rowData){
+                                return '<a class="layui-btn layui-btn-xs layui-btn-danger" permission-btn="MotionExceptionView" lay-event="viewMeeting">查看</a>'
+                            }}
+                        ]
+                    ],
+                    toolbar:'#tableToolBar',
+                    done: function () {
+                        common.buttonLimit();
+                    }
+                }));
+            },
+            tableReload:function(params){
+                params=params||{},
+                table.reload('table1',{
+                    url: baseUrl+'motionmgr/motiona/selectMotionExceptionPage',
+                    method:'post',
+                    where:params,
+                    page:1
+                });
+            },
+            output:function(){
+            // 初始化加载
+                eventHandle.initRender();
+            // 事件监听
+                eventHandle.domEvent();
+            // 异常列表
+                eventHandle.tableInit();
+            }
+        }
+        eventHandle.output();
+        common.buttonLimit();
+    });
+
+
+</script>
+
+<!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

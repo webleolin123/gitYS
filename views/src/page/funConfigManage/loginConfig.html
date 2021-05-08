@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>登录配置页</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../js/layui/css/layui.css"/>
+    <link href="../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script src="../../js/common/plugin.js"></script>
+
+    <style>
+        .themeConfigArea .mainThemeArea ul li {
+            width: 90px;
+            height: 59px;
+        }
+
+        .themeConfigArea .mainThemeArea ul li i {
+            left: 38px;
+        }
+    </style>
+</head>
+
+<body class="iframe-h">
+    <div class="content-wrap">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-header layui-card-header-custom"><span><i></i>登录列表配置列表</span></div>
+                    <div class="layui-card-body">
+                        <form action="" class="layui-form layui-form-pane">
+                            <div class="layui-row layui-col-space10">
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label" style="width:130px;">登录页面名称</label>
+                                        <div class="layui-input-block" style="margin-left: 130px;">
+                                            <input type="text" name="wumiChname" placeholder="请输入名称" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md4">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label" style="width:130px;">是否启用</label>
+                                            <div class="layui-input-block" style="margin-left: 130px;">
+                                                <select name="city" lay-verify="required">
+                                                    <option value="">请选择</option>
+                                                    <option value="1">是</option>
+                                                    <option value="0">否</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <div class="" style="text-align: center;margin-bottom: 5px">
+                                    <button class="layui-btn" lay-submit lay-filter="formSearch" permission-btn="login_tableSearch"><i class="fa fa-search"></i>查询</button>
+                                    <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="layui-card" >
+                    <div class="layui-card-body" style="padding-top: 0">
+                        <table id="table1" lay-filter="table1"></table>
+                        <script type="text/html" id="tableToolBar">
+                            <div class="layui-btn-container">
+                                <button class="layui-btn layui-btn-sm" lay-event="add" permission-btn="login_addConfig">
+                                    <i class="layui-icon">&#xe608;</i> 新增
+                                </button>
+                                <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete" permission-btn="login_deleteConfig">
+                                    <i class="layui-icon">&#xe640;</i> 删除
+                                </button>
+                            </div>
+                        </script>
+                        <script type="text/html" id="tableOper">
+                            <a class="layui-btn layui-btn-xs" lay-event="edit" permission-btn="login_editConfig">编辑</a>
+                            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="singleDel" permission-btn="login_deleteConfig">删除</a>
+                            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="singleEnable"
+                               permission-btn="login_enable"
+                               style="display: {{d.ggEnStatus==='0'?'inline-block':'none'}} ">启用</a>
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="themeConfigArea" style="display: none" type="text/html">
+        <div class=" themeConfigArea">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md12">
+                    <form class="layui-form " lay-filter="defaultForm">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">主题名称:</label>
+                            <div class="layui-input-block">
+                                <input autocomplete="off" class="layui-input" name="compName"
+                                       placeholder="请输入名称" type="text" value="主题">
+                            </div>
+                        </div>
+                        <!--<div class="layui-col-xs12">-->
+                        <!--<div class="layui-form-item">-->
+                        <!--<label class="layui-form-label">是否弱色:</label>-->
+                        <!--<div class="layui-input-block">-->
+                        <!--<input lay-filter="themeInvert" lay-skin="switch" lay-text="开|关"-->
+                        <!--name="themeInvert" type="checkbox">-->
+                        <!--</div>-->
+                        <!--</div>-->
+                        <!--</div>-->
+
+                        <div class="layui-col-xs4">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">主题色:</label>
+                                <div class="layui-input-block">
+                                    <div class="primaryColorArea">
+                                        <ul class="clearFix">
+                                            <li class="selected" data-primary="primary">
+                                                <span class="bg-primary"></span>
+                                                <i class="fa fa-check"></i>
+                                            </li>
+                                            <li data-primary="green">
+                                                <span class="bg-green"></span>
+                                                <i class="fa fa-check"></i>
+                                            </li>
+                                            <li data-primary="gray">
+                                                <span class="bg-gray"></span>
+                                                <i class="fa fa-check"></i>
+                                            </li>
+                                            <li data-primary="red">
+                                                <span class="bg-red"></span>
+                                                <i class="fa fa-check"></i>
+                                            </li>
+                                            <li data-primary="config">
+                                                <input id="themeColorPick" name="color" type="hidden" value="">
+                                                <div id="test-all"></div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="layui-col-xs8">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">登录页风格:</label>
+                                <div class="layui-input-block">
+                                    <div class="mainThemeArea">
+                                        <ul class="clearFix">
+                                            <li class="selected" data-theme="1">
+                                                <img src="./../../images/login/loginTheme1.png">
+                                                <i class="fa fa-check"></i>
+                                            </li>
+                                            <li data-theme="2">
+                                                <img src="./../../images/login/loginTheme2.png">
+                                                <i class="fa fa-check"></i>
+                                            </li>
+                                            <li data-theme="3">
+                                                <img src="./../../images/login/loginTheme3.png">
+                                                <i class="fa fa-check"></i>
+                                            </li>
+                                            <li data-theme="4">
+                                                <img src="./../../images/login/loginTheme4.png">
+                                                <i class="fa fa-check"></i>
+                                            </li>
+                                            <li data-theme="5">
+                                                <img src="./../../images/login/loginTheme5.png">
+                                                <i class="fa fa-check"></i>
+                                            </li>
+                                            <li data-theme="6">
+                                                <img src="./../../images/login/loginTheme6.png">
+                                                <i class="fa fa-check"></i>
+                                            </li>
+                                            <li data-theme="7">
+                                                <img src="./../../images/login/loginTheme7.png">
+                                                <i class="fa fa-check"></i>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="theme1Set" style="display: none">
+
+                            <fieldset class="layui-elem-field" style="padding: 10px">
+                                <legend style="font-size: 16px">主题细节设置</legend>
+                                <div class="layui-form-item layui-form-text">
+                                    <label class="layui-form-label">背景图:</label>
+                                    <div class="layui-input-block">
+                                        <input class="layui-input" name="theme1Bg" placeholder="请输入背景图url" type="text">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item layui-form-text">
+                                    <label class="layui-form-label">文字颜色:</label>
+                                    <div class="layui-input-block">
+                                        <input class="layui-input" name="theme1Color" placeholder="请输入背景色" type="text">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item layui-form-text">
+                                    <label class="layui-form-label">左侧图片:</label>
+                                    <div class="layui-input-block">
+                                        <input class="layui-input" name="theme1LeftBg" placeholder="请输入左侧图片url"
+                                               type="text">
+                                    </div>
+                                </div>
+                                <!--<div class="layui-form-item layui-form-text">-->
+                                <!--<label class="layui-form-label">版本信息logo:</label>-->
+                                <!--<div class="layui-input-block">-->
+                                <!--<input class="layui-input" name="theme1CopyrightLogo" placeholder="请输入logo图片url"-->
+                                <!--type="text">-->
+                                <!--</div>-->
+                                <!--</div>-->
+                            </fieldset>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">标题:</label>
+                            <div class="layui-input-block">
+                                <input class="layui-input" name="titleName" placeholder="请输入标题名称" type="text">
+                            </div>
+                        </div>
+                        <div class="layui-col-md6">
+                            <div class="layui-form-item layui-form-text">
+                                <label class="layui-form-label">LOGO:</label>
+                                <div class="layui-input-block">
+                                    <input class="layui-input" name="logo" placeholder="请输入LOGO地址，例如empty.png"
+                                           type="text">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-md6">
+                            <div class="layui-form-item layui-form-text">
+                                <label class="layui-form-label">ICO:</label>
+                                <div class="layui-input-block">
+                                    <input class="layui-input" name="ico" placeholder="请输入ICO地址"
+                                           type="text">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-md6">
+                            <div class="layui-form-item layui-form-text">
+                                <label class="layui-form-label">是否验证:</label>
+                                <div class="layui-input-block">
+                                    <input checked="" name="isVerify" title="开启" type="radio" value="true">
+                                    <input name="isVerify" title="关闭" type="radio" value="false">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-md6">
+                            <div class="layui-form-item layui-form-text">
+                                <label class="layui-form-label">开启警告:</label>
+                                <div class="layui-input-block">
+                                    <input checked="" name="isAlert" title="开启" type="radio" value="yes">
+                                    <input name="isAlert" title="关闭" type="radio" value="no">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-md6">
+                            <div class="layui-form-item layui-form-text">
+                                <label class="layui-form-label">警告信息:</label>
+                                <div class="layui-input-block">
+                                    <input class="layui-input" name="tipName">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-md6">
+                            <div class="layui-form-item layui-form-text">
+                                <label class="layui-form-label">版权信息:</label>
+                                <div class="layui-input-block">
+                                    <input class="layui-input" name="copyRight">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">版本信息logo:</label>
+                            <div class="layui-input-block">
+                                <input class="layui-input" name="theme1CopyrightLogo" placeholder="请输入logo图片url"
+                                       type="text">
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">备注:</label>
+                            <div class="layui-input-block">
+                                <textarea class="layui-textarea" name="memo"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./../../js/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).extend({
+    }).use(['layer','table','form','laytpl','common','element'],function () {
+        var table=layui.table;
+        var form=layui.form;
+        var common=layui.common;
+        //分页初始参数
+        var pageInitialParam = {
+            pageNum : 1,
+            pareSize : 10,
+            curr:1
+        };
+        common.themeSet();
+        var defaultThemeParams;
+        var pageRequest = {
+            pageName: 'pageNumber',//页码的参数名称，默认：page
+            limitName: 'pageSize' //每页数据量的参数名，默认：limit
+        };
+        var baseUrl='../../../';
+
+        //按钮权限
+        var currentMenuSmId=$("#currentMenuSmId",window.parent.document).val();
+
+        var eventHandle={
+            tableReload:function () {
+                table.reload('table1',{
+                    url: baseUrl+'compmgr/webComponent/pageTopWebComponent',
+                    contentType:'application/json',
+                    method:'post',
+                    page:pageInitialParam,
+                    request:pageRequest,
+                    where: {paras: {wtmiTypecode: "loginPage"}}
+                });
+            },
+            gloThemeFuc: function (parent) {
+                //风格点击
+                parent.find('.mainThemeArea ul li').off().on('click', function () {
+                    $(this).siblings().removeClass('selected');
+                    $(this).addClass('selected');
+                    if ($(this).attr('data-theme') === "1") {
+                        $('.theme1Set').show();
+                    } else {
+                        $('.theme1Set').hide();
+                    }
+
+                });
+
+                //主题色点击
+                parent.find('.primaryColorArea ul li').off().on('click', function () {
+                    $(this).siblings().removeClass('selected');
+                    $(this).addClass('selected');
+                });
+
+
+            }
+        };
+
+        table.render(common.tableInitParams({
+            elem: '#table1',
+            url: baseUrl+'compmgr/webComponent/pageTopWebComponent',
+            method: 'post',
+            // data:resData,
+            height:'full-200',
+            toolbar: '#tableToolBar',
+            cols: [
+                [
+                    {type:'checkbox'},
+                    {"type":"numbers", "title":"序号"},
+                    {field: 'wumiChname', title: '登录页面名称',sort: true},
+                    {field: 'ggEnStatus', title: '是否启用',sort:true,
+                        templet: function(rowData) {
+                            return (rowData["ggEnStatus"]=="0") ? '否' : '是';
+                        }
+                    },
+                    {field: '', title: '操作', toolbar: '#tableOper', fixed: 'right', width: 200}
+                ]
+            ],
+            where:{paras:{wtmiTypecode:"loginPage"}},
+            done:function () {
+                common.buttonLimit();
+            }
+        }));
+
+        //table监听事件
+        table.on('toolbar(table1)',function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch(obj.event) {
+                case 'add':
+                    var themeLayer = layer.open({
+                        title: '新增',
+                        type: 1,
+                        content: $('#themeConfigArea').html(),
+                        area: ['90%', "550px"],
+                        offset: 10,
+                        shadeClose: false,
+                        btn: ['<i class="fa fa-check-circle"></i>确定', '<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>取消'],
+                        btnAlign: 'c',
+                        success: function (obj) {
+                            var parent = $(obj.selector);
+                            form.render();
+
+                            eventHandle.gloThemeFuc(parent);
+
+                            form.val("defaultForm", {
+                                "compName": "主题",
+                                "ico": "favicon.ico",
+                                "logo": "empty.png",
+                                "titleName": "国资国委信息管理系统",
+                                "primaryColor": "primary",
+                                "theme1Bg": '',
+                                "theme1Color": '',
+                                "theme1LeftBg": '',
+                                "theme1CopyrightLogo": '',
+                                "isVerify": false,
+                                "tipName": "上网不涉密，涉密不上网",
+                                "isAlert": "yes",
+                                "copyRight": ""
+                            });
+
+                        },
+                        yes: function (index, obj) {
+                            var parent = $(obj.selector);
+                            //获取全局配置
+                            var params = [{
+                                tempId: "0468855b74544bd2ae862ce17ce14020",
+                                prop: {},
+                                parentCompId: "-1",
+                                compId: common.uuid(),
+                                enable: 0
+                            }];
+                            params[0].compName = parent.find('[name=compName]').val();
+                            params[0].memo = parent.find('[name=memo]').val();
+
+                            params[0].prop = {
+                                "ico": parent.find('[name=ico]').val(),
+                                "logo": parent.find('[name=logo]').val(),
+                                "titleName": parent.find('[name=titleName]').val(),
+                                "theme1Bg": parent.find('[name=theme1Bg]').val(),
+                                "theme1Color": parent.find('[name=theme1Color]').val(),
+                                "theme1LeftBg": parent.find('[name=theme1LeftBg]').val(),
+                                "theme1CopyrightLogo": parent.find('[name=theme1CopyrightLogo]').val(),
+                                "primaryColor": parent.find('.primaryColorArea ul li.selected').attr('data-primary'),
+                                "theme": parent.find('.mainThemeArea ul li.selected').attr('data-theme'),
+                                "isVerify": (parent.find('[name=isVerify]:checked').val() === 'true'),
+                                "isAlert": parent.find('[name=isAlert]:checked').val(),
+                                "tipName": parent.find('[name=tipName]').val(),
+                                "copyRight": parent.find('[name=copyRight]').val()
+                            };
+
+
+                            var layerLoader = common.layerLoader();//正在加载
+
+                            common.fetchPost('compmgr/webComponent/componentInfo', params, function (res) {
+
+                                if (res.success) {
+                                    layer.msg('提交成功！！！', {icon: 6});
+                                    //刷新表格
+                                    table.reload('table1', {
+                                        url: baseUrl + 'compmgr/webComponent/pageTopWebComponent',
+                                        method: 'post',
+                                        contentType: 'application/json',
+                                        page: {
+                                            curr: 1
+                                        }
+                                    });
+                                } else {
+                                    layer.msg("提交失败," + res['resultMessage'], {
+                                        icon: 5,
+                                        time: 5000
+                                    });
+                                }
+
+                                layer.close(themeLayer);
+                                layer.close(layerLoader);
+                            }, function () {
+                                layer.close(layerLoader);
+                                layer.msg('提交失败，请重试!!!', {icon: 5});
+                            });
+                        }
+                    });
+                    break;
+                // case 'delete':
+                //     //点击删除按钮
+                //     if (checkStatus.data.length > 0) {
+                //         layer.confirm('确定删除选中列?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                //             var tIdArr = [];
+
+                //             for (var i = 0; i < checkStatus.data.length; i++) {
+                //                 if(checkStatus.data[i].ggEnStatus==1){
+                //                     layer.msg('包含已启用模板，不可删除!,请去除勾选');
+                //                     return false;
+                //                 }
+                //                 else{
+                //                     tIdArr.push(checkStatus.data[i]['wumiId']);
+                //                 }
+                //             }
+                //             var layerLoader = common.layerLoader();
+                //             common.fetchDelete('compmgr/webComponent/topWebComponent?compIds=' + tIdArr.join(','),function (res) {
+                //                 // layer.alert(res.resultMessage);
+                //                 if(res.success){
+                //                     layer.close(layerLoader);
+                //                     eventHandle.tableReload();
+                //                 }else{
+                //                     layer.msg('删除失败');
+                //                 }
+                //             }, function (res) {
+                //                 layer.msg('删除失败');
+                //                 layer.close(layerLoader);
+                //             });
+                //             layer.close(index);
+                //         });
+                //     } else {
+                //         layer.msg('请选择删除列')
+                //     }
+                    break;
+            }
+        });
+
+        // table row 监听事件
+        table.on('tool(table1)', function(obj){
+            var data = obj.data;
+            switch(obj.event){
+                case 'edit'://编辑
+                    var themeLayer = layer.open({
+                        title: '编辑',
+                        type: 1,
+                        content: $('#themeConfigArea').html(),
+                        area: ['90%', "550px"],
+                        offset: 10,
+                        shadeClose: false,
+                        btn: ['<i class="fa fa-check-circle"></i>确定', '<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>取消'],
+                        btnAlign: 'c',
+                        success: function (obj) {
+                            var parent = $(obj.selector);
+                            form.render();
+                            var compId = data.wumiId;
+
+                            eventHandle.gloThemeFuc(parent);
+
+                            common.fetchGet('compmgr/webComponent/componentInfo?compId=' + compId, function (res) {
+                                defaultThemeParams = res;
+                                var data = res.list[0] || {};
+                                //基础信息
+                                form.val("defaultForm", {
+                                    "compName": data.compName,
+                                    "memo": data.memo,
+                                    "titleName": data.prop.titleName,
+                                    "ico": data.prop.ico,
+                                    "theme1Color": data.prop.theme1Color,
+                                    "theme1LeftBg": data.prop.theme1LeftBg,
+                                    "theme1CopyrightLogo": data.prop.theme1CopyrightLogo,
+                                    "theme1Bg": data.prop.theme1Bg,
+                                    "logo": data.prop.logo,
+                                    "primaryColor": data.prop.primaryColor,
+                                    "theme": data.prop.theme,
+                                    "isVerify": data.prop.isVerify ? "true" : "false",
+                                    "isAlert": data.prop.isAlert,
+                                    "tipName": data.prop.tipName,
+                                    "copyRight": data.prop.copyRight ? data.prop.copyRight : ""
+                                });
+                                parent.find('.primaryColorArea ul li').siblings().removeClass('selected');
+                                if (parent.find('[data-primary=' + data.prop.primaryColor + ']')[0]) {
+                                    parent.find('[data-primary=' + data.prop.primaryColor + ']').addClass('selected');
+                                }
+                                parent.find('.mainThemeArea ul li').siblings().removeClass('selected');
+                                if (parent.find('[data-theme=' + data.prop.theme + ']')[0]) {
+                                    parent.find('[data-theme=' + data.prop.theme + ']').addClass('selected');
+                                }
+
+                                if (data.prop.theme === "1") {
+                                    $('.theme1Set').show()
+                                } else {
+                                    $('.theme1Set').hide()
+                                }
+                            });
+                        },
+                        yes: function (index, obj) {
+                            var parent = $(obj.selector);
+                            //获取全局配置
+                            var params = [];
+                            params.push(defaultThemeParams.list[0]);
+                            params[0].compName = parent.find('[name=compName]').val();
+                            params[0].memo = parent.find('[name=memo]').val();
+
+                            params[0].prop = {
+                                "ico": parent.find('[name=ico]').val(),
+                                "logo": parent.find('[name=logo]').val(),
+                                "titleName": parent.find('[name=titleName]').val(),
+                                "theme1Color": parent.find('[name=theme1Color]').val(),
+                                "theme1LeftBg": parent.find('[name=theme1LeftBg]').val(),
+                                "theme1CopyrightLogo": parent.find('[name=theme1CopyrightLogo]').val(),
+                                "theme1Bg": parent.find('[name=theme1Bg]').val(),
+                                "primaryColor": parent.find('.primaryColorArea ul li.selected').attr('data-primary'),
+                                "theme": parent.find('.mainThemeArea ul li.selected').attr('data-theme'),
+                                "isVerify": (parent.find('[name=isVerify]:checked').val() === 'true'),
+                                "isAlert": parent.find('[name=isAlert]:checked').val(),
+                                "tipName": parent.find('[name=tipName]').val(),
+                                "copyRight": parent.find('[name=copyRight]').val()
+                            };
+
+
+                            var layerLoader = common.layerLoader();//正在加载
+
+                            common.fetchPost('compmgr/webComponent/componentInfo', params, function (res) {
+                                if (res.success) {
+                                    layer.msg('提交成功！！！', {icon: 6});
+                                    //刷新表格
+                                    table.reload('table1', {
+                                        url: baseUrl + 'compmgr/webComponent/pageTopWebComponent',
+                                        method: 'post',
+                                        contentType: 'application/json',
+                                        page: {
+                                            curr: 1
+                                        }
+                                    });
+                                } else {
+                                    layer.msg("提交失败," + res['resultMessage'], {
+                                        icon: 5,
+                                        time: 5000
+                                    });
+                                }
+
+                                layer.close(themeLayer);
+                                layer.close(layerLoader);
+                            }, function () {
+                                layer.close(layerLoader);
+                                layer.msg('提交失败，请重试!!!', {icon: 5});
+                            });
+                        }
+                    });
+                    break;
+                case 'singleDel':
+                    if(data.ggEnStatus==1){
+                        layer.msg('当前模板已启用，不可删除!');
+                        return false;
+                    }
+                    var selectId = data.wumiId;
+                    layer.confirm('确定删除?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                        var layerLoader = common.layerLoader();
+                        common.fetchDelete('compmgr/webComponent/topWebComponent?compIds='+selectId,function (res) {
+                            layer.close(layerLoader);
+                            if(res.success){
+                                eventHandle.tableReload();
+                                layer.msg('删除成功');
+                            }else{
+                                layer.msg('删除成功')
+                            }
+                        }, function () {
+                            layer.close(layerLoader);
+                        });
+
+                        layer.close(index);
+                    });
+                    break;
+                case 'singleEnable':
+                    if(data.ggEnStatus==1){
+                        layer.msg('已启用，请勿重复点击');
+                        return false;
+                    }
+                    var selectId = data.wumiId;
+                    layer.confirm('确定启用?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                        var layerLoader = common.layerLoader();
+                        common.fetchGet('compmgr/webComponent/enableTopWebComponent?compId='+selectId+'&enable=true&type=loginPage',function (res) {
+                            layer.close(layerLoader);
+                            if(res.success){
+                                eventHandle.tableReload();
+                                layer.msg('启用成功');
+                            }else{
+                                layer.msg('启用失败')
+                            }
+                        }, function (err) {
+
+                            layer.close(layerLoader);
+                        });
+                        layer.close(index);
+                    });
+                    break;
+            }
+        });
+        //查询
+        form.on('submit(formSearch)',function (obj) {
+            var name=obj.field.wumiChname;
+            table.reload('table1',{
+                page:{
+                    curr:0
+                },
+                where:{
+                    paras:{
+                        wumiChname:name,
+                        wtmiTypecode:"loginPage",
+                    }
+                }
+            });
+            return false;
+        });
+    });
+</script>
+<!--[if lt IE 9]>
+    <script src="../../js/lib/html5.min.js"></script>
+    <script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

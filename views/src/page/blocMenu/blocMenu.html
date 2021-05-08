@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>集团菜单</title>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link href="./../../../src/js/layui/css/layui.css" rel="stylesheet"/>
+    <link href="./../../../src/css/public.css" rel="stylesheet"/>
+    <script src="./../../../src/js/lib/jquery.1.12.3.js"></script>
+    <link href="./../../../src/css/ztree/zTreeStyle/zTreeStyle.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="iframe-h">
+
+<div class="content-wrap">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>集团菜单绑定列表</span></div>
+                <div class="layui-card-body">
+                    <form action="" class="layui-form layui-form-pane">
+                        <div class="layui-row layui-col-space10">
+                            <div class="layui-col-md4">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">集团名称</label>
+                                    <div class="layui-input-block">
+                                        <!--<input autocomplete="off" class="layui-input" name="loginIp"-->
+                                        <!--placeholder="请输入集团名称" type="text">-->
+                                        <select id="blocNameSearch" lay-search="blocNameSearch"
+                                                name="blocNameSearch"></select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md4">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">版本号</label>
+                                    <div class="layui-input-block">
+                                        <input autocomplete="off" class="layui-input" name="smbVersion"
+                                               placeholder="请输入"
+                                               type="text">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="formSearch-btnArea">
+                                <button class="layui-btn" lay-filter="formSearch" lay-submit><i class="fa fa-search"></i>查询</button>
+                                <button class="layui-btn layui-btn-primary" type="reset"><i class="fa fa-eraser"></i>重置</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="layui-card">
+                <div class="layui-card-body" style="padding-top: 0">
+                    <table id="table1" lay-filter="table1"></table>
+                    <script id="tableToolBar" type="text/html">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-sm" lay-event="add" permission-btn="addSysPathAuth">
+                                <i class="layui-icon">&#xe608;</i> 新增
+                            </button>
+                            <button class="layui-btn layui-btn-sm" lay-event="start" permission-btn="enableSysPathAuth">
+                                <i class="fa fa-sign-out"></i> 导出
+                            </button>
+                            <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete"
+                                    permission-btn="delSysPathAuth">
+                                <i class="layui-icon">&#xe640;</i> 删除
+                            </button>
+                        </div>
+                    </script>
+                    <script id="tableOper" type="text/html">
+                        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                        <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="copy">复制</a>
+                        <!--<a class="layui-btn layui-btn-xs" lay-event="menu">菜单设置</a>-->
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--新增/编辑弹框-->
+<div class="layerOpen" style="display: none">
+    <div style="padding: 15px 20px;overflow-y:auto;overflow-x:hidden">
+        <form action="" class="layui-form layui-form-pane">
+            <div class="layui-row layui-col-space10">
+                <div class="layui-col-md12">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"><b class="red">*</b> 集团名称</label>
+                        <div class="layui-input-block">
+                            <select id="blocName" lay-search="blocName" lay-verify="required" name="blocName"
+                                    required></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md12">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"><b class="red">*</b>菜单版本</label>
+                        <div class="layui-input-block">
+                            <input autocomplete="off" class="layui-input" id="menuVersion" lay-verify="required"
+                                   name="menuVersion" placeholder="请输入" required
+                                   type="text">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="configArea layui-row layui-col-space10">
+            <div class="layui-col-xs6">
+                <div class="custom-title">菜单资源</div>
+                <ul class="ztree ztree-bg" id="treeLeft"></ul>
+            </div>
+            <div class="layui-col-xs6" style="position: relative">
+                <div class="custom-title blocTitle"><b></b>集团菜单</div>
+                <div style="position: absolute;right: 8px;top: 12px;">
+                    <button class="layui-btn layui-btn-xs layui-btn-warm" id="addNode" style="font-size: 12px">
+                        <i class="layui-icon">&#xe608;</i> 新增节点
+                    </button>
+                </div>
+                <ul class="ztree ztree-bg" id="treeRight"></ul>
+            </div>
+        </div>
+    </div>
+</div>
+<script charset="utf-8" src="../../js/common/plugin.js"></script>
+<script src="./../../js/layui/layui.js"></script>
+<script src="./../../../src/js/lib/ztree/jquery.ztree.core.js" type="text/javascript"></script>
+<script src="./../../../src/js/lib/ztree/jquery.ztree.excheck.min.js" type="text/javascript"></script>
+<script src="./../../../src/js/lib/ztree/jquery.ztree.exedit.min.js" type="text/javascript"></script>
+<script>
+
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).extend({}).use(['layer', 'table', 'form', 'common', 'util', 'element', 'laydate'], function () {
+        var util = layui.util;
+        var table = layui.table;
+        var form = layui.form;
+        var common = layui.common;
+        common.themeSet();
+        var baseUrl = '../../../';
+
+
+        var settingLeft = {
+            data: {
+                key: {
+                    name: 'smName',
+                    idKey: 'smId',
+                    pIdKey: "smPid",
+                    // children:"children"
+                },
+                simpleData: {
+                    enable: true,
+                    idKey: 'smId',
+                    pIdKey: "smPid",
+                    name: 'smName'
+                }
+            },
+            edit: {
+                enable: true,
+                showRemoveBtn: false,
+                showRenameBtn: false
+            },
+            callback: {
+                //拖拽前
+                beforeDrag: function (treeId, treeNodes, targetNode, moveType) {
+                    for (var i = 0, l = treeNodes.length; i < l; i++) {
+                        if (treeNodes[i].drag === false) {
+                            return false;
+                        }
+                    }
+                    return true;
+                },
+                //拖拽后
+                beforeDrop: function (treeId, treeNodes, targetNode, moveType) {
+
+                    // if(moveType==='inner'){
+                    //     return false;
+                    // }
+                    return targetNode ? targetNode.drop !== false : true;
+                },
+                //编辑名字前面
+                beforeRename: function (treeId, treeNode, newName, isCancel) {
+
+                },
+                //编辑名字前面
+                onRename: function (treeId, treeNode, newName, isCancel) {
+
+                }
+            }
+        };
+        var settingRight = {
+            data: {
+                key: {
+                    name: 'smName',
+                    idKey: 'smId',
+                    pIdKey: "smPid",
+                    // children:"sysMenuButton"
+                },
+                simpleData: {
+                    enable: true,
+                    idKey: 'smId',
+                    pIdKey: "smPid",
+                    name: 'smName'
+                }
+            },
+            edit: {
+                enable: true,
+                showRemoveBtn: function (treeId, treeNode) {
+                    return treeNode.enableOper;
+                },
+                showRenameBtn: function (treeId, treeNode) {
+                    return treeNode.enableOper;
+                },
+            },
+            callback: {
+                //拖拽前
+                beforeDrag: function (treeId, treeNodes) {
+                    for (var i = 0, l = treeNodes.length; i < l; i++) {
+                        if (treeNodes[i].drag === false) {
+                            return false;
+                        }
+                    }
+                    return true;
+                },
+                //拖拽后
+                beforeDrop: function (treeId, treeNodes, targetNode, moveType) {
+                    return targetNode ? targetNode.drop !== false : true;
+                },
+                //编辑名字前面
+                beforeRename: function (treeId, treeNode, newName, isCancel) {
+
+                },
+                //编辑名字前面
+                onRename: function (treeId, treeNode, newName, isCancel) {
+
+                }
+            }
+        };
+
+        common.selectDataSet({
+            elem: $('#blocNameSearch'),
+            url: "devopsmgr/bloc/selectSysBloc",
+            method: 'get',
+            responseList: 'list',
+            isSearch: true,
+            optionText: 'sbShortname',
+            optionValue: 'sbId',
+            success: function () {
+                form.render('select')
+            }
+        });
+
+        table.render(common.tableInitParams({
+            elem: '#table1',
+            url: baseUrl + "devopsmgr/bloc/pageQueryMenuVersion",
+            method: 'post',
+            height: 'full-160',
+            toolbar: '#tableToolBar',
+            cols: [
+                [
+                    {type: 'checkbox'},
+                    {"type": "numbers", "title": "序号"},
+                    {
+                        field: 'sbFullname', title: '集团全称', minwidth: 250, sort: true, templet: function (rowData) {
+                            return rowData.sysBloc.sbFullname
+                        }
+                    },
+                    {
+                        field: 'sbShortname', title: '集团简称', minwidth: 180, sort: true, templet: function (rowData) {
+                            return rowData.sysBloc.sbShortname
+                        }
+                    },
+                    {
+                        field: 'sbCode', title: '集团信用代码', width: 130, sort: true, templet: function (rowData) {
+                            return rowData.sysBloc.sbCode
+                        }
+                    },
+                    {field: 'smbVersion', title: '版本号', width: 120, sort: true},
+                    {field: '', title: '操作', width: 160, toolbar: '#tableOper', fixed: 'right'}
+                ]
+            ],
+            done: function () {
+                common.buttonLimit();
+            }
+        }));
+
+        //table监听事件
+        table.on('toolbar(table1)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            var treeLeft, treeRight;
+            switch (obj.event) {
+                case 'add':
+                    var addLayerIndex = layer.open({
+                        title: "新增",
+                        maxmin: false,
+                        type: 1,//页面层
+                        area: ['60%', "600px"],//高度自适应
+                        shadeClose: false,
+                        content: $('.layerOpen').html(),//加载该区域的html
+                        btn: ['保存', '<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭'],
+                        btnAlign: 'c',
+                        success: function (obj) {
+                            var parent = $(obj.selector);
+
+                            form.render();
+                            common.selectDataSet({
+                                elem: parent.find('#blocName'),
+                                url: "devopsmgr/bloc/selectSysBloc",
+                                method: 'get',
+                                responseList: 'list',
+                                isSearch: true,
+                                optionText: 'sbShortname',
+                                optionValue: 'sbId',
+                                success: function () {
+                                    form.render('select');
+                                }
+                            });
+
+                            var layerLoader = common.layerLoader();
+                            //获取菜单信息
+                            common.fetchGet('devopsmgr/menu/selectSysMenuAndBtn', function (res) {
+                                var data = res['list'] || [];
+                                var zNodes = [];
+                                $.map(data, function (item, index1) {
+                                    //增加主菜单的key值
+                                    // item['name'] = item.smName;
+                                    // item['id'] = item.smId;
+                                    // item['pIdKey'] = item.smPid;
+                                    item['children'] = item.sysMenuButton;
+
+                                    //增加button 的key值
+                                    if (item['children']) {
+                                        $.map(item['children'], function (children, index) {
+                                            //子节点屏蔽拖拽
+                                            item.children[index]['drag'] = false;
+                                            item.children[index]['smName'] = item.children[index].smbName;
+                                            item.children[index]['smId'] = item.children[index].smbId;
+                                            item.children[index]['smPid'] = item['id'];
+                                        });
+                                    }
+                                    zNodes.push(item);
+                                });
+
+                                treeLeft = $.fn.zTree.init(parent.find("#treeLeft"), settingLeft, zNodes);
+                                layer.close(layerLoader);
+                            }, function (error) {
+                                layer.close(layerLoader);
+                                layer.msg(error.resultMessage);
+                            });
+
+
+                            treeRight = $.fn.zTree.init(parent.find("#treeRight"), settingRight);
+                            parent.find('#addNode').off().on('click', function () {
+                                treeRight.addNodes(null, {
+                                    name: "节点",
+                                    open: true,
+                                    pId: 0,
+                                    id: common.uuid(),
+                                    enableOper: true
+                                });
+                            });
+                        },
+                        yes: function (index, obj) {
+                            var parent = $(obj.selector);
+
+                            var params = {
+                                menuBlocList: [],
+                                sysBloc: {
+                                    sbId: parent.find('#blocName').val()
+                                },
+                                version: parent.find('#menuVersion').val()
+                            };
+
+                            //填入绑定的菜单信息
+
+                            var nodes = treeRight.getNodes();
+                            var nodeArray = treeRight.transformToArray(nodes);
+                            for (var node in nodeArray) {
+                                if (nodeArray[node].drag === undefined) {
+                                    //todo:
+
+                                    // "smPid": "string",
+                                    //     "smPidAll": "string",
+                                    //非按钮节点
+                                    params.menuBlocList.push(nodeArray[node]);
+                                } else if (nodeArray[node].drag === false) {
+                                    //表示按钮节点
+
+                                }
+                            }
+
+
+                            if (!params.sysBloc.sbId) {
+                                layer.msg('请选择集团');
+                                return false;
+                            }
+                            if (!params.version) {
+                                layer.msg('请输入版本信息');
+                                return false;
+                            }
+                            // if (params.menuBlocList.length == 0) {
+                            //     layer.msg('请绑定集团菜单信息');
+                            //     return false;
+                            // }
+                            var layerLoader = common.layerLoader();
+
+                            // transformToArray
+
+                            common.fetchPost('devopsmgr/bloc/saveSysMenuBloc', params, function (res) {
+                                layer.close(layerLoader);
+
+                                layer.msg('保存成功');
+                            }, function (error) {
+                                layer.close(layerLoader);
+                                layer.msg(error.resultMessage);
+                            });
+
+
+                            layer.close(addLayerIndex)
+                        },
+                    });
+                    break;
+                case 'delete':
+                    //点击删除按钮
+                    if (checkStatus.data.length > 0) {
+                        layer.confirm('确定删除选中列?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                            var smIdArr = [];
+
+                            for (var i = 0; i < checkStatus.data.length; i++) {
+                                smIdArr.push(checkStatus.data[i]['spId'])
+                            }
+                            var layerLoader = common.layerLoader();
+                            common.fetchPost('sysmgr/sysPath/deleteSysPathByIds?spIds=' + smIdArr.join(','), null, function () {
+                                layer.close(layerLoader);
+                                eventHandle.tableReload();
+                                layer.msg('删除成功');
+                            }, function () {
+                                layer.close(layerLoader);
+                            });
+
+                            layer.close(index);
+                        });
+                    } else {
+                        layer.msg('请选择删除列')
+                    }
+                    break;
+            }
+        });
+
+        table.on('tool(table1)', function (obj) {
+            var rowData = obj.data;
+            var treeLeft, treeRight;
+            switch (obj.event) {
+                case 'edit':
+                    var layerBox = layer.open({
+                        title: "编辑",
+                        maxmin: false,
+                        type: 1,//页面层
+                        area: ['60%', "600px"],//高度自适应
+                        shadeClose: false,
+                        content: $('.layerOpen').html(),//加载该区域的html
+                        btn: ['保存', '<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭'],
+                        btnAlign: 'c',
+                        success: function (obj) {
+                            var parent = $(obj.selector);
+                            //初始化表格
+                            form.render();
+                            common.selectDataSet({
+                                elem: parent.find('#blocName'),
+                                url: "devopsmgr/bloc/selectSysBloc",
+                                method: 'get',
+                                responseList: 'list',
+                                isSearch: true,
+                                optionText: 'sbShortname',
+                                optionValue: 'sbId',
+                                success: function () {
+                                    form.render('select');
+                                }
+                            });
+
+                            var layerLoader = common.layerLoader();
+                            //获取菜单信息
+                            common.fetchGet('devopsmgr/menu/selectSysMenuAndBtn', function (res) {
+                                var data = res['list'] || [];
+                                var zNodes = [];
+                                $.map(data, function (item, index1) {
+                                    //增加主菜单的key值
+                                    // item['name'] = item.smName;
+                                    // item['id'] = item.smId;
+                                    // item['pIdKey'] = item.smPid;
+                                    item['children'] = item.sysMenuButton;
+
+                                    //增加button 的key值
+                                    if (item['children']) {
+                                        $.map(item['children'], function (children, index) {
+                                            //子节点屏蔽拖拽
+                                            item.children[index]['drag'] = false;
+                                            item.children[index]['smName'] = item.children[index].smbName;
+                                            item.children[index]['smId'] = item.children[index].smbId;
+                                            item.children[index]['smPid'] = item['id'];
+                                        });
+                                    }
+                                    zNodes.push(item);
+                                });
+
+                                treeLeft = $.fn.zTree.init(parent.find("#treeLeft"), settingLeft, zNodes);
+                                layer.close(layerLoader);
+                            }, function (error) {
+                                layer.close(layerLoader);
+                                layer.msg(error.resultMessage);
+                            }, false);
+
+
+                            parent.find('#addNode').off().on('click', function () {
+                                treeRight.addNodes(null, {
+                                    name: "节点",
+                                    open: true,
+                                    pId: 0,
+                                    id: common.uuid(),
+                                    enableOper: true
+                                });
+                            });
+
+                            parent.find('#addNode').off().on('click', function () {
+                                treeRight.addNodes(null, {name: "节点", open: true, pId: 0, id: common.uuid(),enableOper:true});
+                            });
+
+                            //接口值带入
+                            console.log(rowData);
+                            parent.find('[name=menuVersion]').val(rowData['smbVersion']);
+                            parent.find('[name=blocName]').val(rowData['sbId']);
+                            form.render('select');
+                            //集团菜单数据导入
+                            var menuBlocNode = [];
+                            $.map(rowData['menuBloc'], function (item, index1) {
+                                //增加主菜单的key值
+                                item['children'] = item.sysMenuButton;
+                                //增加button 的key值
+                                if (item['children']) {
+                                    $.map(item['children'], function (children, index) {
+                                        //子节点屏蔽拖拽
+                                        item.children[index]['drag'] = false;
+                                        item.children[index]['smName'] = item.children[index].smbName;
+                                        item.children[index]['smId'] = item.children[index].smbId;
+                                        item.children[index]['smPid'] = item['id'];
+                                    });
+                                }
+                                menuBlocNode.push(item);
+                            });
+                            treeRight = $.fn.zTree.init(parent.find("#treeRight"), settingRight, menuBlocNode);
+                        },
+                        yes: function () {
+                            layer.close(layerBox)
+                        }
+                    });
+                    break;
+            }
+
+        });
+
+        //表格查询
+        form.on('submit(formSearch)', function (obj) {
+            //表格重载
+            table.reload('table1', {
+                page: {
+                    curr: 1
+                },
+                where: {
+                    // sbFullname: obj.field.blocNameSearch,
+                    sbFullname: obj.field.blocNameSearch ? $('#blocNameSearch option:checked').text() : '',
+                    smbVersion: obj.field.smbVersion
+                },
+
+            });
+            return false;
+        });
+
+
+    });
+
+</script>
+
+<!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

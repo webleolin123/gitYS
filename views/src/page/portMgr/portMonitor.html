@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>接口监控</title>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+    <link href="../../js/layui/css/layui.css" rel="stylesheet"/>
+    <link href="../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script charset="utf-8" src="../../js/common/plugin.js"></script>
+
+</head>
+<body class="iframe-h">
+
+<div class="content-wrap portDetailPage">
+    <input id="portData" type="hidden">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs12">
+            <div class="layui-card">
+                <div class="layui-row">
+                    <div class="layui-col-xs5">
+                        <div class="layui-card">
+                            <div class="layui-card-header layui-card-header-custom"><span><i></i>接口信息</span></div>
+                            <div class="layui-card-body">
+                                <div class="layui-row">
+                                    <div class="layui-col-xs12">
+                                        <div class="headLine">
+                                            <i class="fa fa-id-card"></i>
+                                            <span>用户管理接口</span>
+                                        </div>
+                                    </div>
+                                    <div class="layui-col-xs5">
+                                        <div style="width: 100%;height: 150px">
+                                            <div id="chart1" style="width: 80%;height: 150px"></div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-col-xs7">
+                                        <div class="custom-detail">
+                                            <ul class="clearFix">
+                                                <!-- <li>
+                                                    <span class="span1">接口分类:</span>
+                                                    <span class="span2">还有分类么？？</span>
+                                                </li> -->
+                                                <li>
+                                                    <span class="span1">版本：</span>
+                                                    <span class="version">v1</span>
+                                                </li>
+                                                <li>
+                                                    <span class="span1">正常调用数：</span>
+                                                    <span class="successCount">100</span>
+                                                </li>
+                                                <li>
+                                                    <span class="span1">异常调用数：</span>
+                                                    <span class="failCount">0</span>
+                                                </li>
+                                                <li>
+                                                    <span class="span1">更新时间：</span>
+                                                    <span class="updateTime">2019-01-17 17:09:11</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="layui-col-xs7">
+                        <div class="layui-card">
+                            <div class="layui-card-header layui-card-header-custom"><span><i></i>运行历史</span></div>
+                            <div class="layui-card-body">
+                                <table class="layui-table">
+                                    <thead>
+                                    <tr>
+                                        <th>发起时间</th>
+                                        <th>结束时间</th>
+                                        <th>持续时间（s）</th>
+                                        <th>返回结果</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>2019-01-17 17:09:11</td>
+                                        <td>2019-01-17 17:09:11</td>
+                                        <td>3</td>
+                                        <td><span class="layui-badge" style="background-color:#66c33a">成功</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>2019-01-17 17:09:11</td>
+                                        <td>2019-01-17 17:09:11</td>
+                                        <td>3</td>
+                                        <td><span class="layui-badge" style="background-color:#f56c6c">失败</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>2019-01-17 17:09:11</td>
+                                        <td>2019-01-17 17:09:11</td>
+                                        <td>3</td>
+                                        <td><span class="layui-badge" style="background-color:#66c33a">成功</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>2019-01-17 17:09:11</td>
+                                        <td>2019-01-17 17:09:11</td>
+                                        <td>3</td>
+                                        <td><span class="layui-badge" style="background-color:#66c33a">成功</span></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs12">
+            <div class="layui-card">
+                <div class="layui-row">
+                    <div class="layui-col-xs12">
+                        <div class="layui-card">
+                         <div class="layui-card-header layui-card-header-custom"><span><i></i>运行历史</span></div>
+                            <div class="layui-card-body">
+                                <table id="table1" lay-filter="table1"></table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <!-- 接口数据未定(后端郑康秋) 2019/8/5 暂时注释 -->
+        <!-- <div class="layui-col-xs12">
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>监控历史概况</span></div>
+                <div class="layui-card-body">
+                    <div style="position: relative;background: white;padding: 10px">
+                        <div id="chart2" style="width: 100%;height: 200px"></div>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+        <div class="layui-col-xs12">
+            <div class="layui-card" style="height:530px;">
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>黑名单</span></div>
+                <div class="layui-card-body">
+                     <table id="table2" lay-filter="table2"></table>
+                    <!-- <table class="layui-table">
+                        <thead>
+                        <tr>
+                            <th>IP</th>
+                            <th>开始时间</th>
+                            <th>结束时间</th>
+                            <th>持续时间（s）</th>
+                            <th>返回结果</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>12.12.12.12</td>
+                            <td>2019-01-17 17:09:11</td>
+                            <td>2019-01-17 17:09:11</td>
+                            <td>3</td>
+                            <td><span class="layui-badge" style="background-color:#66c33a">成功</span></td>
+                        </tr>
+                        <tr>
+                            <td>12.12.12.12</td>
+                            <td>2019-01-17 17:09:11</td>
+                            <td>2019-01-17 17:09:11</td>
+                            <td>3</td>
+                            <td><span class="layui-badge" style="background-color:#f56c6c">失败</span></td>
+                        </tr>
+                        <tr>
+                            <td>12.12.12.12</td>
+                            <td>2019-01-17 17:09:11</td>
+                            <td>2019-01-17 17:09:11</td>
+                            <td>3</td>
+                            <td><span class="layui-badge" style="background-color:#66c33a">成功</span></td>
+                        </tr>
+                        </tbody>
+                    </table> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="./../../js/layui/layui.js"></script>
+<script charset="utf-8" src="../../js/module/monitorPort.js"></script>
+<!-- <script charset="utf-8" src="../../js/lib/echarts-4.1.0.min.js"></script>
+<script charset="utf-8" src="../../js/lib/echartTheme.js"></script>
+<script charset="utf-8" src="../../js/module/jquery.range.js"></script>
+<script charset="utf-8" src="../../js/module/portMonitor.js"></script> -->
+
+
+<!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

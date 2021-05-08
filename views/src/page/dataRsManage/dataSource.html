@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>数据源管理</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../js/layui/css/layui.css"/>
+    <link href="../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script src="../../js/common/plugin.js"></script>
+
+</head>
+
+<!-- 新增/编辑组件弹窗 -->
+<div class="dsLayer hide">
+    <div style="padding: 15px 20px">
+        <form class="layui-form layui-form-pane" lay-filter="addForm" id="dsForm">
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="dsName" required  lay-verify="required" maxlength="100" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>类型</label>
+                <div class="layui-input-block">
+                    <select name="dsType" id="dsType" required lay-verify="required" lay-filter="seIdSelect">
+                        <option value=""></option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>驱动</label>
+                <div class="layui-input-block">
+                    <input type="text" name="dsDriver" required  lay-verify="required"  placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>URL</label>
+                <div class="layui-input-block">
+                    <input type="text" name="dsUrl" placeholder="请输入" required  lay-verify="required" class="layui-input"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>用户名</label>
+                <div class="layui-input-block">
+                    <input type="text" name="dsUsername" required  lay-verify="required"  placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>密码</label>
+                <div class="layui-input-block">
+                    <input type="password" name="dsPassword" required  lay-verify="required"  placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">备注</label>
+                <div class="layui-input-block">
+                    <input type="text" name="ggMemo" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item adapt">
+                <div class="layui-input-block">
+                    <button class="layui-btn layui-btn-warm" id="testLinkSave" permission-btn="testDataSource">测试链接</button>
+                    <button class="layui-btn " lay-submit lay-filter="formSavue" permission-btn="submit"><i class="fa fa-check-circle"></i>确定</button>
+                    <button class="layui-btn layui-btn-primary" id="formClose"><i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<body class="iframe-h">
+<div class="content-wrap">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>数据源列表</span></div>
+                <div class="layui-card-body">
+                    <form action="" class="layui-form layui-form-pane">
+                        <div class="layui-row layui-col-space10">
+                            <div class="layui-col-md4">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">名称</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="dsName" placeholder="请输入" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md4">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">用户名</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="dsUsername" placeholder="请输入" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md4">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">类型</label>
+                                    <div class="layui-input-block">
+                                        <select name="dsType">
+                                            <option value="">请选择</option>
+                                            <option value="mysql">mysql</option>
+                                            <option value="oracle">oracle</option>
+                                            <option value="dameng">dameng</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="formSearch-btnArea">
+                                <button class="layui-btn" lay-submit lay-filter="formSearch"><i class="fa fa-search"></i>查询</button>
+                                <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="layui-card">
+                <div class="layui-card-body" style="padding-top: 0">
+                    <table id="dataSourceTable" lay-filter="dataSourceTable"></table>
+                    <script type="text/html" id="dataSourceTableToolBar">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-sm" lay-event="add" permission-btn="addDataSource">
+                                <i class="layui-icon">&#xe608;</i> 新增
+                            </button>
+                            <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete" permisstion-btn="deleteDataSource">
+                                <i class="layui-icon">&#xe640;</i> 删除
+                            </button>
+                            <button class="layui-btn layui-btn-sm" lay-event="enable" permission-btn="enableDataSource">
+                                <i class="layui-icon">&#x1005;</i> 启用
+                            </button>
+                            <button class="layui-btn layui-btn-sm" lay-event="disable" permission-btn="disableDataSource">
+                                <i class="layui-icon">&#x1007;</i> 禁用
+                            </button>
+                        </div>
+                    </script>
+                    <script type="text/html" id="dataSourceTableOper">
+                        <a class="layui-btn layui-btn-xs" lay-event="edit" permission-btn="updateDataSource">
+                            <!-- <i class="layui-icon layui-icon-edit"></i> -->
+                             编辑
+                        </a>
+                        <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="testLink" permission-btn="testDataSource">
+                            <!-- <i class="layui-icon layui-icon-link"></i>   -->
+                            测试链接
+                        </a>
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="./../../js/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).extend({
+    }).use(['layer','table','form','laytpl','element','common'],function () {
+        var table=layui.table;
+        var form=layui.form;
+        var common=layui.common;
+        var element = layui.element;
+        element.init();
+        var baseUrl='../../../';
+        common.themeSet();
+        var currentMenuSmId=$("#currentMenuSmId",window.parent.document).val();
+
+        var pageInitialParam = {
+            pageNum : 1,
+            pareSize : 10,
+            curr:1
+        };
+
+        var dataSourcePageUrl = baseUrl + 'sysmgr/datasource/page/';
+        var dataSourceUrl = baseUrl + 'sysmgr/datasource/';
+
+        var eventHandle={
+            tableReload:function () {
+                table.reload('dataSourceTable',{
+                    url: dataSourcePageUrl,
+                    contentType: 'application/json',
+                    method:'post',
+                    page:pageInitialParam
+                });
+                common.buttonLimit(currentMenuSmId);
+            },
+            dictInit:function(elem,url,selVal,selText, selectedVal){
+                var option = {
+                        elem: elem,
+                        url: url,
+                        method: 'get',
+                        responseList: 'list',
+                        optionText: selText,
+                        optionValue: selVal,
+                        success: function(obj) {
+                            $(elem).val(selectedVal);
+                            form.render("select");
+                        }
+                    }
+                common.selectDataSet(option);
+            }
+        };
+        table.render(common.tableInitParams({
+            elem: '#dataSourceTable',
+            url: dataSourcePageUrl,
+            method: 'post',
+            toolbar: '#dataSourceTableToolBar',
+            cols: [
+                [
+                    {type:'checkbox'},
+                    {"type":"numbers", "title":"序号"},
+                    {field: 'dsName', title: '名称', width:'10%', sort: true},
+                    {field: 'dsType', title: '类型', width:'15%', sort: true},
+                    {field: 'dsDriver', title: '驱动', width:'15%',sort:true},
+                    {field: 'dsUrl', title: 'URL', width:'15%',sort:true},
+                    {field: 'dsUsername', title: '用户名', width:'15%', sort: true},
+                    {ield: 'ggEnStatus',title: '状态',width: 80, sort: true,
+                        templet: function(rowData) {
+                            if(rowData['ggEnStatus'] === '1'){
+                                return '<span class="layui-badge" style="background-color:#66c33a">启用</span>'
+                            }else{
+                                return '<span class="layui-badge" style="background-color:#f56c6c">禁用</span>'
+                            }
+                        }
+                    },
+                    {field: '', title: '操作', toolbar:'#dataSourceTableOper',fixed: 'right'}
+                ]
+            ]
+        }));
+
+        //table监听事件
+        table.on('toolbar(dataSourceTable)',function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch(obj.event) {
+                case 'add':
+                    var index_add=layer.open({
+                        offset: '150px',
+                        title: '新增',
+                        maxmin: false,
+                        type: 1,//页面层
+                        area: ['580px'],//高度自适应
+                        shadeClose: false,
+                        content: $('.dsLayer').html(),//加载该区域的html
+                        // btn:['保存','<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>取消'],
+                        success: function (obj) {
+                            eventHandle.dictInit($(obj.selector).find('#dsType'), 'sysmgr/dicts/selectDictListByPcode?dictPCode=SATDATABASETYPE','sdCode','sdName', '');
+
+                            form.render();
+                            $(obj.selector).find('#formClose').off().on('click',function(){
+                                    layer.close(index_add);
+                                    return false;
+                            });
+                            $(obj.selector).find('#testLinkSave').off().on('click',function(){
+                                var form = $(obj.selector).find("#dsForm");
+                                var params = {
+                                    dsName:  $(form).find("input[name=dsName]").val(),
+                                    dsDriver: $(form).find("input[name=dsDriver]").val(),
+                                    dsUrl: $(form).find("input[name=dsUrl]").val(),
+                                    dsType: $(form).find("select[name=dsType]").val(),
+                                    dsUsername: $(form).find("input[name=dsUsername]").val(),
+                                    dsPassword: $(form).find("input[name=dsPassword]").val()
+                                };
+                                var layerLoader = common.layerLoader();
+                                common.fetchPost(dataSourceUrl+'testConnect', params,function (res) {
+                                        layer.close(layerLoader);
+                                        if(res.success){
+                                            layer.msg('连接成功');//失败后提示
+                                        }else{
+                                            layer.msg("连接失败:" + res.resultMessage);
+                                        }
+                                        return false;
+                                    }, function () {
+                                        layer.msg('连接失败');//失败后提示
+                                        layer.close(layerLoader);
+                                        return false;
+                                    });
+                                return false
+                            });
+                            form.on('submit(formSavue)', function (obj) {
+                                var params = {
+                                    dsName:obj.field.dsName,
+                                    dsDriver:obj.field.dsDriver,
+                                    dsUrl:obj.field.dsUrl,
+                                    dsType:obj.field.dsType,
+                                    dsUsername:obj.field.dsUsername,
+                                    dsPassword:obj.field.dsPassword,
+                                    ggMemo: obj.field.ggMemo
+                                };
+                                layer.confirm('您确定要保存?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                                    var layerLoader = common.layerLoader();
+                                    common.fetchPost(dataSourceUrl + 'save', params,function (res) {
+                                        layer.close(layerLoader);
+                                        layer.close(index);
+                                        if(res.success){
+                                            layer.close(index_add);
+                                            eventHandle.tableReload();
+                                        }else{
+                                            layer.msg("添加失败:" + res.resultMessage);
+                                        }
+                                    }, function () {
+                                        layer.msg('添加失败');//失败后提示
+                                        layer.close(index);
+                                        layer.close(layerLoader);
+                                    });
+                                });
+                                return false;
+                            });
+                        },
+                    });
+                    break;
+                case 'delete':
+                    //点击删除按钮
+                    if (checkStatus.data.length > 0) {
+                        layer.confirm('确定删除选中行?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                            var tIdArr = [];
+
+                            for (var i = 0; i < checkStatus.data.length; i++) {
+                                tIdArr.push(checkStatus.data[i]['dsId'])
+                            }
+                            var layerLoader = common.layerLoader();
+                            common.fetchDelete(dataSourceUrl + 'deleteByIds?ids=' + tIdArr.join(','),function (res) {
+                                if(res.success){
+                                    layer.close(layerLoader);
+                                    layer.msg('删除成功');
+                                    eventHandle.tableReload();
+                                }else{
+                                    layer.msg('删除失败' + res.resultMessage);
+                                }
+                            }, function (res) {
+                                layer.msg('删除失败');
+                                layer.close(layerLoader);
+                            });
+                            layer.close(index);
+                        });
+                    } else {
+                        layer.msg('请选择删除行')
+                    }
+                    break;
+                case 'refresh':
+                    eventHandle.tableReload();
+                    break;
+                case 'enable':
+                    //点击启用按钮
+                    if (checkStatus.data.length > 0) {
+                        layer.confirm('确定启用选中行?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                            var tIdArr = [];
+
+                            for (var i = 0; i < checkStatus.data.length; i++) {
+                                tIdArr.push(checkStatus.data[i]['dsId'])
+                            }
+                            var layerLoader = common.layerLoader();
+                            common.fetchPut(dataSourceUrl+'/enable',{ids:tIdArr.join(',')},function (res) {
+                                if(res.success){
+                                    layer.close(layerLoader);
+                                    layer.msg('启用成功');
+                                    eventHandle.tableReload();
+                                }else{
+                                    layer.msg('启用失败' +　res.resultMessage);
+                                }
+                            }, function (res) {
+                                layer.msg('启用失败');
+                                layer.close(layerLoader);
+                            });
+                            layer.close(index);
+                        });
+                    } else {
+                        layer.msg('请选择启动行')
+                    }
+                    break;
+                case 'disable':
+                    //点击禁用按钮
+                    if (checkStatus.data.length > 0) {
+                        layer.confirm('确定禁用选中行?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                            var tIdArr = [];
+
+                            for (var i = 0; i < checkStatus.data.length; i++) {
+                                tIdArr.push(checkStatus.data[i]['dsId'])
+                            }
+                            var layerLoader = common.layerLoader();
+                            common.fetchPut(dataSourceUrl + '/disable',{ids:tIdArr.join(',')},function (res) {
+
+                                if(res.success){
+                                    layer.close(layerLoader);
+                                    eventHandle.tableReload();
+                                    layer.msg('禁用成功');
+                                }else{
+                                    layer.msg('禁用失败' +　res.resultMessage);
+                                }
+                            }, function (res) {
+                                layer.msg('禁用失败');
+                                layer.close(layerLoader);
+                            });
+                            layer.close(index);
+                        });
+                    } else {
+                        layer.msg('请选择禁用行')
+                    }
+                    break;
+            }
+        });
+
+        // table row 监听事件
+        table.on('tool(dataSourceTable)', function(obj){
+            var data = obj.data;
+            var recordId = data.dsId;
+            switch(obj.event){
+                case 'edit'://编辑
+                    common.fetchGet(dataSourceUrl + 'getById?id=' +recordId, function (res) {
+                        if(res.success){
+                            var index_edit=layer.open({
+                                offset: '150px',
+                                title:'编辑',
+                                maxmin: false,
+                                type: 1,//页面层
+                                area: ['580px'],//高度自适应
+                                shadeClose: false,
+                                content: $('.dsLayer').html(),//加载该区域的html
+                                success:function (obj) {
+
+                                    eventHandle.dictInit($(obj.selector).find('#dsType'), 'sysmgr/dicts/selectDictListByPcode?dictPCode=SATDATABASETYPE','sdCode','sdName', res.object.dsType);
+                                    //初始化表格
+                                    form.render();
+                                    $(obj.selector).find('input[name=dsName]').val(res.object.dsName);
+                                    $(obj.selector).find('input[name=dsDriver]').val(res.object.dsDriver);
+                                    $(obj.selector).find('input[name=dsUrl]').val(res.object.dsUrl);
+                                    $(obj.selector).find('input[name=dsUsername]').val(res.object.dsUsername);
+                                    $(obj.selector).find('input[name=dsPassword]').val(res.object.dsPassword);
+                                    $(obj.selector).find('input[name=ggMemo]').val(res.object.ggMemo);
+
+                                    $(obj.selector).find('#testLinkSave').off().on('click',function(){
+                                        var params = {
+                                            dsId:recordId,
+                                            dsName:res.object.dsName,
+                                            dsDriver:res.object.dsDriver,
+                                            dsUrl:res.object.dsUrl,
+                                            dsUsername:res.object.dsUsername,
+                                            dsType:res.object.dsType,
+                                            ggMemo: res.object.ggMemo
+                                        };
+                                        var pwd = $(obj.selector).find('input[name=dsPassword]').val();
+                                        if(pwd != res.object.dsPassword){
+                                            params["dsPassword"] = pwd;
+                                        }
+                                        var layerLoader = common.layerLoader();
+                                        common.fetchPost(dataSourceUrl+'testConnect', params,function (res) {
+                                                layer.close(layerLoader);
+                                                if(res.success){
+                                                    layer.msg('连接成功');//失败后提示
+                                                }else{
+                                                    layer.msg("连接失败:" + res.resultMessage);
+                                                }
+                                            }, function () {
+                                                layer.msg('连接失败');//失败后提示
+                                                layer.close(layerLoader);
+                                            });
+                                        return false
+                                    });
+                                    $(obj.selector).find('#formClose').off().on('click',function(){
+                                        layer.close(index_edit);
+                                        return false;
+                                    });
+                                    //点击保存按钮
+                                    form.on('submit(formSavue)', function (obj) {
+                                        var params = {
+                                            dsId:recordId,
+                                            dsName:obj.field.dsName,
+                                            dsDriver:obj.field.dsDriver,
+                                            dsUrl:obj.field.dsUrl,
+                                            dsType:obj.field.dsType,
+                                            dsUsername:obj.field.dsUsername,
+                                            ggMemo:obj.field.ggMemo
+                                        };
+                                        if(obj.field.dsPassword != res.object.dsPassword){
+                                            params["dsPassword"] = obj.field.dsPassword;
+                                        }
+                                        var layerLoader =common.layerLoader();
+                                        common.fetchPost(dataSourceUrl + 'update', params, function (res) {
+                                            layer.close(layerLoader);
+                                            if(res.success){
+                                                layer.msg('修改成功');//失败后提示
+                                                layer.close(index_edit);
+                                                //表格重载
+                                                eventHandle.tableReload();
+                                            }else{
+                                                layer.msg('修改失败' + res.resultMessage);//成功提示
+                                            }
+                                        }, function () {
+                                            layer.close(layerLoader);
+                                            layer.msg('修改失败');//失败后提示
+                                        });
+                                        return false;
+                                    });
+                                }
+                            });
+                        }else{
+                            layer.alert(res.resultMessage);//成功提示
+                        }
+                    }, function () {
+                        layer.msg('打开失败');//失败后提示
+                    });
+                    break;
+                case 'testLink'://编辑
+                    var layerLoader = common.layerLoader();
+                    var params = {
+                        dsId:recordId,
+                        dsName:data.dsName,
+                        dsDriver:data.dsDriver,
+                        dsType:data.dsType,
+                        dsUrl:data.dsUrl,
+                        dsUsername:data.dsUsername
+                    };
+                    common.fetchPost(dataSourceUrl+'testConnect', params,function (res) {
+                            layer.close(layerLoader);
+                            if(res.success){
+                                layer.msg('连接成功');//失败后提示
+                            }else{
+                                layer.msg("连接失败:" + res.resultMessage);
+                            }
+                        }, function () {
+                            layer.msg('连接失败');//失败后提示
+                            layer.close(layerLoader);
+                        });
+                    break;
+            }
+        });
+        //查询
+        form.on('submit(formSearch)',function (obj) {
+            //表格重载
+            table.reload('dataSourceTable',{
+                url: dataSourcePageUrl,
+                contentType: 'application/json',
+                method:'post',
+                page:pageInitialParam,
+                where:{
+                    dsName:obj.field.dsName,
+                    dsUsername:obj.field.dsUsername,
+                    dsType:obj.field.dsType
+                },
+            });
+            return false;
+        });
+        common.buttonLimit(currentMenuSmId);
+    });
+</script>
+<!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

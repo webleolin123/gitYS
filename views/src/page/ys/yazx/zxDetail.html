@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>议案执行-执行明细</title>
+    <meta content="webkit" name="renderer" />
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../../js/layui/css/layui.css" />
+    <link href="../../../css/public.css?v1.01" rel="stylesheet" />
+    <link href="../../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <script src="../../../js/lib/jquery.1.12.3.js"></script>
+    <script src="../../../js/common/plugin.js"></script>
+    <style>
+        .shqkTab {
+            display: inline-block;
+            border: 1px solid gray;
+            background: #ffff;
+            padding: 0 5px;
+            margin: 0 5px;
+            height: 26px;
+            line-height: 26px;
+            color: black;
+            opacity: 0.3;
+        }
+
+        .isYsh {
+            opacity: 1;
+        }
+
+        a.layui-layer-ico.layui-layer-max {
+            display: none;
+        }
+
+        a.layui-layer-ico.layui-layer-max.layui-layer-maxmin {
+            display: inline-block !important;
+        }
+    </style>
+</head>
+
+<body class="iframe-h">
+    <div id="refresh" style="display: none"></div>
+    <div class="content-wrap">
+        <div class="layui-row layui-col-space10">
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+
+                <div class="layui-card">
+                    <div class="layui-card-header layui-card-header-custom"><span class="subjectName"><i></i>执行情况</span>
+                    </div>
+                    <div class="layui-card-body">
+                        <table id="table1" lay-filter="table1"></table>
+                        <script type="text/html" id="tableToolBar">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-sm  layui-btn-danger" lay-event="add" permission-btn="yazx_zx_detail_add"><i class="layui-icon">&#xe608;</i> 新增</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="submit" permission-btn="yazx_zx_detail_submit"><i class="fa fa-check"></i>提交</button>
+                            <!--<button class="layui-btn layui-btn-sm layui-btn-warm" lay-event="withdraw" permission-btn="yazx_zx_detail_withdraw"><i class="fa fa-mail-reply"></i>撤回</button>-->
+                            <button class="layui-btn layui-btn-sm layui-btn-warm" lay-event="delete" permission-btn="yazx_zx_detail_delete"><i class="fa fa-trash"></i>删除</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-warm" lay-event="cancelReport" permission-btn="yazx_zx_detail_cancel"><i class="layui-icon">&#xe62f;</i>作废报送</button>
+                        </div>
+                    </script>
+                    <script type="text/html" id="tableOper">
+                        <a class="layui-btn layui-btn-xs layui-btn-danger" permission-btn='yazx_zx_detail_edit'  lay-event="edit">编辑</a>
+                        <a class="layui-btn layui-btn-xs layui-btn-warm" permission-btn='yazx_zx_detail_view'  lay-event="view">查看</a>
+                    </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="position: fixed;width: 100%;bottom: 12px;">
+        <div class="layui-card" style="margin-top: 10px">
+            <div class="layui-card-body" style="border-top: 1px solid #dfdfdf">
+                <div class="layui-form-item" style="text-align: center;">
+                    <button class="layui-btn" id="formMeetingClose"><i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="hysh" style="display: none">
+        <div class="padding-10">
+            <form action="" class="layui-form layui-form-pane">
+                <div class="layui-row layui-col-space10">
+                    <div class="layui-col-md12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">审核意见</label>
+                            <div class="layui-input-block">
+                                <textarea class="layui-textarea" name="shyj" id="shyj">
+                            </textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">审核结果</label>
+                            <div class="layui-input-block">
+                                <select name="shjg" id="shjg">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="./../../../js/layui/layui.js"></script>
+    <script>
+
+
+
+        layui.config({
+            base: '../../../../src/js/',
+            version: new Date().getTime()
+        }).use(['layer', 'table', 'form', 'laytpl', 'common', 'element', 'laydate', 'eleTree'], function () {
+            var table = layui.table;
+            var form = layui.form;
+            var common = layui.common;
+            var element = layui.element;
+            var laydate = layui.laydate;
+            var tree = layui.eleTree;
+            element.init();
+            var baseUrl = '../../../../';
+            common.themeSet();
+            common.columnSide();
+            common.toggleArea($('.toggle-btn'), $('.toggle-area'));
+            var formMeetingCloseIndex = window.parent.layer.index;
+
+            var subjectId = common.getQueryVariable('subjectId');
+            var subjectName = common.getQueryVariable('subjectName');
+            var meetingId =  common.getQueryVariable('meetingId');
+            var meetingTypeName =  common.getQueryVariable('meetingTypeName');
+
+            if (subjectName) {
+                $('.subjectName').html('<i></i>【' + subjectName + '】执行明细');
+            }
+            $('#formMeetingClose').unbind('click').bind('click', function (e) {
+                window.parent.layer.close(formMeetingCloseIndex);
+                return false;
+            });
+            laydate.render({
+                elem: 'input[name=meetingTime]',
+                type: 'date'
+                , trigger: 'click'
+                // range: true,
+                // value:'2018-08-20 20:08:08'
+            });
+
+            var meetingModeMap = {};
+            var deliberationModeMap = {};
+            var meetingTypeIdMap = {};
+            var meetingShjgMap = {};
+            var deliberationModeUrl = 'meetingmgr/tiolMeetingFormAlias/getTiolMeetingFormList';
+
+            var eventHandle = {
+                tableReload: function (params) {
+                    table.reload('table1', {
+                        url: baseUrl + 'meetingmgr/tiolExecution/pageQueryExecution',
+                        method: 'post',
+                        contentType: 'application/json',
+                        page: {
+                            curr: 1
+                        },
+                        where: {
+
+                        }
+                    });
+                },
+                showHandleResult: function(object, defaultMsg) {
+                    if(object.fCount > 0) {
+                        layer.alert("共处理" + object.total + "条数据，失败" + object.fCount + "条。失败原因：<br>"+ object.fMsg.join('<br>'));
+                    }
+                    else{
+                        layer.msg(defaultMsg||"处理成功");
+                    }
+                }
+            };
+            $('#refresh').off('click').on('click',function(){
+                eventHandle.tableReload();
+            });
+            common.selectDataSet({
+                elem: $('[name=shjg]'),
+                url: 'sysmgr/dicts/selectDictListByPcode?dictPCode=AUDIT_RESULT',
+                responseList: 'list',
+                method: 'get',//默认为get
+                optionText: 'sdName',
+                optionValue: 'sdCode',
+                success: function (data) {
+                    if (data && data.list && data.list.length > 0) {
+                        $.map(data.list, function (item) {
+                            meetingShjgMap[item.sdCode] = item;
+                        });
+                    }
+                    form.render('select');
+                }
+            });
+            // // meetingMode
+            common.selectDataSet({
+                elem: $('[name=meetingMode]'),
+                url: 'sysmgr/dicts/selectDictListByPcode?dictPCode=MEETING_REVIEW_MODE',
+                responseList: 'list',
+                method: 'get',//默认为get
+                optionText: 'sdName',
+                optionValue: 'sdCode',
+                success: function (data) {
+                    if (data && data.list && data.list.length > 0) {
+                        $.map(data.list, function (item) {
+                            meetingModeMap[item.sdCode] = item;
+                        });
+                    }
+                    form.render('select');
+                }
+            });
+
+            common.fetchGet('meetingmgr/tiolMeetingFormAlias/getTiolMeetingFormList', function (data) {
+                if (data && data.list && data.list.length > 0) {
+                    $.map(data.list, function (item) {
+                        deliberationModeMap[item.meetingFormAliasId] = item;
+                    });
+                }
+            });
+            // common.selectDataSet({
+            //     elem: $('[name=deliberationMode]'),
+            //     url: 'meetingmgr/tiolMeetingFormAlias/getTiolMeetingFormList',
+            //     responseList: 'list',
+            //     method: 'get',//默认为get
+            //     optionText: 'meetingFormName',
+            //     optionValue: 'meetingFormAliasId',
+            //     success: function (data) {
+            //         if (data && data.list && data.list.length > 0) {
+            //             $.map(data.list, function (item) {
+            //                 deliberationModeMap[item.meetingFormAliasId] = item;
+            //             });
+            //         }
+            //         form.render('select');
+            //     }
+            // });
+
+            common.selectDataSet({
+                elem: $('[name=meetingTypeId]'),
+                url: 'meetingmgr/tiolMeetingType/getTiolMeetingTypeList',
+                responseList: 'list',
+                method: 'get',//默认为get
+                optionText: 'meetingTypeName',
+                optionValue: 'meetingTypeId',
+                success: function (data) {
+                    if (data && data.list && data.list.length > 0) {
+                        $.map(data.list, function (item) {
+                            meetingTypeIdMap[item.meetingTypeId] = item;
+                        });
+                    }
+                    form.render('select');
+                }
+            });
+
+            //树高度设置
+            $('#leftTree').css('height', $(window).height() - 115 + 'px');
+
+            //按钮权限
+            common.buttonLimit();
+
+            table.render(common.tableInitParams({
+                elem: '#table1',
+                url: baseUrl + 'meetingmgr/tiolExecution/pageQueryExecution',
+                method: 'post',
+                data: [{ meetingName: 1 }, { meetingName: 2 }],
+                // data:resData,
+                height: 'full-135',
+                toolbar: '#tableToolBar',
+                defaultToolbar: [],
+                cols: [
+                    [
+                        { type: 'checkbox' },
+                        { "type": 'numbers', title: '序号' },
+                        { field: 'leadDept', align:'center', title: '牵头部门'},
+                        { field: 'leadPerson', align:'center', title: '牵头人'},
+                        { field: 'implementationStatus', align:'center', title: '执行状态'},
+                        {
+                            field: 'reportToSasac', title: '报国资委', align:'center', templet: function (rowDta) {
+                                return rowDta.reportToSasac === "1" ? "是" : "否";
+                            }
+                        },
+                        {
+                            field: 'ggCreateDatetime', title: '填写日期', align:'center', templet: function (rowDta) {
+                                return rowDta.ggCreateDatetime == null? "": common.timestampToTime(rowDta.ggCreateDatetime);
+                            }
+                        },
+                        {
+                            field: 'submitDatetime', title: '提交日期', align:'center', templet: function (rowDta) {
+                                return rowDta.submitDatetime == null? "": common.timestampToTime(rowDta.submitDatetime);
+                            }
+                        },
+                        {
+                            field: 'submitGzwTime', title: '报国资委日期', align:'center', templet: function (rowDta) {
+                                if ("6" === rowDta.uploadStatus) {
+                                    return "作废";
+                                }
+                                else {
+                                    return rowDta.submitGzwTime == null? "": common.timestampToTime(rowDta.submitGzwTime);
+                                }
+                            }
+                        },
+                        { title: '操作', toolbar: '#tableOper', fixed: 'right', width:110, align:'center',}
+                    ]
+                ],
+                where: {
+                    subjectId: subjectId,
+                }
+            }));
+
+            //table监听事件
+            table.on('toolbar(table1)', function (obj) {
+                var checkStatus = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+                    case 'add':
+                       var meetingId =  common.getQueryVariable('meetingId');
+                       var meetingTypeName =  common.getQueryVariable('meetingTypeName');
+                       var url = baseUrl + 'src/page/ys/yazx/yazxAdd.html?subjectId='+subjectId + '&meetingId='+meetingId+ '&meetingTypeName='+meetingTypeName;
+                       if(table.cache["table1"].length>0){
+                           for (var i = 0; i < table.cache["table1"].length; i++) {
+                               if(table.cache["table1"][i]['implementationStatusCode'] === "2"){
+                                   layer.alert("存在执行状态为完成的议案执行，无法再继续新增");
+                                   return;
+                               }
+                           }
+
+                           var sourceExecutionId = table.cache["table1"][0].executionId;
+                           url = baseUrl + 'src/page/ys/yazx/yazxAdd.html?temporary=1&sourceExecutionId='+sourceExecutionId+'&subjectId='+subjectId + '&meetingId='+meetingId+ '&meetingTypeName='+meetingTypeName;
+                       }
+                        var editLayer = layer.open({
+                            title: ['新增'],
+                            type: 2,
+                            content: url,
+                            maxmin: true,
+                            closeBtn: 0
+                        });
+                        layer.full(editLayer);
+                        break;
+                    case 'submit'://提交
+                        if (checkStatus.data.length > 0) {
+                            /*if (checkStatus.data.length != 1) {
+                                layer.msg('一次只能操作一条数据');
+                                return;
+                            }*/
+                            layer.confirm('确定提交选中列?', { icon: 3, title: '提示', offset: '150px' }, function (index) {
+                                var executionIdArr = [];
+                                for (var i = 0; i < checkStatus.data.length; i++) {
+                                    executionIdArr.push(checkStatus.data[i]['executionId'])
+                                }
+                                var layerLoader = common.layerLoader();
+                                common.fetchPost('meetingmgr/tiolExecution/submitTiolExecution?executionId=' + executionIdArr.join(','), null, function (res) {
+                                    layer.close(layerLoader);
+                                    if (res.success) {
+                                        //layer.alert(res.resultMessage);
+                                        eventHandle.showHandleResult(res.object);
+                                        eventHandle.tableReload();
+                                    } else {
+                                        layer.alert(res.resultMessage);
+                                    }
+                                }, function (res) {
+                                    layer.close(layerLoader);
+                                    layer.alert(res.resultMessage);
+                                });
+                                layer.close(index);
+                            });
+                        } else {
+                            layer.msg('请选择要提交的数据')
+                        }
+                        break;
+                    case 'withdraw'://撤回
+                        if (checkStatus.data.length > 0) {
+                            /*if (checkStatus.data.length != 1) {
+                                layer.msg('一次只能操作一条数据');
+                                return;
+                            }*/
+                            layer.confirm('确定撤回选中列?', { icon: 3, title: '提示', offset: '150px' }, function (index) {
+                                var executionIdArr = [];
+                                for (var i = 0; i < checkStatus.data.length; i++) {
+                                    executionIdArr.push(checkStatus.data[i]['executionId'])
+                                }
+                                var layerLoader = common.layerLoader();
+                                common.fetchPost('meetingmgr/tiolExecution/withdrawTiolExecution?executionId=' + executionIdArr.join(','), null, function (res) {
+                                    layer.close(layerLoader);
+                                    if (res.success) {
+                                        //layer.alert(res.resultMessage);
+                                        eventHandle.showHandleResult(res.object);
+                                        eventHandle.tableReload();
+                                    } else {
+                                        layer.alert(res.resultMessage);
+                                    }
+                                }, function (res) {
+                                    layer.close(layerLoader);
+                                    layer.alert(res.resultMessage);
+                                });
+                                layer.close(index);
+                            });
+                        } else {
+                            layer.msg('请选择要撤回的数据')
+                        }
+                        break;
+                    case 'delete'://删除
+                        if (checkStatus.data.length > 0) {
+                            /*if (checkStatus.data.length != 1) {
+                                layer.msg('一次只能操作一条数据');
+                                return;
+                            }*/
+                            layer.confirm('确定删除选中列?', { icon: 3, title: '提示', offset: '150px' }, function (index) {
+                                var executionIdArr = [];
+                                for (var i = 0; i < checkStatus.data.length; i++) {
+                                    executionIdArr.push(checkStatus.data[i]['executionId'])
+                                }
+                                var layerLoader = common.layerLoader();
+                                common.fetchPost('meetingmgr/tiolExecution/deleteTiolExecution?executionId=' + executionIdArr.join(','), null, function (res) {
+                                    layer.close(layerLoader);
+                                    if (res.success) {
+                                        //layer.alert(res.resultMessage);
+                                        eventHandle.showHandleResult(res.object);
+                                        eventHandle.tableReload();
+                                    } else {
+                                        layer.alert(res.resultMessage);
+                                    }
+                                }, function (res) {
+                                    layer.close(layerLoader);
+                                    layer.alert(res.resultMessage);
+                                });
+                                layer.close(index);
+                            });
+                        } else {
+                            layer.msg('请选择要删除的数据')
+                        }
+                        break;
+                    case 'cancelReport'://作废报送
+                        if (checkStatus.data.length > 0) {
+                            /*if (checkStatus.data.length != 1) {
+                                layer.msg('一次只能操作一条数据');
+                                return;
+                            }*/
+                            layer.confirm('确定作废选中列?', { icon: 3, title: '提示', offset: '150px' }, function (index) {
+                                var executionIdArr = [];
+                                for (var i = 0; i < checkStatus.data.length; i++) {
+                                    executionIdArr.push(checkStatus.data[i]['executionId'])
+                                }
+                                var layerLoader = common.layerLoader();
+                                common.fetchPost('meetingmgr/tiolExecution/cancelTiolExecution?executionId=' + executionIdArr.join(','), null, function (res) {
+                                    layer.close(layerLoader);
+                                    if (res.success) {
+                                        //layer.alert(res.resultMessage);
+                                        eventHandle.showHandleResult(res.object);
+                                        eventHandle.tableReload();
+                                    } else {
+                                        layer.alert(res.resultMessage);
+                                    }
+                                }, function (res) {
+                                    layer.close(layerLoader);
+                                    layer.alert(res.resultMessage);
+                                });
+                                layer.close(index);
+                            });
+                        } else {
+                            layer.msg('请选择要作废的数据')
+                        }
+                        break;
+                    case 'audit'://审核
+                        if (checkStatus.data.length > 0) {
+                            layer.confirm('确定审核选中列?', { icon: 3, title: '提示', offset: '150px' }, function (index) {
+                                var executionIdArr = [];
+                                for (var i = 0; i < checkStatus.data.length; i++) {
+                                    executionIdArr.push(checkStatus.data[i]['executionId'])
+                                }
+                                var layerLoader = common.layerLoader();
+                                common.fetchPost('meetingmgr/tiolExecution/reportTiolExecution?executionId=' + executionIdArr.join(','), null, function (res) {
+                                    layer.close(layerLoader);
+                                    if (res.success) {
+                                        //layer.alert(res.resultMessage);
+                                        eventHandle.showHandleResult(res.object);
+                                        eventHandle.tableReload();
+                                    } else {
+                                        layer.alert(res.resultMessage);
+                                    }
+                                }, function (res) {
+                                    layer.close(layerLoader);
+                                    layer.alert(res.resultMessage);
+                                });
+                                layer.close(index);
+                            });
+                        } else {
+                            layer.msg('请选择审核列')
+                        }
+                        break;
+                }
+            });
+
+            // table row 监听事件
+            table.on('tool(table1)', function (obj) {
+                var data = obj.data;
+                switch (obj.event) {
+                    case 'edit':
+                        var editLayer = layer.open({
+                            title: '编辑',
+                            type: 2,
+                            content: baseUrl + 'src/page/ys/yazx/yazxAdd.html?executionId='+data.executionId+'&subjectId='+subjectId + '&meetingId='+meetingId+ '&meetingTypeName='+meetingTypeName,
+                            maxmin: true,
+                            offset: 't',
+                            btnAlign: 'lc',
+                            yes: function () {
+                                return false;
+                            },
+                            btn2: function () {
+                                layer.close(editLayer);
+                            },
+                            success: function (layero, index) {
+                                //获取单页面的所有配置内容 传入compId
+                                // $("#compId", layero.find("iframe")[0].contentWindow.document).text(data['compId']);
+                            }
+                        });
+                        layer.full(editLayer);
+                        break;
+                    case 'view':
+                        var editLayer = layer.open({
+                            title: '查看',
+                            type: 2,
+                            content: baseUrl + 'src/page/ys/yazx/yazxAdd.html?view=view&executionId='+data.executionId+'&subjectId='+subjectId + '&meetingId='+meetingId+ '&meetingTypeName='+meetingTypeName,
+                            maxmin: true,
+                            offset: 't',
+                            btnAlign: 'lc',
+                            yes: function () {
+                                return false;
+                            },
+                            btn2: function () {
+                                layer.close(editLayer);
+                            },
+                            success: function (layero, index) {
+                                //获取单页面的所有配置内容 传入compId
+                                // $("#compId", layero.find("iframe")[0].contentWindow.document).text(data['compId']);
+                            }
+                        });
+                        layer.full(editLayer);
+                        break;
+                }
+
+            });
+
+            //查询
+            form.on('submit(formSearch)', function (obj) {
+                var meetingName = obj.field.meetingName;
+                var meetingTime = obj.field.meetingTime;
+                var meetingTypeId = obj.field.meetingTypeId;
+                var meetingMode = obj.field.meetingMode;
+                var deliberationMode = obj.field.deliberationMode;
+                //表格重载
+                table.reload('table1', {
+                    url: baseUrl + 'meetingmgr/tiolMeeting/selectTiolMeetingPage',
+                    method: 'post',
+                    contentType: 'application/json',
+                    page: {
+                        curr: 1
+                    },
+                    where: {
+                        "meetingName": meetingName,
+                        "meetingTimeRange": meetingTime,
+                        "meetingTypeId": meetingTypeId,
+                        "meetingMode": meetingMode,
+                        "deliberationMode": deliberationMode,
+                        "statusTypes": "1,3,4,5,6,7,8,9,10",
+                        "type": "zhcx"
+                    },
+
+                });
+                return false;
+            });
+
+            //企业层级加载
+            var eleTreeId = tree.render({
+                elem: '#leftTree',
+                url: baseUrl + 'sysmgr/sysEnterprise/selectSysEnterpriseOrganPostTreeAllList?treeType=enterpriseTree',
+                showIcon: true,
+                done: function (data) {
+                    //默认点击树第一个节点
+                    $('#leftTree').find('.eleTree-node-content-label').eq(0).trigger('click');
+                },
+                lazy: true,
+                load: function (data, callback) {
+                    common.fetchGet('sysmgr/sysEnterprise/selectSysEnterpriseOrganPostTreeAllList?treeType=enterpriseTree' + '&id=' + data.id + "&extendAttr=" + data.extendAttr, function (res) {
+                        if (res.success && res.list) {
+                            callback(res.list);
+                        }
+                    }, function () {
+                        callback([])
+                    });
+                },
+                response: {
+                    dataName: "list"
+                }
+            });
+            tree.on("nodeClick(leftTree)", function (obj) {
+                eventHandle.tableReload();
+            });
+
+            form.on('select(meetingTypeFilter)', function (data) {
+                var meetingTypeId = $("#meetingTypeId").val();
+                var meetingMode = $("#meetingMode").val();
+                if (meetingTypeId && meetingMode) {
+                    common.selectDataSet({
+                        elem: $('[name=deliberationMode]'),
+                        url: deliberationModeUrl + "?meetingTypeId=" + meetingTypeId + "&meetingMode=" + meetingMode,
+                        responseList: 'list',
+                        method: 'get',//默认为get
+                        optionText: 'meetingFormName',
+                        optionValue: 'meetingFormAliasId',
+                        success: function (data) {
+                            form.render('select');
+                        }
+                    });
+                } else {
+                    $("#deliberationMode").empty();
+                }
+            });
+            form.on('select(meetingModeFilter)', function (data) {
+                var meetingTypeId = $("#meetingTypeId").val();
+                var meetingMode = $("#meetingMode").val();
+                if (meetingTypeId && meetingMode) {
+                    common.selectDataSet({
+                        elem: $('[name=deliberationMode]'),
+                        url: deliberationModeUrl + "?meetingTypeId=" + meetingTypeId + "&meetingMode=" + meetingMode,
+                        responseList: 'list',
+                        method: 'get',//默认为get
+                        optionText: 'meetingFormName',
+                        optionValue: 'meetingFormAliasId',
+                        success: function (data) {
+                            form.render('select');
+                        }
+                    });
+                } else {
+                    $("#deliberationMode").empty();
+                }
+            });
+            form.on('select(deliberationModeFilter)', function (data) {
+                var meetingTypeId = $("#meetingTypeId").val();
+                var meetingMode = $("#meetingMode").val();
+                if (meetingTypeId == '') {
+                    alert("请先选择会议类型");
+                    return;
+                }
+                if (meetingMode == '') {
+                    alert("请先选择会议形式");
+                }
+            });
+
+
+        });
+
+    </script>
+
+    <!--[if lt IE 9]>
+<script src="../../../js/lib/html5.min.js"></script>
+<script src="../../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META http-equiv=Content-Type content="text/html; charset=utf-8">
+	<TITLE>选取可用操作</TITLE>
+	<META NAME="Author" CONTENT="Witson">
+	<link rel="stylesheet" type="text/css" href="../../../js/flow/images/style.css" />
+	<link rel="stylesheet" type="text/css" href="../../../js/flow/themes/flat/style.css" />
+	<style type="text/css">
+		fieldset{
+			border-right:none;
+			border-left:none;
+			border-bottom:none;
+			margin-top:5px;
+			padding:4px;
+		}
+	</style>
+</HEAD>
+<script type="text/javascript">
+var strTem=self.location.href;
+strTem = strTem.substr(strTem.indexOf('flowStateDoc.htm?parVal=')+24);
+var sNodeName=strTem;
+
+function funOK(){
+	parent.setStateDoc(sNodeName,selGetName(jsfw.$('sel_selItem')));
+	parent.setStateDoc(sNodeName + 'All',selGetValue(jsfw.$('sel_selItem')));
+	parent.readProperty_Node();
+	parent.closeDialog(self);
+}
+
+function loadData(){
+	
+	var arr0= parent.oFlow.getAttr('',sNodeName + "All").split(';').delEmpty();
+	var arr = parent.getStateDoc(sNodeName + "All").split(';').delEmpty();
+	jsfw.$('tdSel').innerHTML = getSelStateDoc('selItem',arr0,arr);
+}
+
+function getSelStateDoc(sField,arr0,arr){
+	var sSel0='<select id="sel_'+sField+'0" size="12" style="width:165;height:200" multiple ondblclick="selMoveOpt(\''+sField+'\',\''+0+'\');">';
+	var sSel='<select id="sel_'+sField+'" size="12" style="width:165;height:200" multiple ondblclick="selMoveOpt(\''+sField+'\',\'\');">';
+	for (var i=0; i<arr0.length; i++){
+		var btnAttrArr0 = arr0[i].split("##")
+		var sBtnName0 = btnAttrArr0[0];
+		var sBtnCode0 = btnAttrArr0[1];
+		var sBindState0 = btnAttrArr0[2];
+		var bFind=false;
+		for (var j=0; j<arr.length; j++){
+			var btnAttrArr = arr[j].split("##")
+			var sBtnName = btnAttrArr[0];
+			var sBtnCode = btnAttrArr[1];
+			var sBindState = btnAttrArr[2];
+			if (sBtnCode0 == sBtnCode){
+				bFind=true;
+				break;
+			}
+		}
+		if (bFind){
+			sSel += '<option value="'+arr0[i]+ '">'+sBtnName0+'</option>';
+		}else{
+			sSel0 += '<option value="'+arr0[i]+ '">'+sBtnName0+'</option>';
+		}
+	}
+
+	sSel0 += '</select>';
+	sSel += '</select>';
+
+	var sHTML='';
+	sHTML += '<table border="0" cellpadding="2" cellspacing="0"><tr>';
+	sHTML += '<td>待选</td>';
+	sHTML += '<td></td>';
+	sHTML += '<td>已选</td>';
+	sHTML += '</tr><tr>';
+	sHTML += '<td>'+sSel0+'</td>';
+	sHTML += '<td valign="top" style="padding-top:10px;">';
+	sHTML += '<input type="button" class="button" value="&gt;&gt;" onclick="selMoveOpt(\''+sField+'\',\''+0+'\');"/><br><br>';
+	sHTML += '<input type="button" class="button" value="&lt;&lt;" onclick="selMoveOpt(\''+sField+'\',\'\');"/>';
+	sHTML += '</td>';
+	sHTML += '<td>'+sSel+'</td>';
+	sHTML += '</tr></table>';
+	return sHTML;
+}
+///////列表项目移动
+function selMoveOpt(sField,src){
+	var oSrc=jsfw.$('sel_'+sField+src);
+	var oTag=jsfw.$('sel_'+sField+(src=='0'?'':'0'));
+
+	var temOption;
+	for (i = 0; i < oSrc.options.length ; i++){
+		if (oSrc.options[i].selected){
+			temOption =  new Option(oSrc.options[i].text, oSrc.options[i].value);
+			oTag.options[oTag.options.length] = temOption;
+		}
+	}
+	for (i = oSrc.options.length-1; i >-1 ; i--)
+		if (oSrc.options[i].selected) oSrc.options[i] = null;
+}
+function selGetValue(oSel){
+	var sR='';
+	for (i = 0; i < oSel.options.length ; i++){
+		if (sR!='') sR+=';';
+		sR += oSel.options[i].value;
+	}
+	return sR;
+}
+
+function selGetName(oSel){
+	var sR='';
+	for (i = 0; i < oSel.options.length ; i++){
+		if (sR!='') sR+=';';
+		
+		sR += oSel.options[i].text;
+	}
+	return sR;
+}
+</script>
+
+<BODY loadWebUI="Toolbar" scroll="no" onload="loadData()">
+
+<table width="100%" style="table-layout:fixed;height:100%" border="0" cellpadding="0" cellspacing="0">
+	<tr>
+		<td height="28">
+			<div class="Toolbar" style="padding-left:10px;">
+			<xmp style="display:none">
+				<root>
+					<item text="确定" icon="../../../js/flow/images/icon/check.gif" action="funOK();"/>
+					<item text="取消" icon="../../../js/flow/images/icon/close.gif" action="parent.closeDialog(self);"/>
+				</root>
+			</xmp>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td valign="top" style="padding:3px;" id="tdSel">
+		</td>
+	</tr>
+</table>
+</BODY>
+</HTML>
+<script type="text/javascript" src="../../../js/lib/jsfw/boot.js" loadClass="" loadPrototype="Array" loadWebUI="" Theme="Default"></script>

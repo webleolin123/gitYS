@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html  class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>配置页面</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../js/layui/css/layui.css"/>
+    <link href="../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="../../js/lib/jsonEdit/jsoneditor.css"/>
+    <link href="../../css/module/config.css" rel="stylesheet"/>
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script src="../../js/common/plugin.js"></script>
+    <!--[if lt IE 9]>
+    <script src="../../js/lib/html5.min.js"></script>
+    <script src="../../js/lib/respond.js"></script>
+    <![endif]-->
+
+
+    <style>
+        .content-box{
+            border: 2px dashed #87aecc;
+            background: inherit;
+        }
+    </style>
+</head>
+
+<body class="iframe-h" id="configPage">
+<!--隐藏域的值-->
+<input type="hidden" id="rowDataLine">
+
+<input type="hidden" id="nodeDataLine">
+<input type="hidden" id="isDone">
+<div class="content-wrap">
+    <input type="text" style="display: none" title="" id="configData">
+    <div id="compId" style="display: none"></div>
+    <input type="text" id="currentComponentId" style="display: none">
+    <div class="centerControl moduleArea">
+        <!--<div class="box1" style="width: 400px;height: 300px;background: red"></div>-->
+        <!--<div class="box2" style="width: 400px;height: 300px;background: blue"></div>-->
+        <!--<div class="box3" style="width: 400px;height: 300px;background: yellow"></div>-->
+    </div>
+    <div class="layui-footer btnMainBox" >
+        <div class="layui-form-item" style="text-align: center">
+            <button class="layui-btn " id="submitConfig">提交配置</button>
+            <button class="layui-btn layui-btn-warm" id="previewConfig">预览</button>
+            <button id="clearAll" class="layui-btn layui-btn-primary">清空</button>
+        </div>
+    </div>
+    <div class="toolBar">
+        <div class="layui-form-item" style="text-align: center">
+            <!--<button class="layui-btn refreshConfig">刷新</button>-->
+            <button class="layui-btn submitConfig">提交配置</button>
+            <button class="layui-btn layui-btn-warm previewConfig">预览</button>
+            <button class="clearAll layui-btn layui-btn-primary">清空</button>
+        </div>
+    </div>
+    <div class="leftControl" style="-moz-user-select: none; -khtml-user-select: none; user-select: none;">
+        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+            <!--<blockquote class="layui-elem-quote">基础配置</blockquote>-->
+            <div class="custom-title">基础配置</div>
+            <form class="layui-form layui-form-pane" action="" lay-filter="propForm">
+                <div class="layui-row layui-col-space10">
+                    <div class="layui-col-md12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><b class="red">*</b>页面类型</label>
+                            <div class="layui-input-block">
+                                <select name="pageType" id="pageType" lay-filter="pageType"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><b class="red">*</b>名称</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="pageName" name="name" required="" lay-verify="required" placeholder="请输入名称" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><b class="red">*</b>项目归类</label>
+                            <div class="layui-input-block">
+                                <select id="projectCode" lay-filter="projectCode" name="pageType"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md12" style="display: none">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><b class="red">*</b>宽度布局</label>
+                            <div class="layui-input-block">
+                                <select name="layoutWidth" id="layoutWidth" required="" lay-verify="required">
+                                    <option value="[[12]]">[[12]]</option>
+                                    <option value="[[12],[12]]">[[12],[12]]</option>
+                                    <option value="[[6,6]]">[[6,6]]</option>
+                                    <option value="[[4,4,4]]">[[4,4,4]]</option>
+                                    <option value="[[12],[12],[12]]">[[12],[12],[12]]</option>
+                                </select>
+                                <!--<input type="text" name="layoutWidth" id="layoutWidth" required="" lay-verify="required" placeholder="例如：[[4,4,4],[4,8]]" class="layui-input">-->
+                                <!--<select name="layoutWidth" id="layoutWidth" lay-filter="layoutWidth">-->
+                                <!--&lt;!&ndash; <option value="[[12]]" img="{src:'../../images/dhtLayout/1c.bmp', css:'height:24px;width:24px;'}">[[12]]</option>-->
+                                <!--<option value="[[12],[12]]" img="{src:'../../images/dhtLayout/2e.bmp', css:'height:24px;width:24px;'}">[[12],[12]]</option>-->
+                                <!--<option value="[[6,6]]" img="{src:'../../images/dhtLayout/2u.bmp', css:'height:24px;width:24px;'}">[[6,6]]</option>-->
+                                <!--<option value="[[12],[12],[12]]" img="{src:'../../images/dhtLayout/3e.bmp', css:'height:24px;width:24px;'}">[[12],[12],[12]]</option>-->
+                                <!--<option value="1" img="{src:'../../images/dhtLayout/3j.bmp', css:'height:24px;width:24px;'}">[[{"col6":[12,12]},6]]</option>-->
+                                <!--<option value="2" img="{src:'../../images/dhtLayout/3l.bmp', css:'height:24px;width:24px;'}">[[6,{"col6":[12,12]}]]</option>-->
+                                <!--<option value="[[12],[6,6]]" img="{src:'../../images/dhtLayout/3t.bmp', css:'height:24px;width:24px;'}">[[12],[6,6]]</option> &ndash;&gt;-->
+                                <!--<option value="1" img="{src:'../../images/dhtLayout/1c.bmp', css:'height:24px;width:24px;'}">[[12]]</option>-->
+                                <!--<option value="2" img="{src:'../../images/dhtLayout/2e.bmp', css:'height:24px;width:24px;'}">[[12],[12]]</option>-->
+                                <!--<option value="3" img="{src:'../../images/dhtLayout/2u.bmp', css:'height:24px;width:24px;'}">[[6,6]]</option>-->
+                                <!--<option value="4" img="{src:'../../images/dhtLayout/3e.bmp', css:'height:24px;width:24px;'}">[[12],[12],[12]]</option>-->
+                                <!--<option value="5" img="{src:'../../images/dhtLayout/3j.bmp', css:'height:24px;width:24px;'}">[[{"col6":[12,12]},6]]</option>-->
+                                <!--<option value="6" img="{src:'../../images/dhtLayout/3l.bmp', css:'height:24px;width:24px;'}">[[6,{"col6":[12,12]}]]</option>-->
+                                <!--<option value="7" img="{src:'../../images/dhtLayout/3t.bmp', css:'height:24px;width:24px;'}">[[12],[6,6]]</option>-->
+                                <!--</select>-->
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md12" style="display: none">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">高度布局</label>
+                            <div class="layui-input-block">
+                                <select name="layoutHeight" id="layoutHeight" title="高度布局">
+                                    <option value="false">根据内容填充</option>
+                                    <option value="auto">自动一屏布局</option>
+                                    <option value="custom">自定义</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md12">
+                        <!--可复选的树，关联表-->
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" title="信息资源目录">信息资源目录</label>
+                            <div class="layui-input-block">
+                                <input type="text" class="layui-input" name="dataBase" style="padding-right: 40px">
+                                <i class="fa fa-database icon-dataBase" style=""></i>
+                            </div>
+                            <script type="text/html" id="dataBaseLayer">
+                                <div class="content-wrap">
+
+                                    <div class="globalTip">
+                                        <i class="fa fa-info-circle"></i>
+                                        <span>点击目录分类列表 选择对应目录列表</span>
+                                    </div>
+
+                                    <div style="width: 100%;text-align: center;margin-top: 120px;" class="dataBaseTreeLoad">
+                                        <i class="fa fa-spinner fa-pulse"></i>
+                                    </div>
+
+                                    <div class="layui-row layui-col-space10">
+                                        <div class="layui-col-xs6 baseTreeBox">
+                                            <div class="custom-title">目录分类列表</div>
+                                            <div class="eleTree ele4" id="menuTypeTree" style="overflow: auto; padding-bottom: 20px"  lay-filter="menuTypeTree"></div>
+                                        </div>
+                                        <div class="layui-col-xs6 baseTreeBox">
+                                            <div class="custom-title">目录信息</div>
+                                            <div class="eleTree ele4" id="menuListTree" style="overflow: auto; padding-bottom: 20px"  lay-filter="menuListTree"></div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="menuTipArea" >
+                                        <span>目录分类：</span>
+                                        <span class="menu1" style="padding-right: 20px">无</span>
+                                        <span>对应绑定目录：</span>
+                                        <span class="menu2" >无</span>
+                                    </div>
+                                    <div class="layui-form-item" style="text-align: center">
+                                        <button class="layui-btn " id="submitDatabase">输出指标项 / 公共方法</button>
+                                        <!--<button class="layui-btn layui-btn-primary" id="resetDatabase"><i class="fa fa-eraser"></i>重置</button>-->
+                                    </div>
+                                </div>
+                            </script>
+                        </div>
+                    </div>
+                    <div class="layui-col-md12 custom-height-area" style="display: none" >
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">高度值</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="heightValue"  placeholder="例如：[[100,100,100],[200,200]]" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="toggle-area toggle-area1">
+                        <div class="layui-row layui-col-space10">
+                            <!--<div class="layui-col-md4">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">风格设置</label>
+                                    <div class="layui-input-block">
+                                        <select name="menuTheme" id="themeSet">
+                                            <option value="light">亮色</option>
+                                            <option value="dark">弱色</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="layui-col-md4">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">全局主题色</label>
+                                    <div class="layui-input-block">
+                                        <select name="primaryColor" id="primaryColor">
+                                            <option value="primary">默认蓝色</option>
+                                            <option value="green">绿色</option>
+                                            <option value="gray">灰色</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md4">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">菜单主题</label>
+                                    <div class="layui-input-block">
+                                        <select name="menuTheme" id="menuTheme">
+                                            <option value="light">亮色</option>
+                                            <option value="dark">暗色</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+                            </div>-->
+                            <div class="layui-col-md12">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">外部引入JS</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="jsUrl"  placeholder="例如：https://api/json.js,多个url可用逗号隔开" class="layui-input">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md12">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">外部引入css</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="link"  placeholder="例如：https://api/json.css,多个url可用逗号隔开" class="layui-input">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md12">
+                                <div class="layui-form-item layui-form-text">
+                                    <label class="layui-form-label">js代码段</label>
+                                    <div class="layui-input-block">
+                                        <textarea title="" class="layui-textarea" name="cssDes" id="jsDes" ></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="layui-col-md12">
+                                <div class="layui-form-item layui-form-text">
+                                    <label class="layui-form-label">css代码段</label>
+                                    <div class="layui-input-block">
+                                        <textarea class="layui-textarea" name="cssDes" id="cssDes" ></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="layui-col-md12">
+                        <button style="display: none" class="layui-btn " id="layoutSet" lay-submit lay-filter="layoutSet">生成模板配置项</button>
+                        <a class="toggle-btn toggle-btn1">
+                            <span>展开更多配置</span>
+                            <i class="fa fa-angle-up"></i>
+                        </a>
+                    </div>
+                </div>
+            </form>
+            <!--<div class="custom-title">工具集</div>-->
+            <!--<ul>-->
+
+            <!--</ul>-->
+
+            <div class="pluginBox">
+
+                <div class="custom-title">栅格布局</div>
+                <ul class="clearFix">
+                    <!--draggable="true"-->
+                    <li class="grid-box" data-plugin="grid" data-grid="[[12]]"><img draggable="false" src="../../images/dhtLayout/1c.bmp" alt=""></li>
+                    <li class="grid-box" data-plugin="grid" data-grid="[[12],[12]]"><img draggable="false" src="../../images/dhtLayout/2e.bmp" alt=""></li>
+                    <li class="grid-box" data-plugin="grid" data-grid="[[6,6]]"><img draggable="false" src="../../images/dhtLayout/2u.bmp" alt=""></li>
+                    <li class="grid-box" data-plugin="grid" data-grid="[[12],[12],[12]]"><img draggable="false" src="../../images/dhtLayout/3e.bmp" alt=""></li>
+                    <li class="grid-box" data-plugin="grid" data-grid='[[12],[6,6]]'><img draggable="false" src="../../images/dhtLayout/3t.bmp" alt=""></li>
+                    <li class="grid-box" data-plugin="grid" data-grid='[[6,6],[12]]'><img draggable="false" src="../../images/dhtLayout/3u.bmp" alt=""></li>
+                    <li class="grid-box" data-plugin="grid" data-grid='[[4,4,4]]'><img draggable="false" src="../../images/dhtLayout/3w.bmp" alt=""></li>
+                    <li class="grid-box" data-plugin="grid" data-grid='[[12],[12],[12],[12]]'><img draggable="false" src="../../images/dhtLayout/4e.bmp" alt=""></li>
+                    <li class="grid-box" data-plugin="grid" data-grid='[[6,6],[12],[12]]'><img draggable="false" src="../../images/dhtLayout/4f.bmp" alt=""></li>
+                    <li class="grid-box" data-plugin="grid" data-grid='[[12],[6,6],[12]]'><img draggable="false" src="../../images/dhtLayout/4i.bmp" alt=""></li>
+                    <li class="grid-box" data-plugin="grid" data-grid='[[12],[12],[6,6]]'><img draggable="false" src="../../images/dhtLayout/4j.bmp" alt=""></li>
+                    <li class="grid-box" data-plugin="grid" data-grid='[[12],[4,4,4]]'><img draggable="false" src="../../images/dhtLayout/4t.bmp" alt=""></li>
+                    <li class="grid-box" data-plugin="grid" data-grid='[[2,10]]'><div>2-10</div></li>
+                    <li class="grid-box" data-plugin="grid" data-grid='[[10,2]]'><div>10-2</div></li>
+                    <li class="grid-box" data-plugin="grid" data-grid='[[3,9]]'><div>3-9</div></li>
+                    <li class="grid-box" data-plugin="grid" data-grid='[[9,3]]'><div>9-3</div></li>
+                    <li class="grid-box" data-plugin="grid" data-grid='[[4,8]]'><div>4-8</div></li>
+                    <li class="grid-box" data-plugin="grid" data-grid='[[8,4]]'><div>8-4</div></li>
+                   <!--   <li class="grid-box" data-plugin="grid" data-grid='[[5,7]]'><div>5-7</div></li>
+                    <li class="grid-box" data-plugin="grid" data-grid='[[7,5]]'><div>7-5</div></li>-->
+                </ul>
+                <div class="custom-title">实例样板</div>
+                <ul class="clearFix">
+                    <li data-plugin="form" title="表单样板">表单样板</li>
+                    <li data-plugin="table" title="表格样板">表格样板</li>
+                    <li data-plugin="searchTable" title="表格搜索样板">表格搜索样板</li>
+                    <li data-plugin="tree" title="树样板">树样板</li>
+                </ul>
+
+                <div class="custom-title">基础组件</div>
+                <ul class="clearFix">
+                    <!--<li data-plugin="update">上传</li>-->
+                    <li data-plugin="tab">选项卡</li>
+                <!--<li data-plugin="card">面板</li>-->
+                    <li data-plugin="accordion">手风琴</li>
+
+                </ul>
+                <!--<div class="custom-title">表单组件</div>-->
+
+                <!--<ul class="clearFix">-->
+                <!--<li data-plugin="button">按钮</li>-->
+                <!--</ul>-->
+
+                <div class="custom-title">图表样板</div>
+                <ul class="clearFix">
+                    <li data-chart="line" data-plugin="chart"><i class="fa fa-line-chart"></i>折线图</li>
+                    <li data-chart="bar" data-plugin="chart"><i class="fa fa-bar-chart"></i>柱状图</li>
+                    <li data-chart="pie" data-plugin="chart"><i class="fa fa-pie-chart"></i>饼图</li>
+                    <li data-chart="scatter" data-plugin="chart"><i class="fa fa-scatter-chart"></i>散点图</li>
+                    <li data-chart="radar" data-plugin="chart"><i class="fa fa-radar-chart"></i>雷达图</li>
+                </ul>
+
+                <div class="">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="rightControl">
+        <div class="toolLine">
+            <button title="刷新模块" type="button" class="layui-btn layui-btn-sm layui-btn-warm refreshPreviewArea"> <i class="fa fa-refresh" ></i><span style="display: inline-block;margin-left: 3px;color: white">刷新</span></button>
+            <button class="layui-btn layui-btn-sm layui-btn-primary getModulePage" title="模块页面" type="button"><i
+                    class="fa fa-space-shuttle"></i><span style="display: inline-block;margin-left: 3px;color: #333">弹框页集合</span>
+            </button>
+        </div>
+        <div class="layui-tab" lay-filter="mainTab">
+            <div class="layui-collapse" lay-accordion>
+                <div class="layui-colla-item">
+                    <i class="fa fa-expand full-icon" ></i>
+                    <h2 class="layui-colla-title">组件属性JSON配置</h2>
+                    <div class="layui-colla-content layui-show">
+                        <div class="reminderTip">
+                            请在中间区域选择需要编辑的组件模板
+                        </div>
+                        <div class="jsonEditorArea" style="display: none">
+                            <div class="moduleTipArea" style="background: #1f394f;padding: 4px;">
+                                <span>模块：</span>
+                                <span class="currentEditModule"></span>
+                            </div>
+                            <div id="editor_module" class="json-editor"></div>
+                            <form action="" name="jsonEditorForm" class="layui-form layui-form-pane">
+                                <div class="layui-form-item layui-form-text">
+                                    <label class="layui-form-label">组件配置</label>
+                                    <div class="layui-input-block">
+                                        <textarea class="layui-textarea" name="textarea_module" id="textarea_module" title="" ></textarea>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title">栅格配置</h2>
+                    <div class="layui-colla-content ">
+                        <div class="reminderTip">
+                            请在中间区域选择需要编辑的栅格模块
+                        </div>
+                        <div class="styleSetArea" style="display: none">
+                            <div class="moduleTipArea" style="background: #1f394f;padding: 4px;">
+                                <span>模块：</span>
+                                <span class="currentEditModule"></span>
+                            </div>
+                            <form action="" lay-filter="moduleStyleSet" name="moduleStyleSet" class="layui-form layui-form-pane">
+                                <input type="text" style="display: none" name="styleModuleName">
+                               <!-- <div class="layui-form-item">
+                                    <label class="layui-form-label">向左缩放</label>
+                                    <div class="layui-input-block">
+                                        <input type="checkbox" name="slideBtn" lay-skin="switch" lay-text="开启|关闭">
+                                    </div>
+                                </div>-->
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">背景色</label>
+                                    <div class="layui-input-block">
+                                        <input title="backgrondColor" type="text" class="layui-input" name="backgroundColor">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">背景图</label>
+                                    <div class="layui-input-block">
+                                        <input title="border" type="text" class="layui-input" name="backgroundImage">
+                                    </div>
+                                </div>
+
+                                <!--<fieldset class="layui-elem-field inputWidthPx">
+                                    <legend>标题区域</legend>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">标题主题</label>
+                                        <div class="layui-input-block">
+                                            <select name="gridTitle" lay-filter="gridTitle">
+                                                <option value="0">无</option>
+                                                <option value="1">默认标题</option>
+                                                &lt;!&ndash;<option value="2">默认标题2</option>&ndash;&gt;
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="gridTitleSetArea" style="display: none">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">标题名</label>
+                                            <div class="layui-input-block">
+                                                <input type="text"  class="layui-input" name="gridTitleName">
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-text">
+                                            <label class="layui-form-label">辅助标题</label>
+                                            <div class="layui-input-block">
+                                                <textarea class="layui-textarea" name="auxiliaryTitle" placeholder="请输入辅助标题"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-text">
+                                            <label class="layui-form-label">标题提示</label>
+                                            <div class="layui-input-block">
+                                                <textarea class="layui-textarea" name="gridTitleHelpTip" placeholder="请输入提示文字"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </fieldset>-->
+
+                                <fieldset class="layui-elem-field inputWidthPx">
+                                    <legend>边距</legend>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">上边距</label>
+                                        <div class="layui-input-block">
+                                            <input title="gridPaddingTop" type="text" placeholder="1~30" class="layui-input" name="paddingTop">
+                                            <!--<span class="pxLine">px</span>-->
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">下边距</label>
+                                        <div class="layui-input-block">
+                                            <input title="gridPaddingBottom" type="text"  class="layui-input" placeholder="1~30" name="paddingBottom">
+                                            <!--<span class="pxLine">px</span>-->
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">左边距</label>
+                                        <div class="layui-input-block">
+                                            <input title="gridPaddingLeft" type="text"  class="layui-input" placeholder="1~30" name="paddingLeft">
+                                            <!--<span class="pxLine">px</span>-->
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">右边距</label>
+                                        <div class="layui-input-block">
+                                            <input title="gridPaddingRight" type="text" lay-verify="number" class="layui-input" placeholder="1~30" name="paddingRight" >
+                                            <!--<span class="pxLine">px</span>-->
+                                        </div>
+                                    </div>
+                                </fieldset>
+
+                                <fieldset class="layui-elem-field">
+                                    <legend>边框</legend>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">上边框</label>
+                                        <div class="layui-input-block">
+                                            <input title="gridBorderTop" type="text" class="layui-input" name="borderTop">
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">下边框</label>
+                                        <div class="layui-input-block">
+                                            <input title="gridBorderBottom" type="text" class="layui-input" name="borderBottom">
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">左边框</label>
+                                        <div class="layui-input-block">
+                                            <input title="gridBorderLeft" type="text" class="layui-input" name="borderLeft">
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">右边框</label>
+                                        <div class="layui-input-block">
+                                            <input title="gridBorderRight" type="text" class="layui-input" name="borderRight">
+                                        </div>
+                                    </div>
+                                </fieldset>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!--<div class="layui-colla-item">
+                    <h2 class="layui-colla-title">属性可视配置</h2>
+                    <div class="layui-colla-content">
+
+                    </div>
+                </div>-->
+            </div>
+        </div>
+
+        <div class="layui-col-md12 quote-area" style="display: none">
+            <blockquote class="layui-elem-quote layui-quote-nm">
+                <div class="des-text"></div>
+                <div class="tool-area">
+                    <span class="text" >工具栏：</span>
+                    <span> <i class="fa fa-object-ungroup" id="databaseLodash"></i></span>
+                </div>
+
+            </blockquote>
+        </div>
+    </div>
+    <div class="control-hide-left">
+        <i class="layui-icon layui-icon-prev"></i>
+    </div>
+    <div class="control-hide-right">
+        <i class="layui-icon layui-icon-next"></i>
+    </div>
+
+
+</div>
+
+<div class="modeTemplate" style="display: block">
+    <div class="searchTable">
+
+    </div>
+</div>
+
+
+<div class="modeForm" style="display: none">
+    <form action="" lay-filter="modeForm" class="layui-form layui-form-pane">
+        <div class="layui-row layui-col-space10">
+            <div class="layui-col-md6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">组件类型</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="plugin" readonly class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">模块id</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="name" readonly class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-col-space5">
+                <div class="layui-col-md12">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">表单主题</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="theme" value="1" title="全部展开" checked="">
+                            <input type="radio" name="theme" value="2" title="初始单行折叠">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md12">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">是否含有标题</label>
+                        <div class="layui-input-block">
+                            <input type="checkbox" name="isTitle" lay-skin="switch" lay-filter="isTitle" lay-text="是|否">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md12" style="display: none" id="isTitleArea">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">标题名称</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="titleName" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+
+                <fieldset class="layui-elem-field">
+                    <legend>表单内容区域</legend>
+                    <div class="layui-field-box">
+
+                        <div class="layui-col-md9">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">表单</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="formLine0" class="layui-input formLine">
+                                    <i class="fa fa-plus-square formLineAdd"  style="position: absolute;right: -28px;top: 13px; cursor: pointer;color: #999"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset class="layui-elem-field">
+                    <legend>按钮触发区域</legend>
+                    <div class="layui-field-box">
+
+                        <div class="layui-col-md9">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">按钮</label>
+                                <div class="layui-input-block">
+                                    <input type="text" class="layui-input btnLine">
+                                    <i class="fa fa-plus-square btnLineAdd"  style="position: absolute;right: -28px;top: 13px; cursor: pointer;color: #999"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/html" id="formProp">
+    <div class="content-wrap" >
+        <form class="layui-form layui-form-pane" action="" lay-filter="formProp">
+            <div class="layui-row" style="height: 400px;overflow-y: auto">
+                <div class="layui-col-md12">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">绑定字段</label>
+                        <div class="layui-input-block">
+                            <select name="bindField" id="bindField" lay-filter="bindField">
+                                <option value="0">请选择</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md12">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">类型</label>
+                        <div class="layui-input-block">
+                            <select name="formTypeSelect" id="formTypeSelect" lay-filter="formTypeSelect">
+                                <!--<option value="Field Field_Input">输入框　　　　Input</option>-->
+                                <!--<option value="Field Field_Input_Button">输入选择　　　Input_Button</option>-->
+                                <!--<option value="Field Field_Label">文本标签　　　Label</option>-->
+                                <!--<option value="Field Field_Radio">单选按钮　　　Radio</option>-->
+                                <!--<option value="Field Field_Checkbox">多选按钮　　　Checkbox</option>-->
+                                <!--<option value="Field Field_Hidden">隐藏域　　　　Hidden</option>-->
+                                <!--<option value="Field Field_Textarea">多行文本域　　Textarea</option>-->
+                                <!--<option value="Field Field_WebEditor">Web编辑器　　WebEditor</option>-->
+                                <!--<option value="Field Field_Input_Select">输入选择　　　Input_Select</option>-->
+                                <!--<option value="Field Field_Select">下拉选择　　　Select</option>-->
+                                <!--<option value="Field Field_DateTime">日期选择　　　DateTime</option>-->
+                                <!--<option value="Field Field_User">用户选择　　　User</option>-->
+                                <!--<option value="Field Field_SelectList">弹出选择列表　SelectList</option>-->
+                                <!--<option value="Field Field_SelectTree">弹出选择树　　SelectTree</option>-->
+                                <!--<option value="Field Field_Attachment">附件列表　　　Attachment</option>-->
+
+                                <option value="field_Input">输入框----Input</option>
+                                <option value="field_Radio">单选框----Radio</option>
+                                <option value="field_Checkbox">复选框----Checkbox</option>
+                                <option value="field_Switch"> 开关----Switch</option>
+                                <option value="field_Select">下拉框----Select</option>
+                                <option value="field_Textarea">文本域----Textarea</option>
+                                <!--<option value="field_DateTime">日期&#45;&#45;&#45;&#45;DateTime</option>-->
+                                <!--<option value="field_Hidden">隐藏域&#45;&#45;&#45;&#45;Hidden</option>-->
+
+                            </select>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="layui-col-md12">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">Field ID</label>
+                        <div class="layui-input-block">
+                            <input type="text" class="layui-input" name="name">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">Label 名称</label>
+                        <div class="layui-input-block">
+                            <input type="text" class="layui-input" name="label">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">占列</label>
+                        <div class="layui-input-block">
+                            <select name="col">
+                                <option value="12">12</option>
+                                <option value="11">11</option>
+                                <option value="10">10</option>
+                                <option value="9">9</option>
+                                <option value="8">8</option>
+                                <option value="7">7</option>
+                                <option value="6">6</option>
+                                <option value="5">5</option>
+                                <option value="4">4</option>
+                                <option value="3">3</option>
+                                <option value="2">2</option>
+                                <option value="1">1</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">标题全展开</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="isLabelFull" value="true" title="是">
+                            <input type="radio" name="isLabelFull" value="false" title="否" checked="">
+                        </div>
+                    </div>
+                </div>
+                <div class=" field_box field_Input">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">必填</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="required" value="true" title="必填">
+                            <input type="radio" name="required" value="false" title="非必填" checked="">
+                        </div>
+                    </div>
+                   <!-- <div class="layui-form-item">
+                        <label class="layui-form-label">输入值类型</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="inputType" value="text" title="文字" checked="">
+                            <input type="radio" name="inputType" value="number" title="数字">
+                            <input type="radio" name="inputType" value="password" title="密码">
+                        </div>
+                    </div>-->
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">Placeholder</label>
+                        <div class="layui-input-block">
+                            <input type="text" class="layui-input" name="placeholder">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">校验</label>
+                        <div class="layui-input-block">
+                            <select name="verify">
+                                <option value="">无</option>
+                                <option value="phone">phone</option>
+                                <option value="email">email</option>
+                                <option value="url">url</option>
+                                <option value="number">number</option>
+                                <option value="date">date</option>
+                                <option value="identity">identity</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">组件定义事件</label>
+                        <div class="layui-input-block">
+                            <input type="checkbox" name="isOriginOper" checked=""  lay-skin="switch" lay-filter="isOriginOper" lay-text="是|否">
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="hide field_box field_Radio">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">导入数据</label>
+                        <div class="layui-input-block">
+                            <div class="layui-input-line">
+                                <textarea name="radioData" style="text-align: left" class="layui-textarea">[{"text":"男","value":"男","checked":true},{"text":"女","value":"女"},{"text":"不可选","value":"不可选个","disabled":true}]</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hide field_box field_Checkbox"></div>
+                <div class="hide field_box field_Switch">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">是否选中</label>
+                        <div class="layui-input-block">
+                            <input type="checkbox" name="switchChecked" checked="" lay-skin="switch" lay-filter="switchChecked" lay-text="是|否">
+                        </div>
+                    </div>
+                </div>
+                <div class="hide field_box field_Select">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">支持搜索</label>
+                        <div class="layui-input-block">
+                            <input type="checkbox" name="isSearch" lay-skin="switch" lay-filter="isSearch" lay-text="是|否">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">是否异步获取</label>
+                        <div class="layui-input-block">
+                            <input type="checkbox" name="isUrl" checked="" lay-skin="switch" lay-filter="isUrl" lay-text="是|否">
+                        </div>
+                    </div>
+                    <div class="isUrl" style="display: block">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">url</label>
+                            <div class="layui-input-block">
+                                <input type="text" class="layui-input" name="selectUrl">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">请求方法</label>
+                            <div class="layui-input-block">
+                                <select name="selectMethod" id="selectMethod">
+                                    <option value="get">get</option>
+                                    <!--<option value="post">post</option>-->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">请求获取字段</label>
+                            <div class="layui-input-block">
+                                <select name="responseList" id="responseList">
+                                    <option value="list">list</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">optionText</label>
+                            <div class="layui-input-block">
+                                <input type="text" class="layui-input" name="optionText">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">optionValue</label>
+                            <div class="layui-input-block">
+                                <input type="text" class="layui-input" name="optionValue">
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="notUrl" style="display: none">
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">导入数据</label>
+                            <div class="layui-input-line">
+                                <textarea name="selectData" style="text-align: left" class="layui-textarea">[{"text":"系统","value":"system"},{"text":"业务","value":"business"}]</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hide field_box field_Textarea">
+
+                </div>
+                <!--<div class=" field_box field_DateTime"></div>-->
+                <!--<div class="field_box field_Hidden">
+                    <div class="layui-col-md12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">SPAN ID</label>
+                            <div class="layui-input-block">
+                                <input type="text" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">Field ID</label>
+                            <div class="layui-input-block">
+                                <input type="text" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">输入值</label>
+                            <div class="layui-input-block">
+                                <input type="text" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                </div>-->
+            </div>
+            <div style="text-align: center;width: 100%;padding: 10px 0 0;left: 0;">
+                <div class="layui-form-item" style="text-align: center">
+                    <button class="layui-btn " lay-submit type="submit" id="submitProp"><i class="fa fa-check-circle"></i>确定</button>
+                    <button class="layui-btn layui-btn-primary" type="reset"><i class="fa fa-eraser"></i>重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</script>
+
+<script src="../../js/layui/layui.js"></script>
+<script src="../../js/lib/jsonEdit/jquery.jsoneditor.js"></script>
+<script src="../../js/lib/layui-mz-min.js" charset="utf-8"></script>
+
+<script src="../../js/lib/echarts-4.1.0.min.js" charset="utf-8"></script>
+<script src="../../js/lib/echartTheme.js" charset="utf-8"></script>
+
+
+<script src="../../js/module/pageCustom.js" charset="utf-8"></script>
+<!--<script charset="utf-8" src="../../../dist/src/js/module/pageCustom.bundle.js"></script>-->
+
+
+</body>
+</html>

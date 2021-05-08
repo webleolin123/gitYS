@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>组件模板信息</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../js/layui/css/layui.css"/>
+    <link href="../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script src="../../js/common/plugin.js"></script>
+
+    <style>
+        .layui-layer-page .layui-layer-content {
+            overflow-x: hidden;
+            padding: 0 10px;
+        }
+
+        .layui-tab-content {
+            background: white;
+        }
+
+    </style>
+</head>
+
+<!-- 新增/编辑组件弹窗 -->
+<div class="tplLayer hide">
+    <div style="padding: 15px 20px">
+        <form class="layui-form layui-form-pane" lay-filter="addForm">
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width:130px;"><b class="red">*</b>导航页面名称</label>
+                <div class="layui-input-block" style="margin-left: 130px;">
+                    <input type="text" name="wumiChname" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width:100%">备注</label>
+                <div class="layui-input-block" style="margin-left:0;left:0">
+                    <textarea name="memo" placeholder="请输入" class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item adapt" style="margin-left: 30%">
+                <div class="layui-input-block">
+                    <button class="layui-btn " lay-submit lay-filter="formSavue"> <i class="layui-icon">&#x1005;</i>保存</button>
+                    <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                </div>
+            </div>
+        </form>
+        <div class="templateEditLayer hide" style="margin-top: 10px;">
+            <div>
+                <table id="table2" lay-filter="table2"></table>
+                <script type="text/html" id="tableOper2">
+                    <a class="layui-btn layui-btn-xs" lay-event="prop-edit" permission-btn="nav-prop-editConfig">编辑</a>
+                    <a class="layui-btn layui-btn-xs" lay-event="prop-check" permission-btn="nav-prop-checkConfig">查看</a>
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+<!--新增/编辑组件属性弹框-->
+<div id="propLayer" style="margin-top: 10px;display: none">
+    <div style="padding: 15px 20px;overflow-y:auto;overflow-x:hidden">
+        <form class="layui-form layui-form-pane" lay-filter="prop-addForm">
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>属性名</label>
+                <div class="layui-input-block">
+                    <input type="text" name="wtmpPropname" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>属性中文名</label>
+                <div class="layui-input-block">
+                    <input type="text" name="wtmpChname" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">属性值类型</label>
+                <div class="layui-input-block">
+                    <select name="wtmpPropvaltype"  id="wtmpPropvaltype">
+                        <option value="object">object</option>
+                        <option value="array">array</option>
+                        <option value="string">string</option>
+                        <option value="boolean">boolean</option>
+                        <option value="number">number</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item wtmpPropval">
+                <label class="layui-form-label" style="width:100%"><b class="red">*</b>属性值</label>
+                <div class="layui-input-block" style="margin-left:0;left:0">
+                    <textarea name="wtmpPropval" placeholder="请输入" required lay-verify="required"  class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">字典编码</label>
+                <div class="layui-input-block">
+                    <input type="text" name="wtmpDictCode" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">属性版本</label>
+                <div class="layui-input-block">
+                    <input type="text" name="wtmpVersioncode" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width:100%">备注</label>
+                <div class="layui-input-block" style="margin-left:0;left:0">
+                    <textarea name="ggMemo" placeholder="请输入" class="layui-textarea"></textarea>
+                </div>
+            </div>
+
+            <div class="layui-form-item adapt" style="margin-left: 15%">
+                <div class="layui-input-block">
+                    <button title="保存" class="layui-btn"
+                        lay-submit
+                        lay-filter="savePropInfo"
+                        authCode="savePropInfo">
+                        <i class="layui-icon">&#xe605;</i>保存
+                    </button>
+                    <!-- <button title="重置" type="reset"
+                        class="layui-btn layui-btn-primary">
+                        <i class="layui-icon">&#xe666;</i>重置
+                    </button> -->
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!--查询组件属性详情弹框-->
+<div class="propCheckLayer hide">
+        <div style="padding: 15px 20px;overflow-y:auto;overflow-x:hidden">
+            <form class="layui-form layui-form-pane" name="propCheckLayer">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">属性名</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="wtmpPropname" class="layui-input" disabled>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">属性中文名</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="wtmpChname" class="layui-input" disabled>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">属性值类型</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="wtmpPropvaltype"  class="layui-input" disabled>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width:100%">属性值</label>
+                    <div class="layui-input-block" style="margin-left:0;left:0">
+                        <textarea name="wtmpPropval" placeholder="请输入" required  lay-verify="required" class="layui-textarea" disabled></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">字典编码</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="wtmpDictCode" class="layui-input" disabled>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">属性版本</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="wtmpVersioncode"  class="layui-input" disabled>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width:100%">备注</label>
+                    <div class="layui-input-block" style="margin-left:0;left:0">
+                        <textarea name="ggMemo" placeholder="请输入" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+            </form>
+        </div>
+</div>
+
+
+<body class="iframe-h">
+    <div class="content-wrap">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-header layui-card-header-custom"><span><i></i>系统主题列表</span></div>
+                    <div class="layui-card-body">
+                        <form action="" class="layui-form layui-form-pane">
+                            <div class="layui-row layui-col-space10">
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label" style="width:130px;">主题名称</label>
+                                        <div class="layui-input-block" style="margin-left: 130px;">
+                                            <input type="text" name="wumiChname" placeholder="请输入名称" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label" style="width:130px;">是否启用</label>
+                                        <div class="layui-input-block" style="margin-left: 130px;">
+                                            <select name="city">
+                                                <option value="0">否</option>
+                                                <option value="1">是</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- <div class="toggle-area layui-col-space10">
+                                </div> -->
+                                <div class="" style="text-align: center;margin-bottom: 5px">
+                                    <button class="layui-btn" lay-submit lay-filter="formSearch" permission-btn="nav_tableSearch"><i class="fa fa-search"></i>查询</button>
+                                    <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                                    <!-- <a class="toggle-btn">
+                                        <span>展开</span>
+                                        <i class="fa fa-angle-up"></i>
+                                    </a> -->
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="layui-card">
+                    <div class="layui-card-body" style="padding-top: 0">
+                        <table id="table1" lay-filter="table1"></table>
+                        <script type="text/html" id="tableToolBar">
+                            <div class="layui-btn-container">
+                                <button class="layui-btn layui-btn-sm" lay-event="add" permission-btn="nav_addConfig">
+                                    <i class="layui-icon">&#xe608;</i> 新增
+                                </button>
+                                <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete" permission-btn="nav_deleteConfig">
+                                    <i class="layui-icon">&#xe640;</i> 删除
+                                </button>
+                            </div>
+                        </script>
+                        <script type="text/html" id="tableOper">
+                            <a class="layui-btn layui-btn-xs" lay-event="edit" permission-btn="nav_editConfig">编辑</a>
+                            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="singleDel" permission-btn="nav_deleteConfig">删除</a>
+                            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="singleEnable"
+                               permission-btn="nav_enable"
+                               style="display: {{d.ggEnStatus==='0'?'inline-block':'none'}} ">启用</a>
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="themeConfigArea" style="display: none" type="text/html">
+        <div class=" themeConfigArea">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md12">
+                    <div class="custom-title">设置</div>
+                    <form class="layui-form " lay-filter="defaultForm">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">主题名称:</label>
+                            <div class="layui-input-block">
+                                <input autocomplete="off" class="layui-input" name="compName"
+                                       placeholder="请输入名称" type="text" value="主题">
+                            </div>
+                        </div>
+                        <div class="layui-col-md4">
+                            <div class="layui-form-item ">
+                                <label class="layui-form-label">功能页导航:</label>
+                                <div class="layui-input-block">
+                                    <!--<input name="tabMenuMethod" title="选项卡" type="radio" value="tab">-->
+                                    <input checked name="tabMenuMethod" title="面包屑" type="radio" value="bread">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-xs4">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">左导航折叠:</label>
+                                <div class="layui-input-block">
+                                    <input checked lay-filter="defaultClose" lay-skin="switch" lay-text="伸|缩"
+                                           name="defaultClose" type="checkbox">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-xs4">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">是否弱色:</label>
+                                <div class="layui-input-block">
+                                    <input lay-filter="themeInvert" lay-skin="switch" lay-text="开|关"
+                                           name="themeInvert" type="checkbox">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-xs12">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">自定义主题:</label>
+                                <div class="layui-input-block">
+                                    <input checked lay-filter="globalTheme" lay-skin="switch"
+                                           lay-text="是|否" name="globalTheme" type="checkbox">
+                                </div>
+                            </div>
+                            <div class="themeSelectBox">
+                                <div class="customArea clearFix moduleBg" style="display: block">
+                                    <div class="layui-col-xs6">
+                                        <div class="">主题色</div>
+                                        <div class="primaryColorArea">
+                                            <ul class="clearFix">
+                                                <li class="selected" data-primary="primary">
+                                                    <span class="bg-primary"></span>
+                                                    <i class="fa fa-check"></i>
+                                                </li>
+                                                <li data-primary="green">
+                                                    <span class="bg-green"></span>
+                                                    <i class="fa fa-check"></i>
+                                                </li>
+                                                <li data-primary="gray">
+                                                    <span class="bg-gray"></span>
+                                                    <i class="fa fa-check"></i>
+                                                </li>
+                                                <li data-primary="red">
+                                                    <span class="bg-red"></span>
+                                                    <i class="fa fa-check"></i>
+                                                </li>
+                                                <li data-primary="config" style="top: -17px;">
+                                                    <input id="colorAll-input" name="color" type="hidden" value="">
+                                                    <div id="colorAll"></div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="layui-col-xs6">
+                                        <div class="">菜单风格设置</div>
+                                        <div class="mainThemeArea">
+                                            <ul class="clearFix">
+                                                <li class="selected" data-menuTheme="dark">
+                                                    <img alt="dark"
+                                                         src="https://gw.alipayobjects.com/zos/rmsportal/LCkqqYNmvBEbokSDscrm.svg">
+                                                    <i class="fa fa-check"></i>
+                                                </li>
+                                                <li data-menuTheme="light">
+                                                    <img alt="light"
+                                                         src="https://gw.alipayobjects.com/zos/rmsportal/jpRkZQMyYRryryPNtyIC.svg">
+                                                    <i class="fa fa-check"></i>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="globalTheme clearFix" style="display: none">
+                                    <ul class="clearFix">
+                                        <li class="selected" data-globTheme="gloBlue">
+                                            <img alt="dark" src="./../../images/gloBlue.jpg">
+                                            <i class="fa fa-check"></i>
+                                        </li>
+                                        <li data-globTheme="gloDark">
+                                            <img alt="dark" src="./../../images/gloDark.jpg">
+                                            <i class="fa fa-check"></i>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">备注:</label>
+                            <div class="layui-input-block">
+                                <textarea class="layui-textarea" name="memo"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="layui-col-md12">
+                    <div class="primarySettingArea" id="primarySettingArea">
+                        <div class="layui-tab layui-tab-brief" lay-filter="primarySettingArea">
+                            <ul class="layui-tab-title">
+                                <li class="layui-this">标题栏</li>
+                                <li>界面提示</li>
+                                <li>内容</li>
+                                <li></li>
+                            </ul>
+                            <div class="layui-tab-content" style="background: inherit;">
+                                <div class="layui-tab-item layui-show">
+                                    <div style="padding: 10px">
+                                        <form class=" layui-form" lay-filter="sysTitleForm">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">标题名称:</label>
+                                                <div class="layui-input-block">
+                                                    <input autocomplete="off" class="layui-input" lay-verify="required"
+                                                           name="sysTitleName" placeholder="请输入" required type="text">
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">LOGO:</label>
+                                                <div class="layui-input-block">
+                                                    <input class="layui-input" name="logo"
+                                                           placeholder="请输入LOGO地址，例如SZYD" type="text">
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">ICO:</label>
+                                                <div class="layui-input-block">
+                                                    <input class="layui-input" name="ico" placeholder="请输入ICO地址"
+                                                           type="text">
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">退出区域:</label>
+                                                <div class="layui-input-block">
+                                                    <input checked="" name="logOutArea" title="内" type="radio"
+                                                           value="in">
+                                                    <input name="logOutArea" title="外" type="radio" value="out">
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">主题显示:</label>
+                                                <div class="layui-input-block">
+                                                    <input checked="" name="themeSetShow" title="是" type="radio"
+                                                           value="yes">
+                                                    <input name="themeSetShow" title="否" type="radio" value="no">
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">副标题显示:</label>
+                                                <div class="layui-input-inline">
+                                                    <input lay-filter="subTitleOpen" name="subTitleOpen" title="否"
+                                                           type="radio" value="0">
+                                                    <input checked="" lay-filter="subTitleOpen" name="subTitleOpen"
+                                                           title="是" type="radio" value="1">
+                                                </div>
+                                            </div>
+                                            <div class="layui-row layui-col-space10" id="subTitleArea">
+                                                <div class="layui-col-md6">
+                                                    <div class="layui-form-item">
+                                                        <label class="layui-form-label">展示方式:</label>
+                                                        <div class="layui-input-block">
+                                                            <select name="subTitleArea">
+                                                                <option value="1">展示1</option>
+                                                                <option value="2">展示2</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="layui-col-md6">
+                                                    <div class="layui-form-item">
+                                                        <label class="layui-form-label">展示字段:</label>
+                                                        <div class="layui-input-block">
+                                                            <select name="subTitleType">
+                                                                <option checked value="1">简称</option>
+                                                                <option value="2">全称</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="layui-tab-item">
+                                    <div style="padding: 10px">
+                                        <form class=" layui-form" lay-filter="sysTipForm">
+                                            <div class="layui-row layui-col-space10">
+                                                <div class="layui-col-md6">
+                                                    <div class="layui-form-item">
+                                                        <label class="layui-form-label"
+                                                               style="width: 110px">开启安全提示:</label>
+                                                        <div class="layui-input-block">
+                                                            <input checked="" lay-filter="sysTipOpen" name="sysTipOpen"
+                                                                   title="开启" type="radio"
+                                                                   value="true">
+                                                            <input lay-filter="sysTipOpen" name="sysTipOpen" title="关闭"
+                                                                   type="radio" value="false">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="layui-col-md6" id="sysTipOpenArea">
+                                                    <div class="layui-form-item">
+                                                        <label class="layui-form-label">安全提示:</label>
+                                                        <div class="layui-input-block">
+                                                            <input autocomplete="off" class="layui-input"
+                                                                   name="sysTipName"
+                                                                   placeholder="请输入" type="text">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="layui-col-md6">
+                                                    <div class="layui-form-item">
+                                                        <label class="layui-form-label"
+                                                               style="width: 120px">密码重置提醒:</label>
+                                                        <div class="layui-input-block">
+                                                            <input checked="" lay-filter="initialPasswordOpen"
+                                                                   name="initialPasswordOpen" title="开启" type="radio"
+                                                                   value="true">
+                                                            <input lay-filter="initialPasswordOpen"
+                                                                   name="initialPasswordOpen" title="关闭" type="radio"
+                                                                   value="false">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!--<div class="layui-col-md6" id="passwordTip">
+                                                    <div class="layui-form-item">
+                                                        <label class="layui-form-label">初始密码:</label>
+                                                        <div class="layui-input-block">
+                                                            <input type="text" class="layui-input" name="initialPassword"  placeholder="请输入初始密码">
+                                                        </div>
+                                                    </div>
+                                                </div>-->
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="layui-tab-item">
+                                    <div style="padding: 10px">
+                                        <form class=" layui-form" lay-filter="contentSettings">
+                                            <div class="layui-row layui-col-space10">
+                                                <div class="layui-col-md6">
+                                                    <div class="layui-form-item">
+                                                        <label class="layui-form-label">正文字体:</label>
+                                                        <div class="layui-input-block">
+                                                            <input autocomplete="off" class="layui-input"
+                                                                   name="" placeholder="请输入字体大小" type="text">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="layui-col-md6">
+                                                    <div class="layui-form-item">
+                                                        <label class="layui-form-label">标题字体:</label>
+                                                        <div class="layui-input-block">
+                                                            <input autocomplete="off" class="layui-input"
+                                                                   name="" placeholder="请输入字体大小" type="text">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="./../../js/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).extend({}).use(['layer', 'table', 'form', 'laytpl', 'common', 'element', 'colorpicker'], function () {
+        var table=layui.table;
+        var form=layui.form;
+        var common=layui.common;
+        var element = layui.element;
+        var colorpicker = layui.colorpicker;
+
+        var defaultThemeParams;
+
+        //分页初始参数
+        var pageInitialParam = {
+            pageNum : 1,
+            pareSize : 10,
+            curr:1
+        };
+        var pageRequest = {
+            pageName: 'pageNumber',//页码的参数名称，默认：page
+            limitName: 'pageSize' //每页数据量的参数名，默认：limit
+        };
+        var baseUrl='../../../';
+        common.themeSet();
+        // common.toggleArea($('.toggle-btn'),$('.toggle-area'));
+        var currentMenuSmId = common.getCurrentMenuId();
+        var eventHandle={
+            tableReload:function () {
+                table.reload('table1',{
+                    url: baseUrl+'compmgr/webComponent/pageTopWebComponent',
+                    contentType:'application/json',
+                    method:'post',
+                    page:pageInitialParam,
+                    request:pageRequest,
+                    where:{paras:{wtmiTypecode:"navComp"}},
+                    done:function () {
+                        common.buttonLimit();
+                    }
+                });
+            },
+            tableReload_child:function (id) {
+                table.reload('table2',{
+                    url: baseUrl+'compmgr/webcomponenttemplateproperty/page',
+                    contentType:'application/json',
+                    method:'post',
+                    page:pageInitialParam,
+                    request:pageRequest,
+                    done:function () {
+                        common.buttonLimit();
+                    }
+                });
+            },
+            execCheckBoxRowsEvent:function(data,options){
+                if (data && data.length > 0) {
+                    layer.confirm(options.confirmText, {
+                        icon: 3,
+                        title: '提示',
+                        offset: '150px'
+                    }, function(index) {
+                        var delParam = "";
+                        $.each(data,function(index){
+                            if(index){
+                                delParam +=","
+                            }
+                            delParam += data[index][options.value];
+                        });
+                        common.fetch(options.url + '?' + options.key + '=' + delParam,options.type,{suIds:delParam}, function(res) {
+                            if (res.success) {
+                                layer.msg(options.successText, {
+                                    icon: 6
+                                });
+                                options.success(res.list)
+                            }else{
+                                layer.msg(options.errorText, {
+                                    icon: 5
+                                });
+                            }
+                        }, function() {
+                            options.error([])
+                        });
+                        layer.close(index);
+                    });
+                } else {
+                    layer.msg(options.emptyText);
+                }
+            },
+            gloThemeFuc: function (parent) {
+                //菜单风格点击
+                parent.find('.mainThemeArea ul li').off().on('click', function () {
+                    $(this).siblings().removeClass('selected');
+                    $(this).addClass('selected');
+                });
+                parent.find('.globalTheme ul li').off().on('click', function () {
+                    $(this).siblings().removeClass('selected');
+                    $(this).addClass('selected');
+                });
+                //主题色点击
+                parent.find('.primaryColorArea ul li').off().on('click', function () {
+                    $(this).siblings().removeClass('selected');
+                    $(this).addClass('selected');
+                });
+                // globalTheme
+
+                form.on('switch(globalTheme)', function (data) {
+                    if (data.elem.checked) {
+                        parent.find('.globalTheme').hide();
+                        parent.find('.customArea').show();
+                    } else {
+                        parent.find('.customArea').hide();
+                        parent.find('.globalTheme').show();
+                    }
+                });
+                form.on('radio(subTitleOpen)', function (data) {
+                    if (data.value === "1") {
+                        parent.find('#subTitleArea').show()
+                    } else {
+                        parent.find('#subTitleArea').hide()
+                    }
+                });
+                form.on('radio(initialPasswordOpen)', function (data) {
+                    if (data.value === "true") {
+                        parent.find('#passwordTip').show()
+                    } else {
+                        parent.find('#passwordTip').hide()
+                    }
+                });
+                form.on('radio(sysTipOpen)', function (data) {
+                    if (data.value === "true") {
+                        parent.find('#sysTipOpenArea').show()
+                    } else {
+                        parent.find('#sysTipOpenArea').hide()
+                    }
+                });
+            }
+        };
+
+        table.render(common.tableInitParams({
+            elem: '#table1',
+            url: baseUrl+'compmgr/webComponent/pageTopWebComponent',
+            method: 'post',
+            // data:resData,
+            height:'full-200',
+            toolbar: '#tableToolBar',
+            cols: [
+                [
+                    {type:'checkbox'},
+                    {"type":"numbers", "title":"序号"},
+                    {field: 'wumiChname', title: '主题名称', sort: true},
+                    {field: 'ggEnStatus', title: '是否启用',sort:true,
+                        templet: function(rowData) {
+                            return (rowData["ggEnStatus"]=="0") ? '否' : '是';
+                        }
+                    },
+                    {field: '', title: '操作', width: 200, toolbar: '#tableOper', fixed: 'right'},
+                ]
+            ],
+            page:pageInitialParam,
+            where:{paras:{wtmiTypecode:"navComp"}},
+            request:pageRequest,
+            done:function () {
+                common.buttonLimit();
+            }
+        }));
+
+
+        //table监听事件
+        table.on('toolbar(table1)',function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch(obj.event) {
+                case 'add':
+                    var defaultClose = true, themeInvert, globalTheme = false;
+                    var addLayer = layer.open({
+                        title: '新增',
+                        type: 1,
+                        content: $('#themeConfigArea').html(),
+                        area: ['80%', '90%'],
+                        offset: 10,
+                        shadeClose: false,
+                        btn: ['<i class="fa fa-check-circle"></i>确定', '<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>取消'],
+                        btnAlign: 'c',
+                        success: function (obj) {
+                            var parent = $(obj.selector);
+                            form.render();
+                            eventHandle.gloThemeFuc(parent);
+                            form.on('switch(defaultClose)', function (data) {
+                                defaultClose = data.elem.checked;
+
+                            });
+                            form.on('switch(themeInvert)', function (data) {
+                                themeInvert = data.elem.checked;
+                            });
+                            form.on('switch(globalTheme)', function (data) {
+
+                                if (!!data.elem.checked) {
+                                    parent.find('.globalTheme').hide();
+                                    parent.find('.customArea').show();
+                                    globalTheme = false;
+                                } else {
+                                    parent.find('.customArea').hide();
+                                    parent.find('.globalTheme').show();
+                                    globalTheme = true;
+                                }
+
+                            });
+                        },
+                        yes: function (index, obj) {
+                            var parent = $(obj.selector);
+
+                            //获取全局配置
+                            var params = [{
+                                tempId: "3c8ce92924ce4c10b84ea5b670bd65ad",
+                                prop: {},
+                                parentCompId: "-1",
+                                compId: common.uuid(),
+                                enable: 0
+                            }];
+                            params[0].compName = parent.find('[name=compName]').val();
+                            params[0].memo = parent.find('[name=memo]').val();
+
+                            params[0].prop = {
+                                tabMenuMethod: (parent.find('[name=tabMenuMethod]:checked').val() === 'tab') ? true : false,
+                                defaultClose: defaultClose,
+                                themeInvert: themeInvert,
+                                memo: parent.find('[name=memo]').val(),
+                                primaryColor: parent.find('.primaryColorArea ul li.selected').attr('data-primary'),
+                                menuTheme: parent.find('.mainThemeArea ul li.selected').attr('data-menutheme'),
+                                sysTitleSet: {
+                                    name: parent.find('[name=sysTitleName]').val(),
+                                    logo: parent.find('[name=logo]').val(),
+                                    ico: parent.find('[name=ico]').val(),
+                                    logOutArea: parent.find('[name=logOutArea]:checked').val(),
+                                    subTitleOpen: parent.find('[name=subTitleOpen]:checked').val(),
+                                    subTitleArea: parent.find('[name=subTitleArea]').val(),
+                                    themeSetShow: parent.find('[name=themeSetShow]').val(),
+                                    subTitleType: parent.find('[name=subTitleType]').val()
+                                },
+                                sysTipsSet: {
+                                    name: parent.find('[name=sysTipName]').val(),
+                                    open: parent.find('[name=sysTipOpen]:checked').val(),
+                                    initialPasswordOpen: parent.find('[name=initialPasswordOpen]:checked').val(),
+                                    initialPassword: parent.find('[name=initialPassword]').val()
+                                },
+                                globalTheme: !!globalTheme ? parent.find('.globalTheme ul li.selected').attr('data-globTheme') : false
+                            };
+
+                            var layerLoader = common.layerLoader();//正在加载
+
+                            common.fetchPost('compmgr/webComponent/componentInfo', params, function (res) {
+                                if (res.success) {
+                                    layer.msg('提交成功！！', {icon: 6});
+                                    layer.close(addLayer);
+                                    //刷新表格
+                                    table.reload('table1', {
+                                        url: baseUrl + 'compmgr/webComponent/pageTopWebComponent',
+                                        method: 'post',
+                                        contentType: 'application/json',
+                                        page: {
+                                            curr: 1
+                                        }
+                                    });
+                                } else {
+                                    layer.msg("提交失败," + res['resultMessage'], {
+                                        icon: 5,
+                                        time: 5000
+                                    });
+                                }
+
+                                layer.close(layerLoader);
+                            }, function () {
+                                layer.close(layerLoader);
+                                layer.msg('提交失败，请重试!!!', {icon: 5});
+                            });
+                        }
+                    });
+                    break;
+                case 'delete':
+                    //点击删除按钮
+                    if (checkStatus.data.length > 0) {
+                        layer.confirm('确定删除选中列?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                            var tIdArr = [];
+
+                            for (var i = 0; i < checkStatus.data.length; i++) {
+                                if(checkStatus.data[i].ggEnStatus==1){
+                                    layer.msg('包含已启用模板，不可删除!,请去除勾选');
+                                    return false;
+                                }
+                                else{
+                                    tIdArr.push(checkStatus.data[i]['wumiId']);
+                                }
+                            }
+                            var layerLoader = common.layerLoader();
+                            common.fetchDelete('compmgr/webComponent/topWebComponent?compIds=' + tIdArr.join(','),function (res) {
+                                // layer.alert(res.resultMessage);
+                                if(res.success){
+                                    layer.close(layerLoader);
+                                    eventHandle.tableReload();
+                                }else{
+                                    layer.msg('删除失败');
+                                }
+                            }, function (res) {
+                                layer.msg('删除失败');
+                                layer.close(layerLoader);
+                            });
+                            layer.close(index);
+                        });
+                    } else {
+                        layer.msg('请选择删除列')
+                    }
+                    break;
+            }
+        });
+
+        // table row 监听事件
+        table.on('tool(table1)', function(obj){
+            var data = obj.data;
+            var ggEnStatus = data.ggEnStatus;
+            switch(obj.event){
+                case 'singleDel':
+                    if(data.ggEnStatus==1){
+                        layer.msg('当前模板已启用，不可删除!');
+                        return false;
+                    }
+                    var selectId = data.wumiId;
+                    layer.confirm('确定删除?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                        var layerLoader = common.layerLoader();
+                        common.fetchDelete('compmgr/webComponent/topWebComponent?compIds='+selectId,function (res) {
+                            layer.close(layerLoader);
+                            if(res.success){
+                                eventHandle.tableReload();
+                                layer.msg('删除成功');
+                            }else{
+                                layer.msg('删除成功')
+                            }
+                        }, function () {
+                            layer.close(layerLoader);
+                        });
+
+                        layer.close(index);
+                    });
+                    break;
+                case 'singleEnable':
+                    if(data.ggEnStatus==1){
+                        layer.msg('已启用，请勿重复点击');
+                        return false;
+                    }
+                    var selectId = data.wumiId;
+                    layer.confirm('确定启用?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                        var layerLoader = common.layerLoader();
+                        common.fetchGet('compmgr/webComponent/enableTopWebComponent?compId='+selectId+'&enable=true&type=navComp',function (res) {
+                            layer.close(layerLoader);
+                            if(res.success){
+                                eventHandle.tableReload();
+
+                                //删除主题cookie信息
+                                common.setCookie('themeSet', false);
+                                layer.msg('启用成功');
+                                top.location.reload();
+                            }else{
+                                layer.msg('启用失败');
+                            }
+                        }, function (err) {
+
+                            layer.close(layerLoader);
+                        });
+                        layer.close(index);
+                    });
+                    break;
+                case 'edit':
+                    var defaultClose, themeInvert, globalTheme = false;
+                    var themeLayer = layer.open({
+                        title: '编辑',
+                        type: 1,
+                        content: $('#themeConfigArea').html(),
+                        area: ['80%', '90%'],
+                        offset: 10,
+                        shadeClose: false,
+                        btn: ['<i class="fa fa-check-circle"></i>确定', '<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>取消'],
+                        btnAlign: 'c',
+                        success: function (obj) {
+                            var parent = $(obj.selector);
+                            form.render();
+                            var compId = data.wumiId;
+
+                            eventHandle.gloThemeFuc(parent);
+
+                            common.fetchGet('compmgr/webComponent/componentInfo?compId=' + compId, function (res) {
+                                defaultThemeParams = res;
+                                var data = res.list[0] || {};
+
+                                colorpicker.render({
+                                    elem: parent.find('#colorAll'),
+                                    color: 'rgba(0,0,0)',
+                                    format: 'rgb',
+                                    predefine: true,
+                                    alpha: true,
+                                    done: function (color) {
+                                        $('#colorAll-input').val(color); //向隐藏域赋值
+                                        layer.tips('设置了颜色值：' + color, this.elem);
+
+                                        color || this.change(color); //清空时执行 change
+                                    },
+                                    change: function (color) {
+                                        //给当前页面头部和左侧设置主题色
+                                        $('.header-demo,.layui-side .layui-nav').css('background-color', color);
+                                    }
+                                });
+
+                                // form.render('radio');
+                                //基础信息
+                                form.val("defaultForm", {
+                                    "tabMenuMethod": (data.prop.tabMenuMethod ? "tab" : 'bread'),
+                                    "compName": data.compName,
+                                    "defaultClose": data.prop.defaultClose,
+                                    "themeInvert": data.prop.themeInvert,
+                                    "memo": data.memo,
+                                    "globalTheme": !data.prop.globalTheme
+                                });
+                                globalTheme = data.prop.globalTheme;
+                                defaultClose = data.prop.defaultClose;
+
+                                //告警信息
+                                form.val("sysTipForm", {
+                                    "sysTipOpen": data.prop.sysTipsSet.open,
+                                    "sysTipName": data.prop.sysTipsSet.name,
+                                    "initialPasswordOpen": data.prop.sysTipsSet.initialPasswordOpen,
+                                    "initialPassword": data.prop.sysTipsSet.initialPassword
+                                });
+                                //标题信息
+                                form.val("sysTitleForm", {
+                                    sysTitleName: data.prop.sysTitleSet.name,
+                                    logo: data.prop.sysTitleSet.logo,
+                                    ico: data.prop.sysTitleSet.ico,
+                                    logOutArea: data.prop.sysTitleSet.logOutArea,
+                                    themeSetShow: data.prop.sysTitleSet.themeSetShow,
+                                    subTitleOpen: data.prop.sysTitleSet.subTitleOpen,
+                                    subTitleArea: data.prop.sysTitleSet.subTitleArea ? data.prop.sysTitleSet.subTitleArea : '1',
+                                    subTitleType: data.prop.sysTitleSet.subTitleType ? data.prop.sysTitleSet.subTitleType : '1'
+                                });
+
+                                if (data.prop.sysTipsSet.open === 'true') {
+                                    parent.find('#sysTipOpenArea').show()
+                                } else {
+                                    parent.find('#sysTipOpenArea').hide()
+                                }
+
+                                if (data.prop.sysTipsSet.initialPasswordOpen === 'true') {
+                                    parent.find('#passwordTip').show()
+                                } else {
+                                    parent.find('#passwordTip').hide()
+                                }
+
+                                if (!data.prop.sysTitleSet.subTitleOpen || data.prop.sysTitleSet.subTitleOpen === "1") {
+                                    parent.find('#subTitleArea').show()
+                                } else {
+                                    parent.find('#subTitleArea').hide()
+                                }
+
+                                parent.find('.primaryColorArea ul li').siblings().removeClass('selected');
+                                if (parent.find('[data-primary=' + data.prop.primaryColor + ']')[0]) {
+                                    parent.find('[data-primary=' + data.prop.primaryColor + ']').addClass('selected');
+                                }
+                                parent.find('.mainThemeArea ul li').siblings().removeClass('selected');
+                                parent.find('[data-menutheme=' + data.prop.menuTheme + ']').addClass('selected');
+
+
+                                //自定义配置，已设置主题配置
+                                if (!data.prop.globalTheme) {
+                                    parent.find('.globalTheme').hide();
+                                    parent.find('.customArea').show();
+
+                                } else {
+                                    parent.find('.globalTheme').show();
+                                    parent.find('.customArea').hide();
+                                    parent.find('.globalTheme ul li').siblings().removeClass('selected');
+                                    parent.find('[data-globTheme=' + data.prop.globalTheme + ']').addClass('selected');
+                                }
+
+                                form.render();
+                                form.on('switch(defaultClose)', function (data) {
+                                    defaultClose = data.elem.checked;
+                                });
+                                form.on('switch(themeInvert)', function (data) {
+                                    themeInvert = data.elem.checked;
+                                });
+                                form.on('switch(globalTheme)', function (data) {
+
+                                    if (!!data.elem.checked) {
+                                        parent.find('.globalTheme').hide();
+                                        parent.find('.customArea').show();
+                                        globalTheme = false;
+                                    } else {
+                                        parent.find('.customArea').hide();
+                                        parent.find('.globalTheme').show();
+                                        globalTheme = true;
+                                    }
+
+                                });
+
+                            });
+
+                        },
+                        yes: function (index, obj) {
+                            var parent = $(obj.selector);
+                            //获取全局配置
+                            var params = [];
+                            params.push(defaultThemeParams.list[0]);
+                            params[0].compName = parent.find('[name=compName]').val();
+                            params[0].memo = parent.find('[name=memo]').val();
+
+
+                            params[0].prop = {
+                                tabMenuMethod: (parent.find('[name=tabMenuMethod]:checked').val() === 'tab') ? true : false,
+                                defaultClose: defaultClose,
+                                themeInvert: themeInvert,
+                                memo: parent.find('[name=memo]').val(),
+                                primaryColor: parent.find('.primaryColorArea ul li.selected').attr('data-primary'),
+                                menuTheme: parent.find('.mainThemeArea ul li.selected').attr('data-menutheme'),
+                                sysTitleSet: {
+                                    name: parent.find('[name=sysTitleName]').val(),
+                                    logo: parent.find('[name=logo]').val(),
+                                    ico: parent.find('[name=ico]').val(),
+                                    logOutArea: parent.find('[name=logOutArea]:checked').val(),
+                                    themeSetShow: parent.find('[name=themeSetShow]:checked').val(),
+                                    subTitleOpen: parent.find('[name=subTitleOpen]:checked').val(),
+                                    subTitleArea: parent.find('[name=subTitleArea]').val(),
+                                    subTitleType: parent.find('[name=subTitleType]').val()
+                                },
+                                sysTipsSet: {
+                                    name: parent.find('[name=sysTipName]').val(),
+                                    open: parent.find('[name=sysTipOpen]:checked').val(),
+                                    initialPasswordOpen: parent.find('[name=initialPasswordOpen]:checked').val(),
+                                    initialPassword: parent.find('[name=initialPassword]').val()
+                                },
+                                globalTheme: !!globalTheme ? parent.find('.globalTheme ul li.selected').attr('data-globTheme') : false
+                            };
+
+                            var layerLoader = common.layerLoader();//正在加载
+
+                            common.fetchPost('compmgr/webComponent/componentInfo', params, function (res) {
+
+
+                                if (res.success) {
+                                    layer.msg('提交成功！！！', {icon: 6});
+                                    //刷新表格
+                                    table.reload('table1', {
+                                        url: baseUrl + 'compmgr/webComponent/pageTopWebComponent',
+                                        method: 'post',
+                                        contentType: 'application/json',
+                                        page: {
+                                            curr: 1
+                                        }
+                                    });
+
+                                } else {
+                                    layer.msg("提交失败," + res['resultMessage'], {
+                                        icon: 5,
+                                        time: 5000
+                                    });
+                                }
+
+                                layer.close(themeLayer);
+                                layer.close(layerLoader);
+                            }, function () {
+                                layer.close(layerLoader);
+                                layer.msg('提交失败，请重试!!!', {icon: 5});
+                            });
+
+                        }
+                    });
+                    break;
+            }
+        });
+        //查询
+        form.on('submit(formSearch)',function (obj) {
+            var name=obj.field.wumiChname;
+            table.reload('table1',{
+                page:{
+                    curr:0
+                },
+                where:{
+                    paras:{
+                        wumiChname:name,
+                        wtmiTypecode:"navComp",
+                        ggEnStatus: obj.field.ggEnStatus
+                    }
+                }
+            });
+            return false;
+        });
+    });
+</script>
+<!--[if lt IE 9]>
+    <script src="../../js/lib/html5.min.js"></script>
+    <script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

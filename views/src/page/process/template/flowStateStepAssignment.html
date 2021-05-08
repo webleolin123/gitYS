@@ -1,0 +1,82 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"  pageEncoding="UTF-8"%>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META http-equiv=Content-Type content="text/html; charset=utf-8">
+	<TITLE>配置步骤指派</TITLE>
+	<META NAME="Author" CONTENT="Witson">
+	<link rel="stylesheet" type="text/css" href="../images/style.css"/>
+</HEAD>
+<script type="text/javascript">
+var strTem=self.location.href;
+strTem = strTem.substr(strTem.indexOf('.jsp?parVal=')+12);
+var idx=parseInt(strTem);
+
+function funOK(){
+	var sXML='';
+  sXML += '<assignment type="com.yr.gap.engine.core.assignment.StepAssignment">\n';
+  sXML += '	<arg name="stepid">'+jsfw.$('stepid').value+'</arg>\n';
+  sXML += ' <arg name="encorname">'+jsfw.$('encorname').value+'</arg>\n';
+  sXML += '</assignment>';
+	parent.addStateAssignment_After(sXML,idx);
+	parent.closeDialog(self);
+}
+
+function loadData(){
+	var sHTML='<select id="stepid">';
+	var oFlow = parent.oFlow;
+	var oNodes = oFlow.getRoot().childNodes;
+	for (var i=0; i<oNodes.length; i++){
+		if ((oFlow.getNodeType(oNodes[i])=='state') || (oFlow.getNodeType(oNodes[i])=='join-state') || (oFlow.getNodeType(oNodes[i])=='junction') || (oFlow.getNodeType(oNodes[i])=='compete-exe-state')){
+			sHTML += '<option value="'+oNodes[i].getAttribute('sid')+'">'+oNodes[i].getAttribute('name')+'</option>';
+		}
+	}
+	sHTML += '</select>';
+	jsfw.$('td_stepid').innerHTML = sHTML;
+	if (idx==-1) return;
+	var oNode = parent.oFlow.getCurrentObj();
+	var oNodes= oNode.selectNodes('assignment')[idx].selectNodes('arg');
+	try{
+		jsfw.$('stepid').value = oNodes[0].text;
+	}catch(e){}
+	for (var i=0; i<oNodes.length; i++){
+		try{
+			jsfw.$(oNodes[i].getAttribute('name')).value = oNodes[i].text;
+		}catch(e){}
+	}
+}
+</script>
+
+<BODY loadWebUI="Toolbar" scroll="no" onload="loadData()">
+
+<table width="100%" style="table-layout:fixed;height:100%" border="0" cellpadding="0" cellspacing="0">
+	<tr>
+		<td height="28">
+			<div class="Toolbar" style="padding-left:10px;">
+			<xmp style="display:none">
+				<root>
+					<item text="确定" icon="../images/icon/check.gif" action="funOK();"/>
+					<item text="取消" icon="../images/icon/close.gif" action="parent.closeDialog(self);"/>
+				</root>
+			</xmp>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td valign="top" align="center" style="padding-top:25px;">
+			<table border="0" cellpadding="3" cellspacing="0">
+				<tr>
+					<td>环节</td>
+					<td id="td_stepid"></td>
+				</tr>
+				<tr>
+					<td>单位列表</td>
+					<td><input type="text" id="encorname"/></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+</BODY>
+</HTML>
+<script type="text/javascript" src="../jsfw/boot.js" loadClass="" loadPrototype="Array" loadWebUI="" Theme="Default"></script>

@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html  class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>在用模板</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../js/layui/css/layui.css"/>
+    <link href="../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script charset="utf-8" src="../../js/common/plugin.js"></script>
+</head>
+<!--添加按钮中的弹框-->
+<div class="addLayer hide">
+    <div style="padding: 15px 20px;overflow-y:auto;overflow-x:hidden">
+        <form class="layui-form layui-form-pane" name="addLayer">
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>流程名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>流程标识</label>
+                <div class="layui-input-block">
+                    <input type="text" name="label" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>版本</label>
+                <div class="layui-input-block">
+                    <input type="number" name="version" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item adapt">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formAdd" permission-btn="processSaveBtnInfo"> <i class="layui-icon">&#x1005;</i>保存</button>
+                    <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!--按钮信息中的弹框-->
+<div class="menuBtnLayer hide">
+    <div style="padding: 15px 20px;height:500px;overflow-y:auto;overflow-x:hidden">
+        <form class="layui-form layui-form-pane" name="menuBtnLayer">
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="smbName" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>编码</label>
+                <div class="layui-input-block">
+                    <input type="text" name="smbCode" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>序号</label>
+                <div class="layui-input-block">
+                    <input type="number" name="ggSort" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">类型</label>
+                <div class="layui-input-block">
+                    <select name="smbType"  required id="smbType">
+                        <option value="">请选择</option>
+                        <option value="system">系统</option>
+                        <option value="business">业务</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">地址</label>
+                <div class="layui-input-block">
+                    <input type="text" name="smbUrl" required placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item adapt">
+                <div class="layui-input-block">
+                    <button title="提交" class="layui-btn" lay-submit
+                        lay-filter="saveSysMenuBtnInfo"
+                        authCode="saveSysMenuBtnInfo"
+                        permission-btn="processSaveButton">
+                        <i class="layui-icon">&#xe605;</i>提交
+                    </button>
+                    <button title="重置" type="reset"
+                        class="layui-btn layui-btn-primary">
+                        <i class="layui-icon">&#xe666;</i>重置
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!--迁移节点 弹框-->
+<div class="moveNodeLayer hide">
+    <div style="padding: 15px 20px;">
+        <form class="layui-form layui-form-pane" name="moveNodeLayer">
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width:100%">当前已勾选二级节点</label>
+                <div class="layui-input-block" style="margin-left:0;left:0">
+                    <textarea name="gNode" placeholder="请输入" class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width:130px;">选择一级节点</label>
+                <div class="layui-input-block" style="margin-left:130px;">
+                    <select name="fNode"  id="fNode" lay-verify="required">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-form-item adapt">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formAdd" permission-btn="processSaveBtnInfo"> <i class="layui-icon">&#x1005;</i>保存</button>
+                    <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<body class="iframe-h">
+<div class="content-wrap">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+            <!-- layui tree-->
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>流程引擎树</span><div class="columnSide"><i class="fa fa-toggle-left"></i></div></div>
+                <div class="layui-card-body" style="height: 500px;overflow-y: auto;">
+                    <div class="layuiTree eleTree ele4" id="leftTree"  lay-filter="leftTree"></div>
+                    <!--<ul id="leftTree" class="layuiTree"></ul>-->
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>在用流程模板列表</span></div>
+                <div class="layui-card-body">
+                    <form action="" class="layui-form layui-form-pane">
+                        <div class="layui-row layui-col-space10">
+                            <div class="layui-col-md4">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">模板名称</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="qsdName" placeholder="请输入名称" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md4">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">模板标签</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="qsdName" placeholder="请输入名称" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="toggle-area layui-col-space10">
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">模板标本</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="qsdName" placeholder="请输入名称" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">公司版本</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="qsdName" placeholder="请输入名称" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="" style="text-align: center;margin-bottom: 5px">
+                                <button class="layui-btn" lay-submit lay-filter="formSearch" permission-btn="processSearchBtn"><i class="fa fa-search"></i>查询</button>
+                                <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                                 <!-- // 修改3 -->
+                                 <a class="toggle-btn">
+                                    <span>展开</span>
+                                    <i class="fa fa-angle-up"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="layui-card">
+                <div class="layui-card-body" style="padding-top: 0">
+                    <table id="table1" lay-filter="table1"></table>
+                    <script type="text/html" id="tableToolBar">
+                        <div class="layui-btn-container">
+                            <!-- <button class="layui-btn layui-btn-sm" lay-event="add" permission-btn="addSysMenuButton">
+                                    <i class="layui-icon">&#xe608;</i> 新增
+                            </button> -->
+                            <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete" permission-btn="processDeleteButton">
+                                <i class="layui-icon">&#xe640;</i> 删除
+                            </button>
+                            <!-- <button class="layui-btn layui-btn-sm" lay-event="fgdlModule" permission-btn="addSysMenuButton">
+                                <i class="layui-icon">&#xe608;</i> 覆盖导入模块
+                            </button>
+                            <button class="layui-btn layui-btn-sm" lay-event="dbdcModule" permission-btn="deleteSysMenuButton">
+                                <i class="layui-icon">&#xe640;</i> 打包导出模块
+                            </button>
+                            <button class="layui-btn layui-btn-sm" lay-event="bsModule" permission-btn="addSysMenuButton">
+                                <i class="layui-icon">&#xe608;</i> 部署模块
+                            </button>
+                            <button class="layui-btn layui-btn-sm" lay-event="fgbsModule" permission-btn="deleteSysMenuButton">
+                                <i class="layui-icon">&#xe640;</i> 覆盖部署模块
+                            </button> -->
+                        </div>
+                    </script>
+
+                    <!-- <script type="text/html" id="tableOper">
+                        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                        <a class="layui-btn layui-btn-xs" lay-event="singleDel">删除</a>
+                    </script> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="./../../js/layui/layui.js"></script>
+<script>
+
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).extend({}).use(['eleTree', 'layer', 'table', 'form', 'laytpl', 'common', 'element', 'util'], function () {
+        var table=layui.table;
+        var form=layui.form;
+        var tree=layui.eleTree;
+        var common=layui.common;
+        var element = layui.element;
+        var util = layui.util;
+        element.init();
+        var baseUrl='../../../';
+        common.themeSet();
+        common.toggleArea($('.toggle-btn'),$('.toggle-area'));
+        //按钮权限
+        // common.buttonLimit($("#currentMenuSmId",window.parent.document).val(),function (res) {
+            //输入所有可操作的按钮集合
+            // var list=res['list']?res['list']:[];
+
+        // });
+
+        var eleTreeId;
+        var currentEnterpriseId=null;//用于保存当前table的ID
+        var currentPid=null;//用于保存当前table的ID
+        var pageInitialParam = {
+            pageNum : 1,
+            pareSize : 10,
+            curr:1
+        };
+
+        var eventHandle={
+            treeInit: function () {
+                eleTreeId = tree.render({
+                    elem: '#leftTree',
+                    url: baseUrl+'sysmgr/sysEnterprise/selectSysEnterpriseOrganPostTreeAllList?treeType=enterpriseTree',
+                    done: function(data){
+                        $('#leftTree .eleTree-node-content').each(function () {
+                            $(this).click();
+                        });
+                    },
+                    lazy: true,
+                    load: function(data,callback) {
+                        currentEnterpriseId = data.id;
+                        eventHandle.tableInit();
+                        common.fetchGet(baseUrl+'sysmgr/sysEnterprise/selectSysEnterpriseOrganPostTreeAllList?treeType=enterpriseTree' + '&id=' + data.id + "&extendAttr=" + data.extendAttr,function (res) {
+                            if(res.success && res.list){
+                                callback(res.list);
+                            }
+                        },function () {
+                            callback([])
+                        });
+
+                    },
+                    response: {// 对于后台数据重新定义名字
+                        dataName: "list"
+                    },
+                });
+                tree.on("nodeClick(leftTree)", function (obj) {
+                    //表格重载
+                    currentEnterpriseId = obj.data.currentData.id;
+                    eventHandle.tableReload();
+                });
+            },
+            tableInit:function(){
+                table.render(common.tableInitParams({
+                    elem: '#table1',
+                    url: baseUrl+'flowEngine/engineTemplate/queryProcessTemplatePage',
+                    method:'post',
+                    toolbar:'#tableToolBar',
+                    cols: [
+                        [
+                            {type:'checkbox'},
+                            {field: 'name', title: '模板名称',sort:true},
+                            {field: 'label', title: '模板标签',sort:true},
+                            {field: 'version', title: '模板标本',sort:true},
+                            {field: 'orgId', title: '企业ID',sort:true},
+                            {field: 'deploytime', title: '修改时间',sort:true,templet:function (rowData) {
+                                return util.toDateString(rowData['deploytime']);
+                                }
+                            },
+                            {field: '', title: '操作', toolbar:'#tableOper'},
+                        ]
+                    ],
+                    page: pageInitialParam,
+                    where:{
+                        orgId:currentEnterpriseId
+                    }
+                }));
+            },
+            tableReload:function (params) {
+                table.reload('table1',{
+                    url: baseUrl+'flowEngine/engineTemplate/queryProcessTemplatePage',
+                    method:'post',
+                    page:pageInitialParam,
+                    where:{
+                        orgId:currentEnterpriseId
+                    }
+
+                });
+            },
+            dictInit:function(elem,url,selVal,selText, selectedVal){
+                var option = {
+                        elem: elem,
+                        url: url,
+                        method: 'get',
+                        responseList: 'list',
+                        optionText: selText,
+                        optionValue: selVal,
+                        success: function(obj) {
+                            $(elem).val(selectedVal);
+                            form.render("select");
+                        }
+                    }
+                common.selectDataSet(option);
+            }
+        };
+
+        //初始化树
+        eventHandle.treeInit();
+
+        //table监听事件
+        table.on('toolbar(table1)',function (obj) {
+
+            var checkStatus = table.checkStatus(obj.config.id);
+            // var data = obj.data;
+            var data = obj.config;
+            switch(obj.event){
+                case 'delete':
+                    //点击删除按钮
+                    if(checkStatus.data.length>0){
+                        layer.confirm('确定删除选中列?', {icon: 3, title:'提示',offset: '150px'}, function(index){
+                            var flowArr=[];
+                            for(var i=0;i<checkStatus.data.length;i++){
+                                var flowData = checkStatus.data[i];
+                                var flow = {
+                                    label:flowData.label,
+                                    version:flowData.version,
+                                    orgId:flowData.orgId
+                                }
+                                flowArr.push(flow);
+                                // flowArr.push(flowData.label + '@' + flowData.version + '@' + flowData.orgId)
+                            }
+
+                            var layerLoader =common.layerLoader();
+                            common.fetchPost('flowEngine/engineTemplate/delProcessTemplate',
+                            flowArr,function (res) {
+                                layer.close(layerLoader);
+                                //成功之后刷新tree 以及表格
+                                if(res.success){
+                                    eventHandle.tableReload();
+                                    layer.msg('删除成功');
+                                }else{
+                                    layer.alert(res.resultMessage);
+                                }
+                            },function () {
+                                layer.close(layerLoader);
+                            });
+
+                            layer.close(index);
+                        });
+                    }else{
+                        layer.msg('请选择删除列')
+                    }
+                    break;
+            }
+        });
+        //查询
+         //查询
+         form.on('submit(formSearch)',function (obj) {
+            var name=obj.field.name;
+            var label = obj.field.label;
+            var whereParam = {};
+            if(name){
+                whereParam['name'] = name;
+            }else{
+                whereParam['name'] = '';
+            }
+            if(label){
+                whereParam['label'] = label;
+            }else{
+                whereParam['label'] = '';
+            }
+            //表格重载
+            table.reload('table1',{
+                url: baseUrl+'flowEngine/engineTemplate/queryProcessTemplatePage',
+                method:'post',
+                page:{
+                    curr:1
+                },
+                where:whereParam
+            });
+            return false;
+        });
+        common.columnSide();
+
+        // common.buttonLimit($("#currentMenuSmId",window.parent.document).val());
+    });
+
+
+
+</script>
+
+<!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

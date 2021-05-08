@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html  class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>新增模板</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../js/layui/css/layui.css"/>
+    <link href="../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script charset="utf-8" src="../../js/common/plugin.js"></script>
+</head>
+<!--添加按钮中的弹框-->
+<div class="addLayer hide">
+    <div style="padding: 15px 20px;overflow-y:auto;overflow-x:hidden">
+        <form class="layui-form layui-form-pane" name="addLayer">
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>流程名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>流程标识</label>
+                <div class="layui-input-block">
+                    <input type="text" name="label" required  lay-verify="required|label" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>版本</label>
+                <div class="layui-input-block">
+                    <input type="text" name="version" required value='1.0.0' lay-verify="required|version" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item adapt">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formAdd" permission-btn="processSaveBtnInfo"> <i class="layui-icon">&#x1005;</i>保存</button>
+                    <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="deployTemplate hide">
+    <div style="padding: 15px 20px;overflow-y:auto;overflow-x:hidden">
+        <div class="layui-card-body" style="padding-top: 0">
+            <table id="deployTable"  lay-filter="deployTable" ></table>
+
+        </div>
+    </div>
+</div>
+
+<!--按钮信息中的弹框-->
+<body class="iframe-h">
+<div class="content-wrap">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+            <!-- layui tree-->
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>流程引擎树</span><div class="columnSide"><i class="fa fa-toggle-left"></i></div></div>
+                <div class="layui-card-body" style="height: 500px;overflow-y: auto;">
+                    <div class="layuiTree eleTree ele4" id="leftTree"  lay-filter="leftTree"></div>
+                    <!--<ul id="leftTree" class="layuiTree"></ul>-->
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>Web建模列表</span></div>
+                <div class="layui-card-body">
+                    <form action="" class="layui-form layui-form-pane">
+                        <div class="layui-row layui-col-space10">
+                            <div class="layui-col-md4">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">模板名称</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="name" placeholder="请输入名称" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md4">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">模板标签</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="label" placeholder="请输入名称" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="" style="text-align: center;margin-bottom: 5px">
+                                <button class="layui-btn" lay-submit lay-filter="formSearch" permission-btn="processSearchBtn"><i class="fa fa-search"></i>查询</button>
+                                <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                                 <!-- // 修改3 -->
+                                 <a class="toggle-btn">
+                                    <span>展开</span>
+                                    <!-- <i class="fa fa-angle-up"></i> -->
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="layui-card">
+                <div class="layui-card-body" style="padding-top: 0">
+                    <table id="table1" lay-filter="table1"></table>
+                    <script type="text/html" id="tableToolBar">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-sm" lay-event="add" permission-btn="processAddButton">
+                                    <i class="layui-icon">&#xe608;</i> 新增
+                            </button>
+                            <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete" permission-btn="processDeleteButton">
+                                <i class="layui-icon">&#xe640;</i> 删除
+                            </button>
+                            <button class="layui-btn layui-btn-sm" style='display:none'  lay-event="fgdlModule" permission-btn="processFhdlModuleButton">
+                                <i class="layui-icon">&#xe625;</i> 覆盖导入模块
+                            </button>
+                            <button class="layui-btn layui-btn-sm" style='display:none'  lay-event="dbdcModule" permission-btn="processDbdcModuleButton">
+                                <i class="layui-icon">&#xe623;</i> 打包导出模块
+                            </button>
+                            <button class="layui-btn layui-btn-sm" lay-event="bsModule" permission-btn="processBsModuleButton">
+                                <i class="layui-icon">&#xe705;</i> 部署模块
+                            </button>
+                            <button class="layui-btn layui-btn-sm" lay-event="fgbsModule" permission-btn="processFgbsModuleButton">
+                                <i class="layui-icon">&#xe656;</i> 覆盖部署模块
+                            </button>
+                        </div>
+                    </script>
+
+                    <script type="text/html" id="tableOper">
+                        <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="design" permission-btn="designButton">设计建模</a>
+                        <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="singleDel" permission-btn="singleDelButton">删除</a>
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="./../../js/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).extend({}).use(['eleTree', 'layer', 'table', 'form', 'laytpl', 'common', 'element', 'util'], function () {
+
+        var table=layui.table;
+        var form=layui.form;
+        var tree=layui.eleTree;
+        var common=layui.common;
+        var element = layui.element;
+        var util = layui.util;
+        element.init();
+        var baseUrl='../../../';
+        common.themeSet();
+        common.toggleArea($('.toggle-btn'),$('.toggle-area'));//查询条件面版收缩
+        //按钮权限
+        // common.buttonLimit($("#currentMenuSmId",window.parent.document).val(),function (res) {
+            //输入所有可操作的按钮集合
+            // var list=res['list']?res['list']:[];
+
+        // });
+
+
+        var business  = 'catalogueApply';
+        var eleTreeId;
+        var currentEnterpriseId=null;//用于保存当前table的ID
+        var currentPid=null;//用于保存当前table的ID
+        var pageInitialParam = {
+            pageNum : 1,
+            pareSize : 10,
+            curr:1
+        };
+
+        var eventHandle={
+            treeInit: function () {
+                eleTreeId = tree.render({
+                    elem: '#leftTree',
+                    url: baseUrl+'sysmgr/sysEnterprise/selectSysEnterpriseOrganPostTreeAllList?treeType=enterpriseTree',
+                    done: function(data){
+                        $('#leftTree .eleTree-node-content').each(function () {
+                            $(this).click();
+                        });
+                    },
+                    lazy: true,
+                    load: function(data,callback) {
+                        currentEnterpriseId = data.id;
+                        eventHandle.tableInit();
+                        common.fetchGet(baseUrl+'sysmgr/sysEnterprise/selectSysEnterpriseOrganPostTreeAllList?treeType=enterpriseTree' + '&id=' + data.id + "&extendAttr=" + data.extendAttr,function (res) {
+                            if(res.success && res.list){
+                                callback(res.list);
+                            }
+                        },function () {
+                            callback([])
+                        });
+
+                    },
+                    response: {// 对于后台数据重新定义名字
+                        dataName: "list"
+                    },
+                });
+                tree.on("nodeClick(leftTree)", function (obj) {
+                    //表格重载
+                    currentEnterpriseId = obj.data.currentData.id;
+                    eventHandle.tableReload();
+                });
+            },
+            tableInit:function(){
+                table.render(common.tableInitParams({
+                    elem: '#table1',
+                    url: baseUrl+'flowEngine/engineTemplate/queryModelTemplatePage',
+                    // contentType:'text/plain',
+                    method:'post',
+                    // data:resData,
+                    toolbar:'#tableToolBar',
+                    cols: [
+                        [
+                            {type:'checkbox'},
+                            {field: 'name', title: '模板名称',sort:true},
+                            {field: 'label', title: '模板标签',sort:true},
+                            {field: 'version', title: '模板标本',sort:true},
+                            {field: 'orgId', title: '企业ID',sort:true},
+                            {field: 'deploytime', title: '修改时间',sort:true,templet:function (rowData) {
+                                return util.toDateString(rowData['deploytime']);
+                                }
+                            },
+                            {field: '', title: '操作', toolbar:'#tableOper'},
+                        ]
+                    ],
+                    page: pageInitialParam,
+                    where:{
+                        orgId:currentEnterpriseId
+                    }
+                }));
+            },
+            tableReload:function (params) {
+                table.reload('table1',{
+                    url: baseUrl+'flowEngine/engineTemplate/queryModelTemplatePage',
+                    method:'post',
+                    page:pageInitialParam,
+                    where:{
+                        orgId:currentEnterpriseId
+                    }
+
+                });
+            },
+            dictInit:function(elem,url,selVal,selText, selectedVal){
+                var option = {
+                        elem: elem,
+                        url: url,
+                        method: 'get',
+                        responseList: 'list',
+                        optionText: selText,
+                        optionValue: selVal,
+                        success: function(obj) {
+                            $(elem).val(selectedVal);
+                            form.render("select");
+                        }
+                    }
+                common.selectDataSet(option);
+            },
+            resultTableInit:function(resData){
+                var mainMenu = layer.open({
+                            offset: '10px',
+                            maxmin: false,
+                            type: 1,//页面层
+                            area: ['800px', '450px'],//高度自适应
+                            zIndex:998,
+                            id: 'deployTemplate', //防止重复弹出
+                            content: $('.deployTemplate').html(),//加载该区域的html
+                            success:function(obj){
+                                table.render(common.tableInitParams({
+                                    elem: $(obj.selector).find("#deployTable"),
+                                    data:resData,
+                                    cols: [
+                                        [
+                                            {type:'checkbox'},
+                                            {field: 'name', width:150, title: '流程模板名称',sort: true},
+                                            {field: 'label', width:150, title: '流程模板标签',sort: true},
+                                            {field: 'version', width:100, title: '版本号',sort: true},
+                                            {field: 'errorInfo',width:150, title: '部署描述',sort:true,templet:function (rowData) {
+                                                if(rowData.errorCode == '0'){
+                                                    return '<div style="color:green">' + rowData.errorInfo + '</div>';
+                                                }else{
+                                                    return '<div style="color:red">' + rowData.errorInfo + '</div>';
+                                                }
+                                            }},
+                                            {field: '', title: '操作', width: 150,templet:function(rowData){
+                                                if(rowData.errorCode != '0'){
+                                                    var flowDataStr = rowData.label + '@' + rowData.version + '@' + rowData.orgId + '@' + rowData.name
+                                                    return '<a class="layui-btn layui-btn-xs" flowData= "' + flowDataStr +  '" name="deploy">覆蓋部署</a>'
+                                                }else{
+                                                    return '';
+                                                }
+                                            }}
+                                        ]
+                                    ],
+                                    done: function(){
+
+                                    }
+                                }));
+                                $("[name=deploy]").each(function(){
+                                    var flowDataStr = $(this).attr("flowData")
+                                    var rowIndex = $(this).parent().parent().parent().attr("data-index")
+                                    if(flowDataStr){
+                                        $(this).on("click",function(){
+                                            eventHandle.recoverDeployFlow(flowDataStr,rowIndex);
+                                        })
+                                    }
+                                })
+                            }
+                        })
+            },
+            recoverDeployFlow:function(flowDataStr,rowIndex){
+                var flowArr = flowDataStr.split("@");
+                var lable = flowArr[0];
+                var version = flowArr[1];
+                var orgId = flowArr[2];
+                var name = flowArr[3];
+                var params = {
+                    label: lable,
+                    version:version,
+                    orgId:orgId,
+                    name:name,
+                    fcover:true
+                }
+                var layerLoader =common.layerLoader();
+                var textDiv = $("tbody tr[data-index=" + rowIndex + "] td[data-field=errorInfo]")
+                common.fetchPost('flowEngine/engineTemplate/recoverDeploy',
+                params,function (res) {
+                    layer.close(layerLoader);
+                    //成功之后刷新tree 以及表格
+                    if(res.success){
+                        if(res.object.errorCode!='0'){
+                            textDiv.html('<div style="color:red">' + res.object.errorInfo + '</div>')
+                        }else{
+                            textDiv.html('<div style="color:green">' + res.object.errorInfo + '</div>')
+                        }
+                    }else{
+                        layer.alert(res.resultMessage);
+                    }
+                },function () {
+                    layer.close(layerLoader);
+                });
+            }
+        };
+
+        //初始化树
+        eventHandle.treeInit();
+
+        form.verify({
+            //我们既支持上述函数式的方式，也支持下述数组的形式
+            //数组的两个值分别代表：[正则匹配、匹配不符时的提示文字]
+            version: [
+                /^\d+\.\d+\.\d+$/
+                ,'请输入正确的版本号，如1.0.0'
+            ],
+            label:[
+                /^[a-zA-Z]+$/
+                ,'流程标识只能输入英文字符'
+            ]
+        });
+        //table监听事件
+        table.on('toolbar(table1)',function (obj) {
+
+            var checkStatus = table.checkStatus(obj.config.id);
+            // var data = obj.data;
+            var data = obj.config;
+            switch(obj.event){
+                case 'add':
+                    //点击添加按钮
+                    var mainMenu = layer.open({
+                        offset: '10px',
+                        title:'新增流程模板',
+                        maxmin: false,
+                        type: 1,//页面层
+                        area: ['580px'],//高度自适应
+                        zIndex:998,
+                        id: 'addTemplate', //防止重复弹出
+                        content: $('.addLayer').html(),//加载该区域的html
+                        success:function(obj) {
+                            form.render();
+                            form.on('submit(formAdd)', function (obj) {
+                                var params = obj.field;
+                                params["orgId"] = currentEnterpriseId;
+                                var layerLoader =common.layerLoader();
+                                common.fetchPost('flowEngine/engineTemplate/createTemplate',
+                                    params, function (data) {
+                                    layer.close(layerLoader);
+                                    //表格重载
+                                    if(data.success){
+                                        eventHandle.tableReload();
+                                        layer.msg('添加成功')
+                                        layer.close(mainMenu);
+                                    }else{
+                                        layer.msg(data.resultMessage);
+                                    }
+
+                                }, function () {
+                                    layer.close(layerLoader);
+                                    layer.msg('添加失败');//失败后提示
+                                    // layer.close(layer.index);
+                                });
+                                return false;
+                            });
+                        }
+                    });
+                    break;
+                case 'delete':
+                    //点击删除按钮
+                    if(checkStatus.data.length>0){
+                        layer.confirm('确定删除选中流程?', {icon: 3, title:'提示',offset: '150px'}, function(index){
+                            var flowArr=[];
+                            for(var i=0;i<checkStatus.data.length;i++){
+                                var flowData = checkStatus.data[i];
+                                var flow = {
+                                    label:flowData.label,
+                                    version:flowData.version,
+                                    orgId:flowData.orgId
+                                }
+                                flowArr.push(flow);
+                            }
+                            var layerLoader =common.layerLoader();
+                            common.fetchPost('flowEngine/engineTemplate/delModelTemplate',
+                            flowArr,function (res) {
+                                layer.close(layerLoader);
+                                //成功之后刷新tree 以及表格
+                                if(res.success){
+                                    eventHandle.tableReload();
+                                    layer.msg('删除流程成功');
+                                }else{
+                                    layer.alert(res.resultMessage);
+                                }
+                            },function () {
+                                layer.close(layerLoader);
+                            });
+                        });
+                    }else{
+                        layer.msg('请选择删除列')
+                    }
+                    break;
+                case 'fgdlModule':
+                    layer.msg('覆盖导入模块');
+                    break;
+                case 'dbdcModule':
+                    layer.msg('打包导出模块');
+                    break;
+                case 'bsModule':
+                    if(checkStatus.data.length>0){
+                        layer.confirm('确定部署选中列?', {icon: 3, title:'提示',offset: '150px'}, function(index){
+                            var layerLoader =common.layerLoader();
+                            var flowArr=[];
+                            for(var i=0;i<checkStatus.data.length;i++){
+                                var flowData = checkStatus.data[i];
+                                var flow = {
+                                    label:flowData.label,
+                                    version:flowData.version,
+                                    orgId:flowData.orgId,
+                                    fcover:false
+                                }
+                                flowArr.push(flow);
+                                // flowArr.push(flowData.label + '@' + flowData.version + '@' + flowData.orgId + '@' + flowData.name)
+                            }
+                            common.fetchPost('flowEngine/engineTemplate/preDeploy',
+                            flowArr,function (res) {
+                                layer.close(layerLoader);
+                                //成功之后刷新tree 以及表格
+                                if(res.success){
+                                    eventHandle.resultTableInit(res.list);
+                                }else{
+                                    layer.alert(res.resultMessage);
+                                }
+                            },function () {
+                                layer.close(layerLoader);
+                            });
+                            layer.close(index);
+                        })
+                    }
+                    break;
+                case 'fgbsModule':
+                    if(checkStatus.data.length>0){
+                        layer.confirm('确定覆蓋选中列?', {icon: 3, title:'提示',offset: '150px'}, function(index){
+                            var layerLoader =common.layerLoader();
+                            var flowArr=[];
+                            for(var i=0;i<checkStatus.data.length;i++){
+                                var flowData = checkStatus.data[i];
+                                var flow = {
+                                    label:flowData.label,
+                                    version:flowData.version,
+                                    orgId:flowData.orgId,
+                                    fcover:true
+                                }
+                                flowArr.push(flow);
+                                // flowArr.push(flowData.label + '@' + flowData.version + '@' + flowData.orgId + '@' + flowData.name)
+                            }
+                            common.fetchPost('flowEngine/engineTemplate/preDeploy',
+                            flowArr,function (res) {
+                                layer.close(layerLoader);
+                                //成功之后刷新tree 以及表格
+                                if(res.success){
+                                    eventHandle.resultTableInit(res.list);
+                                }else{
+                                    layer.alert(res.resultMessage);
+                                }
+                            },function () {
+                                layer.close(layerLoader);
+                            });
+                            layer.close(index);
+                        })
+                    }
+                    break;
+            }
+        });
+
+        table.on('tool(table1)', function(obj){
+            var data = obj.data;
+            switch(obj.event){
+                case 'singleDel'://删除
+                    var layerLoader =common.layerLoader();
+                    var flowArr = [];
+                    var flow = {
+                        label:data.label,
+                        version:data.version,
+                        orgId:data.orgId
+                    }
+                    flowArr.push(flow)
+                    // var paramData = data.label + '@' +data.version + '@' + data.orgId
+                    common.fetchPost('flowEngine/engineTemplate/delModelTemplate',
+                    flowArr,function (res) {
+                        layer.close(layerLoader);
+                        //成功之后刷新tree 以及表格
+                        if(res.success){
+                            eventHandle.tableReload();
+                            layer.msg('删除流程成功');
+                        }else{
+                            layer.alert(res.resultMessage);
+                        }
+                    },function () {
+                        layer.close(layerLoader);
+                    });
+
+                    break;
+                case 'design'://设计
+                    var paramData = '&label=' + data.label + '&version=' +data.version + '&orgId=' + data.orgId
+                    window.open('template/procesDesign.html?' + paramData);
+                    // var flowWin = layer.open({
+                    //     type: 2,
+                    //     content: 'template/procesDesign.html?' + paramData,
+                    //     scrollbar: false,//关闭进度条
+                    //     shadeClose: true,//点击阴影关闭
+                    //     closeBtn: 0,//不显示关闭按钮
+                    //     title: false,//不显示标题
+                    // });
+                    // layer.full(flowWin);
+                    break;
+            }
+        });
+
+
+        //查询
+        form.on('submit(formSearch)',function (obj) {
+            var name=obj.field.name;
+            var label = obj.field.label;
+            var whereParam = {};
+            if(name){
+                whereParam['name'] = name;
+            }else{
+                whereParam['name'] = '';
+            }
+            if(label){
+                whereParam['label'] = label;
+            }else{
+                whereParam['label'] = '';
+            }
+            //表格重载
+            table.reload('table1',{
+                url: baseUrl+'flowEngine/engineTemplate/queryModelTemplatePage',
+                method:'post',
+                page:{
+                    curr:1
+                },
+                where:whereParam
+            });
+            return false;
+        });
+        // common.columnSide();
+    });
+
+</script>
+
+<!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

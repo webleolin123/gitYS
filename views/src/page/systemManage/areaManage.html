@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html  class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>区域管理</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../js/layui/css/layui.css"/>
+    <link href="../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script charset="utf-8" src="../../js/common/plugin.js"></script>
+    <style>
+        .iframe-h{
+            height: 100%;
+        }
+        .content-wrap{
+            padding: 10px;
+        }
+        .red{
+            color: red;
+            padding-left: 5px;
+        }
+        .hide{
+            display: none;
+        }
+        .adapt{
+            margin-top: 15px;
+            margin-left: 10%;
+        }
+    </style>
+</head>
+<!--添加按钮中的弹框-->
+<div class="userLayer hide">
+    <div style="padding: 15px 20px">
+        <form class="layui-form layui-form-pane" name="userLayer">
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>名称</label>
+                <div class="layui-input-block">
+                    <input type="hidden" id="saPid" name="saPid">
+                    <input type="hidden" id="saRoot" name="saRoot">
+                    <input type="text" name="saName" maxlength="60" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>编码</label>
+                <div class="layui-input-block">
+                    <input type="text" name="saCode" maxlength="25" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>序号</label>
+                <div class="layui-input-block">
+                    <input type="number" name="ggSort" oninput="if( this.value.length > 3 )  this.value = this.value.slice(0,3)" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">层级</label>
+                <div class="layui-input-block">
+                    <input type="text" name="saLevel" readonly placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item adapt">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formSubmit" permission-btn="saveSysArea"> <i class="layui-icon">&#x1005;</i>保存</button>
+                    <button class="layui-btn layui-btn-primary" id="formClose"><i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<body class="iframe-h">
+
+<div class="content-wrap">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+            <!-- layui tree-->
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>行政区划树</span><div class="columnSide"><i class="fa fa-toggle-left"></i></div></div>
+                <div class="layui-card-body">
+                    <ul id="leftTree" lay-filter="leftTree" class="layuiTree eleTree ele4"></ul>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
+            <div class="layui-collapse white-bg">
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title white-bg">行政区划列表</h2>
+                    <div class="layui-colla-content">
+                        <!--layui-form-pane-->
+                        <form action="" class="layui-form layui-form-pane">
+                            <div class="layui-row layui-col-space1">
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">行政区划名称</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="saName" placeholder="请输入名称" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">编码</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="saCode" placeholder="请输入编码" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- <div class="toggle-area layui-col-space10">
+                                    <div class="layui-col-md4">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">父级名称</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="qsaCode" placeholder="请输入编码" autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> -->
+                                <div class="formSearch-btnArea">
+                                        <button class="layui-btn" lay-submit lay-filter="formSearch"><i class="fa fa-search"></i>查询</button>
+                                        <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                                        <!-- <a class="toggle-btn">
+                                            <span>展开</span>
+                                            <i class="fa fa-angle-up"></i>
+                                        </a> -->
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+            <div class="layui-card" style="margin-top: 10px">
+                <div class="layui-card-body">
+                    <table id="table1" lay-filter="table1"></table>
+                    <script type="text/html" id="tableToolBar">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-sm" lay-event="add" permission-btn="addSysArea">
+                                <i class="layui-icon">&#xe608;</i>新增
+                            </button>
+                            <button class="layui-btn layui-btn-sm" lay-event="delete" permission-btn="deleteSysArea">
+                                <i class="layui-icon">&#xe640;</i> 删除
+                            </button>
+                            <!--<button class="layui-btn layui-btn-sm">
+                                <i class="layui-icon ">&#x1005;</i> 启动
+                            </button>
+                            <button class="layui-btn layui-btn-sm layui-btn-warm">
+                                <i class="layui-icon ">&#x1007;</i> 禁用
+                            </button>-->
+                        </div>
+                    </script>
+
+                    <script type="text/html" id="tableOper">
+                        <a class="layui-btn layui-btn-xs" lay-event="edit" permission-btn="editarea">编辑</a>
+                        <a class="layui-btn  layui-btn-xs layui-btn-danger" lay-event="singleDel" permission-btn="editarea">删除</a>
+                    </script>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="./../../js/layui/layui.js"></script>
+<script>
+
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).use(['eleTree','layer','table','form','laytpl','common','element'], function () {
+        var table = layui.table;
+        var form = layui.form;
+        var tree = layui.eleTree;
+        var common = layui.common;
+        var element = layui.element;
+        element.init();
+        var baseUrl='../../../';
+        common.themeSet();
+        var saPid = "-1";
+        var saRoot = "-1";
+        var saLevel = "1";
+
+        var eleTreeId;
+        var eventHandle={
+            treeInit:function () {
+                formatTree();
+                common.fetchGet('sysmgr/sysArea/selectSysAreaTree',function (res) {
+                    //树信息的导入
+                    if(res.success && res.list){
+                        eleTreeId = tree.render({
+                            elem: '#leftTree',
+                            data: res.list,
+                            showCheckbox: false,
+                            lazy: true,
+                            highlightCurrent: true,
+                            load: function(data,callback) {
+                                common.fetchGet('sysmgr/sysArea/selectSysAreaTree'+'?id='+data.id,function (res) {
+                                    if(res.success && res.list){
+                                        callback(res.list);
+                                    }
+                                },function () {
+                                    callback([]);
+                                });
+                            }
+                        });
+                        tree.on("nodeClick(leftTree)",function(obj) {
+                            saPid = obj.data.currentData.id;
+                            saRoot = obj.data.currentData.saRoot;
+                            saLevel = obj.data.currentData.saLevel+1;
+                            eventHandle.tableReload({saRootSelf: saPid});
+                        });
+                    }else{
+                        //不存在数据时的显示
+                    }
+
+                },function () {});
+            },
+            treeReload:function () {
+                common.fetchGet('sysmgr/sysArea/selectSysAreaTree',function (res) {
+                    if(res.success && res.list){
+                        eleTreeId.reload({data:res.list});
+                    }
+                });
+            },
+            tableInit: function(){
+                table.render(common.tableInitParams({
+                    url: baseUrl+'sysmgr/sysArea/selectSysAreaPage',
+                    method:'post',
+                    toolbar:'#tableToolBar',
+                    request: {
+                        pageName: 'pageNum',//页码的参数名称，默认：page
+                        limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                    },
+                    cols: [
+                        [
+                            {type:'checkbox'},
+                            {"field": "saName", "title": "行政区划名称", "sort": true},
+                            {field: 'saCode', title: '编码', width:120,sort:true},
+                            {field: 'saLevel', title: '层级', width: 120, sort: true},
+                            {field: 'tails.pname', title: '父级名称', width: 120, sort: true},
+                            {field: '', title: '操作', width: 150, toolbar:'#tableOper',fixed: 'right'},
+                        ]
+                    ],
+                    page: true,
+                    done: function () {
+                        common.buttonLimit();
+                    }
+                }));
+
+                //table监听事件
+                table.on('toolbar(table1)',function (obj) {
+                    var checkStatus = table.checkStatus(obj.config.id);
+                    switch(obj.event){
+                        case 'add':
+                            //点击添加按钮
+                            var areaAddLayer = layer.open({
+                                offset: '10px',
+                                title:'新增行政区划信息',
+                                maxmin: false,
+                                type: 1,//页面层
+                                area: ['580px'],//高度自适应
+                                shadeClose: false,
+                                content: $('.userLayer').html(),//加载该区域的html
+                                // btn:['<i class="fa fa-check-circle"></i>确定','<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>取消'],
+                                success:function(obj){
+                                    form.render();
+                                    $(obj.selector).find('input[name=saPid]').val(saPid);
+                                    $(obj.selector).find('input[name=saRoot]').val(saRoot);
+                                    $(obj.selector).find('input[name=saLevel]').val(saLevel);
+                                    form.render('select');
+
+                                    //绑定关闭按钮事件
+                                    $(obj.selector).find('#formClose').off().on('click',function(){
+                                        layer.close(areaAddLayer);
+                                        return false;
+                                    });
+
+                                    form.on('submit(formSubmit)', function (obj) {
+                                        var params = {
+                                            saPid: saPid,
+                                            saRoot: saRoot,
+                                            saName: obj.field.saName,
+                                            saCode: obj.field.saCode,
+                                            ggSort: obj.field.ggSort,
+                                            saLevel: obj.field.saLevel
+                                        };
+                                        var loadingIndex = layer.load(1, {shade: [0.1,'#fff']});
+                                        common.fetchPost('sysmgr/sysArea/saveSysArea', params, function (data) {
+                                            layer.close(loadingIndex);
+                                            if(data.success){
+                                                eventHandle.treeReload();
+                                                //表格重载
+                                                eventHandle.tableReload({saRootSelf:saPid});
+                                                layer.close(areaAddLayer);
+                                            }
+                                            else{
+                                                layer.alert(res.resultMessage);
+                                            }
+                                        }, function () {
+                                            layer.close(loadingIndex);
+                                            layer.msg('新增失败');//失败后提示
+                                        });
+                                        return false;
+
+
+                                    });
+                                }
+                            });
+                            break;
+                        case 'delete':
+                            //点击删除按钮
+                            if(checkStatus.data.length>0){
+                                layer.confirm('确定删除选中数据?', {icon: 3, title:'提示',offset: '150px'}, function(index){
+                                    var selectedArray = [];
+                                    for(var j = 0,len = checkStatus.data.length; j < len; j++){
+                                        selectedArray.push(checkStatus.data[j].saCode);
+                                    }
+                                    var loadingIndex = layer.load(1, {shade: [0.1,'#fff']});
+                                    common.fetchDelete("sysmgr/sysArea/deleteSysAreaBySaCodes?saCodes="+selectedArray.join(","), function(res){
+                                        layer.close(loadingIndex);
+                                        if(res.success){
+                                            eventHandle.treeReload();
+                                            eventHandle.tableReload();
+                                            layer.close(index);
+                                        }
+                                        else{
+                                            layer.alert(res.resultMessage);
+                                        }
+                                    });
+                                });
+                            }else{
+                                layer.msg('请选择删除数据')
+                            }
+                            break;
+                    }
+                });
+
+                table.on('tool(table1)', function(obj){
+                    var data = obj.data;
+                    switch(obj.event){
+                        case 'singleDel':
+                            var selectId = obj.data.saCode;
+                            layer.confirm('确定删除?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                                var layerLoader = common.layerLoader();
+                                common.fetchDelete("sysmgr/sysArea/deleteSysAreaBySaCodes?saCodes="+selectId,function (res) {
+                                    layer.close(layerLoader);
+                                    if(res.success){
+                                        eventHandle.treeReload();
+                                        eventHandle.tableReload();
+                                        layer.msg('删除成功' , {
+                                            time: 4000, //20s后自动关闭
+                                        });
+                                    }else{
+                                        layer.alert(res.resultMessage);
+                                    }
+                                }, function () {
+                                    layer.close(layerLoader);
+                                });
+                                layer.close(index);
+                            });
+                            break;
+                        case 'edit'://编辑
+                            //原始数据导入
+                            var areaEditLayer = layer.open({
+                                offset: '10px',
+                                title:'编辑',
+                                maxmin: false,
+                                type: 1,//页面层
+                                area: ['580px'],//高度自适应
+                                shadeClose: false,
+                                content: $('.userLayer').html(),//加载该区域的html
+                                success:function (obj) {
+
+                                    //初始化表格
+                                    form.render();
+                                    $(obj.selector).find('input[name=saPid]').val(data.saPid);
+                                    $(obj.selector).find('input[name=saRoot]').val(data.saRoot);
+                                    $(obj.selector).find('input[name=saName]').val(data.saName);
+                                    $(obj.selector).find('input[name=saCode]').val(data.saCode);
+                                    $(obj.selector).find('input[name=ggSort]').val(data.ggSort);
+                                    $(obj.selector).find('input[name=saLevel]').val(data.saLevel);
+                                    $(obj.selector).find('input[name=saCode]').attr("readonly", "readonly");
+                                    form.render('select');
+
+                                    //绑定关闭按钮事件
+                                    $(obj.selector).find('#formClose').off().on('click',function(){
+                                        layer.close(areaEditLayer);
+                                        return false;
+                                    });
+
+                                    form.on('submit(formSubmit)', function (obj) {
+                                        var params = {
+                                            saPid: obj.field.saPid,
+                                            saRoot: obj.field.saRoot,
+                                            saName: obj.field.saName,
+                                            saCode: obj.field.saCode,
+                                            ggSort: obj.field.ggSort,
+                                            saLevel: obj.field.saLevel
+                                        };
+                                        var loadingIndex = layer.load(1, {shade: [0.1,'#fff']});
+                                        common.fetchPost('sysmgr/sysArea/saveSysArea', params, function (data) {
+                                            layer.close(loadingIndex);
+                                            if(data.success){
+                                                eventHandle.treeReload();
+                                                //表格重载
+                                                eventHandle.tableReload({saRootSelf:saPid});
+                                                layer.close(areaEditLayer);
+                                            }
+                                            else{
+                                                layer.alert(res.resultMessage);
+                                            }
+                                        }, function () {
+                                            layer.close(loadingIndex);
+                                            layer.msg('更新失败');//失败后提示
+                                        });
+                                        return false;
+                                    });
+                                }
+                            });
+                            break;
+                    }
+
+                });
+            },
+            tableReload:function (params) {
+                if(!params) params={};
+                table.reload('table1',{
+                    url: baseUrl+'sysmgr/sysArea/selectSysAreaPage',
+                    method:'post',
+                    contentType:'application/json',
+                    page:{
+                        curr:1
+                    },
+                    where:params
+                });
+            },
+            formInit: function(){
+                form.on('submit(formSearch)',function (obj) {
+                    //表格重载
+                    eventHandle.tableReload({
+                        saName: obj.field.saName,
+                        saCode:obj.field.saCode
+                    });
+                    return false;
+                });
+            }
+        };
+
+        //初始化树
+        eventHandle.treeInit();
+
+        //初始表格
+        eventHandle.tableInit();
+
+        //初始化查询表单
+        eventHandle.formInit();
+    });
+
+    /**
+     * 格式化树形控件
+     */
+    function formatTree(){
+        var cacluHeight = $(document).height() - $("#mainMenuTab").height() - $(".layui-card-header").height() - 77;
+        $("#leftTree").css({
+            "height": cacluHeight + "px",
+            "overflow-y": "auto"
+        });
+    }
+
+</script>
+
+<!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

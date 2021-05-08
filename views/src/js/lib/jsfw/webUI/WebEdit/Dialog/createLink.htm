@@ -1,0 +1,91 @@
+<HTML>
+<HEAD>
+<META content="text/html; charset=utf-8" http-equiv=Content-Type>
+<title>插入/修改链接</title>
+<script type="text/javascript" src="dialog.js"></script>
+
+<script type="text/javascript">
+function funSubmit(aForm){
+	var temObj=self.exProperty;
+	WE_Range.execCommand("CreateLink",false,aForm.d_fromurl.value);
+	var oSel;
+	if (WE_SelType == "Control") {
+		oSel = WE_Range(0).parentNode;
+	}else{
+		oSel = WE_Range.parentElement();
+	}
+
+	if (aForm.d_newwin.checked){
+		oSel.target = '_blank';
+	}else{
+		oSel.removeAttribute("target");
+	}
+	if (aForm.d_alt.value != ""){
+		oSel.title = aForm.d_alt.value;
+	}else{
+		oSel.removeAttribute("title");
+	}
+
+	closeDialog();
+	return false;
+}
+function init(){
+	var temObj=self.exProperty;
+	var oSel;
+
+	if (WE_SelType == "Control") {
+		oSel = WE_Range(0).parentNode;
+	}else{
+		//oSel = WE_Range.parentNode;
+		oSel = WE_Range.parentElement();
+	}
+	if (oSel.tagName.toUpperCase() == "A"){
+		jsfw.$('d_newwin').checked = (oSel.target=='_blank');
+		jsfw.$('d_fromurl').value = oSel.getAttribute("href",2);
+		jsfw.$('d_alt').value = oSel.getAttribute("title",2);
+	}
+	jsfw.$('d_fromurl').focus();
+}
+</script>
+
+</HEAD>
+
+<body onload="init()" scroll="no" class="jsfw_WebEdit_Dialog">
+<center>
+<table height="16" width="100%" border="0" cellpadding="0" cellspacing="0"><tr><td></td></tr></table>
+<form onsubmit="return funSubmit(this);">
+<TABLE border="0" cellpadding="0" cellspacing="0">
+	<TR>
+		<TD>
+			<FIELDSET>
+				<LEGEND>链接属性</LEGEND>
+				<TABLE border="0" cellpadding="0" cellspacing="6">
+					<TR>
+						<TD align="right" width="54">链接地址:</TD>
+						<TD><INPUT class="text file" id="d_fromurl" style="WIDTH: 233px" size="30" value="http://" name="d_fromurl"></TD>
+					</TR>
+					<TR>
+						<TD align="right" width="54">说明文字:</TD>
+						<TD><INPUT class="text file" id="d_alt" style="WIDTH: 233px" size="30" name="d_alt"></TD>
+					</TR>
+					<TR>
+						<TD colSpan="2"><INPUT class="CheckBox" id="d_newwin" name="d_newwin" checked type="checkbox" class="checkBox"><LABEL for="d_newwin">在新窗口打开</LABEL></TD>
+					</TR>
+				</TABLE>
+			</FIELDSET>
+		</TD>
+	</TR>
+	<TR>
+		<TD height="5"></TD>
+	</TR>
+	<TR>
+		<TD align="right">
+			<INPUT class="button" id="Ok" type="submit" value="  确定  ">
+			<INPUT class="button" onclick="closeDialog()" type="button" value="  取消  ">
+		</TD>
+	</TR>
+</TABLE>
+</form>
+</center>
+</BODY>
+</HTML>

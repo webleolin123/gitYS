@@ -1,0 +1,286 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<meta http-equiv="X-UA-Compatible" content="IE=6">
+	<META http-equiv=Content-Type content="text/html; charset=utf-8">
+	<TITLE>流程</TITLE>
+	<META NAME="Author" CONTENT="Witson">
+	<link rel="stylesheet" type="text/css" href="../../../js/flow/images/style.css"/>
+	<link rel="stylesheet" type="text/css" href="../../../js/flow/themes/flat/style.css" />
+    <script type="text/javascript" src="../../../js/flow/jt.js"></script>
+	<script type="text/javascript" src="../../../js/lib/jquery.1.9.1.js"></script>
+	<SCRIPT type="text/javascript" src="../../../js/flow/jquery.form.js"></SCRIPT>
+	<SCRIPT src="../../../js/flow/common.js" type="text/javascript"></SCRIPT>
+	<script type="text/javascript" src="../../../js/flow/flowEdit.js"></script>
+	<script type="text/javascript" src="../../../js/flow/flowFun.js"></script>
+	<style>
+		v\:* { behavior: url(#default#VML) }
+		.ToolItem{display:inline;padding:3px 10px;width:90}
+		.pro_sub{background-color:#EEEEEE; text-align:center;}
+		.pro_cap{background-color:#F5F5F5; text-align:right;}
+		.pro_val{background-color:white;padding-top:0px;padding-bottom:0px}
+		.pro_input{width:100%;border:none;}
+		.pro_select{width:102%;margin:-2;margin-left:-4;}
+		.pro_BtnSel{border:1px solid gray;width:30px;height:16px;}
+
+
+        ::-webkit-scrollbar { /*滚动条整体样式*/
+            width: 8px; /*宽分别对应竖滚动条的尺寸*/
+            height: 8px; /*高分别对应横滚动条的尺寸*/
+        }
+
+        ::-webkit-scrollbar-track { /*滚动条里面轨道*/
+            background-color: white;
+
+        @include globalTheme('gloDark') {
+            background-color: #122142;
+        }
+        }
+
+        ::-webkit-scrollbar-thumb { /*滚动条里面小方块*/
+            background-color: rgba(11, 98, 166, 0.2);
+
+        @include globalTheme('gloDark') {
+            background-color: rgba(0, 134, 200, 0.23);
+        }
+        }
+
+	</style>
+</HEAD>
+<script type="text/javascript">
+    mxBasePath = '../../../js/lib/mxgraph/';
+</script>
+<script type="text/javascript" src="../../../js/lib/mxgraph/js/mxClient.js"></script>
+<script type="text/javascript">
+    moveTo(-4,-4);
+    resizeTo(screen.availWidth+8,screen.availHeight+8);
+    // var param  = '<%=param%>';
+    // var paramA = param.split("@");
+    // //  选择记录后传递过来记录字段属性值
+    // var CST_version=paramA[0];//版本
+    // var CST_label=paramA[1];//标识
+    // var CST_org_id=paramA[2];//组织id
+	// var CST_name=paramA[3];//名称
+
+	var searchObj = searchParse();
+	var CST_version = searchObj["version"]; //版本
+	var CST_label = searchObj["label"]; //标识
+	var CST_org_id = searchObj["orgId"]; //组织id
+	var CST_name = searchObj["name"];//名称
+
+	function searchParse() {
+		var resultObj = {};
+		var search = window.location.search;
+		if (search && search.length > 1) {
+			var search = search.substring(1);
+			var items = search.split('&');
+			for (var index = 0; index < items.length; index++) {
+				if (!items[index]) {
+					continue;
+				}
+				var kv = items[index].split('=');
+				resultObj[kv[0]] = typeof kv[1] === "undefined" ? "" : kv[1];
+			}
+		}
+		return resultObj;
+	}
+</script>
+<script type="text/javascript">
+    var baseUrl='../../../../flowEngine'
+    var CST_URL_Flow = baseUrl+'/engine/TemplateAction?method=getTemplate&tableName=T_ENGINE_MODEL_TEMPLATE&label='+CST_label+'&version='+CST_version+'&orgId='+CST_org_id+'&tmp=' +(new Date()).valueOf();
+    var CST_URL_FlowCorpers = baseUrl+'/engine/TemplateAction?method=getCorpers&tmp=' +(new Date()).valueOf();
+</script>
+
+<BODY loadWebUI="Flow,Toolbar,Window,PopupMenu,TabMenu2,Tip,Validate" scroll1="no" style="background: white">
+<table width="100%" style="table-layout:fixed" border="0" cellpadding="0" cellspacing="0">
+	<tr style="display: ">
+		<td>
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			<!--<div style="height:100%;overflow1:auto;padding-bottom:10px;"></div>-->
+			<div id="divFlow" class="Flow" mode="Edit" style="margin-left:50;margin-top:40;width:1000px"></div>
+		</td>
+	</tr>
+</table>
+<div id="divxml" style="text-align: center;margin:0 auto;position:relative;">
+</div>
+<!-- -------------------------  工具栏[Begin]  ---------------------------- -->
+<!-- -------------------------  工具栏[End]  ---------------------------- -->
+<!-- -------------------------  属性[Begin]  ---------------------------- -->
+</BODY>
+</HTML>
+<script type="text/javascript" src="../../../js/lib/jsfw/boot.js" loadClass="" loadPrototype="Array,String" loadWebUI="PopMsg" Theme="Default"></script>
+<script type="text/javascript">
+
+    var graph;
+    var nodeParent;
+    var nodeArray={};
+
+    var orginMoveCells = mxGraphHandler.prototype.moveCells
+
+	mxGraphHandler.prototype.moveCells = function(cells, dx, dy, clone, target, evt)
+	{
+	    resultCell = [];
+	    for(var k=0; k<cells.length;k++){
+            var curCell = cells[k]; //当前移动的Cell
+            if(!curCell.edge){ //移动时排除连线
+                resultCell.push(curCell)
+                var oNode =  oFlow.findNode(curCell.stepId);
+                oFlow.modified=true;
+                oFlow.setAttr(oNode,'xlocation', parseInt(curCell.getGeometry().x) + parseInt(dx));
+                oFlow.setAttr(oNode,'ylocation', parseInt(curCell.getGeometry().y) + parseInt(dy));
+            }
+		}
+		orginMoveCells.apply(this,[resultCell, dx, dy, clone, target, evt])
+	}
+
+
+    mxVertexHandler.prototype.livePreview = true;
+    mxVertexHandler.prototype.rotationEnabled = true;
+		// mxGraphHandler.prototype.moveCells
+    var orginConnect = mxConnectionHandler.prototype.connect;
+    mxConnectionHandler.prototype.connect = function(source, target, evt, dropTarget){
+        if (source!=null &&target!=null){
+
+            //orginConnect.apply(this,[source, target, evt, dropTarget])
+            graph.getModel().beginUpdate();
+            try{
+                oFlow.addLine(source.stepId,target.stepId);
+            }
+            finally{
+                graph.getModel().endUpdate();
+            }
+
+        }
+	}
+    var orginMouseUp = mxConnectionHandler.prototype.mouseUp;
+
+    mxConnectionHandler.prototype.mouseUp = function(sender, me)
+    {
+        orginMouseUp.apply(this,[sender, me])
+        // graph.setConnectable(false);
+    };
+
+    var orginLayout = mxParallelEdgeLayout.prototype.layout;
+    mxParallelEdgeLayout.prototype.layout = function(parallels){
+        var edge = parallels[0];
+        var view = graph.getView();
+        var model = graph.getModel();
+        var src = model.getGeometry(view.getVisibleTerminal(edge, true));
+        var trg = model.getGeometry(view.getVisibleTerminal(edge, false));
+        if(src == null || trg == null){
+            return;
+        }
+        orginLayout.apply(this,[parallels])
+    }
+
+
+    function main(container)
+    {
+        // Checks if the browser is supported
+        if (!mxClient.isBrowserSupported())
+        {
+            // Displays an error message if the browser is not supported.
+            mxUtils.error('Browser is not supported!', 200, false);
+        }
+        else
+        {
+            // Disables the built-in context menu
+            mxEvent.disableContextMenu(container);
+
+            // Creates the graph inside the given container
+            graph = new mxGraph(container);
+            graph.setCellsCloneable(true);
+            graph.setTooltips(true);
+            graph.setHtmlLabels(true);
+            graph.setPanning(true);
+            graph.centerZoom = false;
+            graph.setCellsResizable(false)
+            graph.setMultigraph(false);
+            // graph.setConnectable(true);
+            graph.setEnabled(false);
+            // Enables rubberband selection
+            // new mxRubberband(graph);
+            var layout = new mxParallelEdgeLayout(graph);
+            var layoutMgr = new mxLayoutManager(graph);
+
+            layoutMgr.getLayout = function(cell)
+            {
+                if (cell.getChildCount() > 0)
+                {
+                    return layout;
+                }
+            };
+
+            // Installs a handler for double click events in the graph
+            // that shows an alert box
+            graph.addListener(mxEvent.DOUBLE_CLICK, function(sender, evt)
+            {
+                winProperty.show()
+                evt.consume();
+            });
+
+            // Gets the default parent for inserting new cells. This
+            // is normally the first child of the root (ie. layer 0).
+            nodeParent = graph.getDefaultParent();
+
+            // Adds cells to the model in a single step
+            graph.getModel().beginUpdate();
+            try
+            {
+				oFlow.loadFromURL(CST_URL_Flow);
+            }
+            finally
+            {
+                // Updates the display
+                graph.getModel().endUpdate();
+
+            }
+        }
+    };
+
+
+
+function Body_Click(){
+	if (self.event.srcElement.nodeName=='BODY') oFlow.selItem(''); //取消选择
+}
+
+function reloadEngineSource(){
+    if (/msie/i.test(navigator.userAgent)){
+    }else{
+        if(jsfw.WebUI.Window.findWindow("winXMLSrc")){
+            $("iframe[name=" +jsfw.WebUI.Window.findWindow("winXMLSrc").IFrameName+"]")[0].contentWindow.location.reload(true);
+        }
+    }
+}
+
+//扩展函数
+Array.prototype.toString2 = function(){
+	var rs='';
+	for (var i=0; i<this.length; i++){
+		if (i>0) rs+=';';
+		rs += this[i];
+	}
+	return rs;
+}
+
+var oFlow=jsfw.$('divFlow');
+main(document.getElementById('divxml'));
+
+
+document.title = oFlow.getAttr(oFlow.getRoot(),'name') + '  [' + oFlow.getAttr(oFlow.getRoot(),'label') +  '  v' +oFlow.getAttr(oFlow.getRoot(),'version') + ']  - 流程建模';
+CST_name = oFlow.getAttr(oFlow.getRoot(),'name');
+//另存为窗口
+// var saveAsTool = jsfw.WebUI.Window.newWindow('saveAsTool','另存为',jsfw.$('saveAsWindow'),319,200,0,0,true);
+// jsfw.WebUI.Window.findWindow(saveAsTool).hide();
+
+
+setInterval(function(){
+	try{
+		//xxy.innerText=oFlow.getFlowXML()
+		document.getElementById('divModified').style.display = oFlow.modified?'':'none';
+	}catch(e){}
+},1000);
+</script>

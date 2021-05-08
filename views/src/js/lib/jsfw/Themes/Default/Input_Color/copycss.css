@@ -1,0 +1,15 @@
+.Input_Color_Frame{
+	border:1px solid gray;
+	background-Color: white;
+	padding:1px;
+	width:180px !important;
+	width:184px;
+}
+.Input_Color_Item{
+	border:1px solid white;
+	width:16px !important;
+	width:18px;
+	height:16px !important;
+	height:18px;
+	float:left;
+}

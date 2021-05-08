@@ -1,0 +1,655 @@
+/*
+  @author : gaoli
+  @des :layui 重置样式
+*/
+
+@import "../helps/variable";
+@import "../helps/mixin";
+@import "../helps/themes";
+
+.layui-layout-admin{
+  .layui-nav-tree .layui-nav-child a {
+    @include presentTheme('blueDark') {
+      color: white !important;
+    }
+
+  }
+  /*--右侧menu区域--*/
+  .layui-side{
+    //padding-bottom: 20px;
+    &.layui-bg-black{
+      @include presentTheme('dark'){
+        background-color: #393D49 !important;//默认的样式就写了 Import 所以只能也写Import, 正常情况下 不写import 这么暴力的东西
+      }
+      @include presentTheme('light'){
+        background-color: white !important;
+      }
+      @include presentTheme('blueDark') {
+        background-color: #334563 !important;
+      }
+    }
+    .layui-nav{
+      @include presentTheme('dark'){
+        color: white;
+        background-color: #393D49;
+      }
+      @include presentTheme('light'){
+        background-color: white;
+        color: #262626;
+      }
+      @include presentTheme('blueDark') {
+        color: white;
+        background-color: #334563;
+      }
+      .layui-nav-tree {
+        .layui-nav-child {
+          @include transition(all 0.3s ease-in);
+          a{
+            @include presentTheme('dark'){
+              background-color: rgba(255,255,255,.7);
+            }
+            @include presentTheme('light'){
+              background-color: #262626;
+            }
+            @include presentTheme('blueDark') {
+              background-color: rgba(255, 255, 255, .7);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .layui-nav-tree {
+    .layui-nav-child{
+      a{
+        padding-left: 40px;
+
+        @include presentTheme('dark'){
+          color: rgba(255,255,255,.7);
+        }
+        @include presentTheme('light'){
+          color: #262626;
+        }
+      }
+      dl{
+        dd{
+          a{
+            padding-left: 60px;
+          }
+        }
+      }
+    }
+  }
+  .layui-body{
+    bottom: 0;
+  }
+  .layui-nav-tree .layui-nav-item a:hover{
+    @include presentTheme('dark') {
+      color: white !important;
+    }
+    @include presentTheme('light') {
+      color: $primary-color !important;
+      background: white;
+    }
+  }
+  .layui-nav-tree .layui-nav-child dd.layui-this,
+  .layui-nav-tree .layui-nav-child dd.layui-this a,
+  .layui-nav-tree .layui-this,
+  .layui-nav-tree .layui-this>a,
+  .layui-nav-tree .layui-this>a:hover {
+    @include presentTheme('dark') {
+      background-color: rgb(25, 81, 132);
+    }
+    @include presentTheme('light') {
+      background-color: #f0f9fe;
+      color: $primary-color !important;
+      //color: $primary-color;
+      @include primary()
+    }
+  }
+  .layui-side .layui-nav-item a{
+    @include presentTheme('dark'){
+      color: rgba(255,255,255,.7);
+    }
+    @include presentTheme('light'){
+      color: #262626 !important;
+    }
+  }
+  .layui-nav-itemed>a,
+  .layui-nav-tree .layui-nav-title a,
+  .layui-nav-tree .layui-nav-title a:hover{
+    @include presentTheme('dark'){
+      color: white !important;
+    }
+    @include presentTheme('light'){
+      color: #262626 !important;
+    }
+  }
+
+  .layui-nav-itemed>.layui-nav-child{
+    @include presentTheme('dark') {
+      background-color: rgba(0,0,0,.3)!important;
+    }
+    @include presentTheme('light') {
+      background-color: white !important;
+    }
+  }
+  .layui-side .layui-nav-mored, .layui-nav-itemed>a .layui-nav-more{
+    @include presentTheme('dark'){
+      border-color: transparent transparent #fff;
+    }
+    @include presentTheme('light'){
+      border-color: transparent transparent #262626;
+    }
+  }
+  .layui-side .layui-nav-more{
+    @include presentTheme('dark'){
+      //border-color: #fff transparent transparent;
+      border-top-color: rgba(255,255,255,.7);
+    }
+    @include presentTheme('light'){
+      border-top-color: #262626;
+    }
+  }
+}
+
+
+
+
+.layui-layout-admin {
+  .layui-header {
+    @include primaryBg();
+  }
+  .layui-logo {
+    color: white;
+  }
+}
+
+
+
+.layui-nav-tree .layui-nav-child dd.layui-this, .layui-nav-tree .layui-nav-child dd.layui-this a, .layui-nav-tree .layui-this, .layui-nav-tree .layui-this > a, .layui-nav-tree .layui-this > a:hover {
+
+  @include primaryBg();
+
+  //@include presentTheme('blueDark') {
+  //  background-color: rgba(0, 1, 2, 0.3);
+  //  border-left: 2px solid #adb3be;
+  //  color: #57a2ff !important;
+  //}
+}
+
+.layui-nav-tree .layui-nav-item {
+  @include presentTheme('blueDark') {
+    border-bottom: 1px solid #425575;
+  }
+}
+
+
+
+.layui-nav .layui-this:after, .layui-nav-bar, .layui-nav-tree .layui-nav-itemed:after{
+  background-color: transparent;
+  display: none;
+}
+
+/*
+.layui-table-tool{
+  background: #f5faff;
+}
+.layui-table tbody tr:hover, .layui-table thead tr, .layui-table-click, .layui-table-header, .layui-table-hover, .layui-table-mend, .layui-table-patch, .layui-table-tool, .layui-table-total, .layui-table-total tr, .layui-table[lay-even] tr:nth-child(even) {
+  background-color: #f5faff;
+}
+*/
+
+/*
+.layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r, .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main, .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin="line"], .layui-table[lay-skin="row"] {
+  border-color: rgb(240, 242, 244);
+}
+
+*/
+.layui-table-tool {
+  padding-top: 0;
+  min-height: 40px;
+  border: none;
+}
+.layui-card-header {
+  border-bottom: 1px dashed #eae8e8;
+}
+
+.layui-table-page {
+  border: 1px solid #e6e6e6;
+}
+
+.layui-layout-admin .layui-header {
+
+  @include primaryBg();
+
+  @include globalTheme('gloDark') {
+    background-color: #021133;
+    @include box-shadow(2px 3px 7px #052250);
+  }
+}
+.layui-layout-admin .layui-logo{
+  color: white;
+}
+textarea{
+  border: 1px solid #e6e6e6
+}
+
+.layui-nav .layui-nav-child dd.layui-this a, .layui-nav-child dd.layui-this {
+  background-color: $primary-color;
+  color: #fff;
+}
+
+
+//tablecss
+.layui-table {
+
+  @include globalTheme('gloDark') {
+    background-color: $dark-bg;
+    color: $dart-zw-color;
+  }
+}
+
+.layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r, .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main, .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
+
+  @include globalTheme('gloDark') {
+    //border-color: $dark-border-color;
+    border-color: #003e5a;
+  }
+
+}
+
+.layui-table tbody tr:hover, .layui-table thead tr, .layui-table-click, .layui-table-header, .layui-table-hover, .layui-table-mend, .layui-table-patch, .layui-table-tool, .layui-table-total, .layui-table-total tr, .layui-table[lay-even] tr:nth-child(even) {
+  @include globalTheme('gloDark') {
+    background-color: $dark-bg
+  }
+}
+
+.layui-laypage a, .layui-laypage span {
+  @include globalTheme('gloDark') {
+    color: $dart-zw-color;
+  }
+}
+
+.layui-table-tool .layui-inline[lay-event] {
+  @include globalTheme('gloDark') {
+
+    border: 1px solid $dark-border-color;
+  }
+
+}
+
+.layui-table-tool .layui-inline[lay-event] {
+  @include globalTheme('gloDark') {
+    color: $dark-primary;
+  }
+}
+
+.layui-table-tool-panel {
+  @include globalTheme('gloDark') {
+    background: $dark-bg;
+    border: 1px solid #0086c8;
+  }
+}
+
+.layui-form-checkbox[lay-skin=primary] span {
+  @include globalTheme('gloDark') {
+    color: $dart-zw-color;
+  }
+}
+
+.layui-table-tool-panel li:hover {
+  @include globalTheme('gloDark') {
+    background-color: #404a64;
+  }
+}
+
+.layui-laypage button {
+  @include globalTheme('gloDark') {
+    border: 1px solid $dark-border-color;
+  }
+}
+
+.layui-form-switch {
+  @include globalTheme('gloDark') {
+    border: 1px solid $dark-border-color;
+    border-radius: 20px;
+    cursor: pointer;
+    background-color: $dark-module-bg;
+  }
+}
+//cardcss
+.layui-card {
+  margin-bottom: 0;
+
+  @include box-shadow(none);
+  @include globalTheme('gloDark') {
+    background: #122142;
+  }
+}
+
+.layui-colla-title {
+  @include globalTheme("gloDark") {
+    color: $dark-title-color;
+  }
+}
+
+.layui-card:after {
+  content: "";
+  height: 0;
+  visibility: hidden;
+  display: block;
+  clear: both;
+}
+
+.layui-card {
+  zoom: 1;
+}
+
+//layercss .layui-layer .layui-layer-title
+.layui-layer {
+  .layui-layer-title {
+    font-size: 16px;
+    background: #407ac1;
+    color: white;
+  }
+  @include globalTheme('gloDark') {
+    background-color: $dark-bg;
+    @include box-shadow(1px 1px 3px 1px #11191f);
+    .layui-layer-title {
+      font-size: 16px;
+      background: $dark-bg;
+      color: $dark-title-color;
+      border-bottom: 1px solid $dark-border-color;
+    }
+  }
+}
+
+.layui-layer-shade {
+  @include globalTheme('gloDark') {
+    background-color: rgba(255, 255, 255, 0.8) !important;
+  }
+}
+
+.layui-table tbody tr:hover {
+  background-color: #fffce2;
+}
+
+//formcss
+.layui-form-checkbox[lay-skin=primary] i {
+  @include globalTheme('gloDark') {
+    border: 1px solid $dark-border-color;
+    //background-color: $dark-bg;
+  }
+}
+
+.layui-input, .layui-select, .layui-textarea {
+  @include globalTheme('gloDark') {
+    //background-color: rgba(255, 255, 255, 0.05)
+    background-color: transparent;
+    color: $dart-zw-color;
+  }
+}
+
+.layui-badge-rim, .layui-colla-content, .layui-colla-item, .layui-collapse, .layui-elem-field, .layui-form-pane .layui-form-item[pane], .layui-form-pane .layui-form-label, .layui-input, .layui-layedit, .layui-layedit-tool, .layui-quote-nm, .layui-select, .layui-tab-bar, .layui-tab-card, .layui-tab-title, .layui-tab-title .layui-this:after, .layui-textarea {
+  @include globalTheme('gloDark') {
+    border-color: $dark-border-color;
+  }
+}
+
+.layui-form-pane .layui-form-label {
+  @include globalTheme('gloDark') {
+    background-color: rgba(255, 255, 255, 0.05)
+  }
+}
+
+.layui-flow-more a *, .layui-laypage input, .layui-table-view select[lay-ignore] {
+  @include globalTheme('gloDark') {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: $dart-zw-color;
+  }
+}
+
+.layui-laypage select {
+  @include globalTheme('gloDark') {
+    border: 1px solid #003e5a;
+  }
+}
+
+.layui-input:hover, .layui-textarea:hover {
+  @include globalTheme('gloDark') {
+    border-color: $dark-primary !important;
+  }
+}
+
+.layui-input:focus, .layui-textarea:focus {
+  @include globalTheme('gloDark') {
+    border-color: $dark-primary !important;
+  }
+}
+
+.layui-laypage .layui-laypage-skip {
+  @include globalTheme('gloDark') {
+    color: $dart-zw-color
+  }
+}
+
+.layui-laypage button {
+  @include globalTheme('gloDark') {
+    background-color: $dark-primary;
+    color: white;
+  }
+}
+
+.layui-laypage a, .layui-laypage button, .layui-laypage input, .layui-laypage select, .layui-laypage span {
+  @include globalTheme('gloDark') {
+    //border: 1px solid $dark-border-color;
+  }
+}
+
+.layui-form-select dl {
+  @include globalTheme('gloDark') {
+    border: 1px solid $dark-border-color;
+    background-color: $dark-bg;
+  }
+}
+
+.layui-form-select dl dd:hover {
+  @include globalTheme('gloDark') {
+    background-color: $dark-hover-color;
+  }
+}
+
+.layui-progress-text {
+  @include globalTheme('gloDark') {
+    color: $dart-zw-color;
+  }
+}
+
+.layadmin-takerates .layui-progress h3 {
+  @include globalTheme('gloDark') {
+    color: $dart-zw-color;
+  }
+}
+
+.layui-elem-quote {
+  @include globalTheme('gloDark') {
+    background-color: #000;
+  }
+}
+
+.layui-layer-ico {
+  @include globalTheme('gloDark') {
+    background: none;
+  }
+}
+
+.layui-layer-setwin .layui-layer-close1 {
+  @include globalTheme('gloDark') {
+    display: inline-block;
+    font-size: 20px;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    top: -7px;
+    color: white;
+  }
+
+  &:hover {
+    opacity: 1;
+    .layui-layer-setwin .layui-layer-close1:after {
+      @include globalTheme('gloDark') {
+        color: $dark-primary;
+      }
+    }
+  }
+}
+
+.layui-layer-setwin .layui-layer-close1:after {
+  @include globalTheme('gloDark') {
+    content: "x";
+    font-size: 20px;
+    color: white;
+  }
+}
+
+.layui-progress {
+  @include globalTheme('gloDark') {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+}
+
+//.layui-layer-setwin .layui-layer-close1 {
+//  background: none;
+//
+//}
+.layui-layer-btn a {
+  opacity: 1;
+  @include globalTheme('gloDark') {
+    background-color: $dark-module-bg;
+    color: white;
+    border: 1px solid $dark-border-color;
+  }
+
+  &:hover {
+    @include globalTheme('gloDark') {
+      color: white;
+    }
+  }
+}
+
+.layui-form-onswitch i {
+  @include globalTheme('gloDark') {
+    background-color: $dark-primary;
+  }
+}
+.layui-btn {
+  @include globalTheme('gloDark') {
+    color: white;
+  }
+  &:hover {
+    @include globalTheme('gloDark') {
+      color: white;
+    }
+  }
+}
+
+.layui-layout-right {
+  .layui-nav-child {
+    @include globalTheme('gloDark') {
+      background-color: $dark-module-bg;
+      color: white;
+      border: 1px solid $dark-border-color;
+    }
+    a {
+      @include globalTheme('gloDark') {
+        color: white;
+      }
+    }
+    a:hover {
+      @include globalTheme('gloDark') {
+        background: $dark-primary;
+      }
+    }
+  }
+}
+
+.layui-nav * {
+  font-size: initial;
+}
+
+//.layui-breadcrumb > * {
+//  font-size: initial;
+//}
+
+//.layui-btn-xs {
+//  //font-size: initial;
+//  font-size: 14px !important;
+//}
+
+//.layui-btn-sm {
+//  font-size: initial;
+//}
+//.layui-form-checkbox span {
+//  font-size: initial;
+//}
+
+.layui-colla-title {
+  //font-size: initial;
+  font-size: 20px;
+}
+
+//.layui-btn {
+//  font-size: initial;
+//}
+//
+//.layui-layer-title {
+//  font-size: initial;
+//}
+//
+//.layui-table-tips-main {
+//  font-size: initial;
+//}
+
+.eleTree .eleTree-node .eleTree-node-content {
+  overflow: inherit !important;
+}
+
+.layui-table-tool .layui-table-tool-self .layui-inline[lay-event=LAYTABLE_EXPORT] {
+  display: none;
+}
+
+.layui-colla-icon {
+  //background: ;
+  top: 10px;
+}
+
+.layui-colla-title {
+  padding: 0 15px 0 28px;
+  font-weight: bold;
+}
+
+
+
+::-webkit-scrollbar {  /*滚动条整体样式*/
+  width: 8px; /*宽分别对应竖滚动条的尺寸*/
+  height: 8px; /*高分别对应横滚动条的尺寸*/
+}
+
+::-webkit-scrollbar-track { /*滚动条里面轨道*/
+  background-color: white;
+  @include globalTheme('gloDark') {
+    background-color: #122142;
+  }
+}
+
+::-webkit-scrollbar-thumb { /*滚动条里面小方块*/
+  background-color: rgba(11, 98, 166, 0.2);
+  @include globalTheme('gloDark') {
+    background-color: rgba(0, 134, 200, 0.23);
+  }
+}
+
+.layui-table-view {
+  border: none;
+}

@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>议案执行-执行报送</title>
+    <meta content="webkit" name="renderer" />
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../../js/layui/css/layui.css" />
+    <link href="../../../css/public.css?v1.01" rel="stylesheet" />
+    <link href="../../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <script src="../../../js/lib/jquery.1.12.3.js"></script>
+    <script src="../../../js/common/plugin.js"></script>
+    <style>
+        .shqkTab {
+            display: inline-block;
+            border: 1px solid gray;
+            background: #ffff;
+            padding: 0 5px;
+            margin: 0 5px;
+            height: 26px;
+            line-height: 26px;
+            color: black;
+            opacity: 0.3;
+        }
+
+        .isYsh {
+            opacity: 1;
+        }
+
+        a.layui-layer-ico.layui-layer-max {
+            display: none;
+        }
+
+        a.layui-layer-ico.layui-layer-max.layui-layer-maxmin {
+            display: inline-block !important;
+        }
+    </style>
+</head>
+<script type="text/html" id="withdraw">
+    <div class="regulationText-add">
+        <div class="layui-card-body">
+            <form class="layui-form layui-form-pane  form-theme3" name="regulationText-add"
+                  lay-filter="ruleBack">
+                <div class="layui-row layui-col-space15"> 
+                                <div class="layui-col-xs12">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label hylabel" style="background-color:white;border:none"><b class="red">*</b>撤回意见:</label>
+                                        <div class="layui-input-block">
+                                            <textarea class="layui-textarea hyinput" name="auditOpnion" lay-verify="required"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                    <div class="layui-col-md12">
+                        <div class="layui-layer-btn layui-layer-btn-c">
+                            <button class="layui-btn" id="saveRegulationText" lay-submit lay-filter="ruleBack"
+                                    permission-btn="saveRegulationText"><i class="fa fa-check-circle"></i>确定
+                            </button>
+                            <button type="button" class="layui-btn layui-btn-primary btnClose"><i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</script>
+
+<body class="iframe-h">
+    <div class="content-wrap">
+        <div class="layui-row layui-col-space10">
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <div class="layui-card white-bg">
+                    <div class="layui-card-header layui-card-header-custom"><span><i></i>报送列表</span></div>
+                    <div class="layui-card-body">
+                        <!--layui-form-pane-->
+                        <form action="" class="layui-form layui-form-pane">
+                            <div class="layui-row layui-col-space10">
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">议案名称</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="subjectName" placeholder="请输入" autocomplete="off"
+                                                class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">牵头部门</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="leadDept" placeholder="请输入" autocomplete="off"
+                                                class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="toggle-area layui-col-space10">
+                                    <div class="layui-col-md4">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">会议日期</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" class="layui-input" name="meetingTime"
+                                                    readonly="readonly" placeholder="请选择">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class=" " style="text-align: center;margin-bottom: 5px">
+                                    <button class="layui-btn" lay-submit lay-filter="formSearch"><i
+                                            class="fa fa-search"></i>查询</button>
+                                    <button type="reset" class="layui-btn layui-btn-primary"><i
+                                            class="fa fa-eraser"></i>重置</button>
+                                    <a class="toggle-btn">
+                                        <span>展开</span>
+                                        <i class="fa fa-angle-up"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="layui-card">
+                    <div class="layui-card-body" style="padding-top: 0">
+                        <table id="table1" lay-filter="table1"></table>
+                        <script type="text/html" id="tableToolBar">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-sm layui-btn-warm"  lay-event="report">
+                                <i class="layui-icon">&#xe62f;</i> 报送
+                            </button>
+                            <button class="layui-btn layui-btn-sm layui-btn-primary" lay-event="back"><i class="fa fa-mail-reply"></i>退回</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-warm" lay-event="withdraw"><i class="fa fa-trash"></i>撤回</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-warm" lay-event="cancel"><i class="layui-icon">&#xe62f;</i>作废报送</button>
+                        </div>
+                        <div class="tableDes" style="font-size: 14px;margin-top: -5px">
+                            <div style="display: inline-block">
+                                <span>执行情况：</span>
+                                <span><b class="primary" name="tj_seName">XXXXX企业</b>已提交需报国资委的执行情况<b class="primary" name="tj_submitCount">0</b>个，其中已报送<b class="primary" name="tj_reportCount">0</b>个（上报国资委<b
+                                        class="primary" name="tj_reportSasac">0</b>个，占已上报的<b class="primary" name="tj_rate">0%</b>）</span>
+                            </div>
+                        </div>
+                    </script>
+
+                        <script type="text/html" id="tableOper">
+                        <a class="layui-btn layui-btn-xs layui-btn-warm" permission-btn="meetingZhcxLook" lay-event="view">查看</a>
+                    </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="hysh" style="display: none">
+        <div class="padding-10">
+            <form action="" class="layui-form layui-form-pane">
+                <div class="layui-row layui-col-space10">
+                    <div class="layui-col-md12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">审核意见</label>
+                            <div class="layui-input-block">
+                                <textarea class="layui-textarea" name="shyj" id="shyj">
+                            </textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">审核结果</label>
+                            <div class="layui-input-block">
+                                <select name="shjg" id="shjg">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="./../../../js/layui/layui.js"></script>
+    <script>
+
+        layui.config({
+            base: '../../../../src/js/',
+            version: new Date().getTime()
+        }).use(['layer', 'table', 'form', 'laytpl', 'common', 'element', 'laydate', 'eleTree'], function () {
+            var table = layui.table;
+            var form = layui.form;
+            var common = layui.common;
+            var element = layui.element;
+            var laydate = layui.laydate;
+            var tree = layui.eleTree;
+            element.init();
+            var baseUrl = '../../../../';
+            common.themeSet();
+            common.columnSide();
+            common.toggleArea($('.toggle-btn'), $('.toggle-area'));
+
+            laydate.render({
+                elem: 'input[name=meetingTime]',
+                type: 'date'
+                , trigger: 'click'
+                // range: true,
+                // value:'2018-08-20 20:08:08'
+            });
+
+            var userInfo = common.getUserInfo();
+
+            var eventHandle = {
+                getExecutionReportInfo: function () {
+                    //查询统计信息
+                    var param = { seId: userInfo.seId, includeSubEnterprise: false };
+                    common.fetchPost('meetingmgr/tiolExecution/getExecutionReportInfo', param, function (res) {
+                        $('b[name=tj_seName]').html(res.object.seId=='001'? '集团公司': (res.object.seShortName == null? res.object.seName: res.object.seShortName));
+                        $('b[name=tj_submitCount]').html(res.object.submitCount);
+                        $('b[name=tj_reportCount]').html(res.object.reportCount);
+                        $('b[name=tj_reportSasac]').html(res.object.reportSasacCount);
+                        $('b[name=tj_rate]').html(res.object.reportSasacRate);
+                    }, function () {
+                    });
+                },
+                tableReload: function (params) {
+                    table.reload('table1', {
+                        url: baseUrl + 'meetingmgr/tiolExecution/pageQueryToReportExecutionVo',
+                        method: 'post',
+                        contentType: 'application/json',
+                        page: {
+                            curr: 1
+                        },
+                        where: {
+                            "needReportToSasac": 1,
+                            "queryMeetingFLowStatus": 1
+                        }
+                    });
+                    eventHandle.getExecutionReportInfo();
+                },
+                tableInit: function () {
+                    eventHandle.getExecutionReportInfo();
+
+                    table.render(common.tableInitParams({
+                        elem: '#table1',
+                        url: baseUrl + 'meetingmgr/tiolExecution/pageQueryToReportExecutionVo',
+                        method: 'post',
+                        // data:[{},{}],
+                        // data:resData,
+                        height: 'full-170',
+                        toolbar: '#tableToolBar',
+                        defaultToolbar: [],
+                        cols: [
+                            [
+                                { type: 'checkbox' },
+                                { "type": 'numbers', title: '序号' },
+                                { field: 'subjectName', title: '议案名称', minWidth: '150' },
+                                { field: 'meetingName', title: '会议名称', minWidth: '150' },
+                                { field: 'meetingTime', title: '会议日期', minWidth: '110', align: "center" },
+                                {
+                                    field: 'meetingReportTime', title: '议案报送日期', minWidth: '120', align: "center", templet: function (rowDta) {
+                                        return rowDta.tails.meetingReportTime == null ? "" : common.timestampToTime(rowDta.tails.meetingReportTime);
+                                    }
+                                },
+                                { field: 'leadDept', title: '牵头部门', minWidth: '100', align: "center" },
+                                { field: 'leadPerson', title: '牵头人', minWidth: '100', align: "center" },
+                                { field: 'implementationStatus', title: '执行状态', minWidth: '100', align: "center" },
+                                {
+                                    field: 'submitDatetime', title: '提交日期', minWidth: '110', align: "center", templet: function (rowDta) {
+                                        return rowDta.submitDatetime == null ? "" : common.timestampToTime(rowDta.submitDatetime);
+                                    }
+                                },
+                                {
+                                    field: 'reportDatetime', title: '执行报送日期', minWidth: '120', align: "center", templet: function (rowDta) {
+                                        return rowDta.reportDatetime == null ? "" : common.timestampToTime(rowDta.reportDatetime);
+                                    }
+                                },
+                                {
+                                    field: 'alreadySubmitGzw', title: '已报国资委', minWidth: '100', align: "center", templet: function (rowDta) {
+                                        return rowDta.alreadySubmitGzw == '0' ? '<span class="red">否</span>' : rowDta.alreadySubmitGzw == '1' ? '<span class="green">是</span>' : "-";
+                                    }
+                                },
+                                { field: '', title: '操作', minWidth: '80', toolbar: '#tableOper', fixed: 'right', align: "center" }
+                            ]
+                        ],
+                        where: {
+                            "needReportToSasac": 1,
+                            "queryMeetingFLowStatus": 1
+                        }
+                    }));
+
+                    //table监听事件
+                    table.on('toolbar(table1)', function (obj) {
+                        var checkStatus = table.checkStatus(obj.config.id);
+                        switch (obj.event) {
+                            case 'report'://报送
+                                if (checkStatus.data.length > 0) {
+                                    /*if(checkStatus.data.length != 1){
+                                        layer.msg('一次只能操作一条数据');
+                                        return;
+                                    }*/
+                                    for (var i = 0; i < checkStatus.data.length; i++) {
+                                        var subNameArr = [];
+                                        if (checkStatus.data[i].tails.meetingReportTime == null) {
+                                            subNameArr.push(checkStatus.data[i]['subjectName']);
+                                        }
+                                        if (subNameArr.length > 0) {
+                                            layer.alert('议案[' + subNameArr.join(',') + ']未上报，请先上报议案后再上报议案执行');
+                                            return;
+                                        }
+                                    }
+
+                                    layer.confirm('确定报送选中列?', { icon: 3, title: '提示', offset: '150px' }, function (index) {
+                                        var tIdArr = [];
+                                        for (var i = 0; i < checkStatus.data.length; i++) {
+                                            tIdArr.push(checkStatus.data[i]['executionId'])
+                                        }
+                                        var layerLoader = common.layerLoader();
+                                        common.fetchPost('meetingmgr/tiolExecution/reportTiolExecution?executionId=' + tIdArr.join(','), null, function (res) {
+                                            layer.close(layerLoader);
+                                            if (res.success) {
+                                                //layer.alert(res.resultMessage);
+                                                eventHandle.tableReload();
+                                                eventHandle.showHandleResult(res.object);
+                                            } else {
+                                                layer.alert(res.resultMessage);
+                                            }
+                                        }, function (res) {
+                                            layer.close(layerLoader);
+                                            layer.alert(res.resultMessage);
+                                        });
+                                        layer.close(index);
+                                    });
+                                } else {
+                                    layer.msg('请选择报送列');
+                                }
+                                break;
+                            case 'back'://退回
+                                if (checkStatus.data.length > 0) {
+                                    /*if(checkStatus.data.length != 1){
+                                        layer.msg('一次只能操作一条数据');
+                                        return;
+                                    }*/
+
+                                    var reportedToSasac = [];
+                                    for (var i = 0; i < checkStatus.data.length; i++) {
+                                        if("1"==checkStatus.data[i]['alreadySubmitGzw']){
+                                            reportedToSasac.push(checkStatus.data[i]['subjectName']);
+                                        }
+                                    }
+                                    if(reportedToSasac.length > 0){
+                                        layer.msg(reportedToSasac.join(",")+'的议案执行已报送至国资委，不能退回');
+                                        return false;
+                                    }
+
+                                    layer.confirm('确定退回选中列?', { icon: 3, title: '提示', offset: '150px' }, function (index) {
+                                        var tIdArr = [];
+
+                                        for (var i = 0; i < checkStatus.data.length; i++) {
+                                            tIdArr.push(checkStatus.data[i]['executionId']);
+                                        }
+                                        var layerLoader = common.layerLoader();
+                                        common.fetchPost('meetingmgr/tiolExecution/backTiolExecution?executionId=' + tIdArr.join(','), null, function (res) {
+                                            layer.close(layerLoader);
+                                            if (res.success) {
+                                                //layer.alert(res.resultMessage);
+                                                eventHandle.tableReload();
+                                                eventHandle.showHandleResult(res.object);
+                                            } else {
+                                                layer.alert(res.resultMessage);
+                                            }
+                                        }, function (res) {
+                                            layer.alert(res.resultMessage);
+                                            layer.close(layerLoader);
+                                        });
+                                        layer.close(index);
+                                    });
+                                } else {
+                                    layer.msg('请选择退回列')
+                                }
+                                break;
+                            case 'withdraw'://撤回
+                                if (checkStatus.data.length > 0) {
+                                    var reportedToSasac = [];
+                                    for (var i = 0; i < checkStatus.data.length; i++) {
+                                        if("1"==checkStatus.data[i]['alreadySubmitGzw']){
+                                            reportedToSasac.push(checkStatus.data[i]['subjectName']);
+                                        }
+                                    }
+                                    if(reportedToSasac.length > 0){
+                                        layer.msg(reportedToSasac.join(",")+'的议案执行已报送至国资委，不能退回');
+                                        return false;
+                                    }
+
+                                    var tIdArr = [];
+                                    for (var i = 0; i < checkStatus.data.length; i++) {
+                                        tIdArr.push(checkStatus.data[i]['executionId'])
+                                    }
+
+                                    var regulationTextLayer = layer.open({
+                                        type: 1,
+                                        content: $("#withdraw").html(),
+                                        title: "撤回信息",
+                                        area: ["800px", "300px"],
+                                        success: function (obj) {
+                                            form.on('submit(ruleBack)', function (obj) {
+                                                var layerLoader = common.layerLoader();
+                                                common.fetchPost('meetingmgr/tiolExecution/withdrawTiolExecution?executionId=' + tIdArr.join(','), null, function (res) {
+                                                    layer.close(layerLoader);
+                                                    if (res.success) {
+                                                        //layer.alert(res.resultMessage);
+                                                        layer.close(regulationTextLayer);
+                                                        eventHandle.tableReload();
+                                                        eventHandle.showHandleResult(res.object);
+                                                    } else {
+                                                        layer.close(regulationTextLayer);
+                                                        layer.alert(res.resultMessage);
+                                                    }
+                                                }, function (res) {
+                                                    layer.close(regulationTextLayer);
+                                                    layer.close(layerLoader);
+                                                    layer.alert(res.resultMessage);
+                                                });
+                                                return false;
+                                            });
+
+                                            $(".btnClose").on("click", function () {
+                                                layer.close(regulationTextLayer);
+                                            });
+                                        }
+                                    });
+
+
+                                } else {
+                                    layer.msg('请选择撤回数据')
+                                }
+                                break;
+                            case 'cancel'://作废
+                                if (checkStatus.data.length > 0) {
+                                    /*if(checkStatus.data.length != 1){
+                                        layer.msg('一次只能操作一条数据');
+                                        return;
+                                    }*/
+                                    var reportedToSasac = [];
+                                    for (var i = 0; i < checkStatus.data.length; i++) {
+                                        if("0"==checkStatus.data[i]['alreadySubmitGzw']){
+                                            reportedToSasac.push(checkStatus.data[i]['subjectName']);
+                                        }
+                                    }
+                                    if(reportedToSasac.length > 0){
+                                        layer.msg(reportedToSasac.join(",")+'的议案执行未报送至国资委，不能作废');
+                                        return false;
+                                    }
+
+                                    layer.confirm('确定作废选中数据?', { icon: 3, title: '提示', offset: '150px' }, function (index) {
+                                        var tIdArr = [];
+
+                                        for (var i = 0; i < checkStatus.data.length; i++) {
+                                            tIdArr.push(checkStatus.data[i]['executionId'])
+                                        }
+                                        var layerLoader = common.layerLoader();
+                                        common.fetchPost('meetingmgr/tiolExecution/cancelTiolExecution?executionId=' + tIdArr.join(','), null, function (res) {
+                                            layer.close(layerLoader);
+                                            if (res.success) {
+                                                //layer.alert(res.resultMessage);
+                                                eventHandle.tableReload();
+                                                eventHandle.showHandleResult(res.object);
+                                            } else {
+                                                layer.alert(res.resultMessage);
+                                            }
+                                        }, function (res) {
+                                            layer.alert(res.resultMessage);
+                                            layer.close(layerLoader);
+                                        });
+                                        layer.close(index);
+                                    });
+                                } else {
+                                    layer.msg('请选择作废数据');
+                                }
+                                break;
+                        }
+                    });
+
+                    // table row 监听事件
+                    table.on('tool(table1)', function (obj) {
+                        var data = obj.data;
+                        switch (obj.event) {
+                            case 'view':
+                                var editLayer = layer.open({
+                                    title: '查看',
+                                    type: 2,
+                                    content: baseUrl + 'src/page/ys/yazx/yazxAdd.html?view=view&executionId=' + data.executionId,
+                                    maxmin: true,
+                                    offset: 't',
+                                    btnAlign: 'lc',
+                                    yes: function () {
+                                        return false;
+                                    },
+                                    btn2: function () {
+                                        layer.close(editLayer);
+                                    },
+                                    success: function (layero, index) {
+                                        //获取单页面的所有配置内容 传入compId
+                                        // $("#compId", layero.find("iframe")[0].contentWindow.document).text(data['compId']);
+                                    }
+                                });
+                                layer.full(editLayer);
+                                break;
+                        }
+                    });
+
+                    //查询
+                    form.on('submit(formSearch)', function (obj) {
+                        var subjectName = obj.field.subjectName;
+                        var leadDept = obj.field.leadDept;
+                        var meetingTime = obj.field.meetingTime;
+
+                        //表格重载
+                        table.reload('table1', {
+                            url: baseUrl + 'meetingmgr/tiolExecution/pageQueryToReportExecutionVo',
+                            method: 'post',
+                            contentType: 'application/json',
+                            page: {
+                                curr: 1
+                            },
+                            where: {
+                                "needReportToSasac": 1,
+                                "queryMeetingFLowStatus": 1,
+                                "subjectName": subjectName,
+                                "meetingTime": meetingTime,
+                                "leadDept": leadDept
+                            },
+
+                        });
+
+                        eventHandle.getExecutionReportInfo();
+                        return false;
+                    });
+                },
+                showHandleResult: function (object, defaultMsg) {
+                    if (object.fCount > 0) {
+                        layer.alert("共处理" + object.total + "条数据，失败" + object.fCount + "条。失败原因：<br>" + object.fMsg.join('<br>'));
+                    }
+                    else {
+                        layer.msg(defaultMsg || "处理成功");
+                    }
+                }
+            };
+
+            eventHandle.tableInit();
+
+            //按钮权限
+            common.buttonLimit();
+
+
+        });
+
+    </script>
+
+    <!--[if lt IE 9]>
+<script src="../../../js/lib/html5.min.js"></script>
+<script src="../../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+
+</html>

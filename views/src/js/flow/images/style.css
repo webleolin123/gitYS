@@ -1,0 +1,82 @@
+body,td,th,a,p,div,input,textarea,select,button {
+	font-size:9pt; 
+	font-family:"Tahoma","ËÎÌו", "Arial", "Verdana", "Helvetica", "sans-serif";
+}
+BODY {
+	margin:0px;
+	SCROLLBAR-FACE-COLOR: #F0F3F5;
+	SCROLLBAR-HIGHLIGHT-COLOR: #ffffff; 
+	SCROLLBAR-SHADOW-COLOR: #E1E6EA;
+	SCROLLBAR-3DLIGHT-COLOR: #E1E6EA; 
+	SCROLLBAR-ARROW-COLOR: #006699;
+	SCROLLBAR-TRACK-COLOR: #FFFFFF; 
+	SCROLLBAR-DARKSHADOW-COLOR: #98AAB1;
+}
+a{ text-decoration:none; color:#009;}
+a:hover{ text-decoration:underline;}
+img{ border:0px}
+.input{ border:1px solid gray;}
+.input_Line{ border:none;border-bottom:1px solid gray;}
+.Input_Color{ border:1px solid gray;}
+TEXTAREA	{ border:1px solid gray;OVERFLOW:auto;}
+form{margin:0px}
+
+.Button{
+	background-image: url(button.gif);
+	border:1px solid #999999;
+	height:22px;
+	padding-left:4px;
+	padding-right:4px;
+	padding-top:1px;
+	background-repeat: repeat-x;
+	BACKGROUND-POSITION:0% 0%;
+}
+.divEllipsis{
+	width:100%;
+	text-decoration:none;
+	white-space:nowrap;
+	text-overflow:ellipsis;
+	overflow:hidden;
+}
+
+#tabTableEdit{border-left:1px solid #99CCFF; border-top:1px solid #99CCFF}
+#tabTableEdit .Cnt{border-right:1px solid #99CCFF; border-bottom:1px solid #99CCFF;}
+#tabTableEdit .Cap{border-right:1px solid #99CCFF; border-bottom:1px solid #99CCFF;background-color:#F5F5F5;text-align:right;}
+#tabTableEdit .Cap0{border-right:1px solid #99CCFF; border-bottom:1px solid #99CCFF;background-color:#D1E5FE; font-weight:bold;}
+#tabTableEdit .Desc{border-right:1px solid #99CCFF; border-bottom:1px solid #99CCFF;color:gray}
+
+.pageNav_Num0   {width:20;height:16;padding-top:2px;text-align:center;}
+.pageNav_Num    {width:20;height:18;padding-top:2px;text-align:center;border:1px solid #CCCCCC;}
+.pageNav_Num_Cur{width:20;height:18;padding-top:2px;text-align:center;border:1px solid gray;color:red;font-weight:bold;}
+
+.DictSel{
+	border:1px solid #333333;
+	background-Color: white;
+	padding:1px;
+	height:18px;
+	position:absolute;
+}
+.DictSel .over{ background-color:#3366CC; }
+.DictSel .over td{ color:white; }
+.DictSel .over .note{ color:white; }
+.DictSel .note{ color:gray }
+
+.BtnSelectItem{
+	width:20px;
+	background-image: url('btnSelectItem.gif');
+	background-repeat: no-repeat;
+	background-position: 50% 50%;
+	cursor:hand;
+}
+
+.indexNavItems td{}
+.indexNavItems td.over{background-color:#E9EFFA}
+.indexNavItems td.sel{
+	background-image: url('indexNav_sel.gif');
+	background-repeat: repeat-x;
+}
+
+.SearchBar{
+	background-image: url('BG.gif');
+	background-repeat: repeat-x;
+}

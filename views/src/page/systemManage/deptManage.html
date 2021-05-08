@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>部门管理</title>
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../js/layui/css/layui.css"/>
+    <link href="../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script charset="utf-8" src="../../js/common/plugin.js"></script>
+</head>
+<!--添加按钮中的弹框-->
+<div class="userLayer hide">
+    <div style="padding: 15px 20px">
+        <form class="layui-form layui-form-pane" name="userLayer">
+            <input type="hidden" name="soId" id="soId" />
+            <input type="hidden" name="seId" id="seId" />
+            <input type="hidden" name="soPid" id="soPid" />
+            <input type="hidden" name="soPidAll" id="soPidAll" />
+            <input type="hidden" name="soArea" id="soArea" />
+            <input type="hidden" name="ggEnStatus" id="ggEnStatus" />
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>部门名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="soName" required lay-verify="required" placeholder="请输入" autocomplete="off"
+                           class="layui-input" maxlength="100">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>部门编码</label>
+                <div class="layui-input-block">
+                    <input type="text" name="soCode" required lay-verify="required" placeholder="请输入" autocomplete="off"
+                           class="layui-input" maxlength="15">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>部门简称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="soShortName" required lay-verify="required" placeholder="请输入"
+                           autocomplete="off" class="layui-input"  maxlength="100">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">传真</label>
+                <div class="layui-input-block">
+                    <input type="text" name="soFax" placeholder="请输入" autocomplete="off"
+                           class="layui-input" maxlength="10">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">电话</label>
+                <div class="layui-input-block">
+                    <input type="text" name="soTel" placeholder="请输入" autocomplete="off"
+                           class="layui-input" maxlength="10">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">排序</label>
+                <div class="layui-input-block">
+                    <input type="number" name="ggSort" placeholder="请输入" autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width:100%">备注</label>
+                <div class="layui-input-block" style="margin-left:0;left:0">
+                    <textarea name="soRemarks" placeholder="请输入" class="layui-textarea" maxlength="125"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item adapt">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formAdd" permission-btn="saveSysOrgan"> <i class="layui-icon">&#x1005;</i>保存</button>
+                    <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<body class="iframe-h">
+
+<div class="content-wrap">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+            <!-- layui tree-->
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>企业层级</span></div>
+                <div class="layui-card-body">
+                    <ul id="leftTree" lay-filter="leftTree" class="eleTree"></ul>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>部门列表</span></div>
+                <div class="layui-card-body">
+                    <!--layui-form-pane-->
+                    <form action="" class="layui-form layui-form-pane">
+                        <div class="layui-row layui-col-space10">
+                            <div class="layui-col-md4">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">部门名称</label>
+                                    <div class="layui-input-block">
+                                        <input autocomplete="off" class="layui-input" name="soName" placeholder="请输入"
+                                               type="text">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md4">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">企业名称</label>
+                                    <div class="layui-input-block">
+                                        <input autocomplete="off" class="layui-input" name="seName" placeholder="请输入"
+                                               type="text">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="" style="text-align: center;margin-bottom: 5px">
+                                <button class="layui-btn" lay-submit lay-filter="formSearch"><i class="fa fa-search"></i>查询</button>
+                                <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="layui-card">
+                <div class="layui-card-body" style="padding-top: 0">
+                    <table id="table1" lay-filter="table1"></table>
+                    <script type="text/html" id="tableToolBar">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-sm" lay-event="add" permission-btn="addSysOrgan">
+                                <i class="layui-icon">&#xe608;</i> 新增
+                            </button>
+                            <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete" permission-btn="deleteSysOrgan">
+                                <i class="layui-icon">&#xe640;</i> 删除
+                            </button>
+                        </div>
+                    </script>
+
+                    <script type="text/html" id="tableOper">
+                        <a class="layui-btn layui-btn-xs" lay-event="edit" permission-btn="editorgan">编辑</a>
+                        <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="singleDel" permission-btn="singleDelSysOrgan">删除</a>
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="./../../js/layui/layui.js"></script>
+<script>
+
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).use(['eleTree', 'layer', 'table', 'form', 'laytpl', 'common','element'], function () {
+        var common = layui.common;
+        var table = layui.table;
+        var form = layui.form;
+        var tree = layui.eleTree;
+        var element = layui.element;
+        element.init();
+        var baseUrl = '../../../';
+        var currentMenuSmId=$("#currentMenuSmId",window.parent.document).val();
+        var eleTreeId;
+        var currentTableId = null;//用于保存当前table的ID
+
+        var seId = null;//选中单位ID
+        var soId = null;//选中部门ID
+        var extendAttr = null;//选中节点类型
+        common.themeSet();
+        //tree
+        var eventHandle = {
+            treeInit: function () {
+                formatTree();
+                common.fetchGet('sysmgr/sysEnterprise/selectSysEnterpriseOrganTreeList?treeType=organTree', function (res) {
+                    //树信息的导入
+                    if (res.success && res.list) {
+                        eleTreeId = tree.render({
+                            elem: '#leftTree',
+                            data: res.list,
+                            showCheckbox: false,
+                            lazy: true,
+                            load: function (data, callback) {
+                                common.fetchGet('sysmgr/sysEnterprise/selectSysEnterpriseOrganTreeList?treeType=organTree' + '&id=' + data.id + "&extendAttr=" + data.extendAttr, function (res) {
+                                    if (res.success && res.list) {
+                                        callback(res.list)
+                                    }
+                                }, function () {
+                                    callback([])
+                                });
+                            }
+                        });
+                        tree.on("nodeClick(leftTree)", function (obj) {
+
+                            //表格重载
+                            extendAttr = obj.data.currentData.extendAttr;
+                            currentTableId = obj.data.currentData.id;
+
+                            if (extendAttr == "enterprise") {
+                                seId = currentTableId;
+                                soId = null;
+                            } else if (extendAttr = "organ") {
+                                seId = null;
+                                soId = currentTableId;
+                            }
+                            //表格重载
+                            eventHandle.tableReload();
+                        });
+                    } else {
+                        //不存在数据时的显示
+
+                    }
+
+                }, function () {
+                });
+            },
+            treeReload: function () {
+                common.fetchGet('sysmgr/sysEnterprise/selectSysEnterpriseOrganTreeList', function (res) {
+                    //树信息的导入
+                    if (res.success && res.list) {
+                        eleTreeId.reload({data:res.list});
+                    } else {
+                        //不存在数据时的显示
+                    }
+                }, function () {
+                });
+            },
+            tableReload: function (obj) {
+                table.reload('table1', {
+                    url: baseUrl + 'sysmgr/sysOrgan/selectSysOrganPage',
+                    method: 'post',
+                    contentType: 'application/json',
+                    page: {
+                        curr: 1
+                    },
+                    where: {
+                        seId:seId,
+                        soPidAll: soId,
+                        /*     soName:obj.field.soName,
+                             seName:obj.field.seName*/
+                    },
+                    done:function () {
+                        common.buttonLimit(currentMenuSmId);
+                    }
+                });
+            }
+        };
+        //初始化树
+        eventHandle.treeInit();
+
+
+        table.render(common.tableInitParams({
+            elem: '#table1',
+            height: 'full-175',
+            url: baseUrl + 'sysmgr/sysOrgan/selectSysOrganPage',
+            method: 'post',
+            toolbar: '#tableToolBar',
+            cols: [
+                [
+                    {type: 'checkbox'},
+                    {"type":"numbers", "title":"排序"},
+                    {field: 'soName', title: '部门名称'},
+                    {field: 'seName', title: '企业名称'},
+                    {field: '', title: '操作', width: 150, toolbar: '#tableOper', fixed: 'right'},
+                ]
+            ],
+            page: true,
+            done: function () {
+                common.buttonLimit();
+            }
+        }));
+
+        //table监听事件
+        table.on('toolbar(table1)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch (obj.event) {
+                case 'add':
+                    //点击添加按钮
+                    if(seId == null && soId == null){
+                        layer.msg('请选择左边树节点新增');
+                        break;
+                    }
+                    var addWin = layer.open({
+                        offset: '10px',
+                        title: '新增',
+                        maxmin: false,
+                        type: 1,//页面层
+                        area: ['580px','85%'],//高度自适应
+                        shadeClose: false,
+                        content: $('.userLayer').html(),//加载该区域的html
+                        // btn:['<i class="fa fa-check-circle"></i>确定','<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>取消'],
+                        success: function () {
+                            form.render();
+                            form.on('submit(formAdd)', function (obj) {
+                                var params = {
+                                    soId:obj.field.soId,
+                                    seId:seId,
+                                    soCode:obj.field.soCode,
+                                    soName:obj.field.soName,
+                                    soShortName:obj.field.soShortName,
+                                    soPid:soId,
+                                    ggSort:obj.field.ggSort,
+                                    soTel:obj.field.soTel,
+                                    soFax:obj.field.soFax,
+                                    soLevel:obj.field.soLevel,
+                                    soRemarks:obj.field.soRemarks,
+                                };
+                                common.fetchPost('sysmgr/sysOrgan/saveSysOrganInfo', params, function (data) {
+                                    if(data.success){
+                                        //表格重载
+                                        eventHandle.tableReload();
+                                        eventHandle.treeReload();
+                                        layer.msg('保存成功');
+                                        layer.close(addWin);
+                                    }else{
+                                        layer.msg('保存失败:'+ data.resultMessage);
+                                    }
+                                }, function () {
+                                    layer.msg('新增失败');//失败后提示
+                                    layer.close(layer.index);
+                                });
+                                return false;
+                            });
+
+                        }
+
+                    });
+                    break;
+                case 'delete':
+                    //点击删除按钮
+                    if (checkStatus.data.length > 0) {
+                        layer.confirm('确定删除选中项?', {icon: 3, tnodeClickitle: '提示', offset: '150px'}, function (index) {
+                            var selectedArray = [];
+                            for(var j = 0,len = checkStatus.data.length; j < len; j++){
+                                selectedArray.push(checkStatus.data[j].soId);
+                            }
+                            var layerLoader =common.layerLoader();
+                            common.fetchDelete("sysmgr/sysOrgan/deleteSysOrganBySoIds?soIds="+selectedArray.join(","), function(res){
+                                layer.close(layerLoader);
+                                if(res.success){
+                                    eventHandle.tableReload();
+                                    eventHandle.treeReload();
+                                    layer.msg('删除成功' , {
+                                        time: 4000, //20s后自动关闭
+                                    });
+                                }else{
+                                    layer.msg('删除失败' , {
+                                        time: 4000, //20s后自动关闭
+                                    });
+                                }
+                                layer.close(index);
+                            }, function (res) {
+                                layer.close(layerLoader);
+                                layer.alert(res.resultMessage);
+                                return;
+                            });
+                        });
+                    } else {
+                        layer.msg('请选择删除列')
+                    }
+                    break;
+                case 'start':
+                    layer.msg('启动');
+                    break;
+                case 'forbid':
+                    layer.msg('禁止');
+                    break;
+            }
+        });
+
+        table.on('tool(table1)', function (obj) {
+            var data = obj.data;
+            switch (obj.event) {
+                case 'singleDel':
+                    var selectId = obj.data.soId;
+                    layer.confirm('确定删除?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                        var layerLoader = common.layerLoader();
+                        common.fetchDelete("sysmgr/sysOrgan/deleteSysOrganBySoIds?soIds="+selectId,function (res) {
+                            layer.close(layerLoader);
+                            if(res.success){
+                                eventHandle.tableReload();
+                                eventHandle.treeReload();
+                                layer.msg('删除成功' , {
+                                    time: 4000, //20s后自动关闭
+                                });
+                            }else{
+                                layer.alert(res.resultMessage);
+                            }
+                        }, function () {
+                            layer.close(layerLoader);
+                        });
+                        layer.close(index);
+                    });
+                    break;
+                case 'edit'://编辑
+                    //原始数据导入
+                    var deptEditIndex = layer.open({
+                        offset: '10px',
+                        title: '编辑',
+                        maxmin: false,
+                        type: 1,//页面层
+                        area: ['580px','90%'],//高度自适应
+                        shadeClose: false,
+                        content: $('.userLayer').html(),//加载该区域的html
+                        success: function (obj) {
+
+                            //初始化表格
+                            form.render();
+                            $(obj.selector).find('input[name=soId]').val(data.soId);
+                            $(obj.selector).find('input[name=seId]').val(data.seId);
+                            $(obj.selector).find('input[name=soPid]').val(data.soPid);
+                            $(obj.selector).find('input[name=soPidAll]').val(data.soPidAll);
+                            $(obj.selector).find('input[name=soName]').val(data.soName);
+                            $(obj.selector).find('input[name=soCode]').val(data.soCode);
+                            $(obj.selector).find('input[name=soShortName]').val(data.soShortName);
+                            $(obj.selector).find('input[name=soFax]').val(data.soFax);
+                            $(obj.selector).find('input[name=soTel]').val(data.soTel);
+                            $(obj.selector).find('input[name=ggSort]').val(data.ggSort);
+                            $(obj.selector).find('textarea[name=soRemarks]').val(data.soRemarks);
+                            $(obj.selector).find('input[name=ggEnStatus]').val(data.ggEnStatus);
+                            
+                            form.on('submit(formAdd)', function (obj2) {
+                                var params = {
+                                    soId:obj2.field.soId,
+                                    seId:obj2.field.seId,
+                                    soCode:obj2.field.soCode,
+                                    soName:obj2.field.soName,
+                                    soShortName:obj2.field.soShortName,
+                                    soPid:obj2.field.soPid,
+                                    soPidAll:obj2.field.soPidAll,
+                                    ggSort:obj2.field.ggSort,
+                                    soTel:obj2.field.soTel,
+                                    soFax:obj2.field.soFax,
+                                    soLevel:obj2.field.soLevel,
+                                    soRemarks:obj2.field.soRemarks,
+                                    ggDelStatus:obj2.field.ggDelStatus,
+                                    ggEnStatus:obj2.field.ggEnStatus,
+                                    ggCreateUser:obj2.field.ggCreateUser,
+                                    ggCreateDatetime:obj2.field.ggCreateDatetime,
+                                    ggCreateUid:obj2.field.ggCreateUid,
+                                    ggUpdateUser:obj2.field.ggUpdateUser,
+                                    ggUpdateUid:obj2.field.ggUpdateUid,
+                                    ggUpdateDatetime:obj2.field.ggUpdateDatetime
+                                };
+                                var loadingIndex = layer.load();
+                                common.fetchPost('sysmgr/sysOrgan/saveSysOrganInfo', params, function (data) {
+                                    layer.close(loadingIndex);
+                                    //表格重载
+                                    if(data.success){
+                                        //表格重载
+                                        eventHandle.treeReload();
+                                        eventHandle.tableReload();
+                                        layer.alert("成功修改部门信息。", {
+                                            icon: 6
+                                        });
+                                        layer.close(deptEditIndex);
+                                    }else{
+                                        layer.msg(data.resultMessage);
+                                    }
+                                }, function () {
+                                    layer.close(loadingIndex);
+                                    layer.msg('更新失败');//失败后提示
+                                });
+                                return false;
+                            });
+                        }
+                    });
+                    break;
+            }
+
+        });
+
+        //查询
+        form.on('submit(formSearch)', function (obj) {
+
+            var params = {
+                seId: "",
+                soName: obj.field.soName,
+                seName: obj.field.seName,
+                soPidAll: ""
+            }
+            //表格重载
+            table.reload('table1', {
+                url: baseUrl + 'sysmgr/sysOrgan/selectSysOrganPage',
+                method: 'post',
+                contentType: 'application/json',
+                page: {
+                    curr: 1
+                },
+                where: params
+            });
+            return false;
+        });
+
+        function formatTree(){
+            var cacluHeight = $(document).height() - $("#mainMenuTab").height() - $(".layui-card-header").height() - 77;
+            $("#leftTree").css({
+                "height": cacluHeight + "px",
+                "overflow-y": "auto"
+            });
+        }
+
+
+        // common.buttonLimit(currentMenuSmId);
+        common.columnSide();
+    });
+</script>
+
+<!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

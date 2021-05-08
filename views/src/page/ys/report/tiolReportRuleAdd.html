@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>上报单位</title>
+    <meta content="webkit" name="renderer" />
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../../js/layui/css/layui.css" />
+    <link href="../../../css/public.css?v1.01" rel="stylesheet" />
+    <link href="../../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <script src="../../../js/lib/jquery.1.12.3.js"></script>
+    <script charset="utf-8" src="../../../js/common/plugin.js"></script>
+</head>
+<style>
+    .content {
+        height: 100%;
+        width: 100%;
+        position: fixed;
+    }
+
+    .reportRule-right-padding {
+        padding: 0 0 0 12px;
+        height: 90%;
+    }
+</style>
+
+<body class="iframe-h">
+    <div class="content">
+        <div class="layui-row" id="reportRuleContainerFirstRowId" style="width:100%;height:100%; overflow-y: hidden;">
+            <!-- 左边一列 -->
+            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6  reportRule-right-padding" id="reportRuleTreeDivMd1">
+                <div style="height:100%;overflow-y: auto;overflow-x: hidden;">
+                    <blockquote class="layui-elem-quote">待上报单位</blockquote>
+                    <div class="left_menu_tree" style="padding:0px 0px 0px 6px;width: 95%;height:auto;">
+                        <ul class="eleTree ele4" id="leftTree" lay-filter="leftTree" style="overflow:hidden"></ul>
+                    </div>
+                </div>
+            </div>
+            <!-- 右边一列 -->
+            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6  reportRule-right-padding" id="reportRuleTreeDivMd2">
+                <div style="height: 100%;overflow-y: auto;overflow-x: hidden;">
+                    <blockquote class="layui-elem-quote">上报单位</blockquote>
+                    <div class="left_menu_tree" style="padding:0px 0px 0px 6px;width: 95%;height:auto;">
+                        <ul class="eleTree ele4" id="rightTree" lay-filter="rightTree" style="overflow:hidden"></ul>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block" style="text-align:center;margin-left:0px;padding-top:10px;">
+                    <button class="layui-btn" id="saveReportRules"><i class="layui-icon">&#xe605;</i>提交</button>
+                    <button class="layui-btn layui-btn-primary" id="closeReportRules"><i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./../../../js/layui/layui.js"></script>
+    <script>
+        layui.config({
+            base: '../../../../src/js/',
+            version: new Date().getTime()
+        }).use(['eleTree', 'layer', 'table', 'form', 'laytpl', 'common', 'element'], function () {
+            var table = layui.table;
+            var form = layui.form;
+            var tree = layui.eleTree;
+            var common = layui.common;
+            var element = layui.element;
+            element.init();
+            var baseUrl = '../../../../';
+            common.themeSet();
+            var leftTree;
+            var rightTree;
+            var getSeIdBySuperSeId = baseUrl + "reportmgr/tiolReportRule/queryTiolReportRuleBySuperSeId?superSeId="
+            var getEnterpriseBySeId = baseUrl + "sysmgr/sysEnterprise/selectSysEnterpriseById?seId="
+            var superSeId = common.getQueryVariable("superSeId");
+            var oldSuperSeId = superSeId ? superSeId : "";
+            var reportSeIdList = new Array();
+            var oldReportSeIds;
+            var superSePids;
+            if (superSeId) {
+                common.fetchGet(getSeIdBySuperSeId + oldSuperSeId, function (res) {
+                    if (res.success) {
+                        reportSeIdList = res.list;
+                        oldReportSeIds = reportSeIdList.toString();
+                    } else {
+                        layer.msg("获取待上报企业层级默认选中节点失败!");
+                    }
+                }, function (res) {
+                    layer.msg("获取待上报企业层级默认选中节点失败!");
+                });
+                common.fetchGet(getEnterpriseBySeId + superSeId, function (res) {
+                    if (res.success) {
+                        var seIds = res.object.seAllPid;
+                        superSePids = seIds.split(",");
+                        superSePids.splice(0, 1);
+                    } else {
+                        layer.msg("获取上报企业信息失败!");
+                    }
+                }, function (res) {
+                    layer.msg("获取上报企业信息失败!");
+                });
+            }
+            var eventHandler = {
+                //菜单按钮树初始化
+                leftTreeInit: function () {
+                    leftTree = tree.render({
+                        elem: '#leftTree',
+                        url: baseUrl + 'sysmgr/sysEnterprise/selectSysEnterpriseTree?isAll=true',
+                        done: function (data) {
+                            $('#leftTree .eleTree-node-content-icon').each(function () {
+                                $(this).click();
+                            });
+                        },
+                        checkStrictly: true,
+                        showCheckbox: true,
+                        expandOnClickNode: false,
+                        checkOnClickNode: false,
+                        defaultCheckedKeys: reportSeIdList,
+                        lazy: true,
+                        load: function (data, callback) {
+                            common.fetchGet(baseUrl + 'sysmgr/sysEnterprise/selectSysEnterpriseTree?id=' + data.id, function (res) {
+                                if (res.success && res.list) {
+                                    callback(res.list);
+                                    leftTree.setChecked(reportSeIdList);
+                                }
+                            }, function () {
+                                callback([])
+                            });
+                        },
+                        response: {                 // 对于后台数据重新定义名字
+                            dataName: "list"
+                        },
+                        request: {                  // 对后台返回的数据格式重新定义
+                            disabled: "nocheck",
+                        }
+                    });
+                    tree.on("nodeChecked(leftTree)", function (d) {
+                        var value = d.data.currentData.id;
+                        if (d.isChecked) {
+                            reportSeIdList.push(value);
+                        } else {
+                            var index = reportSeIdList.indexOf(value)
+                            reportSeIdList.splice(index, 1);
+                        }
+                    })
+                },
+                //企业用户树初始化
+                rightTreeInit: function () {
+                    rightTree = tree.render({
+                        elem: '#rightTree',
+                        url: baseUrl + 'sysmgr/sysEnterprise/selectSysEnterpriseTree?isAll=true',
+                        done: function (data) {
+                            if (superSePids && superSePids.length != 0) {
+                                var checkedNode = $('#rightTree div[data-id=' + superSePids[0] + '] .eleTree-node-content-icon')[0];
+                                $(checkedNode).click();
+                            } else {
+                                $('#rightTree .eleTree-node-content-icon').each(function () {
+                                    $(this).click();
+                                });
+                            }
+                        },
+                        checkStrictly: false,
+                        defaultExpandAll: true,
+                        lazy: true,
+                        expandOnClickNode: false,
+                        checkOnClickNode: true,
+                        load: function (data, callback) {
+                            common.fetchGet(baseUrl + 'sysmgr/sysEnterprise/selectSysEnterpriseTree?id=' + data.id, function (res) {
+                                if (res.success && res.list) {
+                                    callback(res.list);
+                                    if (superSePids && superSePids.length != 0) {
+                                        for (var i = 1; i < superSePids.length; i++) {
+                                            var checkedNode = $('#rightTree div[data-id=' + superSePids[i] + '] .eleTree-node-content-icon')[0];
+                                            $(checkedNode).click();
+                                        }
+                                        var checkedNode = $('#rightTree div[data-id=' + superSeId + '] .eleTree-node-content')[0];
+                                        $(checkedNode).click();
+                                    }
+                                }
+                            }, function () {
+                                callback([])
+                            });
+                        },
+                        response: {
+                            dataName: "list"
+                        },
+                        request: {
+                            disabled: "nocheck"
+                        }
+                    });
+                    tree.on("nodeClick(rightTree)", function (obj) {
+                        superSeId = obj.data.currentData.id;
+                    });
+                },
+            }
+            $("#closeReportRules").on("click", function () {
+                parent.layer.close(parent.layer.index);
+            });
+            $("#saveReportRules").on("click", function () {
+                var reportSeIds = '';
+                reportSeIdList.forEach(element => {
+                    reportSeIds += (reportSeIds.length > 0 ? "," : "") + element;
+                });
+
+                if (superSeId.length == 0 || reportSeIds.length == 0) {
+                    layer.msg("请选择待上报单位或上报单位后再提交");
+                    return false;
+                }
+                if (reportSeIds.indexOf(superSeId) != -1) {
+                    layer.msg("待上报企业与上报企业不能重复");
+                    return false;
+                }
+                var params = {
+                    superSeId: superSeId,
+                    oldSuperSeId: oldSuperSeId,
+                    reportSeIds: reportSeIds,
+                    oldReportSeIds: oldReportSeIds
+                };
+                var loadingIndex = layer.load(1, { shade: [0.1, '#fff'] });
+                common.fetchPost('reportmgr/tiolReportRule/saveTiolReportRules', params, function (data) {
+                    layer.close(loadingIndex);
+                    if (data.success) {
+                        layer.msg('保存成功');
+                        parent.layer.close(parent.layer.index);
+                    }
+                    else {
+                        layer.msg(data.resultMessage);
+                    }
+                }, function () {
+                    layer.close(loadingIndex);
+                    layer.msg('保存失败');//失败后提示
+                });
+            });
+            eventHandler.leftTreeInit();
+            eventHandler.rightTreeInit();
+            form.render();
+            common.buttonLimit();
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,5 @@
+.Input_Color_Frame{
+	filter:Shadow(color=#999999,direction=135,strength=3);
+	padding-right:3px;
+	padding-bottom:3px;
+}

@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>目录信息资源管理</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../js/layui/css/layui.css"/>
+    <link href="../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script src="../../js/common/plugin.js"></script>
+
+    <style>
+        .adapt {
+            margin-top: 20px;
+            margin-left: 20%;
+        }
+    </style>
+</head>
+
+<!-- 新增/编辑组件弹窗 -->
+<div class="dsLayer hide">
+    <div style="padding: 15px 20px">
+        <form class="layui-form layui-form-pane" lay-filter="addForm">
+            <input type="hidden" name="caId">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md12">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"><b class="red">*</b>申请类型</label>
+                        <div class="layui-input-block">
+                            <select name="caApplyType" id="edit_caApplyType">
+                                <option value="0">目录信息</option>
+                                <option value="1">目录事项</option>
+                                <option value="2">目录指标内容</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md12">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width:100%"><b class="red">*</b>申请内容</label>
+                        <div class="layui-input-block" style="margin-left:0;left:0">
+                            <textarea name="caApplyContent" placeholder="请输入" required lay-verify="required" class="layui-textarea"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item adapt">
+                <div class="layui-input-block">
+                    <button class="layui-btn save-btn" lay-submit lay-filter="formSave" permission-btn="saveApply"> <i class="layui-icon">&#x1005;</i>保存</button>
+                    <button class="layui-btn layui-btn-primary close-btn"><i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- 审批弹窗 -->
+<div class="apLayer hide">
+    <div style="padding: 15px 20px">
+        <form class="layui-form layui-form-pane" lay-filter="approvalForm">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md12">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"><b class="red">*</b>申请类型</label>
+                        <div class="layui-input-block">
+                            <select name="caApplyType">
+                                <option value="0">目录信息</option>
+                                <option value="1">目录事项</option>
+                                <option value="2">目录指标内容</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md12">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width:100%"><b class="red">*</b>申请内容</label>
+                        <div class="layui-input-block" style="margin-left:0;left:0">
+                            <textarea name="caApplyContent" placeholder="请输入" required lay-verify="required"
+                                      class="layui-textarea"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">申请时间</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="caApplyTime" placeholder="以当前时间为准" autocomplete="off"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">申请人姓名</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="caApplyUsername" placeholder="以当前时间为准" autocomplete="off"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md12">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">申请单位名称</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="caApplyUnitname" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md12">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width:100%">反馈内容</label>
+                        <div class="layui-input-block" style="margin-left:0;left:0">
+                            <textarea name="caApplyFeedback" placeholder="请输入" required lay-verify="required"
+                                      class="layui-textarea"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-col-space15" id='opinionDiv'>
+                <div class="layui-col-md12">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width:100%">流程意见</label>
+                        <div class="layui-input-block"  style="margin-left:0;left:0">
+                            <table class='layui-table'>
+                                <colgroup>
+                                    <col width="100">
+                                    <col width="200">
+                                    <col width="150">
+                                    <col>
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                      <th>环节名称</th>
+                                      <th>意见内容</th>
+                                      <th>落款人</th>
+                                      <th>意见时间</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="opiniontBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item adapt">
+                <div class="layui-input-block">
+                    <button class="layui-btn pass-btn">通过</button>
+                    <button class="layui-btn fail-btn">驳回</button>
+                    <button class="layui-btn save-btn" lay-submit lay-filter="formSave"> <i class="layui-icon">&#x1005;</i>保存</button>
+                    <button class="layui-btn layui-btn-primary close-btn"><i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- 查看弹窗 -->
+<div class="ckLayer hide">
+    <div style="padding: 15px 20px">
+        <form class="layui-form layui-form-pane" lay-filter="checkForm">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md12">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"><b class="red">*</b>申请类型</label>
+                        <div class="layui-input-block">
+                            <select name="caApplyType" disabled>
+                                <option value="0">目录信息</option>
+                                <option value="1">目录事项</option>
+                                <option value="2">目录指标内容</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md12">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width:100%"><b class="red">*</b>申请内容</label>
+                        <div class="layui-input-block" style="margin-left:0;left:0">
+                            <textarea name="caApplyContent" class="layui-textarea" disabled></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">申请时间</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="caApplyTime" placeholder="以当前时间为准" autocomplete="off"
+                                   class="layui-input" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">申请人姓名</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="caApplyUsername" placeholder="以当前时间为准" autocomplete="off"
+                                   class="layui-input" disabled>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md12">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">申请单位名称</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="caApplyUnitname" autocomplete="off" class="layui-input" disabled>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item adapt">
+                <div class="layui-input-block">
+                    <button class="layui-btn cancel-btn" style="display:none">取消办结</button>
+                    <button class="layui-btn layui-btn-primary close-btn"><i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="selectLayer hide">
+    <div style="padding: 15px 20px">
+        <form class="layui-form layui-form-pane">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md12">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">使用流程</label>
+                        <div class="layui-input-block" id="flowSelect">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<body class="iframe-h">
+<div class="content-wrap">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>目录申请/审批列表</span></div>
+                <div class="layui-card-body">
+                    <form class="layui-form layui-form-pane">
+                        <div class="layui-row layui-col-space10">
+                            <div class="layui-col-md4">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">申请类型</label>
+                                    <div class="layui-input-block">
+                                        <select name="caApplyType" id="query_caApplyType">
+                                            <option value="">请选择</option>
+                                            <option value="0">目录信息</option>
+                                            <option value="1">目录事项</option>
+                                            <option value="2">目录指标内容</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md4">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">审批状态</label>
+                                    <div class="layui-input-block">
+                                        <select name="ggAuditType" id="query_flowStatus">
+                                            <option value="">全部</option>
+                                            <option value="1">待办</option>
+                                            <option value="2">经办</option>
+                                            <option value="3">办结</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="toggle-area layui-col-space10">
+                                <div class="layui-col-md4">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">申请单位名称</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="caApplyUnitname" placeholder="请输入" autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+                                    </div>
+                                <div class="layui-col-md4">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">申请内容</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="caApplyContent" placeholder="请输入" autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+                                    </div>
+                            </div>
+                            <div class="formSearch-btnArea">
+                                <button class="layui-btn" lay-submit lay-filter="formSearch" permission-btn="listApply"><i class="fa fa-search"></i>查询</button>
+                                <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                                <a class="toggle-btn">
+                                    <span>展开</span>
+                                    <i class="fa fa-angle-up"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="layui-card">
+                <div class="layui-card-body" style="padding-top: 0">
+                    <table id="table1" lay-filter="table1"></table>
+                    <script type="text/html" id="tableToolBar">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-sm add-btn" lay-event="add" permission-btn="addContentInfo">
+                                <i class="layui-icon">&#xe608;</i> 新增
+                            </button>
+                            <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete" permission-btn="deleteApply">
+                                <i class="layui-icon">&#xe640;</i> 删除
+                            </button>
+                        </div>
+                    </script>
+                    <script type="text/html" id="tableOper">
+                        <a class="layui-btn layui-btn-xs" lay-event="apply" permission-btn="requestApply">
+                            <i class="layui-icon layui-icon-survey"></i> 申请
+                        </a>
+                        <a class="layui-btn layui-btn-xs" lay-event="edit" permission-btn="editApply">
+                            <i class="layui-icon layui-icon-edit"></i> 编辑
+                        </a>
+                        <a class="layui-btn layui-btn-xs" lay-event="approval" permission-btn="approvalApply">
+                            <i class="layui-icon layui-icon-ok-circle"></i> 审批
+                        </a>
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="./../../js/layui/layui.js"></script>
+<script>
+    var  tableReload = null;
+
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).extend({
+        flowEngine: 'common/flowEngine'
+    }).use(['layer', 'table', 'form', 'laytpl', 'common', 'element','flowEngine'], function () {
+        var table = layui.table;
+        var form = layui.form;
+        var common = layui.common;
+        var element = layui.element;
+        var flowEngine = layui.flowEngine;
+        var catalogueId =　'catalogueApply';
+        var businessId = 'catalogueApply';
+        element.init();
+        var baseUrl = '../../../';
+        parentEnt = {};
+        common.themeSet();
+        common.toggleArea($('.toggle-btn'),$('.toggle-area'));
+        var eventHandle = {
+            tableReload: function () {
+                table.reload('table1', {
+                    url: baseUrl + 'sysmgr/contentApply/queryContentApplyPage',
+                    method: 'post',
+                    page: {
+                        curr: 1
+                    },
+                });
+            },
+            showOpinion:function(piid,obj){
+                common.fetchGet(baseUrl + 'flowEngine/engineQuery/queryOpinionByPiid?piid='+ piid,function(data){
+                    if(data.success && data.list.length>0){
+                        var html = '';
+                        for(var i=0; i<data.list.length;i++){
+                            html += '<tr>';
+                            html += '<td>' + data.list[i].label + '</td>';
+                            html += '<td>' + data.list[i].content + '</td>';
+                            html += '<td>' + data.list[i].username + '</td>';
+                            html += '<td>' + data.list[i].odate + '</td>';
+                            html += '</tr>';
+                        }
+                        obj.html(html);
+                    }
+                })
+            },
+        };
+        //字典获取URL
+        common.selectDataSet({
+            elem : $('#query_caApplyType'),
+            url : "sysmgr/dicts/selectDictListByPcode?dictPCode=APPLY_TYPE",
+            responseList:'list',
+            optionText:'sdName',
+            optionValue:'sdCode'
+        });
+        //eventHandle.loadSelect();
+        table.render(common.tableInitParams({
+            elem: '#table1',
+            url: baseUrl + 'sysmgr/contentApply/queryContentApplyPage',
+            method: 'post',
+            toolbar: '#tableToolBar',
+            cols: [
+                [
+                    {type: 'checkbox'},
+                    {"type":"numbers", "title":"序号"},
+                    {
+                        field: 'caApplyType', title: '申请类型', sort: true,
+                        templet: function (rowData) {
+                            if (rowData['caApplyType'] === '0') {
+                                return '<span>目录信息</span>'
+                            }else if (rowData['caApplyType'] === '1') {
+                                return '<span>目录事项</span>'
+                            }else if (rowData['caApplyType'] === '2') {
+                                return '<span>目录指标内容</span>'
+                            }
+                        }
+                    },
+                    {field: 'caApplyContent', title: '申请内容', sort: true},
+                    {
+                        field: 'ggAuditType', title: '审批状态', sort: true,
+                        templet: function (rowData) {
+                            if (rowData['flowStatus'] === '1'　&& rowData['ggAuditType'] === '1') {
+                                return '<span>待办</span>'
+                            } else if (rowData['flowStatus'] === '2' && rowData['ggAuditType'] === '1') {
+                                return '<span>经办</span>'
+                            } else if (rowData['ggAuditType'] === '2') {
+                                return '<span>办结</span>'
+                            }else if(rowData['flowStatus'] === '4' && rowData['ggAuditType'] === '1'){
+                                return '<span>撤办</span>'
+                            }else{
+                                return '<span>起草</span>'
+                            }
+                        }
+                    },
+                    {field: 'caApplyUnitname', title: '申请单位名称', width: '10%', sort: true},
+                    {field: 'caApplyTime', title: '申请时间', width: '15%', sort: true},
+                    {field: '', title: '操作', width: '20%', fixed: 'right',
+                        templet: function (rowData) {
+                            var status = rowData['flowStatus'];
+                            var docStatus = rowData['ggAuditType'];
+                            var html = "";
+                            var specialBtn = '<a class="layui-btn layui-btn-xs" lay-event="special">'+ '<i class="layui-icon layui-icon-survey"></i> 特送'+ '</a>';
+                            var viewBtn = '<a class="layui-btn layui-btn-xs" lay-event="view">'+ '<i class="layui-icon layui-icon-survey"></i> 查看'+ '</a>';
+                            var editBtn = '<a class="layui-btn layui-btn-xs" lay-event="edit">'+ '<i class="layui-icon layui-icon-survey"></i> 编辑'+ '</a>';
+                            var recordBtn = '<a class="layui-btn layui-btn-xs" lay-event="flowLog">'+ '<i class="layui-icon layui-icon-survey"></i> 记录'+ '</a>';
+                            var applyBtn = '<a class="layui-btn layui-btn-xs" lay-event="apply">'+ '<i class="layui-icon layui-icon-survey"></i> 申请'+ '</a>';
+                            var approveBtn = '<a class="layui-btn layui-btn-xs" lay-event="approval">'+ '<i class="layui-icon layui-icon-ok-circle"></i> 审批'+ '</a>';
+                            var cancelBtn = '<a class="layui-btn layui-btn-xs" lay-event="cancel">'+ '<i class="icon iconfont icon-button-hh-1"></i> 撤办'+ '</a>';
+                            if(!status && docStatus === '0'){ //起草
+                                html += applyBtn + editBtn;
+                            }else if (status === '1' && docStatus === '1') {
+                                html += approveBtn + viewBtn + recordBtn + specialBtn;
+                            } else if (status === '2' && docStatus === '1') {
+                                html += viewBtn + cancelBtn + recordBtn + specialBtn;
+                            } else if (docStatus === '2') {
+                                html += viewBtn + recordBtn + specialBtn;
+                            }else if(status === '3'){
+                                html += viewBtn + recordBtn + specialBtn;
+                            }
+                            return html;
+                        }
+                    },
+                ]
+            ],
+            page: true
+        }));
+
+        //table监听事件
+        table.on('toolbar(table1)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch (obj.event) {
+                case 'add':
+                    var index_add = layer.open({
+                        offset: '10px',
+                        title: '新增',
+                        maxmin: false,
+                        type: 1,//页面层
+                        area: ['580px'],//高度自适应
+                        shadeClose: false,
+                        content: $('.dsLayer').html(),//加载该区域的html
+                        // btn:['保存','<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>取消'],
+                        success: function (obj) {
+                            form.render();
+                            $(obj.selector).find('.close-btn').off().on('click', function () {
+                                layer.close(index_add);
+                            });
+                            form.render('select');
+                            form.on('submit(formSave)', function (obj) {
+                                var params = {
+                                    caApplyType: obj.field.caApplyType,
+                                    caApplyContent: obj.field.caApplyContent
+                                };
+                                layer.confirm('您确定要保存?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                                    var layerLoader = common.layerLoader();
+                                    common.fetchPost('sysmgr/contentApply/saveContentApply', params, function (res) {
+                                        layer.close(index);
+                                        if (res.success) {
+                                            layer.msg('保存成功');
+                                            eventHandle.tableReload();
+                                            layer.close(index_add);
+                                            layer.close(layerLoader);
+                                        }
+                                    }, function () {
+                                        layer.close(index);
+                                        layer.close(layerLoader);
+                                    });
+                                });
+                                return false;
+                            });
+                        },
+                    });
+                    break;
+                case 'delete':
+                    //点击删除按钮
+                    if (checkStatus.data.length > 0) {
+                        layer.confirm('确定删除选中列?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                            var tIdArr = [];
+                            var piidArr = [];
+                            for (var i = 0; i < checkStatus.data.length; i++) {
+                                tIdArr.push(checkStatus.data[i]['caId']);
+                                piidArr.push(checkStatus.data[i]['ggAuditId'])
+                            }
+                            var layerLoader = common.layerLoader();
+                            var url = 'sysmgr/contentApply/deleteContentApply?ids=' + tIdArr.join(',') + "&piids="+piidArr.join(',');
+                            common.fetchDelete(url, function (res) {
+                                if (res.success) {
+                                    layer.close(layerLoader);
+                                    eventHandle.tableReload();
+                                }
+                            }, function (res) {
+                                layer.msg('删除失败');
+                                layer.close(layerLoader);
+                            });
+                            layer.close(index);
+                        });
+                    } else {
+                        layer.msg('请选择删除列')
+                    }
+                    break;
+                case 'refresh':
+                    eventHandle.tableReload();
+                    break;
+            }
+        });
+
+        // table row 监听事件
+        table.on('tool(table1)', function (obj) {
+            var rowData = obj;
+            var data = obj.data;
+            parentEnt = data;
+            parentEnt.catalogueId = catalogueId;
+            // parentEnt.ptLabel = "ADADAD";
+            // parentEnt.ptVersion="1.0.0";
+            // parentEnt.ptCompanyId="9b15a5532933470da9ecb20999031f94";
+            switch (obj.event) {
+                case 'view'://查看
+                    var index_view = layer.open({
+                        offset: '10px',
+                        title: '查看目录申请表单',
+                        maxmin: false,
+                        type: 1,//页面层
+                        area: ['999px', '500px'],//高度自适应
+                        shadeClose: false,
+                        content: $('.ckLayer').html(),//加载该区域的html
+                        success: function (obj) {
+                            //初始化表格
+                            form.render();
+                            $(obj.selector).find('select[name=caApplyType]').val(data.caApplyType);
+                            $(obj.selector).find('textarea[name=caApplyContent]').val(data.caApplyContent);
+                            $(obj.selector).find('input[name=caApplyTime]').val(data.caApplyTime);
+                            $(obj.selector).find('input[name=caApplyUsername]').val(data.caApplyUsername);
+                            $(obj.selector).find('input[name=caApplyUnitname]').val(data.caApplyUnitname);
+                            $(obj.selector).find('.close-btn').off().on('click', function () {
+                                layer.close(index_view);
+                                return false;
+                            });
+
+                            var checkDoneUserUrl = '../../../flowEngine/engineQuery/checkDoneUser?piid=';
+                            common.fetchGet(checkDoneUserUrl + parentEnt.processInstanceid,function(data){
+                                if(data.success && data.object && parentEnt.ggAuditType === '2'){
+                                    $(obj.selector).find('.cancel-btn').show();
+                                }
+                            })
+                            $(obj.selector).find('.cancel-btn').off().on('click', function () {
+                                var flowparam = {
+                                    ptLabel:parentEnt.ptLabel,
+                                    ptVersion:parentEnt.ptVersion,
+                                    ptCompanyId:parentEnt.ptCompanyId,
+                                    businessId:parentEnt.caId,
+                                    stateId:parentEnt.stateId,
+                                    piid:parentEnt.processInstanceid,
+                                    aiid:parentEnt.activityInstanceid,
+                                    catalogueId: parentEnt.catalogueId
+                                };
+                                flowEngine.init(flowparam);
+                                flowEngine.cancelEndSubmit(flowparam,eventHandle.tableReload());
+                                return false;
+                            });
+                        }
+                    });
+                    break;
+                case 'edit'://编辑
+                    // layer.msg('申请中或已审批的申请不允许编辑');
+                    // return false;
+                    var index_edit = layer.open({
+                        offset: '10px',
+                        title: '编辑',
+                        maxmin: false,
+                        type: 1,//页面层
+                        area: ['580px', '380px'],//高度自适应
+                        shadeClose: false,
+                        content: $('.dsLayer').html(),//加载该区域的html
+                        success: function (obj) {
+                            //初始化表格
+                            form.render();
+                            $(obj.selector).find('input[name=caId]').val(data.caId);
+                            $(obj.selector).find('select[name=caApplyType]').val(data.caApplyType);
+                            $(obj.selector).find('textarea[name=caApplyContent]').val(data.caApplyContent);
+                            $(obj.selector).find('input[name=caApplyTime]').val(data.caApplyTime);
+                            $(obj.selector).find('input[name=caApplyUsername]').val(data.caApplyUsername);
+                            $(obj.selector).find('input[name=caApplyUnitname]').val(data.caApplyUnitname);
+
+                            $(obj.selector).find('.close-btn').off().on('click', function () {
+                                layer.close(index_edit);
+                            });
+                            form.render('select');
+                            form.on('submit(formSave)', function (obj) {
+                                var params = {
+                                    caId:obj.field.caId,
+                                    caApplyType: obj.field.caApplyType,
+                                    caApplyContent: obj.field.caApplyContent
+                                };
+                                layer.confirm('您确定要保存?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                                    var layerLoader = common.layerLoader();
+                                    common.fetchPost('sysmgr/contentApply/saveContentApply', params, function (res) {
+                                        layer.close(index);
+                                        if (res.success) {
+                                            layer.msg('保存成功');
+                                            eventHandle.tableReload();
+                                            layer.close(index_edit);
+                                            layer.close(layerLoader);
+                                        }
+                                    }, function () {
+                                        layer.close(index);
+                                        layer.close(layerLoader);
+                                    });
+                                });
+                                return false;
+                            });
+                        }
+                    });
+                    break;
+                case 'approval'://审批
+                    var index_approval = layer.open({
+                        offset: '10px',
+                        title: '目录审批表单',
+                        maxmin: false,
+                        type: 1,//页面层
+                        area: ['700px', '650px'],//高度自适应
+                        shadeClose: false,
+                        content: $('.apLayer').html(),//加载该区域的html
+                        success: function (obj) {
+                            //初始化表格
+                            form.render();
+                            $(obj.selector).find('select[name=caApplyType]').val(data.caApplyType);
+                            $(obj.selector).find('textarea[name=caApplyContent]').val(data.caApplyContent);
+                            $(obj.selector).find('input[name=caApplyTime]').val(data.caApplyTime);
+                            $(obj.selector).find('input[name=caApplyUsername]').val(data.caApplyUsername);
+                            $(obj.selector).find('input[name=caApplyUnitname]').val(data.caApplyUnitname);
+                            $(obj.selector).find('textarea[name=caApplyFeedback]').val(data.caApplyFeedback);
+                            $(obj.selector).find('input[name=msSpsj]').val(data.msSpsj);
+                            $(obj.selector).find('input[name=msSprXm]').val(data.msSprXm);
+                            $(obj.selector).find('input[name=caApplyUnitname]').val(data.caApplyUnitname);
+                            eventHandle.showOpinion(data.processInstanceid,$(obj.selector).find('#opiniontBody'));
+                            $(obj.selector).find('.close-btn').off().on('click', function () {
+                                layer.close(index_approval);
+                                return false;
+                            });
+                            $(obj.selector).find('.pass-btn').off().on('click', function () {
+                                parentEnt.reject = false;
+                                parentEnt.draft = false;
+                                common.fetchGet('flowEngine/engineQuery/getProcessInstance?piid=' + data.processInstanceid,function(res){
+
+                                    if(res.success){
+                                        if(res.object){
+                                            parentEnt.ptLabel = res.object.ptLabel;
+                                            parentEnt.ptVersion = res.object.ptVersion;
+                                            parentEnt.ptCompanyId = res.object.ptCompanyId;
+                                            parentEnt.catalogueId = catalogueId;
+                                            parentEnt.piid = data.processInstanceid;
+                                            parentEnt.aiid = data.activityInstanceid;
+                                            var index_apply = layer.open({
+                                                offset: '10px',
+                                                title: '发起申请',
+                                                maxmin: false,
+                                                type: 2,//页面层
+                                                area: ['600px', '420px'],//高度自适应
+                                                shadeClose: false,
+                                                content: '../flow/flowSend.html'//加载该区域的html
+                                            });
+                                        }else{
+                                            layer.msg('未找到流程实例信息');
+                                        }
+                                    }else{
+                                        layer.alert(res.resultMessage);
+                                    }
+                                })
+                                return false;
+                            });
+                            $(obj.selector).find('.fail-btn').off().on('click', function () {
+                                parentEnt.reject = true;
+                                parentEnt.draft = false;
+                                common.fetchGet('flowEngine/engineQuery/getProcessInstance?piid=' + data.processInstanceid,function(res){
+
+                                    if(res.success){
+                                        if(res.object){
+                                            parentEnt.ptLabel = res.object.ptLabel;
+                                            parentEnt.ptVersion = res.object.ptVersion;
+                                            parentEnt.ptCompanyId = res.object.ptCompanyId;
+                                            parentEnt.catalogueId = catalogueId;
+                                            parentEnt.piid = data.processInstanceid;
+                                            parentEnt.aiid = data.activityInstanceid;
+                                            var index_apply = layer.open({
+                                                offset: '10px',
+                                                title: '发起申请',
+                                                maxmin: false,
+                                                type: 2,//页面层
+                                                area: ['600px', '420px'],//高度自适应
+                                                shadeClose: false,
+                                                content: '../flow/flowSend.html'//加载该区域的html
+                                            });
+                                        }else{
+                                            layer.msg('未找到流程实例信息');
+                                        }
+                                    }else{
+                                        layer.alert(res.resultMessage);
+                                    }
+                                })
+                                return false;
+                            });
+                            //点击保存按钮
+                            form.on('submit(formSave)', function (object) {
+                                var layerLoader = common.layerLoader();
+                                var params  = {
+                                    caId:data.caId,
+                                    caApplyFeedback:object.field.caApplyFeedback
+                                }
+                                common.fetchPost('sysmgr/contentApply/saveContentApply', params, function (res) {
+                                    if (res.success) {
+                                        rowData.update({
+                                            caApplyFeedback: res.object.caApplyFeedback
+                                        });
+                                        layer.msg('保存成功');
+                                        layer.close(layerLoader);
+                                    }else{
+                                        layer.msg('保存失败');
+                                    }
+                                }, function () {
+                                    layer.close(layerLoader);
+                                });
+                                return false;
+                            });
+                        }
+                    });
+                    break;
+                case 'apply'://发起申请
+                    parentEnt.reject = false;
+                    parentEnt.draft = true;
+                    common.fetchGet('flowEngine/engineQuery/getTemplateByForm?companyId=' + parentEnt.caApplyUnitid + '&businessId=' + businessId,function(res){
+                        if(res.success){
+                            if(res.list.lengh===0){
+                                layer.msg('未找到可用的流程');
+                            }else if(res.list.length === 1){
+                                parentEnt.ptLabel = res.list[0].label;
+                                parentEnt.ptVersion = res.list[0].version;
+                                parentEnt.ptCompanyId = res.list[0].companyid;
+                                parentEnt.catalogueId = catalogueId;
+                                parentEnt.piid = data.processInstanceid;
+                                parentEnt.aiid = data.activityInstanceid;
+                                var index_apply = layer.open({
+                                    offset: '10px',
+                                    title: '发起申请',
+                                    maxmin: false,
+                                    type: 2,//页面层
+                                    area: ['600px', '420px'],//高度自适应
+                                    shadeClose: false,
+                                    content: '../flow/flowSend.html'//加载该区域的html
+                                });
+                            }else{
+
+                                var index_flowSelect = layer.open({
+                                    offset: '10px',
+                                    title: '流程撤办',
+                                    maxmin: false,
+                                    type: 1,//页面层
+                                    area: ['400px', '300px'],//高度自适应
+                                    shadeClose: false,
+                                    content: $('.selectLayer').html(),//加载该区域的html
+                                    btn:['<i class="fa fa-check-circle"></i>确定','<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭'],
+                                    btnAlign:"c",
+                                    yes:function(obj){
+                                        var flowObj = $('#flowSelect>select').val();
+                                        var flowarr = flowObj.split('@');
+                                        parentEnt.ptLabel = flowarr[0];
+                                        parentEnt.ptVersion = flowarr[1];
+                                        parentEnt.ptCompanyId = flowarr[2];
+                                        parentEnt.catalogueId = catalogueId;
+                                        parentEnt.piid = data.processInstanceid;
+                                        parentEnt.aiid = data.activityInstanceid;
+                                        layer.close(index_flowSelect);
+                                        var index_apply = layer.open({
+                                            offset: '10px',
+                                            title: '发起申请',
+                                            maxmin: false,
+                                            type: 2,//页面层
+                                            area: ['600px', '420px'],//高度自适应
+                                            shadeClose: false,
+                                            content: '../flow/flowSend.html'//加载该区域的html
+                                        });
+                                        return false;
+                                    },
+                                    success: function(obj){
+                                        var html = '<select>';
+                                        for(var i=0;i<res.list.length; i++){
+                                            var flowObj = res.list[i];
+                                            var flowValue = flowObj.label + '@' + flowObj.version + '@' + flowObj.companyid;
+                                            html += '<option value="' + flowValue + ''+'">' + flowObj.name + '</option>'
+                                        }
+                                        html += '</select>';
+                                        $(obj.selector).find('#flowSelect').empty().html(html);
+                                        form.render('select');
+                                    }
+                                });
+                            }
+                        }else{
+                            layer.msg('查询流程失败');
+                        }
+                    });
+                    break;
+                case 'cancel':
+                    var index_flowLog = layer.open({
+                        offset: '10px',
+                        title: '流程撤办',
+                        maxmin: false,
+                        type: 2,//页面层
+                        area: ['600px', '550px'],//高度自适应
+                        shadeClose: false,
+                        content: '../flow/flowCancel.html'//加载该区域的html
+                    });
+                    break;
+                case 'special':
+                    common.fetchGet('flowEngine/engineQuery/getProcessInstance?piid=' + data.processInstanceid,function(res){
+                        if(res.success){
+                            if(res.object){
+                                parentEnt.ptLabel = res.object.ptLabel;
+                                parentEnt.ptVersion = res.object.ptVersion;
+                                parentEnt.ptCompanyId = res.object.ptCompanyId;
+                                parentEnt.catalogueId = catalogueId;
+                                parentEnt.piid = data.processInstanceid;
+                                parentEnt.aiid = data.activityInstanceid;
+                                var index_apply = layer.open({
+                                    offset: '10px',
+                                    title: '发起申请',
+                                    maxmin: false,
+                                    type: 2,//页面层
+                                    area: ['600px', '420px'],//高度自适应
+                                    shadeClose: false,
+                                    content: '../flow/flowSpecialSend.html'//加载该区域的html
+                                });
+                            }else{
+                                layer.msg('未找到流程实例信息');
+                            }
+                        }else{
+                            layer.alert(res.resultMessage);
+                        }
+                    });
+                    break;
+                case 'flowLog'://流程记录
+                    parentEnt.piid = data.processInstanceid;
+                    var index_flowLog = layer.open({
+                        offset: '10px',
+                        title: '流程记录',
+                        maxmin: false,
+                        type: 2,//页面层
+                        area: ['600px', '550px'],//高度自适应
+                        shadeClose: false,
+                        content: '../flow/flowLog.html'//加载该区域的html
+                    });
+                    break;
+            }
+        });
+        //查询
+        form.on('submit(formSearch)', function (obj) {
+            //表格重载
+            table.reload('table1', {
+                url: baseUrl + 'sysmgr/contentApply/queryContentApplyPage',
+                method: 'post',
+                page: {
+                    curr: 1
+                },
+                where: {
+                    caApplyType : obj.field.caApplyType,
+                    caApplyContent : obj.field.caApplyContent,
+                    flowType : obj.field.ggAuditType,
+                    caApplyUnitname : obj.field.caApplyUnitname
+                }
+            });
+            return false;
+        });
+
+        tableReload = eventHandle.tableReload;
+    });
+</script>
+<!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

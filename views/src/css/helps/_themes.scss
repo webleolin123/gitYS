@@ -1,0 +1,155 @@
+@charset "utf-8";
+
+/*
+ * @author gl
+ * @description 主题样式设置、 占位样式
+ * 需要优化的改进点：使用@extend 整理出所有多次使用的占位样式 （后期弄）
+ **/
+
+@import "mixin"; //引用公共函数
+@import "variable"; //变量
+
+
+
+
+//通用class 样式设置
+.primary{
+  color: $primary-color;
+  //@include primaryColor()
+}
+
+.danger {
+  color: $alert-color;
+  //@include primaryColor()
+}
+
+.warning {
+  color: $warning-color;
+  //@include primaryColor()
+}
+
+.gray {
+  color: $gray;
+  //@include primaryColor()
+}
+
+.green {
+  color: $green;
+  //@include primaryColor()
+}
+
+.font-weight-bold{
+  font-weight: bold;
+}
+
+.bg-primary{
+  background: $primary-color;
+}
+
+.bg-green, .bg-success {
+  background: $green;
+}
+
+.bg-danger {
+  background: $alert-color;
+}
+
+.bg-warn {
+  background: $warning-color;
+}
+.bg-gray{
+  background: $gray;
+}
+
+.bg-red {
+  background: #d30001;
+}
+
+/*主题色设置*/
+
+//主色设置
+@mixin primary() {
+  @include primaryColorSet('primary'){
+    color: $primary-color;
+  }
+  @include primaryColorSet('green'){
+    color: $green;
+  }
+  @include primaryColorSet('gray'){
+    color: $gray;
+  }
+}
+//border-bottom 2px solid
+@mixin underline2() {
+  @include primaryColorSet('primary'){
+    border-bottom: 2px solid  $primary-color;
+  }
+  @include primaryColorSet('green'){
+    border-bottom: 2px solid  $green;
+  }
+  @include primaryColorSet('gray'){
+    border-bottom: 2px solid  $gray;
+  }
+}
+
+@mixin underline($number,$border-way) {
+  @include primaryColorSet('primary') {
+    border-#{$border-way}: #{$number}px solid $primary-color;
+  }
+  @include primaryColorSet('green') {
+    border-bottom: 2px solid $green;
+  }
+  @include primaryColorSet('gray') {
+    border-bottom: 2px solid $gray;
+  }
+}
+
+//border-color default
+@mixin borderColor() {
+  @include primaryColorSet('primary'){
+    border-color:$primary-color;
+  }
+  @include primaryColorSet('green'){
+    border-color:$green;
+  }
+  @include primaryColorSet('gray'){
+    border-color:$gray;
+  }
+}
+
+//主背景色设置
+@mixin primaryBg() {
+  @include primaryColorSet('primary'){
+    background-color: $primary-color;
+  }
+  @include primaryColorSet('green'){
+    background-color: $green;
+  }
+  @include primaryColorSet('gray'){
+    background-color: $gray;
+  }
+}
+
+
+//暗黑主题 相关变量
+
+$dark-bg: #021136;
+$dart-zw-color: #C2C2C2;
+$dark-title-color: #FFFFFF;
+$dark-border-color: #256583;
+$dark-primary: #0186c8;
+$dark-hover-color: #33405f;
+$dark-module-bg: #122142;
+
+.bg-f7 {
+  background: #f7f7f7;
+}
+
+/*-----------------公共占位样式 @extend----------------------------------*/
+
+%text-ellipsis{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+

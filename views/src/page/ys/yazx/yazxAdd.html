@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+
+<head>
+    <meta charset="UTF-8">
+    <title>议案执行-新建编辑</title>
+    <meta content="webkit" name="renderer" />
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../../js/layui/css/layui.css" />
+    <link href="../../../css/public.css?v1.01" rel="stylesheet" />
+    <link href="../../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <script src="../../../js/lib/jquery.1.12.3.js"></script>
+    <style>
+        .hytitle {
+            font-size: 14px;
+        }
+
+        .hylabel {
+            border: 1px solid transparent !important;
+            background: transparent !important;
+        }
+
+        .hyinput {
+            border: 1px solid transparent !important;
+            border-bottom-color: red !important;
+        }
+
+        .layui-form-label {
+            width: 97px;
+        }
+
+        /*.layui-unselect {*/
+        /*border-color: #f56c6c;*/
+        /*border-top-style: none;*/
+        /*border-right-style: none;*/
+        /*border-left-style: none;*/
+        /*}*/
+        /* .layui-form-select .layui-edge {
+            border-top-color: #f56c6c;
+        }
+
+        /*body{*/
+        /*background:#f8f8f8;*/
+        /*}*/
+        .load-btn,
+        .check-btn,
+        .right-btn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            border-radius: 3px;
+        }
+
+        .right70 {
+            right: 70px;
+        }
+
+        .relative {
+            position: relative;
+        }
+
+        .padRt64 {
+            padding-right: 64px;
+        }
+
+        li {
+            cursor: pointer;
+        }
+
+        .zsBga {
+            color: purple;
+            vertical-align: 1px;
+            opacity: 0.5;
+        }
+
+        .eleTree.ele5,
+        .eleTree.ele6,
+        .eleTree.eleBill {
+            height: 300px;
+            width: 100%;
+            display: none;
+            position: absolute;
+            top: 100%;
+            background-color: #fff;
+            z-index: 100;
+            border: 1px solid #ccc;
+        }
+
+        /* 去除弹窗侧面张开按钮 */
+        /*a.layui-layer-ico.layui-layer-max{*/
+        /*display: none;*/
+        /*}*/
+        /*a.layui-layer-ico.layui-layer-max.layui-layer-maxmin{*/
+        /*display:inline-block!important;*/
+        /*}*/
+        /* .layui-table-tool {
+            min-height: 0px;
+        } */
+
+        th>div {
+            text-align: center;
+        }
+
+        .laytable-cell-checkbox .layui-icon-ok {
+            position: relative;
+            top: -5px;
+        }
+
+
+        .eleTree.ele5,
+        .eleTree.ele6,
+        .eleTree.eleBill {
+            height: 300px;
+            width: 100%;
+            display: none;
+            position: absolute;
+            top: 100%;
+            background-color: #fff;
+            z-index: 100;
+            border: 1px solid #ccc;
+        }
+    </style>
+
+</head>
+
+
+<body class="iframe-h">
+
+    <div class="content-wrap">
+        <div class="layui-row layui-col-space15">
+
+            <!-- 基本信息 -->
+            <div class="layui-card" style="margin: 7.5px;">
+                <div class="layui-card-header layui-card-header-custom">
+                    <span><i></i><b style="font-size: 19px;">议案信息</b></span>
+                </div>
+                <div class="layui-card-body">
+                    <div class="layui-row layui-col-space15">
+                        <div class="layui-col-md15">
+                            <div class="layui-form-item" style="position: relative;">
+                                <label class="layui-form-label hylabel">议案名称:</label>
+                                <div class="layui-input-block" style="padding-right: 80px;">
+                                    <input autocomplete="off" class="layui-input hyinput" name="subjectName"
+                                        placeholder="请输入" readonly type="text" />
+                                </div>
+                                <div style="position:absolute;right:0;top:0;">
+                                    <button class="layui-btn viewShow" type="button" id="yaView"><i class="fa fa-search"
+                                            aria-hidden="true"></i> 详情
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-row layui-col-space15">
+                        <div class="layui-col-md15">
+                            <div class="layui-form-item" style="position: relative;">
+                                <label class="layui-form-label hylabel">会议名称:</label>
+                                <div class="layui-input-block" style="padding-right: 80px;">
+                                    <input autocomplete="off" class="layui-input hyinput" readonly name="meetingName"
+                                        placeholder="请输入" type="text">
+                                </div>
+                                <div style="position: absolute;right:0;top:0;">
+                                    <button class="layui-btn viewShow" type="button" id="meetingView"><i
+                                            class="fa fa-search" aria-hidden="true"></i> 详情
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-row layui-col-space15">
+                        <div class="layui-col-md6">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label hylabel">会议类型:</label>
+                                <div class="layui-input-block">
+                                    <input autocomplete="off" class="layui-input hyinput" readonly
+                                        name="meetingTypeName" placeholder="请输入" type="text">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-md6">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label hylabel">会议日期:</label>
+                                <div class="layui-input-block">
+                                    <input autocomplete="off" class="layui-input hyinput" name="meetingTime"
+                                        placeholder="请选择" type="text" type="text" id="meetingDate" readonly />
+                                    <!-- <div class="eleTree ele6" id="ele6" lay-filter="regulationType"></div> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-row layui-col-space15">
+                        <div class="layui-col-md6">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label hylabel">议案类别:</label>
+                                <div class="layui-input-block">
+                                    <input autocomplete="off" class="layui-input hyinput" readonly name="billTypeName"
+                                        placeholder="请输入" type="text">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-md6">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label hylabel">提出部门:</label>
+                                <div class="layui-input-block">
+                                    <input autocomplete="off" class="layui-input hyinput" name="subjectSoName"
+                                        placeholder="请输入" readonly type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-row layui-col-space15">
+                        <div class="layui-col-xs12">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label hylabel">主要内容:</label>
+                                <div class="layui-input-block">
+                                    <textarea class="layui-textarea hyinput" readonly name="motionContent"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-row layui-col-space15">
+                        <div class="layui-col-xs12">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label hylabel">审议结论:</label>
+                                <div class="layui-input-block">
+                                    <textarea class="layui-textarea hyinput" readonly name="subjectResult"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- -----------议案执行------------ -->
+            <div class="layui-collapse white-bg" style="margin:12px 7.5px 7.5px 7.5px;">
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title white-bg">议案执行</h2>
+                    <div class="layui-colla-content layui-show">
+                        <div class="layui-form layui-form-pane form-theme3" lay-filter="submitExecution"
+                            name="yazxForm">
+                            <input type="hidden" name="subjectId">
+                            <input type="hidden" name="executionId">
+                            <div class="layui-card">
+                                <div class="layui-card-body">
+                                    <div class="layui-row layui-col-space15">
+                                        <div class="layui-col-md6">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label hylabel"><b
+                                                        class="red">*</b>牵头部门:</label>
+                                                <div class="layui-input-block">
+                                                    <input autocomplete="off" class="layui-input hyinput"
+                                                        name="leadDept" placeholder="请选择" type="text"
+                                                        lay-verify="required" type="text" readonly />
+                                                        <div class="eleTree ele5"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="layui-col-md6">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label hylabel"><b class="red">*</b>牵头人:</label>
+                                                <div class="layui-input-block">
+                                                    <input autocomplete="off" class="layui-input hyinput"
+                                                        name="leadPerson" placeholder="请输入" type="text"
+                                                        lay-verify="required" type="text" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-row layui-col-space15">
+                                        <div class="layui-col-md12">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label hylabel"><b
+                                                        class="red">*</b>督办记录:</label>
+                                                <div class="layui-input-block">
+                                                    <textarea autocomplete="off" class="layui-textarea hyinput"
+                                                        lay-verify="required" name="supervisionRecord" placeholder=""
+                                                        type="text"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- 时间安排 -->
+                                    <div class="layui-row layui-col-space15">
+                                        <div class="layui-col-md12">
+                                            <div class="layui-form-item" style="position: relative;">
+                                                <label class="layui-form-label hylabel"><b
+                                                        class="red">*</b>时间安排:</label>
+                                                <div class="layui-input-block">
+                                                    <textarea autocomplete="off" class="layui-textarea hyinput"
+                                                        lay-verify="required" name="timing" placeholder=""
+                                                        type="text"></textarea>
+                                                </div>
+                                                <div class="layui-input-block" style="padding-right: 176px;">
+                                                    <input class="layui-input" name="timeFileName"
+                                                        placeholder="根据议题决策后按照具体实施工作制定的时间进度计划，并转换成的PDF或OFD格式文件。"
+                                                        readonly="readonly" type="text">
+                                                    <input class="hide" type="text" name="timeFileId" id="timeFileId">
+                                                </div>
+                                                <div
+                                                    style="position: absolute;top: 103px; right: 0;display: inline-block;">
+                                                    <button id="hideAddTimeFileAddBtn" class="hide"></button>
+                                                    <button class="layui-btn viewHiden editShow" id="timeFileAddBtn"><i
+                                                            class="layui-icon">&#xe62f;</i>上传</button>
+                                                    <button class="layui-btn layui-btn-warm viewHiden editShow"
+                                                        id="timeFileDelBtn"><i
+                                                            class="layui-icon">&#xe640;</i>删除</button>
+                                                    <button class="layui-btn layui-btn-warm viewShow editHide"
+                                                        id="timeFilePreviewBtn"><i
+                                                            class="layui-icon">&#xe640;</i>预览</button>
+                                                    <button class="layui-btn layui-btn-warm viewShow editHide"
+                                                        id="timeFileDownloadBtn"><i
+                                                            class="layui-icon">&#xe640;</i>下载</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- 实施情况 -->
+                                    <div class="layui-row layui-col-space15">
+                                        <div class="layui-col-md12">
+                                            <div class="layui-form-item" style="position: relative;">
+                                                <label class="layui-form-label hylabel"><b
+                                                        class="red">*</b>实施情况:</label>
+                                                <div class="layui-input-block">
+                                                    <textarea autocomplete="off" class="layui-textarea hyinput"
+                                                        name="description" placeholder="" lay-verify="required"
+                                                        type="text"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="layui-row layui-col-space15">
+                                        <div class="layui-col-md6">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label hylabel"><b
+                                                        class="red">*</b>执行状态:</label>
+                                                <div class="layui-input-block">
+                                                    <select name="implementationStatusCode" id="" lay-verify="required">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="layui-col-md6">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label hylabel"><b
+                                                        class="red">*</b>报国资委:</label>
+                                                <div class="layui-input-block">
+                                                    <input checked lay-filter="" name="reportToSasac" title="否"
+                                                        type="radio" value="0" style="margin-right: 10%;">
+                                                    &#X3000;&#X3000;&#X3000;
+                                                    <input lay-filter="" name="reportToSasac" title="是" type="radio"
+                                                        value="1">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="layui-row layui-col-space15">
+                                        <div class="layui-col-md12">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label hylabel">相关文件:</label>
+                                                <div class="layui-input-block" style="padding-top: 11px;">
+                                                    <button id="hideAddFormalFileBtn" class="hide"></button>
+                                                    <table id="formalFileTable" lay-filter="formalFileTable"
+                                                        style="border: 1px solid red;"></table>
+                                                    <script id="formalFileTableBar" type="text/html">
+                                                    <div class="layui-btn-container">
+                                                        <button class="layui-btn layui-btn-sm viewHiden" permission-btn="" id="addFormalFileBtn" lay-event="add">
+                                                            <i class="layui-icon">&#xe608;</i> 新增
+                                                        </button>
+                                                        <button class="layui-btn layui-btn-sm layui-btn-danger viewHiden" lay-event="delete" permission-btn="">
+                                                            <i class="layui-icon">&#xe640;</i> 删除
+                                                        </button>
+                                                    </div>
+                                                </script>
+                                                    <script type="text/html" id="formalFileTableOper">
+                                                    <a class="layui-btn layui-btn-xs layui-btn-warm viewShow" lay-event="preview">预览</a>
+                                                    <a class="layui-btn layui-btn-xs layui-btn-warm viewShow" lay-event="download">下载</a>
+                                                    <!-- permission-btn="previewYazx" -->
+                                                </script>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="layui-row layui-col-space15" style="margin-bottom: 50px;">
+                                        <div class="layui-col-md6">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label hylabel"><b
+                                                        class="red">*</b>填报部门:</label>
+                                                <div class="layui-input-block">
+                                                    <input autocomplete="off" class="layui-input hyinput" name="soName"
+                                                        lay-verify="required" type="text" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="layui-col-md6">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label hylabel"><b
+                                                        class="red">*</b>填报人员:</label>
+                                                <div class="layui-input-block">
+                                                    <input autocomplete="off" lay-verify="required"
+                                                        class="layui-input hyinput" name="ggCreateUser" type="text"
+                                                        readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div style="position: fixed;width: 100%;bottom: 17px;z-index: 999;" class="viewHiden">
+                                <div class="layui-card" style="margin-top: 10px">
+                                    <div class="layui-card-body">
+                                        <div class="layui-form-item" style="text-align: center;">
+                                            <button type="button" class="layui-btn layui-btn-danger viewHiden"
+                                                lay-submit lay-filter="submitExecution"><i
+                                                    class="layui-icon">&#xe605;</i>提交</button>
+                                            <!-- permission-btn="submitRegulation" -->
+                                            <button type="button" lay-filter="saveExecution" lay-submit
+                                                class="layui-btn viewHiden"> <i
+                                                    class="layui-icon">&#x1005;</i>保存</button>
+                                            <!-- permission-btn="savaRegulation" -->
+                                            <button type="button" class="layui-btn viewHiden" lay-submit
+                                                lay-filter="copyExecution"><i class="layui-icon"
+                                                    style="margin-right: 2px">&#xe608;</i>复制</button>
+                                            <button type="button" class="layui-btn layui-btn-primary btnClose"><i
+                                                    class="icon iconfont icon-button-cha-2"
+                                                    style="margin-right: 3px"></i>关闭</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./../../../js/layui/layui.js"></script>
+    <script>
+        (function ($) {
+            $.reloadParentPage = function () {//获取父页面dom
+                if ($(top.window.document).find('#refresh')[0]) {
+                    $(top.window.document).find('#refresh').trigger('click');
+                } else {
+                    // $($(top.window.document).find('#mainTabContent .layui-show').find('.iframe')[0].contentWindow.document).find(toModule.toModuleDom).click();
+                    //$($(top.window.document).find('#menuContent').find('.iframe')[0].contentWindow.document).find('#refresh').click();
+                    parent.$('#refresh', parent.document).trigger('click');
+                }
+            }
+        })(jQuery);
+
+        layui.config({
+            base: '../../../src/js/',
+            version: new Date().getTime()
+        }).use(['eleTree', 'layer', 'table', 'form', 'laytpl', 'common', 'element', 'laydate', 'upload'], function () {
+
+            var table = layui.table;
+            var form = layui.form;
+            var common = layui.common;
+            var element = layui.element;
+            var laydate = layui.laydate;
+            var upload = layui.upload;
+            var util = layui.util;
+            var tree = layui.eleTree;
+            //按钮权限
+            common.buttonLimit();
+            element.init();
+            var baseUrl = '../../../../';
+            common.themeSet();
+            var temporary = common.getQueryVariable('temporary');
+            var sourceExecutionId = common.getQueryVariable('sourceExecutionId');
+            //议题id
+            var subjectId = common.getQueryVariable('subjectId');
+            var executionId = common.getQueryVariable('executionId');
+            var oldTimeFileId;
+            var meetingId;
+            var meetingTypeName;
+
+            var uploadTimeFileObj;
+            var deptList = [];
+            //获取所有部门
+            common.fetchPost('sysmgr/sysOrgan/selectSysOrganTreeBySeId', {}, function (res) {
+                if (res.list && res.list.length > 0) {
+                    deptList = res.list;
+                }
+            },false,false);
+            var eventHandle = {
+
+                //获取议案信息
+                getExecutionInfo: function () {
+                    if(temporary === "1"){//需要复制出来的临时的议案执行
+                        common.fetchPost('meetingmgr/tiolExecution/addTmpTiolExecution?sourceExecutionId=' + sourceExecutionId+'&targetSubjectId='+subjectId, null, function (res) {
+                            executionId = res.object;
+                        }, function (res) {
+                            layer.alert(res.resultMessage);
+                            return false;
+                        }, false);
+                    }
+
+                    if (executionId) {
+                        common.fetchGet('meetingmgr/tiolExecution/getTiolExecutionVo?executionId=' + executionId, function (res) {
+                            var data = res.object;
+                            $('input[name=subjectName]').val(data.subjectName);
+                            $('input[name=meetingName]').val(data.meetingName);
+                            $('input[name=meetingTypeName]').val(data.meetingTypeName);
+                            $('input[name=meetingTime]').val(data.meetingTime);
+                            $('input[name=billTypeName]').val(data.billTypeName);
+                            $('input[name=subjectSoName]').val(data.subjectSoName);
+                            $('textarea[name=subjectResult]').val(data.subjectResult);
+                            $('textarea[name=motionContent]').val(data.motionContent);
+                            $('input[name=soName]').val(data.soName);
+                            $('input[name=ggCreateUser]').val(data.ggCreateUser);
+
+                            $('input[name=subjectId]').val(data.subjectId);
+                            $('input[name=executionId]').val(data.executionId);
+                            $('input[name=leadDept]').val(data.leadDept);
+                            $('input[name=leadPerson]').val(data.leadPerson);
+
+                            $('textarea[name=supervisionRecord]').val(data.supervisionRecord);
+                            $('textarea[name=timing]').val(data.timing);
+                            $('textarea[name=description]').val(data.description);
+
+                            subjectId = data.subjectId;
+                            // debugger
+                            meetingId = data.meetingId;
+                            meetingTypeName = data.meetingName;
+                            $('select[name=implementationStatusCode]').val(data.implementationStatusCode);
+                            form.render('select');
+
+                            $("input:radio[value='" + data.reportToSasac + "'][name='reportToSasac']").prop('checked', 'true');
+                            form.render("radio");
+
+                        }, function (res) {
+
+                        });
+
+                        //获取时间进度文件
+                        common.fetchGet('zuul/dfsmgr/file/getFileByResIdAndFileType?id=' + executionId + '&type=timeFile', function (res) {
+                            var data = res.list || [];
+                            if (data.length > 0) {
+                                $('input[name=timeFileName]').val(data[0].fiOriginalName);
+                                $('input[name=timeFileId]').val(data[0].fiId);
+                                $('#timeFileAddBtn').attr("disabled", "disabled");
+                            }
+                        });
+                    }
+                    else {
+                        common.fetchGet('meetingmgr/tiolExecution/getSubjectInfo?subjectId=' + subjectId, function (res) {
+                            var data = res.object;
+                            $('input[name=subjectId]').val(subjectId);
+                            $('input[name=subjectName]').val(data.subjectName);
+                            $('input[name=meetingName]').val(data.meetingName);
+                            $('input[name=meetingTypeName]').val(data.meetingTypeName);
+                            $('input[name=meetingTime]').val(data.meetingTime);
+                            $('input[name=billTypeName]').val(data.billTypeName);
+                            $('input[name=subjectSoName]').val(data.subjectSoName);
+                            $('textarea[name=subjectResult]').val(data.subjectResult);
+                            $('textarea[name=motionContent]').val(data.motionContent);
+                            $('input[name=soName]').val(data.soName);
+                            $('input[name=ggCreateUser]').val(data.ggCreateUser);
+                            // subjectId=data.subjectId;
+                            meetingId = data.meetingId;
+                            meetingTypeName = data.meetingName;
+                        }, function (res) {
+                        });
+                    }
+                },
+                //从字典表查表单的下拉框数据
+                selectDictData: function () {
+                    common.selectDataSet({
+                        elem: $('[name=implementationStatusCode]'),
+                        url: 'sysmgr/dicts/selectDictListByPcode?dictPCode=IMPLEMENTATION_STATUS',
+                        responseList: 'list',
+                        method: 'get',//默认为get
+                        optionText: 'sdName',
+                        optionValue: 'sdCode',
+                        success: function (data) {
+                            form.render('select');
+                        }
+                    });
+                },
+                formalFileTableReload: function () {
+                    table.reload('formalFileTable', {
+                        url: baseUrl + 'zuul/dfsmgr/file/getFileByResIdAndFileType?id=' + executionId + '&type=formalFile',
+                    });
+                },
+                //表格初始化
+                formalFileTableInit: function () {
+                    var url = "";
+                    if (executionId) {
+                        url = baseUrl + 'zuul/dfsmgr/file/getFileByResIdAndFileType?id=' + executionId + '&type=formalFile';
+                    }
+                    table.render(common.tableInitParams({
+                        elem: '#formalFileTable',
+                        url: url,
+                        method: 'post',
+                        toolbar: '#formalFileTableBar',
+                        // height: 'full-200',
+                        height: false,
+                        cols: [[
+                            { type: 'checkbox' },
+                            { type: 'numbers', title: '序号' },
+                            { field: 'fiName', title: '文件名称', minWidth: 150, },
+                            { field: '', title: '操作', toolbar: '#formalFileTableOper', fixed: 'right', width: 120, align: "center" }
+                        ]],
+                    }));
+
+                    table.on('toolbar(formalFileTable)', function (obj) {
+                        var checkStatus = table.checkStatus(obj.config.id);
+                        switch (obj.event) {
+                            case 'delete'://删除
+                                if (checkStatus.data.length == 0) {
+                                    layer.msg('请选择删除列');
+                                    return;
+                                }
+                                layer.confirm('确定删除选中列?', { icon: 3, title: '提示', offset: '150px' }, function (index) {
+                                    var fiIds = [];
+                                    for (var i = 0; i < checkStatus.data.length; i++) {
+                                        fiIds.push(checkStatus.data[i]['fiId'])
+                                    }
+                                    var layerLoader = common.layerLoader();
+                                    common.fetchDelete("zuul/dfsmgr/file/deleteById?id=" + fiIds.join(','), function (res) {
+                                        layer.close(layerLoader);
+                                        if (res.success) {
+                                            eventHandle.formalFileTableReload();
+                                        }
+                                        else {
+                                            layer.close(layerLoader);
+                                        }
+                                        return false;
+                                    }, function (res) {
+                                        layer.close(layerLoader);
+                                        return false;
+                                    });
+
+                                    layer.close(index);
+                                });
+                                break;
+                            case 'add':
+                                if (executionId) {
+                                    $("#hideAddFormalFileBtn").click();
+                                }
+                                else {
+                                    return layer.msg("请先保存议案执行");
+                                }
+                                break;
+                        }
+                    });
+
+                    table.on('tool(formalFileTable)', function (obj) {
+                        var data = obj.data;
+                        switch (obj.event) {
+                            case "preview":// 预览
+                                common.pdfPreview(data.fiId, data.fiSuffix ? data.fiSuffix : 'pdf');
+                                break;
+                            case "download":// 下载
+                                window.open("/dfsmgr/file/filesDownload?fid=" + data.fiId);
+                                break;
+                        }
+                    });
+
+                    upload.render({
+                        elem: '#hideAddFormalFileBtn',
+                        url: baseUrl + 'zuul/dfsmgr/file/fileUpload',
+                        auto: true,
+                        // bindAction: "#saveLawFile",
+                        before: function () {
+                        },
+                        data: {
+                            resId: executionId,
+                            fiFileType: 'formalFile'
+                        },
+                        accept: 'file',
+                        done: function (res, index, upload) {
+                            if (res.success) {
+                                eventHandle.formalFileTableReload();
+                            }
+                            return false;
+                        }
+                    });
+                },
+                //查看模式
+                renderViewMode: function () {
+                    var view = common.getQueryVariable("view");
+                    if (view == "view") {
+                        $("button").addClass("hide");
+                        $("input,select,textarea").attr("disabled", "disabled");
+                        $(".viewHiden").addClass("hide");
+                        $(".viewShow").removeClass("hide");
+                    }
+                },
+                //绑定事件
+                domListen: function () {
+
+                    $('input[name=leadDept]').off('click').on("click", function (e) {
+                        e.stopPropagation();
+                        var el5;
+                        if (!el5) {
+                            el5 = tree.render({
+                                elem: $(".ele5"),
+                                // url: baseUrl + 'sysmgr/sysOrgan/selectSysOrganTreeBySeId',
+                                // method: "POST",
+                                data: deptList,
+                                response: {                 // 对于后台数据重新定义名字
+                                    statusName: "success",
+                                    statusCode: "0",
+                                    dataName: "list"
+                                },
+                                defaultExpandAll: true,
+                                expandOnClickNode: false,
+                                highlightCurrent: true
+                            });
+                        }
+                        $(".ele5").toggle();
+                    });
+                    tree.on('nodeClick', function (item) {
+                        $('input[name=leadDept]').val(item.data.currentData.name);
+                        $(".ele5").hide();
+                    });
+
+                    $(document).on("click", function () {
+                        $(".ele5").hide();
+
+                    });
+                    form.on("submit(submitExecution)", function (obj) {
+                        if (executionId) {
+                            var layerLoader = common.layerLoader();
+                            common.fetchPost("meetingmgr/tiolExecution/submitTiolExecution?executionId=" + executionId, null, function (res) {
+                                layer.close(layerLoader);
+                                $.reloadParentPage();
+                                parent.layer.closeAll();
+                                parent.layer.msg("提交成功");
+                            }, function (err) {
+                                layer.close(layerLoader);
+                                layer.alert(err.resultMessage);
+                            });
+                        }
+                        else {
+                            return layer.msg("请先保存议案执行");
+                        }
+                    }, function (err) { });
+
+                    form.on("submit(saveExecution)", function (obj) {
+                        var url = 'meetingmgr/tiolExecution/addTiolExecution';
+                        if (executionId) {
+                            url = 'meetingmgr/tiolExecution/updateTiolExecution';
+                        }
+                        var param = obj.field;
+                        var layerLoader = common.layerLoader();
+                        common.fetchPost(url, param, function (res) {
+                            layer.close(layerLoader);
+                            $("[name='executionId']").val(res.object);
+                            executionId = res.object;
+                            $.reloadParentPage();
+                            parent.layer.closeAll();
+                            parent.layer.msg("保存成功");
+                        }, function (err) {
+                            layer.close(layerLoader);
+                            layer.alert(err.resultMessage);
+                        });
+                    }, function (err) { });
+
+                    form.on("submit(copyExecution)", function (obj) {
+                        executionId = undefined;
+                        $("[name='executionId']").val('');
+                        var url = 'meetingmgr/tiolExecution/addTiolExecution';
+                        if (executionId) {
+                            url = 'meetingmgr/tiolExecution/updateTiolExecution';
+                        }
+                        var param = obj.field;
+                        var layerLoader = common.layerLoader();
+                        common.fetchPost(url, param, function (res) {
+                            layer.close(layerLoader);
+                            $("[name='executionId']").val(res.object);
+                            executionId = res.object;
+                            $.reloadParentPage();
+                            parent.layer.closeAll();
+                            parent.layer.msg("复制成功");
+                        }, function (err) {
+                            layer.close(layerLoader);
+                            layer.alert(err.resultMessage);
+                        });
+                    }, function (err) { });
+
+                    $('.btnClose').off('click').on('click', function () {
+                        if(temporary === "1"){
+                            parent.layer.closeAll();
+                            common.fetchPost('meetingmgr/tiolExecution/delTmpTiolExecution?executionId='+executionId+'&targetSubjectId='+subjectId, null, function (res) {
+                            }, function (res) {
+                                layer.alert(res.resultMessage);
+                            });
+                        }
+                        else{
+                            parent.layer.closeAll();
+                        }
+                    });
+
+                    upload.render({
+                        elem: '#hideAddTimeFileAddBtn',
+                        url: baseUrl + 'zuul/dfsmgr/file/fileUpload',
+                        auto: true,
+                        // bindAction: "#saveLawFile",
+                        before: function () {
+                            oldTimeFileId = $("input[name=timeFileId]").val();
+                        },
+                        data: {
+                            resId: executionId,
+                            fiFileType: 'timeFile'
+                        },
+                        accept: 'file',
+                        done: function (res, index, upload) {
+                            if (res.success) {
+                                $("input[name=timeFileId]").val(res.list[0].fiId);
+                                $("input[name=timeFileName]").val(res.list[0].fiOriginalName);
+                                $('#timeFileAddBtn').attr("disabled", "disabled");
+                                if (oldTimeFileId && oldTimeFileId.length > 0) {
+                                    common.fetchDelete("zuul/dfsmgr/file/deleteById?id=" + oldTimeFileId, function (res) { });
+                                }
+                            }
+                            return false;
+                        }
+                    });
+
+                    // 删除时间进度文件
+                    $('#timeFileDelBtn').off('click').on('click', function () {
+                        if ($("input[name=timeFileId]").val().length > 0) {
+                            var loading = common.layerLoader();
+                            common.fetchDelete("zuul/dfsmgr/file/deleteById?id=" + $("input[name=timeFileId]").val(), function (res) {
+                                layer.close(loading);
+                                if (res.success && res.object) {
+                                    layer.msg("删除成功!");
+                                    $("input[name=timeFileName]").val('');
+                                    $("input[name=timeFileId]").val('');
+                                    $('#timeFileAddBtn').removeAttr("disabled");
+                                }
+                                else {
+                                    layer.alert(res.resultMessage);
+                                }
+                                return false;
+                            }, function (res) {
+                                layer.close(loading);
+                                layer.alert(res.resultMessage);
+                            });
+                        }
+                        return false;
+                    });
+
+                    // 添加时间进度文件
+                    $('#timeFileAddBtn').off("click").bind("click", function () {
+                        if (executionId && executionId.length > 0) {
+                            $("#hideAddFormalFileBtn").click();
+                        }
+                        else {
+                            layer.msg("请先保存议案执行");
+                            return false;
+                        }
+                    });
+
+                    // 预览时间进度文件
+                    $('#timeFilePreviewBtn').off('click').on('click', function () {
+                        if ($("input[name=timeFileId]").val().length > 0) {
+                            var id = $("input[name=timeFileId]").val();
+                            common.pdfPreview(id, 'pdf');
+                        }
+                        return false;
+                    });
+
+                    // 下载时间进度文件
+                    $('#timeFileDownloadBtn').off('click').on('click', function () {
+                        if ($("input[name=timeFileId]").val().length > 0) {
+                            window.open("/dfsmgr/file/filesDownload?fid=" + $("input[name=timeFileId]").val());
+                        }
+                        return false;
+                    });
+
+                    // 点击查看议案
+                    $('#yaView').on('click', function () {
+                        var viewMeeting = top.layer.open({
+                            title: ['议案查看'],
+                            type: 2,
+                            content: baseUrl + 'src/page/ys/yagl/yaListReportedView.html?motionId=' + subjectId + "&meetingTypeName=" + meetingTypeName,
+                            maxmin: true
+                        });
+                        top.layer.full(viewMeeting);
+                    });
+
+                    //  点击查看会议
+                    $('#meetingView').on('click', function () {
+                        var viewMeeting = top.layer.open({
+                            title: ['会议查看'],
+                            type: 2,
+                            content: baseUrl + 'src/page/ys/hygl/meetingView.html?meetingId=' + meetingId + '&meetingTypeName=' + meetingTypeName,
+                            maxmin: true,
+                            // btn: ['<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭'],
+                            btnAlign: 'c',
+                            yes: function () {
+                                top.layer.close(viewMeeting);
+                                return false;
+                            },
+                            success: function (layero, index) {
+                            }
+                        });
+                        top.layer.full(viewMeeting);
+                    })
+
+
+                }
+            };
+            $('.editHide').addClass('hide');
+
+            eventHandle.selectDictData();
+            eventHandle.getExecutionInfo();
+            eventHandle.formalFileTableInit();
+            eventHandle.domListen();
+
+            //判断当前查看模式
+            eventHandle.renderViewMode();
+        });
+
+    </script>
+
+    <!--[if lt IE 9]>
+
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+
+</html>

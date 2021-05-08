@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>事项清单</title>
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../js/layui/css/layui.css" />
+    <link href="../../css/public.css?v1.01" rel="stylesheet" />
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script charset="utf-8" src="../../js/common/plugin.js"></script>
+</head>
+<style>
+    .content {
+        height: 100%;
+        width: 100%;
+        position: fixed;
+        background: white;
+    }
+
+    .white-bg {
+        background: white;
+    }
+
+    .iframe-h {
+        height: 100%;
+    }
+
+    .content-wrap {
+        padding: 10px;
+    }
+
+    .red {
+        color: red;
+        padding-left: 5px;
+    }
+
+    .hide {
+        display: none;
+    }
+
+    .layui-form-pane .layui-form-label {
+        width: 150px;
+    }
+
+    .layui-form-pane .layui-input-block {
+        margin-left: 150px;
+    }
+</style>
+
+<body>
+    <!--事项清单内容维护-->
+    <div class="userLayer">
+        <div style="padding: 15px 20px">
+            <form class="layui-form layui-form-pane" name="userLayer" id="seForm">
+                <div style="overflow-y:hidden;overflow-x:hidden">
+                    <input type="hidden" name="itemId" id="itemId">
+                    <input type="hidden" name="seId" id="seId">
+                    <input type="hidden" name="catalogId" id="catalogId">
+                    <input type="hidden" name="itemFillWay" id="itemFillWay">
+                    <input type="hidden" name="uploadStatus" id="uploadStatus">
+                    <input type="hidden" name="quoteItemId" id="quoteItemId">
+                    <input type="hidden" name="operType" id="operType">
+                    <input type="hidden" name="itemMeetingOrderId" id="itemMeetingOrderId">
+                    <input type="hidden" name="ggDelStatus" id="ggDelStatus">
+                    <input type="hidden" name="ggCreateUser" id="ggCreateUser">
+                    <input type="hidden" name="ggCreateUid" id="ggCreateUid">
+                    <input type="hidden" name="ggCreateDatetime" id="ggCreateDatetime">
+                    <input type="hidden" name="ggCreateEname" id="ggCreateEname">
+                    <input type="hidden" name="ggCreateEid" id="ggCreateEid">
+                    <input type="hidden" name="ggUpdateDatetime" id="ggUpdateDatetime">
+                    <input type="hidden" name="ggUpdateUser" id="ggUpdateUser">
+                    <input type="hidden" name="ggUpdateUid" id="ggUpdateUid">
+                    <input type="hidden" name="ggUpdateEname" id="ggUpdateEname">
+                    <input type="hidden" name="ggUpdateEid" id="ggUpdateEid">
+
+                    <div class="layui-row layui-col-space15">
+                        <div class="layui-col-md12">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">目录编码</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="catalogChar" required lay-verify="required"
+                                        autocomplete="off" class="layui-input" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-md12">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">统一信用代码</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="seComcode" required lay-verify="required"
+                                        autocomplete="off" class="layui-input" readonly>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-md6">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">版本号(年份)</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="itemYear" id="year_version" autocomplete="off"
+                                        class="layui-input" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-md6">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">流水号</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="serialNumber" autocomplete="off" class="layui-input"
+                                        readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-md12">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">事项编码</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="itemCode" required lay-verify="required" autocomplete="off"
+                                        class="layui-input" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-md12">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">事项名称</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="itemName" required lay-verify="required" autocomplete="off"
+                                        class="layui-input" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-md12">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">经法律审核</label>
+                                <div class="layui-input-block">
+                                    <input type="radio" name="legalFlag" lay-filter="legalFlag" value="1" title="是"
+                                        checked>
+                                    <input type="radio" name="legalFlag" lay-filter="legalFlag" value="0" title="否">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-xs6">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label hylabel">生效日期</label>
+                                <div class="layui-input-block">
+                                    <input class="layui-input hyinput" id="effectTime" name="effectTime" type="text"
+                                        required readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-xs6">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label hylabel">失效日期</label>
+                                <div class="layui-input-block">
+                                    <input class="layui-input hyinput" id="expireTime" name="expireTime" type="text"
+                                        readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-xs12">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label hylabel">决策会议顺序</label>
+                                <div class="layui-input-block">
+                                    <input class="layui-input hyinput" id="itemMeetingOrder" name="itemMeetingOrder"
+                                        type="text" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-xs12">
+                            <div class="layui-form-item ">
+                                <div class="layui-input-block" id="orderMeeting"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-row layui-col-space15">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" style="width:100%">备注</label>
+                            <div class="layui-input-block" style="margin-left:0;left:0">
+                                <textarea name="remark" class="layui-textarea" readonly></textarea>
+                            </div>
+                        </div>
+                    </div>                    
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- 选择企业选择 -->
+    <div class="add9" style="display: none">
+        <div style="padding: 10px">
+            <div class="layui-row layui-col-space10">
+                <div class="layui-col-xs12">
+                    <ul class="eleTree ele4 unitTree" id="unitTree" lay-filter="unitTree"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="./../../js/layui/layui.js"></script>
+    <script>
+        var request = {
+            getUrlParam: function (name) {
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+                var r = window.location.search.substr(1).match(reg); //匹配目标参数
+                if (r != null) return unescape(r[2]);
+                return null; //返回参数值
+            },
+        }
+
+        layui.config({
+            base: '../../../src/js/',
+            version: new Date().getTime()
+        }).use(['eleTree', 'layer', 'table', 'form', 'laytpl', 'common', 'element', 'laydate'], function () {
+            var table = layui.table;
+            var form = layui.form;
+            var tree = layui.eleTree;
+            var common = layui.common;
+            var element = layui.element;
+            var laydate = layui.laydate;
+            var util = layui.util;
+            var baseUrl = '../../../';
+            var currentMenuSmId = $("#currentMenuSmId", window.parent.document).val();
+
+            var selectSeShortName = '';
+
+            //监听复选框
+            var orderMeetingTypeNames = [];
+            var orderMeetingTypeIds = [];
+
+            element.init();
+            common.themeSet();
+
+
+
+            var eventHandle = {
+                init: function () {
+                    //新增
+                    var catalogId = request.getUrlParam("catalogId");
+                    var catalogChar = request.getUrlParam("catalogChar");
+                    var itemId = request.getUrlParam("itemId");
+                    if (catalogId && catalogChar) {
+                        $('input[name=catalogChar]').val(catalogChar);
+                        $('input[name=catalogId]').val(catalogId);
+                        eventHandle.createItemCode();
+                        eventHandle.initMeetType();
+                    }
+                    //修改
+                    if (itemId) {
+                        common.fetchGet('catalog/tiolItem/selectTiolItemById?itemId=' + itemId, function (res) {
+                            if (res.success) {
+                                eventHandle.setForm(res.object);
+                            }
+                        });
+                    }
+                },
+                //生成事项编码
+                createItemCode: function () {
+                    var catalogCodeEq = $('input[name=catalogChar]').val();
+                    var catalogIdEq = $('input[name=catalogId]').val();
+                    var seComcodeEq = $('input[name=seComcode]').val();
+                    var itemYear = $('input[name=itemYear]').val();
+                    var serialNumber = $('input[name=serialNumber]').val();
+                    var parms = {
+                        catalogIdEq: catalogIdEq,
+                        catalogCodeEq: catalogCodeEq,
+                        seComcodeEq: seComcodeEq,
+                        itemYear: itemYear
+                    };
+                    common.fetchPost('catalog/tiolItem/initItemCode', parms, function (res) {
+                        if (res.success) {
+                            $('input[name=seComcode]').val(res.object.seComcodeEq);
+                            $('input[name=itemYear]').val(res.object.itemYear);
+                            $('input[name=serialNumber]').val(res.object.serialNumber);
+                            $('input[name=itemCode]').val(res.object.itemCode);
+                        }
+                    });
+                },
+                //获取会议类型
+                initMeetType: function (initChecks) {
+                    common.fetchGet('catalog/tiolMeetingType/getTiolMeetingTypeList', function (res) {
+                        if (res.success) {
+                            $.each(res.list, function (index, item) {
+                                var checked = "";
+                                if (initChecks) {
+                                    var initCheckedIds = initChecks.split(",");
+                                    for (var i = 0; i < initCheckedIds.length; i++) {
+                                        if (item.meetingTypeId == initCheckedIds[i]) {
+                                            checked = "checked";
+                                        }
+                                    }
+                                }
+                                $("#orderMeeting").append(" <input type=\"checkbox\" value=\"" + item.meetingTypeId + "\" name=\meetingtype\" title=\"" + item.meetingTypeName + "\" " + checked + ">");
+                            });
+                            form.render();
+                        }
+                    });
+                },
+                setForm: function (data) {
+                    orderMeetingTypeIds = (data.itemMeetingOrderId == null || data.itemMeetingOrderId == "") ? [] : data.itemMeetingOrderId.split(",");
+                    orderMeetingTypeNames = (data.itemMeetingOrder == null || data.itemMeetingOrder == "") ? [] : data.itemMeetingOrder.split("=>");
+
+                    $('input[name=catalogChar]').val(data.catalogChar);
+                    $('input[name=itemId]').val(data.itemId);
+                    $('input[name=itemFillWay]').val(data.itemFillWay);
+                    $('input[name=uploadStatus]').val(data.uploadStatus);
+                    $('input[name=quoteItemId]').val(data.quoteItemId);
+                    $('input[name=operType]').val(data.operType);
+                    $('input[name=catalogId]').val(data.catalogId);
+                    $('input[name=catalogChar]').val(data.catalogChar);
+                    $('input[name=seComcode]').val(data.seComcode);
+                    $('input[name=itemYear]').val(data.itemYear);
+                    $('input[name=itemCode]').val(data.itemCode);
+                    $('input[name=itemName]').val(data.itemName);
+                    $('input[name=serialNumber]').val(data.serialNumber);
+                    $('input[name=itemMeetingOrderId]').val(data.itemMeetingOrderId);
+                    $('input[name=itemMeetingOrder]').val(data.itemMeetingOrder);
+
+
+                    eventHandle.initMeetType(data.itemMeetingOrderId);
+                    $('input[name=effectTime]').val(util.toDateString(data.effectTime, 'yyyy-MM-dd'));
+                    $('input[name=expireTime]').val(util.toDateString(data.expireTime, 'yyyy-MM-dd'));
+
+                    $('textarea[name=remark]').val(data.remark);
+                    $('input[name=ggDelStatus]').val(data.ggDelStatus);
+                    $('input[name=ggCreateUser]').val(data.ggCreateUser);
+                    $('input[name=ggCreateUid]').val(data.ggCreateUid);
+                    $('input[name=ggCreateDatetime]').val(data.ggCreateDatetime);
+                    $('input[name=ggCreateEname]').val(data.ggCreateEname);
+                    $('input[name=ggCreateEid]').val(data.ggCreateEid);
+                    $('input[name=ggUpdateDatetime]').val(data.ggUpdateDatetime);
+                    $('input[name=ggUpdateUser]').val(data.ggUpdateUser);
+                    $('input[name=ggUpdateUid]').val(data.ggUpdateUid);
+                    $('input[name=ggUpdateEname]').val(data.ggUpdateEname);
+                    $('input[name=ggUpdateEid]').val(data.ggUpdateEid);
+                    $("input[name=legalFlag][value="+data.legalFlag+"]").attr("checked",true);
+                    form.render();
+                }
+            };            
+            eventHandle.init();
+            common.buttonLimit($("#currentMenuSmId", window.parent.document).val());
+        });
+
+
+    </script>
+    <!--[if lt IE 9]>
+    <script src="../../js/lib/html5.min.js"></script>
+    <script src="../../js/lib/respond.js"></script>
+    <![endif]-->
+</body>
+
+</html>

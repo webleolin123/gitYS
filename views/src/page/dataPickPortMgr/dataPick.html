@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>数据采集接口管理</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../js/layui/css/layui.css"/>
+    <link href="../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script src="../../js/common/plugin.js"></script>
+
+</head>
+
+<body class="iframe-h">
+    <div class="content-wrap">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-header layui-card-header-custom"><span><i></i>数据采集接口列表</span></div>
+                    <div class="layui-card-body">
+                        <form action="" class="layui-form layui-form-pane">
+                            <div class="layui-row layui-col-space10">
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">接口名称</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="daaName" placeholder="请输入名称" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">是否启用</label>
+                                        <div class="layui-input-block">
+                                            <select name="ggEnStatus">
+                                                <option value="">请选择</option>
+                                                <option value="1">启用</option>
+                                                <option value="0">禁用</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="toggle-area layui-col-space10">
+                                    <div class="layui-col-md4">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">请求方式</label>
+                                            <div class="layui-input-block">
+                                                <select name="daaRequestType">
+                                                    <option value="">请选择</option>
+                                                    <option value="get">get</option>
+                                                    <option value="post">post</option>
+                                                    <option value="put">put</option>
+                                                    <option value="delete">delete</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-col-md4">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">请求协议</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="daaProtocol" placeholder="请输入" autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- <div class="" style="text-align: center;margin-bottom: 5px">
+                                    <button class="layui-btn" lay-submit lay-filter="formSearch"><i class="fa fa-search"></i>查询</button>
+                                    <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i><i class="fa fa-eraser"></i>重置</button>
+                                    <a class="toggle-btn">
+                                        <span>展开</span>
+                                        <i class="fa fa-angle-up"></i>
+                                    </a>
+                                </div> -->
+                                <div class=""
+                                     style="text-align: center; margin-bottom: 5px;position: absolute;width: 33%;right: 0;bottom: 8px;">
+                                        <div class="layui-input-inline" style="padding-left: 20px">
+                                            <button name="searchSubmit" class="layui-btn  " lay-submit="" lay-filter="formSearch" ><i class="fa fa-search"></i>查询</button>
+                                            <button name="reset" lay-filter="reset" type="reset" class="layui-btn layui-btn-primary  "><i class="fa fa-eraser"></i>重置</button>
+                                            <a class="toggle-btn">
+                                            <span>展开</span><i class="fa fa-angle-up"></i></a>
+                                        </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="layui-card">
+                    <div class="layui-card-body" style="padding-top: 0">
+                        <table id="table1" lay-filter="table1"></table>
+                        <script type="text/html" id="tableToolBar">
+                            <div class="layui-btn-container">
+                                <button class="layui-btn layui-btn-sm" lay-event="add" permission-btn="add_dataPickPortMgr">
+                                    <i class="layui-icon">&#xe608;</i> 新增
+                                </button>
+                                <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete" permission-btn="delete_dataPickPortMgr">
+                                    <i class="layui-icon">&#xe640;</i> 删除
+                                </button>
+                                <button class="layui-btn layui-btn-sm " lay-event="enable" permission-btn="enable_dataPickPortMgr">
+                                    <i class="layui-icon">&#xe608;</i> 启用
+                                </button>
+                                <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="forbid" permission-btn="forbid_dataPickPortMgr">
+                                    <i class="layui-icon">&#xe640;</i> 禁用
+                                </button>
+                            </div>
+                        </script>
+                        <script type="text/html" id="tableOper">
+                            <a class="layui-btn layui-btn-xs" lay-event="edit" permission-btn="edit_dataPickPortMgr">编辑</a>
+                            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="singleDel" permission-btn="singleDel_dataPickPortMgr">删除</a>
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<script src="./../../js/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).extend({
+    }).use(['layer','table','form','laytpl','common','element'],function () {
+        var table=layui.table;
+        var form=layui.form;
+        var common=layui.common;
+        var element = layui.element;
+
+        common.themeSet();
+
+        //分页初始参数
+        var pageInitialParam = {
+            pageNum : 1,
+            pareSize : 10,
+            curr:1
+        };
+        var pageRequest = {
+            pageName: 'pageNumber',//页码的参数名称，默认：page
+            limitName: 'pageSize' //每页数据量的参数名，默认：limit
+        };
+        var baseUrl='../../../';
+
+        common.toggleArea($('.toggle-btn'),$('.toggle-area'));
+        var currentMenuSmId=$("#currentMenuSmId",window.parent.document).val();
+        var eventHandle={
+            tableReload:function () {
+                table.reload('table1',{
+                    url: baseUrl+'compmgr/webComponent/pageTopWebComponent',
+                    contentType:'application/json',
+                    method:'post',
+                    page:pageInitialParam,
+                    request:pageRequest,
+                    where:{paras:{wtmiTypecode:"navComp"}},
+                    done:function () {
+                      common.buttonLimit(currentMenuSmId);
+                    }
+                });
+            },
+            tableReload_child:function (id) {
+                table.reload('table2',{
+                    url: baseUrl+'compmgr/webcomponenttemplateproperty/page',
+                    contentType:'application/json',
+                    method:'post',
+                    page:pageInitialParam,
+                    request:pageRequest,
+                    done:function () {
+                        common.buttonLimit(currentMenuSmId);
+                    }
+                });
+            },
+            execCheckBoxRowsEvent:function(data,options){
+                if (data && data.length > 0) {
+                    layer.confirm(options.confirmText, {
+                        icon: 3,
+                        title: '提示',
+                        offset: '150px'
+                    }, function(index) {
+                        var delParam = "";
+                        $.each(data,function(index){
+                            if(index){
+                                delParam +=","
+                            }
+                            delParam += data[index][options.value];
+                        });
+                        common.fetch(options.url + '?' + options.key + '=' + delParam,options.type,{suIds:delParam}, function(res) {
+                            if (res.success) {
+                                layer.msg(options.successText, {
+                                    icon: 6
+                                });
+                                options.success(res.list)
+                            }else{
+                                layer.msg(options.errorText, {
+                                    icon: 5
+                                });
+                            }
+                        }, function() {
+                            options.error([])
+                        });
+                        layer.close(index);
+                    });
+                } else {
+                    layer.msg(options.emptyText);
+                }
+            }
+        };
+
+        table.render(common.tableInitParams({
+            elem: '#table1',
+            url: baseUrl+'apidaqmgr/daqApi/pageQueryDataAcquisitionApi',
+            method: 'post',
+            // data:[{
+            //     "daaName":"获取企业信息",
+            //     "daaProtocol":"http://localhost/enterprise",
+            //     "daaRequestType":"GET",
+            //     "ggEnstatus":"0",
+            // },{
+            //     "daaName":"新增用户",
+            //     "daaProtocol":"http://localhost/user",
+            //     "daaRequestType":"POST",
+            //     "ggEnstatus":"1",
+            // }],
+            height:'full-200',
+            toolbar: '#tableToolBar',
+            cols: [
+                [
+                    {type:'checkbox',width:50},
+                    {type: "numbers", title: "序号",width:60},
+                    {field: 'daaName', align:'center',title: '接口名称',sort: true},
+                    {field: 'daaProtocol', align:'center',title: '请求协议',sort: true},
+                    {field: 'daaRequestType', align:'center',title: '请求方式',sort:true,
+                        templet: function(rowData) {
+                            var html='';
+                            switch(rowData["daaRequestType"]){//不确定value 对应值 目前先定与text一致
+                                case 'get':html='get';break;
+                                case 'post':html='post';break;
+                                case 'put':html='put';break;
+                                case 'delete':html='delete';break;
+                                default:break;
+                            }
+                            return html;
+                        }
+                    },
+                    {field: 'ggEnstatus', align:'center',title: '状态',sort:true,
+                        templet: function(rowData) {
+                            return (rowData["ggEnstatus"]==="0") ? '禁用' : '启用';
+                        }
+                    },
+                    {field: '', title: '操作',align:'center', toolbar:'#tableOper',fixed: 'right'},
+                ]
+            ],
+            page:pageInitialParam,
+            // where:{paras:{wtmiTypecode:"navComp"}},
+            request:pageRequest,
+            done:function () {
+                common.buttonLimit(currentMenuSmId);
+            }
+        }));
+
+        //table监听事件
+        table.on('toolbar(table1)',function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch(obj.event) {
+                case 'add':
+                var addLayer = layer.open({
+                        title: '新增接口',
+                        maxmin: false,
+                        type: 2,
+                        area: ['580px'],//高度自适应
+                        shadeClose: false,
+                        content: './../../../src/page/dataPickPortMgr/dataPick-add.html',
+                        success: function () {
+                            // var body = layer.getChildFrame('body', index);
+                            // 保存
+                            // 关闭
+                        }
+                    });
+                    layer.full(addLayer);
+                    break;
+                case 'delete':
+                    //点击删除按钮
+                    if (checkStatus.data.length > 0) {
+                        layer.confirm('确定删除选中列?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                            layer.msg('删除');
+                                return
+                            var tIdArr = [];
+
+                            for (var i = 0; i < checkStatus.data.length; i++) {
+                                if(checkStatus.data[i].ggEnStatus==1){
+                                    layer.msg('包含已启用模板，不可删除!,请去除勾选');
+                                    return false;
+                                }
+                                else{
+                                    tIdArr.push(checkStatus.data[i]['wumiId']);
+                                }
+                            }
+                            var layerLoader = common.layerLoader();
+                            common.fetchDelete('compmgr/webComponent/topWebComponent?compIds=' + tIdArr.join(','),function (res) {
+                                // layer.alert(res.resultMessage);
+                                if(res.success){
+                                    layer.close(layerLoader);
+                                    eventHandle.tableReload();
+                                }else{
+                                    layer.msg('删除失败');
+                                }
+                            }, function (res) {
+                                layer.msg('删除失败');
+                                layer.close(layerLoader);
+                            });
+                            layer.close(index);
+                        });
+                    } else {
+                        layer.msg('请选择删除列')
+                    }
+                    break;
+                case 'enable':
+                    layer.msg('启用');
+                        return
+                    break;
+                case 'forbid':
+                    layer.msg('禁用');
+                        return
+                    break;
+            }
+        });
+
+        // table row 监听事件
+        table.on('tool(table1)', function(obj){
+            var data = obj.data;
+
+            var ggEnStatus = data.ggEnStatus;
+            switch(obj.event){
+                case 'edit'://编辑
+                     var edit = top.layer.open({
+                        title: '编辑接口',
+                        maxmin: false,
+                        type: 2,
+                        area: ['580px'],//高度自适应
+                        shadeClose: false,
+                        content: './../../../src/page/dataPickPortMgr/dataPick-add.html',
+                        success: function (layero, index) {
+                            //获取单页面的所有配置内容 传入compId
+                            $("#editData", layero.find("iframe")[0].contentWindow.document).text(data['daaId']);
+
+                        }
+                    });
+                    top.layer.full(edit);
+                    break;
+                case 'singleDel':
+                     layer.msg('删除');
+                            return
+                    var selectId = data.wumiId;
+                    layer.confirm('确定删除?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                        var layerLoader = common.layerLoader();
+                        common.fetchDelete('compmgr/webComponent/topWebComponent?compIds='+selectId,function (res) {
+                            layer.close(layerLoader);
+                            if(res.success){
+                                eventHandle.tableReload();
+                                layer.msg('删除成功');
+                            }else{
+                                layer.msg('删除成功')
+                            }
+                        }, function () {
+                            layer.close(layerLoader);
+                        });
+
+                        layer.close(index);
+                    });
+                    break;
+            }
+        });
+        //查询
+        form.on('submit(formSearch)',function (obj) {
+            table.reload('table1',{
+                page:{
+                    curr:0
+                },
+                where:{
+                    daaName:obj.field.daaName,
+                    daaProtocol:obj.field.daaProtocol,
+                    ggEnStatus:obj.field.ggEnStatus,
+                    daaRequestType:obj.field.daaRequestType
+                    // paras:{
+                    //     daaName:obj.field.daaName,
+                    //     daaProtocol:obj.field.daaProtocol,
+                    //     ggEnStatus:obj.field.ggEnStatus,
+                    //     daaRequestType:obj.field.daaRequestType
+                    // }
+                },
+                done:function () {
+                    common.buttonLimit(currentMenuSmId);
+                }
+            });
+            return false;
+        });
+    });
+</script>
+<!--[if lt IE 9]>
+    <script src="../../js/lib/html5.min.js"></script>
+    <script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html  class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>上报管理-报送统计-下级上报查询</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../../js/layui/css/layui.css"/>
+    <link href="../../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../../js/lib/jquery.1.12.3.js"></script>
+</head>
+
+<style>
+    .layui-layer-btn-c {
+        margin-top: -20px;
+    }
+    span#reportNums {
+        font-weight:900;
+        font-size:18px;
+    }
+     span#reportNums i{
+         height:20px;
+         vertical-align:-2px;
+     }
+     .eleTree.ele5,
+        .eleTree.ele6{
+            height: auto;
+            width: 100%;
+            display: none;
+            position: absolute;
+            top:100%;
+            background-color: #fff;
+            z-index: 10000;
+            border: 1px solid #ccc;
+        }
+</style>
+<body class="iframe-h">
+
+<div class="content-wrap">
+    <div class="layui-row layui-col-space10">
+        <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+            <!-- layui tree-->
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>企业层级</span></div>
+                <div class="layui-card-body">
+                    <ul id="leftTree" lay-filter="leftTree" class="eleTree"></ul>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>上报查询列表<b class="columnToggle"><i class="fa fa-toggle-left"></i></b></span></div>
+                <div class="layui-card-body">
+                    <form action="" class="layui-form layui-form-pane">
+                        <div class="layui-row layui-col-space10">
+                            <div class="layui-col-md4 layui-col-xs4">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">整改率</label>
+                                    <div class="layui-input-block">
+                                        <select name="queryRectificationRate" id="queryRectificationRate">
+                                            <option value="">请选择</option>
+                                            <option value="0,0.2">0%~20%</option>
+                                            <option value="0.2,0.5">20%~50%</option>
+                                            <option value="0.5,1">50%~100%</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md4 layui-col-xs4">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">生成日期</label>
+                                    <div class="layui-input-block">
+                                        <input autocomplete="off" class="layui-input" name="ggCreateDatetimeStr" placeholder="请选择生成日期" type="text">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="toggle-area layui-col-space10">
+                                <div class="layui-col-md4 layui-col-xs4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">已报国资委</label>
+                                        <div class="layui-input-block">
+                                            <select name="uploadStatus" id="uploadStatus">
+                                                <option value="">请选择</option>
+                                                <option value="0">否</option>
+                                                <option value="2">是</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md4 layui-col-xs4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">下级上报日期</label>
+                                        <div class="layui-input-block">
+                                            <input autocomplete="off" class="layui-input" name="reportToSasacTimeStr" placeholder="请选择下级上报日期" type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="" style="text-align: center;">
+                                    <div class="layui-input-inline" style="padding-left: 20px">
+                                        <button name="searchSubmit" class="layui-btn  " lay-submit="" lay-filter="formSearch" permission-btn="sbgl_bstjxjsbcx_query"><i class="fa fa-search"></i>查询</button>
+                                        <button name="reset" lay-filter="reset" type="reset" class="layui-btn layui-btn-primary  "><i class="fa fa-eraser"></i>重置</button>
+                                        <a class="toggle-btn">
+                                        <span>展开</span><i class="fa fa-angle-up"></i></a>
+                                    </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="layui-card" style="margin-top: -13px">
+                    <div class="layui-card-body">
+                        <table id="tabelSubMeetingReport" lay-filter="tabelSubMeetingReport" style="margin-top:5px;"></table>
+                        <script type="text/html" id="tableToolBar">
+                            <div class="layui-btn-container">
+                                <button class="layui-btn layui-btn-sm hide" id="refresh" lay-event="refresh">
+                                    <i class="layui-icon layui-icon-diamond"></i>
+                                    刷新
+                                </button>
+                                <!-- <button class="layui-btn layui-btn-sm" permission-btn="" lay-event="generate">
+                                    <i class="layui-icon">&#xe605;</i> 生成
+                                </button>
+                                <button class="layui-btn layui-btn-sm layui-btn-danger" permission-btn="" lay-event="delete">
+                                    <i class="layui-icon">&#xe640;</i> 删除
+                                </button>
+                                <button class="layui-btn layui-btn-sm layui-btn-danger" permission-btn="" lay-event="report">
+                                    <i class="icon iconfont icon-button-sc-1"></i> 报送
+                                </button>
+                                <button class="layui-btn layui-btn-sm layui-btn-danger" permission-btn="" lay-event="revoke">
+                                    <i class="layui-icon">&#xe640;</i> 撤回
+                                </button>
+                                <button class="layui-btn layui-btn-sm layui-btn-danger" permission-btn="" lay-event="obsolete">
+                                    <i class="icon iconfont icon-button-sc-1"></i> 作废报送
+                                </button> -->
+                                <div class="tableDes" style="font-size: 14px;margin-top: -5px" hidden>
+                                    <div style="display: inline-block">
+                                        <span>报送统计情况：</span>
+                                        <span>
+                                            <b class="primary" name="tj_seName">XXXXX企业</b>
+                                            已报送统计<b class="primary" name="tj_reportCount">X</b>个至国资委。
+                                            <!-- 已报送<b class="primary" name="bsNum">X</b>个,
+                                                报送国资委<b class="primary" name="bsGZWNum">X</b>个,
+                                                占已报送的<b class="primary" name="bsGZRate">0.0%</b> -->
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </script>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="./../../../js/layui/layui.js"></script>
+<script src="../../../js/lib/echarts-4.1.0.min.js" charset="utf-8"></script>
+<script src="../../../js/lib/echartTheme.js" charset="utf-8"></script>
+<script>
+
+    layui.config({
+        base: '../../../../src/js/',
+        version: new Date().getTime()
+    }).extend({
+        custom:'common/custom'
+    }).use(['layer', 'eleTree', 'table', 'form', 'laytpl', 'element', 'custom', 'laydate', 'util'], function () {
+        var table=layui.table;
+        var form=layui.form;
+        var common=layui.common;
+        var element = layui.element;
+        var tree = layui.eleTree;
+        var laydate = layui.laydate;
+        var util = layui.util;
+        var el6;
+        var fileIframe;
+        element.init();
+        var baseUrl='../../../../';
+
+        common.themeSet();
+        common.toggleArea($('.toggle-btn'),$('.toggle-area'));
+
+        //树高度设置
+        $('#leftTree').css('height',$(window).height()-110+'px');
+
+        var where = {};
+        var seId = "";
+
+        var userInfo = common.getUserInfo();
+        var subMeetingPageUrl = baseUrl + 'meetingmgr/reportingStatistic/pageQuerySubordinateReportingStatistic';
+
+        var eventHandle={
+            getStatisticInfo: function(){
+                $('.tableDes').show();
+                //查询统计信息
+                common.fetchGet('meetingmgr/reportingStatistic/getEnterpriseStatisticReportInfo?seId='+seId + '&includeSubEnterprise=false', function (res) {
+                    $('b[name=tj_seName]').html(res.object.seName);
+                    $('b[name=tj_reportCount]').html(res.object.reportCount);
+                    $('b[name=tj_submitCount]').html(res.object.reportCount + res.object.unReportCount);
+                },function () {
+                });
+            },
+
+            tableInit:function(){
+                table.render(common.tableInitParams({
+                    elem: '#tabelSubMeetingReport',
+                    height: 'full-205',
+                    //url: subMeetingPageUrl,
+                    method:'post',
+                    cols: [
+                        [
+                            {type: 'checkbox', LAY_CHECKED: false},
+                            {type: 'numbers',align:'center', title: '序号', width: 60},
+                            {field: 'trsRegulationCount',align:'center', title: '决策制度数',width:120},
+                            {field: 'trsMeetingCount',align:'center', title: '决策会议数',width:120},
+                            {field: 'trsSubjectCount',align:'center', title: '审议议题数',width:120},
+                            {field: 'trsRectificationRate',align:'center', title: '整改率',width:100},
+                            {field: 'trsExceptionCount',align:'center', title: '决策异常数',width:120},
+                            {field: 'trsExecutionCount',align:'center', title: '议案执行数',width:120},
+                            {field: 'ggCreateDatetime',align:'center', title: '生成日期',minWidth:150,
+                                templet:function (rowData) {
+                                    return rowData.ggCreateDatetime? common.dateFormat(rowData.ggCreateDatetime, 'yyyy-MM-dd'): "";
+                                }},
+                            {field: 'submitGzwTime',align:'center', title: '下级上报日期',minWidth:150,
+                                templet:function (rowData) {
+                                    return rowData.submitGzwTime? common.dateFormat(rowData.submitGzwTime, 'yyyy-MM-dd'): "";
+                                }
+                            },
+                            {field: 'uploadStatus',align:'center', title: '已报国资委',width:120,  templet:function (rowData) {
+                                    return rowData.uploadStatus === '2'? '<span class="green">是</span>': '<span class="red">否</span>';}
+                            },
+                            {field: '',align:'center', title: '操作', width: 80,templet:function(rowData){
+                                return '<a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="viewMeeting" permission-btn="sbgl_bstjxjsbcx_view">查看</a>'
+                            }}
+                        ]
+                    ],
+                    toolbar:'#tableToolBar',
+                }));
+            },
+            tableReload:function(where){
+                table.reload('tabelSubMeetingReport',{
+                    url: subMeetingPageUrl,
+                    method:'post',
+                    where:where
+                });
+
+                eventHandle.getStatisticInfo();
+            },
+            output:function(){
+            //查询条件 
+                // 生成时间
+                laydate.render({
+                    elem: 'input[name=ggCreateDatetimeStr]',
+                    type: 'date',
+                    trigger: 'click'
+                });
+                // 上报国资委时间
+                laydate.render({
+                    elem: 'input[name=reportToSasacTimeStr]',
+                    type: 'date',
+                    trigger: 'click'
+                });
+                // 表格渲染
+                eventHandle.tableInit()
+            }
+        };
+        eventHandle.output();
+
+        var needExpend = true;//进入页面时，需要展开默认节点
+
+        //企业层级加载
+        var eleTreeId = tree.render({
+            elem: '#leftTree',
+            url: baseUrl+'sysmgr/sysEnterprise/selectSysEnterpriseOrganPostTreeAllList?treeType=enterpriseTree',
+            showIcon:true,
+            done: function(data){
+                //默认点击树第一个节点
+                $('#leftTree').find('.eleTree-node-content-label').eq(0).trigger('click');
+            },
+            lazy: true,
+            load: function(data,callback) {
+                common.fetchGet('sysmgr/sysEnterprise/selectSysEnterpriseOrganPostTreeAllList?treeType=enterpriseTree' + '&id=' + data.id + "&extendAttr=" + data.extendAttr,function (res) {
+                    if(res.success && res.list){
+                        callback(res.list);
+                        /*if(needExpend) {
+                            needExpend = false;
+                            if(res.list.length > 0){
+                                $('#leftTree').find('div[data-id='+res.list[0].id+']').find('.eleTree-node-content-label').trigger('click');
+                            }
+                        }*/
+                    }
+                },function () {
+                    callback([])
+                });
+            },
+            response: {
+                dataName: "list"
+            }
+        });
+
+        tree.on("nodeClick(leftTree)", function (obj) {
+            seId = obj.data.currentData.id;
+            /*if(seId === userInfo.seId){
+                $('.tableDes').hide();
+                return false;
+            }*/
+            var para = {'subordinateSeId': seId};
+            $.extend(where, para);
+            eventHandle.tableReload(where);
+        });
+
+        //table监听事件
+        table.on('toolbar(tabelSubMeetingReport)',function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch(obj.event){
+                case 'refresh':
+                    eventHandle.tableReload();
+                    break;
+            }
+        });
+
+        table.on('tool(tabelSubMeetingReport)',function (obj) {
+            var data = obj.data;
+            switch(obj.event){
+                case 'viewMeeting':
+                    //打开会议详情
+                    var viewMeeting = top.layer.open({
+                        title: ['查看'],
+                        type: 2,
+                        content: baseUrl + 'src/page/ys/bstj/bstjView.html?statisticId='+obj.data.trsId,
+                        maxmin: true,
+                        btn: ['<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭'],
+                        btnAlign: 'c',
+                        yes: function () {
+                            top.layer.close(viewMeeting);
+                            return false;
+                        },
+                        success: function (layero, index) {
+                        }
+                    });
+                    top.layer.full(viewMeeting);
+                    break;
+                default:break;
+            }
+        });
+
+        form.on('submit(formSearch)',function (obj) {
+            //表格重载
+            var para = {
+                ggCreateDatetimeStr:obj.field.ggCreateDatetimeStr,
+                reportToSasacTimeStr:obj.field.reportToSasacTimeStr,
+                uploadStatus:obj.field.uploadStatus,
+                queryRectificationRate:obj.field.queryRectificationRate
+            };
+
+            eventHandle.tableReload($.extend(where, para));
+            return false;
+        });
+        common.columnToggle();
+    });
+
+
+</script>
+
+<!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

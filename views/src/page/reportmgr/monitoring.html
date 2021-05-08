@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html  class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>运行监控</title>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link href="../../js/layui/css/layui.css" rel="stylesheet"/>
+    <link href="../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script charset="utf-8" src="../../js/common/plugin.js"></script>
+</head>
+<body class="iframe-h">
+
+<div class="content-wrap">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+
+            <div class="layui-card" >
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>监控列表</span><div class="columnSide"><i class="fa fa-toggle-left"></i></div></div>
+                <div class="layui-card-body treeHeight" style="overflow-y: auto">
+                    <div class="eleTree ele4" id="leftTree"  lay-filter="leftTree"></div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>“三重一大”决策运行概况</span></div>
+                <div class="layui-card-body">
+                    <div class="monitorBar">
+                       <div class="layui-row">
+                           <div class="layui-col-xs3 borderRight moniBox" style="width: 20%">
+                               <div class="iconBoxMain">
+                                   <div class="icon-box bg-green1"><i class="icon iconfont icon-enterprise"></i></div>
+                                   <div class="icon-des">
+                                       <p class="p-text">涉及企业数</p>
+                                       <p class="p-number">
+                                           <b class="green1">9</b>
+                                           <span>家</span>
+                                       </p>
+                                   </div>
+                               </div>
+                           </div>
+                           <div class="layui-col-xs3 borderRight moniBox" style="width: 20%">
+                               <div class="iconBoxMain">
+                                   <div class="icon-box bg-green2"><i class="icon iconfont icon-SZYD-juecehuiyi"></i></div>
+                                   <div class="icon-des">
+                                       <p class="p-text">涉及会议数</p>
+                                       <p class="p-number">
+                                           <b class="green2">0</b>
+                                           <span>次</span>
+                                       </p>
+                                   </div>
+                               </div>
+                           </div>
+                           <div class="layui-col-xs3 borderRight moniBox" style="width: 20%">
+                               <div class="iconBoxMain">
+                                   <div class="icon-box bg-green3"><i class="icon iconfont icon-DEZJ-yewushuliang"></i></div>
+                                   <div class="icon-des">
+                                       <p class="p-text">涉及议题数</p>
+                                       <p class="p-number">
+                                           <b class="green3">12</b>
+                                           <span>个</span>
+                                       </p>
+                                   </div>
+                               </div>
+                           </div>
+                           <div class="layui-col-xs3 moniBox" style="width: 40%">
+                               <div class="iconBoxMain">
+                                   <div class="icon-box bg-green4"><i class="icon iconfont icon-SZYD-minganshixiang"></i></div>
+                                   <div class="icon-des">
+                                       <p class="p-text">决议情况</p>
+                                       <p class="p-number">
+                                           <span>通过：</span>
+                                           <b class="green4">0</b>
+                                           <span style="margin-right: 10px">个</span>
+                                           <span>缓议：</span>
+                                           <b class="green4">0</b>
+                                           <span style="margin-right: 10px">项</span>
+                                           <span>否决：</span>
+                                           <b class="green4">0</b>
+                                           <span>项</span>
+                                       </p>
+                                   </div>
+                               </div>
+                           </div>
+                       </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-card">
+                <div style="padding: 0 10px 10px 10px">
+                    <table id="table1" lay-filter="table1"></table>
+                    <script id="tableToolBar" type="text/html">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-sm layui-btn-primary" lay-event="refresh" id="refreshBtn">
+                                <i class="layui-icon">&#xe669;</i> 刷新
+                            </button>
+
+                        </div>
+                    </script>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script src="./../../js/layui/layui.js"></script>
+<script charset="utf-8" src="../../js/lib/echarts-4.1.0.min.js"></script>
+<script charset="utf-8" src="../../js/lib/echartTheme.js"></script>
+<script>
+
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).extend({
+        custom:'common/custom'
+    }).use(['layer','eleTree','table','form','laytpl','element','custom'],function () {
+        var table=layui.table;
+        var form=layui.form;
+        var common=layui.common;
+        var element = layui.element;
+        var tree = layui.eleTree;
+        element.init();
+        var baseUrl='../../../';
+        common.themeSet();
+        common.toggleArea($('.toggle-btn'),$('.toggle-area'));
+        var eleTreeId=tree.render({
+            elem: '#leftTree',
+            defaultExpandAll: true,
+            data:  [
+                {
+                    id: 1,
+                    name: "运行分析",
+                    extendAttr:"list",
+                    children: [
+                        {
+                            id: 2,
+                            name: "上个工作日",
+                            extendAttr:"listItem"
+                        },
+                        {
+                            id: 3,
+                            name: "近一周",
+                            extendAttr:"listItem"
+                        },
+                        {
+                            id: 4,
+                            name: "近半个月",
+                            extendAttr:"listItem"
+                        },
+                        {
+                            id: 5,
+                            name: "近一个月",
+                            extendAttr:"listItem"
+                        },
+                        {
+                            id: 6,
+                            name: "近三个月",
+                            extendAttr:"listItem"
+                        },
+                        {
+                            id: 7,
+                            name: "近半年",
+                             extendAttr:"listItem"
+                        },
+                    ]
+                }],
+            showCheckbox: false,
+            done:function(data){
+
+            }
+        });
+
+        table.render(common.tableInitParams({
+            elem: '#table1',
+            height:'full-240',
+            data:[
+                {
+                    "index1":"集团",
+                    "index2":'0',
+                    index3:'0',
+                    index4:"0",
+                    index5:"0",
+                    index6:"0"
+                },
+                {
+                    "index1":"中国电建",
+                    "index2":'0',
+                    index3:'0',
+                    index4:"0",
+                    index5:"0",
+                    index6:"0"
+                },
+                {
+                    "index1":"三级单位",
+                    "index2":'0',
+                    index3:'0',
+                    index4:"0",
+                    index5:"0",
+                    index6:"0"
+                },
+                {
+                    "index1":"集团二级单位",
+                    "index2":'0',
+                    index3:'0',
+                    index4:"0",
+                    index5:"0",
+                    index6:"0"
+                }
+            ],
+            method:'post',
+            toolbar:'#tableToolBar',
+            cols: [
+                [
+                    {type:'checkbox'},
+                    {"type":"numbers", "title":"序号"},
+                    {field: 'index1', title: '企业名称', sort: true},
+                    {field: 'index2', title: '会议数量', sort: true},
+                    {field: 'index3', title: '议题数量', sort: true},
+                    {field: 'index4', title: '通过数量', sort: true},
+                    {field: 'index5', title: '缓议数量', sort: true},
+                    {field: 'index6', title: '否决数量', sort: true}
+                ]
+            ]
+        }));
+        var eventHandle={
+            tableReload:function () {
+                table.reload('table1',{
+                    page:{
+                        curr:1
+                    }
+                });
+            }
+        };
+
+        //table监听事件
+        table.on('toolbar(table1)',function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch(obj.event){
+                case 'refresh':
+                    //刷新表格
+                    eventHandle.tableReload();
+                    break;
+            }
+        });
+
+        common.columnSide();
+    });
+    $('.treeHeight').css({'height':$(document).height()-120+'px'});
+    common.buttonLimit();
+
+</script>
+
+<!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

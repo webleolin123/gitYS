@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh" xml:lang="zh" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>数据权限角色</title>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+    <link href="../../../js/layui/css/layui.css" rel="stylesheet"/>
+    <link href="../../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <link href="../../../css/module/config.css" rel="stylesheet"/>
+    <script src="../../../js/lib/jquery.1.12.3.js"></script>
+    <script charset="utf-8" src="../../../js/common/plugin.js"></script>
+</head>
+<body class="iframe-h">
+<div class="content-wrap">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>数据权限角色列表</span></div>
+                <div class="layui-card-body">
+                    <form action="" class="layui-form layui-form-pane">
+                        <div class="layui-row layui-col-space10">
+                            <div class="layui-col-xs4">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">数据角色名称</label>
+                                    <div class="layui-input-block">
+                                        <input autocomplete="off" class="layui-input" name="roleName"
+                                               placeholder="请输入名称" type="text">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-xs4">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">菜单名称</label>
+                                    <div class="layui-input-block">
+                                        <select name="menuId"></select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="formSearch-btnArea">
+                                <button class="layui-btn" lay-filter="formSearch" lay-submit
+                                        permission-btn="dataAccessRoleSearch"><i class="fa fa-search"></i>查询
+                                </button>
+                                <button class="layui-btn layui-btn-primary" type="reset"><i class="fa fa-eraser"></i>重置</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="layui-card">
+                <div class="layui-card-body" style="padding-top: 0">
+                    <table id="table1" lay-filter="table1"></table>
+                    <script id="tableToolBar" type="text/html">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-sm" lay-event="add" permission-btn="dataAccessRoleAdd">
+                                <i class="layui-icon">&#xe608;</i>新增
+                            </button>
+                            <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete"
+                                    permission-btn="dataAccessRoleDeleteAll">
+                                <i class="layui-icon">&#xe640;</i> 删除
+                            </button>
+                        </div>
+                    </script>
+
+                    <script id="tableOper" type="text/html">
+                        <a class="layui-btn layui-btn-xs" lay-event="edit" permission-btn="dataAccessRoleEdit">编辑</a>
+                        <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="singleDel"
+                           permission-btn="dataAccessRoleDelete">删除</a>
+                        <!--<a class="layui-btn layui-btn-xs layui-btn-primary" lay-event="menuSelect">目录选择</a>-->
+                        <!--<a class="layui-btn layui-btn-xs layui-btn-primary" lay-event="allocatePersonnel">分配人员</a>-->
+                        <a class="layui-btn layui-btn-xs layui-btn-primary" lay-event="dataAccessConfig"
+                           permission-btn="dataAccessUser">用户权限</a>
+                        <a class="layui-btn layui-btn-xs layui-btn-primary" lay-event="showDeal"
+                           permission-btn="dataAccessShowDeal">目录关系联动</a>
+
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="menuLayer hide">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <form action="" class="layui-form layui-form-pane" lay-filter="addForm">
+                <div class="layui-row layui-col-space10">
+                    <div class="layui-col-md12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><b class="red">*</b>菜单名称</label>
+                            <div class="layui-input-block">
+                                <select name="form0"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><b class="red">*</b>数据角色名称</label>
+                            <div class="layui-input-block">
+                                <input class="layui-input" name="form1" type="text">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><b class="red">*</b>最高等级</label>
+                            <div class="layui-input-block">
+                                <input name="form2" title="是" type="radio" value="1">
+                                <input checked="" name="form2" title="否" type="radio" value="0">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md12">
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">数据角色描述</label>
+                            <div class="layui-input-block">
+                                <textarea class="layui-textarea" name="form3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="showDealLayer hide">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <table id="showDealTable" lay-filter="showDealTable"></table>
+            <script id="tableToolBar1" type="text/html">
+                <div class="layui-btn-container">
+                    <button class="layui-btn layui-btn-sm" lay-event="add">
+                        <i class="layui-icon">&#xe608;</i>新增
+                    </button>
+                    <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete">
+                        <i class="layui-icon">&#xe640;</i> 删除
+                    </button>
+                </div>
+            </script>
+            <script id="tableOper1" type="text/html">
+                <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="singleDel">删除</a>
+            </script>
+            <!--条件 编辑/新增窗口-->
+
+            <div class="conditionAdd hide">
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <form action="" class="layui-form layui-form-pane" lay-filter="conditionForm">
+                            <div class="layui-row layui-col-space10">
+                                <div class="layui-col-xs12">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label"><b class="red">*</b>目录名称</label>
+                                        <div class="layui-input-block">
+                                            <select name="condition1"></select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs12">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label"><b class="red">*</b>字段</label>
+                                        <div class="layui-input-block">
+                                            <input autocomplete="off" class="layui-input" id="lodash" name="condition2"
+                                                   placeholder="请点击选择或手写输入" style="padding-right: 50px;" type="text">
+                                            <span class="icon-btn" id="lodash-icon"><i
+                                                    class="layui-icon layui-icon-more"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs12">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label"><b class="red">*</b>条件</label>
+                                        <div class="layui-input-block">
+                                            <select name="condition3">
+                                                <option value="">请选择</option>
+                                                <option value="=">=</option>
+                                                <option value="!=">!=</option>
+                                                <option value=">">></option>
+                                                <option value="<"><</option>
+                                                <option value=">=">>=</option>
+                                                <option value="<="><=</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs12">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">值来源</label>
+                                        <div class="layui-input-block">
+                                            <select lay-filter="condition5" name="condition5">
+                                                <option value="1">手动输入</option>
+                                                <option value="2">目标目录</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs12 condition6Box">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">值类型</label>
+                                        <div class="layui-input-block">
+                                            <select name="condition6">
+                                                <option value="string">string</option>
+                                                <option value="number">number</option>
+                                                <option value="boolean">boolean</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs12">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label"><b class="red">*</b>值/字段</label>
+                                        <div class="layui-input-block">
+                                            <input autocomplete="off" class="layui-input" id="condition4"
+                                                   name="condition4" placeholder="请点击选择或手写输入"
+                                                   style="padding-right: 50px;" type="text">
+                                            <span class="icon-btn" id="condition4-icon"><i
+                                                    class="layui-icon layui-icon-more"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--权限配置弹框-->
+<div class="dataAccessConfig hide">
+    <div class="padding-20">
+        <div class="layui-card">
+            <div class="layui-card-body">
+                <div class="layui-row layui-col-space10">
+                    <div class="layui-col-xs6">
+                        <div class="custom-title">目录选择</div>
+                        <div style="padding: 10px;">
+                            <div class="eleTree tree4" id="menuSelectTree" style="height: 320px"></div>
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6">
+                        <div class="custom-title">分配人员</div>
+                        <div style="padding: 10px">
+                            <div class="eleTree tree4" id="allocatePersonnelTree" style="height: 350px"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--值选择弹框-->
+<div class="hide valueLayer">
+    <div style="padding: 10px;overflow: hidden">
+        <form action="" class="layui-form " id="targetMenuArea" lay-filter="targetMenu"
+              style="display: block;margin-bottom: 10px">
+            <div class="layui-row layui-col-space10">
+                <div class="layui-col-xs6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">目录目标</label>
+                        <div class="layui-input-block">
+                            <select id="targetMenu" lay-filter="targetMenu" name="targetMenu"></select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <table id="valueTable" lay-filter="valueTable"></table>
+        <div class="lodashListArea">
+            <div class="globalTip" style="margin-top: 15px;margin-left: 10px">
+                <i class="fa fa-info-circle"></i>
+                <span>双击选中字段</span>
+            </div>
+            <ul class="lodashList" id="lodashList"></ul>
+        </div>
+    </div>
+</div>
+<script src="./../../../js/layui/layui.js"></script>
+<script src="./../../../js/module/platformModule/dataAccessMgr/dataAccessRole.js"></script>
+
+<!--[if lt IE 9]>
+<script src="../../../js/lib/html5.min.js"></script>
+<script src="../../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

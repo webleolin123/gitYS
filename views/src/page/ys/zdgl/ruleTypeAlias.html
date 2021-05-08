@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+
+<head>
+    <meta charset="UTF-8">
+    <title>制度类型别名</title>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link href="../../../js/layui/css/layui.css" rel="stylesheet" />
+    <link href="../../../css/public.css?v1.01" rel="stylesheet" />
+    <link href="../../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <script src="../../../js/lib/jquery.1.12.3.js"></script>
+</head>
+
+
+
+
+<body class="iframe-h">
+    <div class="regulationName-add" style="display: none;">
+        <div class="layui-card-body">
+            <form class="layui-form layui-form-pane  form-theme3" name="regulationName-add"
+                lay-filter="regulationName-add">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-xs12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label hylabel" style="background-color:white;border:none"><b
+                                    class="red">*</b>制度类型别名:</label>
+                            <div class="layui-input-block">
+                                <input autocomplete="off" class="layui-input" name="regulationName"
+                                    lay-verify="required" type="text">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-xs12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label hylabel" style="background-color:white;border:none;"
+                                title="所属制度类型">所属制度类型:</label>
+                            <div class="layui-input-block">
+                                <select name="regulationTypeId" lay-filter="selectType">
+
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-xs12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label hylabel" style="background-color:white;border:none"><b
+                                    class="red">*</b>排序:</label>
+                            <div class="layui-input-block">
+                                <input autocomplete="off" class="layui-input" name="ggSort" lay-verify="required"
+                                    placeholder="" type="text">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="isYsgz" class="hide">
+                    <div class="layui-card-header layui-card-header-custom" style="padding-left: 5px;">
+                        <span><i></i>适用范围</span></div>
+                    <div id="applicationArea" class="layui-row layui-col-space15"></div>
+                </div>
+
+                <div class="layui-col-md12">
+                    <div class="layui-layer-btn layui-layer-btn-c">
+                        <button class="layui-btn" id="saveRegulationText" lay-submit lay-filter="regulationNameSave"><i class="fa fa-check-circle"></i>确定
+                        </button>
+                        <button type="button" class="layui-btn layui-btn-primary btnClose"><i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>取消</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!--新增制度表决-->
+    <div class="companyTree" style="display: none">
+        <div style="padding: 10px">
+            <div class="layui-row layui-col-space10">
+                <div class="layui-col-xs12">
+                    <div class="custom-title">上级单位</div>
+                    <ul class="eleTree ele4 unitTree" lay-filter="unitTree"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 上报弹窗 -->
+    <div class="reportLayer" style="display: none">
+        <div style="padding: 10px">
+            <div class="layui-row layui-col-space10">
+                <div class="layui-col-xs6">
+                    <div class="layui-card-header layui-card-header-custom">
+                        <span><i></i>本次上报单位:
+                            <b class="primary" id="reportCompany"></b>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-row layui-col-space10">
+                <div class="layui-col-xs12">
+                    <div class="layui-card">
+                        <div class="layui-card-header layui-card-header-custom">
+                            <span><i></i>制度文本
+                            </span>
+                        </div>
+                        <div class="layui-card-body">
+                            <table id="ruleTextTable" lay-filter="ruleTextTable"></table>
+                        </div>
+                    </div>
+                </div>
+                <!--            <div class="layui-col-xs12">-->
+                <!--                <div class="layui-card">-->
+                <!--                    <div class="layui-card-header layui-card-header-custom">-->
+                <!--                                <span><i></i>表决方式-->
+                <!--                                </span>-->
+                <!--                    </div>-->
+                <!--                    <div class="layui-card-body">-->
+                <!--                        <table id="ruleVoteTable" lay-filter="ruleVoteTable"></table>-->
+                <!--                    </div>-->
+                <!--                </div>-->
+                <!--            </div>-->
+            </div>
+        </div>
+    </div>
+    <div class="content-wrap">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+                <!-- layui tree-->
+                <div class="layui-card">
+                    <div class="layui-card-header layui-card-header-custom"><span><i></i>制度类型别名</span>
+                        <!-- <div class="columnToggle"><i class="fa fa-toggle-left"></i></div> -->
+                    </div>
+                    <div class="layui-card-body">
+                        <div class="layuiTree eleTree ele4" id="leftTree" lay-filter="leftTree"
+                            style="overflow-y: auto;margin-top: 10px">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
+                <div class="layui-card" style="margin-bottom: 15px;">
+                    <div class="layui-card-header layui-card-header-custom"><span><i></i>查询条件<b class="columnToggle"><i class="fa fa-toggle-left"></i></b></span></div>
+                    <div class="layui-card-body" style="padding-bottom: 0;">
+                        <form action="" class="layui-form layui-form-pane">
+                            <div class="layui-row layui-col-space10">
+                                <div class="layui-col-xs4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">制度类型别名</label>
+                                        <div class="layui-input-block">
+                                            <input autocomplete="off" class="layui-input" name="regulationName"
+                                                placeholder="请输入名称" type="text">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="" style="text-align: right; margin-bottom: 5px;right: 0;bottom: 0;">
+                                    <div class="layui-input-inline" style="padding-right: 100px">
+                                        <button class="layui-btn  " lay-filter="formSearch" lay-submit=""
+                                            name="searchSubmit"><i class="fa fa-search"></i>查询
+                                        </button>
+                                        <button class="layui-btn layui-btn-primary  " lay-filter="reset" name="reset"
+                                            type="reset" id="reset"><i class="fa fa-eraser"></i>重置
+                                        </button>
+                                        <!-- <a class="toggle-btn">
+                                            <span>展开</span><i class="fa fa-angle-up"></i></a> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="layui-card">
+                    <div class="">
+                        <div class="layui-card-body">
+                            <table id="ruleTypeAliasTable" lay-filter="ruleTypeAliasTable"></table>
+                            <script id="tableToolBar" type="text/html">
+                                <div class="layui-btn-container">
+                                    <button class="layui-btn layui-btn-sm"  lay-event="addParent" permission-btn="addRegulationTypeAlias"><i class="layui-icon" style="margin-right: 2px">&#xe608;</i>新增</button>
+                                    <!-- <button class="layui-btn layui-btn-sm"  lay-event="add" permission-btn="addRegulationTypeAlias"><i class="layui-icon" style="margin-right: 2px">&#xe608;</i>新增子节点</button> -->
+                                    <button class="layui-btn layui-btn-sm layui-btn-warm" lay-event="del" permission-btn="deleteRegulationTypeAlias"><i class="fa fa-trash"></i>删除</button>
+                                    <button class="layui-btn layui-btn-sm" lay-event="open" permission-btn="gge1"><i class="fa fa-check" style="margin-right: 2px"></i>启用</button>
+                                    <button class="layui-btn layui-btn-sm layui-btn-warm" lay-event="close" permission-btn="gge1"><i class="fa fa-ban"></i>禁用</button>
+                                    <button class="layui-btn layui-btn-sm" lay-event="copy" permission-btn="copyRegulationTypeAlias"><i class="layui-icon" style="margin-right: 2px">&#xe608;</i>初始化复制</button>
+                                    <button class="layui-btn layui-btn-sm hide" id="refresh" ><i class="layui-icon" style="margin-right: 2px">&#xe608;</i></button>
+                                </div>
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script id="tableOper33" type="text/html">
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    </script>
+
+    <script src="./../../../js/layui/layui.js"></script>
+    <script>
+
+        layui.config({
+            base: '../../../../src/js/',
+            version: new Date().getTime()
+        }).extend({
+            custom: 'common/custom'
+        }).use(['layer', 'eleTree', 'table', 'form', 'laytpl', 'element', 'custom', 'laydate', 'util', 'common'], function () {
+            var table = layui.table;
+            var form = layui.form;
+            var common = layui.common;
+            var element = layui.element;
+            var tree = layui.eleTree;
+            var laydate = layui.laydate;
+            var util = layui.util;
+            element.init();
+            var baseUrl = '../../../../';
+            var sysEnterpriseTreeUrl = "sysmgr/sysEnterprise/selectSysEnterpriseOrganPostTreeAllList?treeType=enterpriseTree";
+            var currentMenuSmId = $("#currentMenuSmId", window.parent.document).val();
+            var statSubUrl = baseUrl + "rulemgr/reportStat/statReportInfo";
+            var subfPageUrl = baseUrl + "rulemgr/regulation/downReportList";
+            var getTextUrl = baseUrl + "rulemgr/regulation/selectFilePage";
+            var getVoteUrl = baseUrl + "rulemgr/regulationVote/list"
+            var getRuleStatusUrl = baseUrl + "rulemgr/reportRegulation/getReportRegulationInfo";
+            var rejectSubRegulationUrl = baseUrl + "rulemgr/reportRegulation/rejectSubReportRegulationInfo";
+            var treeCheckEnt;
+            var userInfo = JSON.parse(common.getCookie('userInfo'));
+            var currEnterpriseId = userInfo.currEnterpriseVo.seId;
+            var seId = common.getUserInfo().seId
+            var aliasPid = '';
+            var regulationTypeAliasMeeting = [];
+            var isYsgz = false;
+
+
+            common.selectDataSet({
+                elem: $('[name=regulationTypeId]'),
+                url: 'rulemgr/regulationType/getAll',
+                responseList: 'list',
+                method: 'get',//默认为get
+                optionText: 'trtName',
+                optionValue: 'trtId',
+                success: function (data) {
+                    form.render('select');
+                }
+            });
+
+            common.fetchGet('meetingmgr/tiolMeetingType/getTiolMeetingTypeList', function (res) {
+                if (res.success) {
+                    var checkboxHtml = '';
+                    for (var i = 0; i < res.list.length; i++) {
+                        checkboxHtml += '<div class="layui-col-xs4">' +
+                            '<div class="layui-form-item">' +
+                            '<div class="layui-input-block" style="margin-left:0;">' +
+                            '<input type="checkbox" lay-skin="primary" lay-filter="area" title="' + res.list[i].meetingTypeName + '" name="' + res.list[i].meetingTypeCode + '" value="'+ res.list[i].meetingTypeId +'"  >' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>'
+                    }
+                    $('#applicationArea').html(checkboxHtml);
+                } else {
+                    layer.alert(res.resultMessage)
+                }
+            }, function (err) {
+                layer.alert(err.resultMessage);
+            })
+
+            form.on('checkbox(area)',function (data) { 
+                if(data.elem.checked){
+                    regulationTypeAliasMeeting.push({'meetingTypeName':data.elem.title,'meetingTypeId':data.value,'meetingTypeCode':data.elem.name});
+                }else{
+                    for(var i=0;i<regulationTypeAliasMeeting.length;i++){
+                        if(regulationTypeAliasMeeting[i].meetingTypeId == data.value){
+                            regulationTypeAliasMeeting.splice(i, 1);
+                        }
+                    }
+                }
+             })
+
+
+            var eventHandle = {
+                treeInit: function () {
+                    var eleTreeId = tree.render({
+                        elem: '#leftTree',
+                        url: baseUrl + 'rulemgr/regulationTypeAlias/getTree',
+                        showIcon: true,
+                        done: function (data) {
+                            //默认点击树第一个节点
+                            // $('#leftTree').find('.eleTree-node-content-label').eq(0).trigger('click');
+                        },
+                        lazy: true,
+                        load: function (data, callback) {
+                            common.fetchGet('sysmgr/sysEnterprise/selectSysEnterpriseOrganPostTreeAllList?treeType=enterpriseTree' + '&id=' + data.id + "&extendAttr=" + data.extendAttr, function (res) {
+                                if (res.success && res.list) {
+                                    callback(res.list);
+                                }
+                            }, function () {
+                                callback([])
+                            });
+                        },
+                        response: {
+                            dataName: "list"
+                        }
+                    });
+                    tree.on("nodeClick(leftTree)", function (obj) {
+                        aliasPid = obj.data.currentData.id;
+                        var curTreeNode = obj.data.currentData;
+                        $('#reset').click();
+                        eventHandle.tableReload();
+                    });
+                },
+
+
+
+                tableInit: function () {
+                    table.render(common.tableInitParams({
+                        elem: '#ruleTypeAliasTable',
+                        height: 'full-165',
+                        // data:[{}],
+                        url: baseUrl + '/rulemgr/regulationTypeAlias/list',
+                        where: {
+                            'aliasPid': aliasPid
+                        },
+                        method: 'post',
+                        toolbar: '#tableToolBar',
+                        defaultToolbar: [],
+                        cols: [
+                            [
+                                { type: 'checkbox' },
+                                { type: "numbers", title: "序号", width: 60, },
+                                { field: 'regulationName', title: '制度类型别名', minWidth: 180 },
+                                {
+                                    field: 'regulationTypeName', title: '所属制度类型', minWidth: 180, templet: function (rowData) {
+                                        return (rowData.tails.trtName ? rowData.tails.trtName : '-');
+                                    }
+                                },
+                                {
+                                    field: 'ggEnStatus', title: '启用状态', width: 120, templet: function (rowData) {
+                                        if (rowData['ggEnStatus'] === '1') {
+                                            return '<span class="green">是</span>';
+                                        } else {
+                                            return '<span class="red">否</span>';
+                                        }
+                                    }
+                                },
+                                { field: 'ggCreateDatetime', title: '适用范围', minWidth: 180 },
+                                {
+                                    field: '', title: '操作', width: 100, align: "center", fixed: 'right', toolbar: '#tableOper33'
+                                }
+                            ]
+                        ],
+                        done: function () {
+
+                        }
+                    }));
+                },
+                tableReload: function (where) {
+                    table.reload('ruleTypeAliasTable', {
+                        // url: subfPageUrl,
+                        method: 'post',
+                        where: { 'aliasPid': aliasPid }
+                    });
+                },
+
+            }
+            common.themeSet();
+            eventHandle.treeInit();
+
+            eventHandle.tableInit();
+
+
+            //table监听事件
+            $('#refresh').on("click",function ( ) { 
+                eventHandle.tableReload();
+             })
+
+            table.on('toolbar(ruleTypeAliasTable)', function (obj) {
+                var checkStatus = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+                    case 'addParent':
+
+                        var layerAdd = layer.open({
+                            title: '<i class="iconfont icon-SZYD-xitongcaidanguanli"></i>新增制度类型别名',
+                            area: ['600px', '400px'],//高度自适应
+                            type: 1,//页面层
+                            zIndex: 891,
+                            content: $('.regulationName-add').html(),//加载该区域的html
+
+                            success: function (obj) {
+                                isYsgz = false;
+                                regulationTypeAliasMeeting = [];
+                                form.render('select');
+                                form.render('checkbox');
+                                form.on('select(selectType)', function (data) {
+                                    if (data.value == "33b8bfe3ece149839a9f3c478cc7d23e") {
+                                        $(obj.selector).find("#isYsgz").show();
+                                        isYsgz = true;
+                                    } else {
+                                        $(obj.selector).find("#isYsgz").hide();
+                                        isYsgz = false;
+                                    }
+                                });
+                                $(obj.selector).find('.btnClose').off().on('click', function () {
+                                    layer.close(layerAdd);
+                                });
+                                form.on("submit(regulationNameSave)", function (obj) {
+                                    var layerLoader = common.layerLoader();
+                                    obj.field['aliasPid'] = -1;
+
+                                    if(isYsgz){
+                                        obj.field['regulationTypeAliasMeeting'] = regulationTypeAliasMeeting
+                                    }
+                                    common.fetchPost('rulemgr/regulationTypeAlias/save', obj.field, function (res) {
+                                        if (res.success) {
+                                            layer.close(layerLoader);
+                                            layer.close(layerAdd);
+                                            layer.alert('新增成功');
+                                            eventHandle.tableReload();
+                                            eventHandle.treeInit()
+                                        } else {
+                                            layer.close(layerLoader);
+                                            layer.close(layerAdd);
+                                            layer.alert(res.resultMessage);
+                                            
+                                        }
+                                    }, function (err) {
+                                        layer.close(layerLoader);
+                                        layer.close(layerAdd);
+                                        layer.alert(err.resultMessage);
+                                    })
+                                    return false;
+                                })
+                            },
+                            // btn: false
+                        });
+                        break;
+                    case 'add':
+                        if (aliasPid == '') {
+                            layer.msg('请选择父节点');
+                            return false;
+                        }
+                        var layerAdd = layer.open({
+                            title: '<i class="iconfont icon-SZYD-xitongcaidanguanli"></i>新增制度类型别名',
+                            area: ['600px', '400px'],//高度自适应
+                            type: 1,//页面层
+                            zIndex: 891,
+                            content: $('.regulationName-add').html(),//加载该区域的html
+
+                            success: function (obj) {
+                                isYsgz = false;
+                                regulationTypeAliasMeeting = [];
+                                form.render('select');
+                                form.render('checkbox');
+                                form.on('select(selectType)', function (data) {
+                                    if (data.value == "33b8bfe3ece149839a9f3c478cc7d23e") {
+                                        $(obj.selector).find("#isYsgz").show();
+                                        isYsgz = true;
+                                    } else {
+                                        $(obj.selector).find("#isYsgz").hide();
+                                        isYsgz = false;
+                                    }
+                                });
+                                $(obj.selector).find('.btnClose').off().on('click', function () {
+                                    layer.close(layerAdd);
+                                });
+                                form.on("submit(regulationNameSave)", function (obj) {
+                                    var layerLoader = common.layerLoader();
+                                    obj.field['aliasPid'] = aliasPid;
+
+                                    if(isYsgz){
+                                        obj.field['regulationTypeAliasMeeting'] = regulationTypeAliasMeeting;
+                                    }
+                                    common.fetchPost('rulemgr/regulationTypeAlias/save', obj.field, function (res) {
+                                        if (res.success) {
+                                            layer.close(layerLoader);
+                                            layer.close(layerAdd);
+                                            layer.alert('新增成功');
+                                            eventHandle.tableReload();
+                                        } else {
+                                            layer.close(layerLoader);
+                                            layer.close(layerAdd);
+                                            layer.alert(res.resultMessage);
+                                        }
+                                    }, function (err) {
+                                        layer.close(layerLoader);
+                                        layer.close(layerAdd);
+                                        layer.alert(err.resultMessage);
+                                    })
+                                    return false;
+                                })
+                            },
+                            // btn: false
+                        });
+                        break;
+                    case 'del':
+                        var checkStatus = table.checkStatus(obj.config.id);
+                        var data = checkStatus.data;
+                        if (data.length == 0) {
+                            layer.msg('至少选择一条数据');
+                            return false;
+                        }
+                        var ids = []
+                        for (var i = 0; i < data.length; i++) {
+                            ids.push(data[i].regulationTypeAliasId);
+                        }
+
+
+                        layer.confirm('确定删除?', function (index) {
+                            var layerLoader = common.layerLoader();
+                            common.fetchDelete('rulemgr/regulationTypeAlias/delete?ids=' + ids.join(','), function (res) {
+                                if (res.success) {
+                                    layer.close(layerLoader);
+                                    layer.close(index);
+                                    layer.alert('删除成功');
+                                    eventHandle.treeInit()
+                                    eventHandle.tableReload();
+
+                                } else {
+                                    layer.close(layerLoader);
+                                    layer.close(index);
+                                    layer.alert(res.resultMessage);
+                                }
+                            }, function (err) {
+                                layer.close(layerLoader);
+                                layer.close(index);
+                                layer.alert(err.resultMessage);
+                            })
+                        })
+                        break;
+                    case 'open':
+                        var checkStatus = table.checkStatus(obj.config.id);
+                        var data = checkStatus.data;
+                        if (data.length == 0) {
+                            layer.msg('至少选择一条数据');
+                            return false;
+                        }
+                        var ids = []
+                        for (var i = 0; i < data.length; i++) {
+                            ids.push(data[i].regulationTypeAliasId);
+                        }
+
+                        layer.confirm('确定启用?', function (index) {
+                            var layerLoader = common.layerLoader();
+                            common.fetchPost('rulemgr/regulationTypeAlias/EnableForbidden', { ids: ids.join(','), ggEnStatus: 1 }, function (res) {
+                                if (res.success) {
+                                    layer.close(layerLoader);
+                                    layer.close(index);
+                                    layer.alert('启用成功');
+                                    eventHandle.tableReload();
+                                } else {
+                                    layer.close(layerLoader);
+                                    layer.close(index);
+                                    layer.alert(res.resultMessage);
+                                }
+                            }, function (err) {
+                                layer.close(layerLoader);
+                                layer.close(index);
+                                layer.alert(err.resultMessage);
+                            })
+                        })
+                        break;
+                    case 'close':
+                        var checkStatus = table.checkStatus(obj.config.id);
+                        var data = checkStatus.data;
+                        if (data.length == 0) {
+                            layer.msg('至少选择一条数据');
+                            return false;
+                        }
+                        var ids = []
+                        for (var i = 0; i < data.length; i++) {
+                            ids.push(data[i].regulationTypeAliasId);
+                        }
+
+                        layer.confirm('确定禁用?', function (index) {
+                            var layerLoader = common.layerLoader();
+
+                            common.fetchPost('rulemgr/regulationTypeAlias/EnableForbidden', { ids: ids.join(','), ggEnStatus: 0 }, function (res) {
+                                if (res.success) {
+                                    layer.close(layerLoader);
+                                    layer.close(index);
+                                    layer.alert('禁用成功');
+                                    eventHandle.tableReload();
+                                } else {
+                                    layer.close(layerLoader);
+                                    layer.close(index);
+                                    layer.alert(res.resultMessage);
+                                }
+                            }, function (err) {
+                                layer.close(layerLoader);
+                                layer.close(index);
+                                layer.alert(err.resultMessage);
+                            })
+                        })
+                        break;
+                    case 'copy':
+                    var layerAdd = layer.open({
+                            title: '<i class="iconfont icon-SZYD-xitongcaidanguanli"></i>选择初始化企业',
+                            area: ['40%', '90%'],//高度自适应
+                            type: 2,//页面层
+                            // zIndex: 891,
+                            content: "/src/page/ys/zdgl/regulationTypeAliasCopy.html",//加载该区域的html
+
+                            success: function (obj) {
+                                
+                                    return false;
+                                
+                            },
+                            // btn: false
+                        });
+                        break;
+                }
+            });
+
+            table.on('tool(ruleTypeAliasTable)', function (obj) {
+                var data = obj.data;
+                switch (obj.event) {
+                    case 'edit':
+                        var layerAdd = layer.open({
+                            title: '<i class="iconfont icon-SZYD-xitongcaidanguanli"></i>编辑制度类型别名',
+                            area: ['600px', '400px'],//高度自适应
+                            type: 1,//页面层
+                            zIndex: 891,
+                            content: $('.regulationName-add').html(),//加载该区域的html
+                            success: function (obj) {
+                                regulationTypeAliasMeeting = data.regulationTypeAliasMeeting;
+                                if(data.tails.trtName == "议事规则"){
+                                    $(obj.selector).find('#isYsgz').show();
+                                }
+
+                                for(var j=0;j<data.regulationTypeAliasMeeting.length;j++){
+                                    data[regulationTypeAliasMeeting[j].meetingTypeCode] = regulationTypeAliasMeeting[j].meetingTypeId;
+                                }
+                                form.val('regulationName-add', data)
+                                $(obj.selector).find('.btnClose').off().on('click', function () {
+                                    layer.close(layerAdd);
+                                });
+
+                                form.on('select(selectType)', function (data) {
+                                    if (data.value == "33b8bfe3ece149839a9f3c478cc7d23e") {
+                                        $(obj.selector).find("#isYsgz").show();
+                                        isYsgz = true;
+                                    } else {
+                                        $(obj.selector).find("#isYsgz").hide();
+                                        isYsgz = false;
+                                    }
+                                });
+
+
+                                form.on("submit(regulationNameSave)", function (obj) {
+                                    var layerLoader = common.layerLoader();
+                                    common.fetchPost('rulemgr/regulationTypeAlias/save', obj.field, function (res) {
+                                        if (res.success) {
+                                            layer.close(layerLoader);
+                                            layer.close(layerAdd);
+                                            layer.alert('编辑成功');
+                                            eventHandle.tableReload();
+                                        } else {
+                                            layer.close(layerLoader);
+                                            layer.close(layerAdd);
+                                            layer.alert(res.resultMessage);
+                                        }
+                                    }, function (err) {
+                                        layer.close(layerLoader);
+                                        layer.close(layerAdd);
+                                        layer.alert(err.resultMessage);
+                                    })
+                                    return false;
+                                })
+                            },
+                            // btn: false
+                        });
+                        break;
+
+                }
+            });
+
+
+            form.on('submit(formSearch)', function (obj) {
+                //表格重载
+                var regulationTypeId = '';
+                if (obj.field.regulationTypeName) {
+                    regulationTypeId = obj.field.regulationTypeId;
+                }
+                var seId = obj.field.seName != "" ? obj.field.seId : "";
+                var where = {
+                    regulationName: obj.field.regulationName,
+                    regulationTypeId: regulationTypeId,
+                    ggCreateDatetime: obj.field.ggCreateDatetime,
+                    isReportFlag: obj.field.isReportFlag,
+                    regulationTypeName: obj.field.regulationTypeName,
+                    isSan: obj.field.isSan,
+                    effectiveDate: obj.field.effectiveDate,
+                    nodeStatus: obj.field.nodeStatus,
+                    seId: seId
+                }
+                eventHandle.tableReload(where);
+                return false;
+            });
+            common.buttonLimit(currentMenuSmId);
+            common.columnToggle();
+            function formatTree() {
+                var cacluHeight = $(document).height() - 120;
+                $("#leftTree").css({
+                    "height": cacluHeight + "px",
+                    "overflow-y": "auto"
+                });
+            }
+
+            formatTree();
+            // common.buttonLimit(currentMenuSmId);
+        });
+
+
+    </script>
+
+    <!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+
+</html>

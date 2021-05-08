@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>编辑资源信息</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../js/layui/css/layui.css"/>
+    <link href="../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script src="../../js/common/plugin.js"></script>
+</head>
+<div class="dsLayer hide">
+    <div style="padding: 15px 20px">
+        <form class="layui-form layui-form-pane" lay-filter="addForm">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md4">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"><b class="red">*</b>名称</label>
+                        <div class="layui-input-block">
+                            <input type="hidden" name="cfId">
+                            <input type="hidden" name="chId">
+                            <input type="text" name="cfName" required lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"><b class="red">*</b>编码</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="cfCode" required lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"><b class="red">*</b>是否主键</label>
+                        <div class="layui-input-block">
+                            <select name="cfPrimaryKey" required lay-verify="required">
+                                <option value="0">否</option>
+                                <option value="1">是</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md4">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"><b class="red">*</b>是否必填</label>
+                        <div class="layui-input-block">
+                            <select name="cfRequire" required lay-verify="required">
+                                <option value="0">否</option>
+                                <option value="1">是</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"><b class="red">*</b>字段类型</label>
+                        <div class="layui-input-block">
+                            <select name="cfFieldType" required lay-verify="required">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"><b class="red">*</b>字段长度</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="cfFieldLen" required lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md4">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width:130px;">字段小数长度</label>
+                        <div class="layui-input-block" style="margin-left:130px;">
+                            <input type="text" name="cfFieldDigitLen" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">字段默认值</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="cfDefaultval" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width:200px;">是否自动生成业务Id</label>
+                        <div class="layui-input-block" style="margin-left:200px;">
+                            <select name="cfAutoBuskey" placeholder="请选择">
+                                <option value="0">否</option>
+                                <option value="1">是</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md4">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width:200px;">新增是否自动生成时间</label>
+                        <div class="layui-input-block" style="margin-left:200px;">
+                            <select name="cfAutoCreatetime">
+                                <option value="0">否</option>
+                                <option value="1">是</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width:200px;">更新是否自动生成时间</label>
+                        <div class="layui-input-block" style="margin-left:200px;">
+                            <select name="cfAutoUpdatetime">
+                                <option value="0">否</option>
+                                <option value="1">是</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">关联信息</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="cfRelateInfo" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md4">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width:200px;">是否自动填入目录名称</label>
+                        <div class="layui-input-block" style="margin-left:200px;">
+                            <select name="cfAutoContentName">
+                                <option value="0">否</option>
+                                <option value="1">是</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width: 130px;">是否关联校验</label>
+                        <div class="layui-input-block" style="margin-left: 130px;">
+                            <select name="cfAutoVerify">
+                                <option value="0">否</option>
+                                <option value="1">是</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">关联检查</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="cfVerify" placeholder="请输入" autocomplete="off" class="layui-input">
+                            </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md4">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width:130px;">数据取值来源</label>
+                        <div class="layui-input-block" style="margin-left:130px;">
+                            <select name="cfDataSource">
+                                <option value="1">人工输入</option>
+                                <option value="2">数据字典</option>
+                                <option value="3">其它目录字段关联</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width:200px;">查询取值数据字典编码</label>
+                        <div class="layui-input-block" style="margin-left:200px;">
+                            <input type="text" name="cfDataDictCode" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width:150px;"><b class="red">*</b>查询取值目录编码</label>
+                        <div class="layui-input-block" style="margin-left:150px;">
+                                <input type="text" name="cfDataContentCode" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md4">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width:200px;">查询取值目录指标编码</label>
+                        <div class="layui-input-block" style="margin-left:200px;">
+                            <input type="text" name="cfDataContentFieldCode" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">备注</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="cfRemark" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"><b class="red">*</b>序号</label>
+                        <div class="layui-input-block">
+                            <input type="number" name="cfNum" required lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item adapt" style="margin-left: 30%">
+                <div class="layui-input-block">
+                    <button class="layui-btn " lay-submit lay-filter="formSave" permission-btn="submitIndicator"><i class="fa fa-check-circle"></i>确定</button>
+                    <button class="layui-btn layui-btn-primary" id="formClose"><i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="commonIndicatorLayer hide">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+            <div class="layui-collapse white-bg">
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title white-bg">查询条件</h2>
+                    <div class="layui-colla-content">
+                        <form class="layui-form layui-form-pane">
+                            <div class="layui-row layui-col-space15">
+                                <div class="layui-col-md6">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">名称</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="qHeadName" placeholder="请输入" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-input-block">
+                                    <button class="layui-btn" lay-submit lay-filter="formSearchCommonIndicator"><i class="fa fa-search"></i>查询</button>
+                                    <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-card" style="margin-top: 10px">
+                <div class="layui-card-body">
+                    <table id="commonIndicatorTable" lay-filter="commonIndicatorTable"></table>
+                </div>
+            </div>
+            <script type="text/html" id="commonIndicatorTableToolBar">
+                <div class="layui-btn-container">
+                    <button class="layui-btn layui-btn-sm" lay-event="add">新增</button>
+                </div>
+            </script>
+        </div>
+    </div>
+</div>
+<body class="iframe-h">
+<div class="content-wrap">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+            <div class="layui-collapse white-bg">
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title white-bg">数据资源表头信息</h2>
+                    <div class="layui-colla-content layui-show">
+                        <!--layui-form-pane-->
+                        <form class="layui-form layui-form-pane" id="headForm">
+                            <div class="layui-row layui-col-space15">
+                                <div class="layui-col-md6">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label"><b class="red">*</b>表名称</label>
+                                        <div class="layui-input-block">
+                                            <input type="hidden" name="chId">
+                                            <input type="text" name="chTableName" required lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md6">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label"><b class="red">*</b>表名编码</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="chTableCode" required lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-row layui-col-space15">
+                                <div class="layui-col-md6">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">排序信息</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="chOrder" placeholder="请输入" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md6">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label"><b class="red">*</b>数据源</label>
+                                        <div class="layui-input-block">
+                                            <select name="dsId" id="dsId" required lay-verify="required">
+                                                <option value=""></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item" style="margin-left: 30%">
+                                <div class="layui-input-block">
+                                    <button class="layui-btn" lay-submit lay-filter="saveHead" permission-btn="saveCatalogueHead"> <i class="layui-icon">&#x1005;</i>保存</button>
+                                    <button class="layui-btn" id="unbindHead" permission-btn="unbindCatalogueHead">解除绑定</button>
+                                    <button class="layui-btn" id="genTable" permission-btn="generateTable">生成表</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-card" style="margin-top: 10px">
+                <div class="layui-card-body">
+                    <div class="layui-card-header layui-card-header-custom"><span><i></i>数据资源指标列表</span></div>
+                    <table id="table1" lay-filter="table1"></table>
+                    <script type="text/html" id="tableToolBar">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-sm" lay-event="add" permission-btn="addIndicator">新增</button>
+                            <button class="layui-btn layui-btn-sm" lay-event="addFromTemplate" permission-btn="joinFieldTemplate">加入字段模板</button>
+                        </div>
+                    </script>
+                    <script type="text/html" id="tableOper">
+                        <a class="layui-btn layui-btn-xs" lay-event="edit" permission-btn="editIndicator">
+                            <i class="layui-icon layui-icon-edit"></i> 编辑
+                        </a>
+                        <a class="layui-btn layui-btn-xs" lay-event="asc" permission-btn="sortIndicatorAsc">
+                            <i class="layui-icon layui-icon-link"></i> 升序
+                        </a>
+                        <a class="layui-btn layui-btn-xs" lay-event="desc" permission-btn="sortIndicatorDesc">
+                            <i class="layui-icon layui-icon-table"></i> 降序
+                        </a>
+                        <a class="layui-btn layui-btn-xs" lay-event="delete" permission-btn="deleteIndicator">
+                            <i class="layui-icon layui-icon-theme"></i> 删除
+                        </a>
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="./../../js/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).extend({
+    }).use(['layer','table','form','laytpl','common','element','eleTree',],function () {
+        var table=layui.table;
+        var form=layui.form;
+        var common=layui.common;
+        var element = layui.element;
+        var tree = layui.eleTree;
+        element.init();
+        var baseUrl='../../../';
+        common.themeSet();
+
+        var currentMenuSmId=$("#currentMenuSmId", top.window.parent.document).val();
+
+        var eventHandle={
+            formInit: function(){
+                var obj = $("#headForm");
+                form.render();
+                if(parent.catalogue.chId){
+                    common.fetchGet('sysmgr/catalogueTable/catalogueTable?tableId='+parent.catalogue.chId,function (res) {
+                        if(res.success){
+                            $(obj).find('input[name=chId]').val(res.object.chId);
+                            $(obj).find('input[name=chTableName]').val(res.object.chTableName);
+                            $(obj).find('input[name=chTableCode]').val(res.object.chTableCode);
+                            $(obj).find('input[name=chOrder]').val(res.object.chOrder);
+                            $(obj).find('select[name=dsId]').val(res.object.dsId);
+                        }
+
+                        var option = {
+                            elem: $('#dsId'),
+                            url: 'sysmgr/datasource/validDataSource',
+                            method: 'post',
+                            responseList: 'list',
+                            optionText: 'dsName',
+                            optionValue: 'dsId',
+                            where: {"ggEnStatus":"1", "ggDelStatus":"0"},
+                            success: function(obj) {
+                                $('#dsId').val(res.object.dsId);
+                                form.render("select");
+                            }
+                        };
+                        common.selectDataSet(option);
+                    }, function () {
+
+                    });
+                }
+                else{
+                    var option = {
+                        elem: $('#dsId'),
+                        url: 'sysmgr/datasource/validDataSource',
+                        method: 'post',
+                        responseList: 'list',
+                        optionText: 'dsName',
+                        optionValue: 'dsId',
+                        where: {"ggEnStatus":"1", "ggDelStatus":"0"},
+                        success: function(obj) {
+                            form.render("select");
+                        }
+                    };
+                    common.selectDataSet(option);
+                }
+                //保存
+                form.on('submit(saveHead)',function (obj) {
+                    var params = {
+                        chId: obj.field.chId,
+                        dsId: obj.field.dsId,
+                        chTableName: obj.field.chTableName,
+                        chTableCode: obj.field.chTableCode,
+                        chOrder: obj.field.chOrder
+                    };
+                    var layerLoader =common.layerLoader();
+                    common.fetchPost('sysmgr/catalogueTable/catalogueTable?ciId='+parent.catalogue.ciId, params, function (data) {
+                        layer.close(layerLoader);
+                        layer.msg('保存成功');
+                        parent.eventHandle.tableReload();
+                        parent.catalogue.chId = data.object.chId;
+                        eventHandle.tableReload({"chId":data.object.chId});
+                    }, function (res) {
+                        layer.close(layerLoader);
+                        layer.alert(res.resultMessage);//失败后提示
+                        // layer.close(layer.index);
+                    });
+                    return false;
+                });
+                //解除绑定
+                $("#unbindHead").click(function(){
+                    if(!parent.catalogue.chId){
+                        layer.msg('未绑定资源头部信息');//失败后提示
+                        return false;
+                    }
+
+                    var layerLoader =common.layerLoader();
+                    common.fetchGet('sysmgr/catalogue/unbindCatalogueHead?ciId='+parent.catalogue.ciId, function (data) {
+                        layer.close(layerLoader);
+                        layer.msg('操作成功');
+                        $("#headForm").find('input[name=chId]').val('');
+                        $("#headForm").find('input[name=chTableName]').val('');
+                        $("#headForm").find('input[name=chTableCode]').val('');
+                        $("#headForm").find('input[name=chOrder]').val('');
+                        $("#headForm").find('select[name=dsId]').val('');
+                        form.render('select');
+
+                        parent.eventHandle.tableReload();
+                        parent.catalogue.chId = null;
+                        eventHandle.tableReload({"chId":parent.catalogue.chId});
+                    }, function (res) {
+                        layer.close(layerLoader);
+                        if(res.resultCode == 'CONNECT_DATASOURCE_ERROR'){
+                            layer.confirm('无法连接数据源，是否强制解除绑定?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                                layer.close(index);
+                                var layerLoader = common.layerLoader();
+                                common.fetchGet('sysmgr/catalogue/unbindCatalogueHead?forceUnbind=true&ciId='+parent.catalogue.ciId, function (data) {
+                                    layer.close(layerLoader);
+                                    $("#headForm").find('input[name=chId]').val('');
+                                    $("#headForm").find('input[name=chTableName]').val('');
+                                    $("#headForm").find('input[name=chTableCode]').val('');
+                                    $("#headForm").find('input[name=chOrder]').val('');
+                                    $("#headForm").find('select[name=dsId]').val('');
+                                    form.render('select');
+
+                                    parent.eventHandle.tableReload();
+                                    parent.catalogue.chId = null;
+                                    eventHandle.tableReload({"chId":parent.catalogue.chId});
+                                });
+                            });
+                            return;
+                        }
+                        layer.alert(res.resultMessage);
+                    });
+                    return false;
+                });
+                //生成表
+                $("#genTable").click(function(){
+                    if(!parent.catalogue.chId){
+                        layer.msg('请先绑定资源头部信息');//失败后提示
+                        return false;
+                    }
+
+                    var layerLoader =common.layerLoader();
+                    common.fetchGet('sysmgr/catalogueTable/generateTable?tableId='+parent.catalogue.chId, function (data) {
+                        layer.close(layerLoader);
+                        layer.msg('操作成功');
+                    }, function (res) {
+                        layer.close(layerLoader);
+                        layer.alert(res.resultMessage);
+                    });
+                    return false;
+                });
+            },
+            tableInit: function(){
+                table.render(common.tableInitParams({
+                    elem: '#table1',
+                    url: baseUrl+'sysmgr/indicator/indicatorPagination',
+                    height:  'full-200',
+                    defaultToolbar:[],
+                    where: {'chId':parent.catalogue.chId},
+                    toolbar:'#tableToolBar',
+                    cols: [
+                        [
+                            {type:'checkbox'},
+                            {field: 'cfNum', title: '序号', align:'center',sort: true},
+                            {field: 'cfName', title: '名称', sort: true},
+                            {field: 'cfCode', title: '编码', sort: true},
+                            {field: 'cfPrimaryKey', title: '是否主键', sort: true},
+                            {field: 'cfRequire', title: '是否必填', sort: true},
+                            {field: 'cfFieldType', title: '字段类型', sort: true},
+                            {field: '', title: '操作', width:'30%', toolbar:'#tableOper',fixed: 'right'}
+                        ]
+                    ],
+                    done: function(){
+                        common.buttonLimit(currentMenuSmId);
+                    }
+                }));
+
+                //table监听事件
+                table.on('toolbar(table1)',function (obj) {
+                    switch(obj.event) {
+                        case 'add':
+                            if(!parent.catalogue.chId){
+                                layer.msg('先绑定头部信息');//失败后提示
+                                return;
+                            }
+
+                            var index_edit=layer.open({
+                                offset: '10px',
+                                title: '新增',
+                                maxmin: false,
+                                type: 1,//页面层
+                                area: ['100%', '100%'],//高度自适应
+                                shadeClose: false,
+                                content: $('.dsLayer').html(),//加载该区域的html
+                                success: function (obj) {
+                                    form.render('select');
+
+                                    form.on('submit(formSave)', function (obj) {
+                                        var params = obj.field;
+                                        params.chId = parent.catalogue.chId;
+
+                                        var loadingIndex = layer.load(1, {shade: [0.1,'#fff']});
+                                        common.fetchPost('sysmgr/indicator/indicator', params, function (data) {
+                                            layer.close(loadingIndex);
+                                            //表格重载
+                                            eventHandle.tableReload();
+                                            layer.close(index_edit);
+                                        }, function (res) {
+                                            layer.close(loadingIndex);
+                                            layer.alert(res.resultMessage);
+                                        });
+                                        return false;
+                                    });
+
+                                    //绑定关闭按钮事件
+                                    $(obj.selector).find('#formClose').off().on('click',function(){
+                                        layer.close(index_edit);
+                                        return false;
+                                    });
+
+                                    eventHandle.selectDataType($(obj).find('select[name=cfFieldType]'), parent.catalogue.chId);
+                                }
+                            });
+                            break;
+                        case 'addFromTemplate':
+                            if(!parent.catalogue.chId){
+                                layer.msg('先绑定头部信息');//失败后提示
+                                return;
+                            }
+                            var commonIndicatorIndex = layer.open({
+                                offset: '10px',
+                                title: '加入字段模板',
+                                maxmin: false,
+                                type: 1,//页面层
+                                area: ['100%', '100%'],//高度自适应
+                                shadeClose: false,
+                                content: $('.commonIndicatorLayer').html(),//加载该区域的html
+                                success: function (obj) {
+                                    element.init();
+
+                                    table.render(common.tableInitParams({
+                                        elem: $(obj.selector).find('#commonIndicatorTable'),
+                                        url: baseUrl+'sysmgr/commonIndicator/commonIndicatorPagination',
+                                        toolbar:'#commonIndicatorTableToolBar',
+                                        cols: [
+                                            [
+                                                {type: 'checkbox'},
+                                                {field: 'ccfName', title: '字段名称'},
+                                                {field: 'ccfCode', title: '字段编码'}
+                                            ]
+                                        ],
+                                        done:function (res) {
+                                        }
+                                    }));
+
+                                    table.on('toolbar(commonIndicatorTable)',function (obj) {
+                                        var checkStatus = table.checkStatus(obj.config.id);
+                                        switch(obj.event) {
+                                            case 'add':
+                                                if(checkStatus.data.length==0){
+                                                    layer.msg('请选择要新增的字段模板数据');
+                                                }
+                                                else{
+                                                    layer.confirm('确定新增选中数据?', {
+                                                        icon: 3,
+                                                        title: '提示',
+                                                        offset: '150px'
+                                                    }, function (index) {
+                                                        var selectedArray = [];
+                                                        for(var j = 0,len = checkStatus.data.length; j < len; j++){
+                                                            selectedArray.push(checkStatus.data[j].ccfId);
+                                                        }
+                                                        var para = {
+                                                            "headId": parent.catalogue.chId,
+                                                            "commonIndicators":selectedArray.join(",")
+                                                        };
+                                                        var layerLoader =common.layerLoader();
+                                                        common.fetchPost("sysmgr/indicator/addFromCommonIndicator", para ,function (data) {
+                                                            layer.close(layerLoader);
+                                                            layer.close(commonIndicatorIndex);
+                                                            eventHandle.tableReload();
+                                                            layer.msg('新增成功');
+                                                        },function (data) {
+                                                            layer.close(layerLoader);
+                                                            layer.msg(data.resultMessage);
+                                                        });
+
+                                                    });
+                                                }
+                                                break;
+                                        }
+                                    });
+                                    form.on('submit(formSearchCommonIndicator)',function (obj) {
+                                        //表格重载
+                                        table.reload('commonIndicatorTable',{
+                                            url: baseUrl+'sysmgr/commonIndicator/commonIndicatorPagination',
+                                            method:'post',
+                                            contentType:'application/json',
+                                            page:{
+                                                curr:1
+                                            },
+                                            where:{ccfName:obj.field.qCcfName}
+                                        });
+                                        return false;
+                                    });
+                                }
+                            });
+                            break;
+                    }
+                });
+
+                // table row 监听事件
+                table.on('tool(table1)', function(obj){
+                var data = obj.data;
+                switch(obj.event){
+                    case 'edit'://编辑
+                        var index_edit=layer.open({
+                            offset: '10px',
+                            title:'编辑',
+                            maxmin: false,
+                            type: 1,//页面层
+                            area: ['100%', '100%'],//高度自适应
+                            shadeClose: false,
+                            content: $('.dsLayer').html(),//加载该区域的html
+                            success:function (obj) {
+                                //初始化表格
+                                form.render();
+                                $(obj.selector).find('input[name=cfId]').val(data.cfId);
+                                $(obj.selector).find('input[name=chId]').val(data.chId);
+                                $(obj.selector).find('input[name=cfNum]').val(data.cfNum);
+                                $(obj.selector).find('input[name=cfName]').val(data.cfName);
+                                $(obj.selector).find('input[name=cfCode]').val(data.cfCode);
+                                $(obj.selector).find('input[name=cfFieldLen]').val(data.cfFieldLen);
+                                $(obj.selector).find('input[name=cfFieldDigitLen]').val(data.cfFieldDigitLen);
+                                $(obj.selector).find('input[name=cfDefaultval]').val(data.cfDefaultval);
+                                $(obj.selector).find('input[name=cfRemark]').val(data.cfRemark);
+                                $(obj.selector).find('input[name=cfRelateInfo]').val(data.cfRelateInfo);
+                                $(obj.selector).find('input[name=cfVerify]').val(data.cfVerify);
+                                $(obj.selector).find('input[name=cfDataSource]').val(data.cfDataSource);
+                                $(obj.selector).find('input[name=cfDataDictCode]').val(data.cfDataDictCode);
+                                $(obj.selector).find('input[name=cfDataContentCode]').val(data.cfDataContentCode);
+                                $(obj.selector).find('input[name=cfDataContentFieldCode]').val(data.cfDataContentFieldCode);
+
+                                eventHandle.selectDataType($(obj).find('select[name=cfFieldType]'), parent.catalogue.chId, data.cfFieldType);
+
+                                $(obj.selector).find('select[name=cfPrimaryKey]').val(data.cfPrimaryKey);
+                                $(obj.selector).find('select[name=cfRequire]').val(data.cfRequire);
+                                //$(obj.selector).find('select[name=cfFieldType]').val(data.cfFieldType);
+                                $(obj.selector).find('select[name=cfAutoBuskey]').val(data.cfAutoBuskey);
+                                $(obj.selector).find('select[name=cfAutoCreatetime]').val(data.cfAutoCreatetime);
+                                $(obj.selector).find('select[name=cfAutoUpdatetime]').val(data.cfAutoUpdatetime);
+                                $(obj.selector).find('select[name=cfAutoContentName]').val(data.cfAutoContentName);
+                                $(obj.selector).find('select[name=cfAutoVerify]').val(data.cfAutoVerify);
+                                $(obj.selector).find('select[name=cfUniqueVerify]').val(data.cfUniqueVerify);
+
+                                form.render('select');
+
+                                $(obj.selector).find('#formClose').off().on('click',function(){
+                                    layer.close(index_edit);
+                                    return false;
+                                });
+                                //点击保存按钮
+                                form.on('submit(formSave)', function (form) {
+                                    var params = form.field;
+                                    params.chId = parent.catalogue.chId;
+
+                                    var layerLoader =common.layerLoader();
+                                    common.fetchPut('sysmgr/indicator/indicator/', params, function (data) {
+                                        layer.close(layerLoader);
+                                        layer.msg(data.resultMessage);//成功提示
+                                        layer.close(index_edit);
+                                        //表格重载
+                                        eventHandle.tableReload();
+                                    }, function (data) {
+                                        layer.close(layerLoader);
+                                        layer.msg(data.resultMessage);//失败后提示
+                                    });
+                                    return false;
+                                });
+
+
+                            }
+                        });
+                        break;
+                    case 'asc'://升序
+                        var loadingIndex = layer.load(1, {shade: [0.1,'#fff']});
+                        common.fetchGet('sysmgr/indicator/sortIndicator?asc=true&indicatorId='+data.cfId, function(data){
+                            layer.close(loadingIndex);
+                            layer.msg(data.resultMessage);//成功提示
+                            eventHandle.tableReload();
+                        }, function(data){
+                            layer.close(loadingIndex);
+                            layer.msg(data.resultMessage);//失败后提示
+                        });
+                        break;
+                    case 'desc'://降序
+                        var loadingIndex = layer.load(1, {shade: [0.1,'#fff']});
+                        common.fetchGet('sysmgr/indicator/sortIndicator?asc=false&indicatorId='+data.cfId, function(data){
+                            layer.close(loadingIndex);
+                            layer.msg(data.resultMessage);//成功提示
+                            eventHandle.tableReload();
+                        }, function(res){
+                            layer.close(loadingIndex);
+                            layer.alert(res.resultMessage);//失败后提示
+                        });
+                        break;
+                    case 'delete'://删除
+                        layer.confirm('确定删除选中数据?', {icon: 3, title:'提示',offset: '150px'}, function(index){
+                            layer.close(index);
+                            var loadingIndex = layer.load(1, {shade: [0.1,'#fff']});
+                            common.fetchDelete('sysmgr/indicator/indicator/'+data.cfId, function(data){
+                                layer.close(loadingIndex);
+                                layer.msg(data.resultMessage);//成功提示
+                                eventHandle.tableReload();
+                            }, function(data){
+                                layer.close(loadingIndex);
+                                layer.msg(data.resultMessage);//失败后提示
+                            });
+                        });
+                        break;
+                }
+               });
+            },
+            tableReload:function (params) {
+                if(!params) params={};
+                table.reload('table1',{
+                    url: baseUrl+'sysmgr/indicator/indicatorPagination',
+                    method:'post',
+                    contentType:'application/json',
+                    page:{
+                        curr:1
+                    },
+                    where:params
+                });
+                common.buttonLimit(currentMenuSmId);
+            },
+            selectDataType: function(elem, headId, selectedDataType){
+                common.fetchGet('sysmgr/catalogueTable/getDbTypeByHeadId?headId='+headId,function (res) {
+                    var url = 'sysmgr/dicts/selectDictListByPcode?dictPCode='+(res.object=='mysql'? 'MYSQL_COLUMN_DATA_TYPE':(res.object=='dameng'? 'DAMENG_COLUMN_DATA_TYPE' :'SATCCMTYPE'));
+                    var option = {
+                        elem: elem,
+                        url: url,
+                        method: 'get',
+                        responseList: 'list',
+                        optionText:'sdName',
+                        optionValue:'sdCode',
+                        success: function(obj) {
+                            $(elem).val(selectedDataType);
+                            form.render("select");
+                        }
+                    };
+                    common.selectDataSet(option);
+                });
+            }
+        };
+        eventHandle.formInit();
+        //初始表格
+        eventHandle.tableInit();
+    });
+</script>
+<!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+
+<head>
+    <meta charset="UTF-8">
+    <title>议案列表-拟上会-挂会</title>
+    <meta content="webkit" name="renderer" />
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../../js/layui/css/layui.css" />
+    <link href="../../../css/public.css?v1.01" rel="stylesheet" />
+    <link href="../../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <script src="../../../js/lib/jquery.1.12.3.js"></script>
+</head>
+
+<style>
+    .layui-layer-btn-c {
+        margin-top: -20px;
+    }
+
+    span#reportNums {
+        font-weight: 900;
+        font-size: 18px;
+    }
+
+    span#reportNums i {
+        height: 20px;
+        vertical-align: -2px;
+    }
+
+    .eleTree.ele5,
+    .eleTree.ele6 {
+        height: auto;
+        width: 100%;
+        display: none;
+        position: absolute;
+        top: 100%;
+        background-color: #fff;
+        z-index: 10000;
+        border: 1px solid #ccc;
+    }
+</style>
+
+<body class="iframe-h">
+
+    <div class="content-wrap">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-xs12">
+                <div class="layui-card">
+                    <div class="layui-card-header layui-card-header-custom"><span><i></i>会议列表</span></div>
+                    <div class="layui-card-body">
+                        <form action="" class="layui-form layui-form-pane">
+                            <div class="layui-row layui-col-space10">
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">会议名称</label>
+                                        <div class="layui-input-block">
+                                            <input autocomplete="off" class="layui-input" name="meetingName"
+                                                placeholder="请输入" type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">会议日期</label>
+                                        <div class="layui-input-block">
+                                            <input class="layui-input" name="meetingTime" placeholder="请选择" type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="toggle-area layui-col-space10">
+                                </div>
+                                <div class="" style="text-align: center;">
+                                    <div class="layui-input-inline" style="padding-left: 20px">
+                                        <button name="searchSubmit" class="layui-btn  " lay-submit=""
+                                            lay-filter="formSearch"><i class="fa fa-search"></i>查询</button>
+                                        <button name="reset" lay-filter="reset" type="reset"
+                                            class="layui-btn layui-btn-primary  "><i
+                                                class="fa fa-eraser"></i>重置</button>
+                                        <a class="toggle-btn">
+                                            <span>展开</span><i class="fa fa-angle-up"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="layui-card" style="margin-top: -13px">
+                    <div class="layui-card-body">
+                        <table id="table1" lay-filter="table1" style="margin-top:5px;"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./../../../js/layui/layui.js"></script>
+    <script src="../../../js/lib/echarts-4.1.0.min.js" charset="utf-8"></script>
+    <script src="../../../js/lib/echartTheme.js" charset="utf-8"></script>
+    <script>
+        var ftable;
+        layui.config({
+            base: '../../../../src/js/',
+            version: new Date().getTime()
+        }).extend({
+            custom: 'common/custom'
+        }).use(['layer', 'eleTree', 'table', 'form', 'laytpl', 'element', 'custom', 'laydate', 'util'], function () {
+            var table = layui.table;
+            ftable = table;
+            var form = layui.form;
+            var common = layui.common;
+            var element = layui.element;
+            var tree = layui.eleTree;
+            var laydate = layui.laydate;
+            var util = layui.util;
+            var el6;
+            var fileIframe;
+            element.init();
+            var baseUrl = '../../../../';
+
+            var meetingTypeId = common.getQueryVariable("meetingTypeId");
+            common.themeSet();
+            common.toggleArea($('.toggle-btn'), $('.toggle-area'));
+            var userInfo = common.getUserInfo();
+            var pageUrl = baseUrl + 'meetingmgr/tiolMeeting/selectMeetingPageForMotion';
+            var eventHandle = {
+                tableInit: function () {
+                    table.render(common.tableInitParams({
+                        elem: '#table1',
+                        height: 'full-180',
+                        defaultToolbar: [],
+                        url: pageUrl,
+                        method: 'post',
+                        where: { meetingTypeId: meetingTypeId },
+                        cols: [
+                            [
+                                { type: 'radio', LAY_CHECKED: false },
+                                { type: 'numbers', align: 'center', title: '序号', width: 60 },
+                                { field: 'meetingName', title: '会议名称', minWidth: 100 },
+                                {
+                                    field: 'meetingTime', title: '会议日期', align: 'center', width: 250, templet: function (rowData) {
+                                        if (rowData['meetingTime'] && rowData['meetingTimeEnd']) {
+                                            if (rowData['meetingTime'] != rowData['meetingTimeEnd']) {
+                                                return rowData['meetingTime'] + '至' + rowData['meetingTimeEnd']
+                                            } else {
+                                                return rowData['meetingTime']
+                                            }
+                                        } else {
+                                            return '-'
+                                        }
+                                    }
+                                },
+                            ]
+                        ],
+                        // toolbar:'#tableToolBar',
+                    }));
+                },
+                tableReload: function (where) {
+                    table.reload('table1', {
+                        url: pageUrl,
+                        method: 'post',
+                        where: where
+                    });
+                },
+                output: function () {
+                    //查询条件 
+                    // 会议日期
+                    laydate.render({
+                        elem: 'input[name=meetingTime]',
+                        type: 'date',
+                        trigger: 'click'
+                    });
+                    // 表格渲染
+                    eventHandle.tableInit();
+                }
+            }
+            eventHandle.output();
+
+
+            form.on('submit(formSearch)', function (obj) {
+                obj.field.meetingTypeId = meetingTypeId;
+
+                eventHandle.tableReload(obj.field);
+                return false;
+            });
+            common.columnSide();
+        });
+
+
+    </script>
+
+    <!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+
+</html>

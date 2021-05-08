@@ -1,0 +1,184 @@
+@charset "utf-8";
+/*
+ *
+ * @author gl
+ * @description mixin  公共函数
+ *
+ **/
+
+//keyframes 动画混合
+@mixin keyframes($animationName) {
+    @-webkit-keyframes #{$animationName} {
+        @content;
+    }
+
+    @-moz-keyframes #{$animationName} {
+        @content;
+    }
+
+    @-o-keyframes #{$animationName} {
+        @content;
+    }
+
+    @keyframes #{$animationName} {
+        @content;
+    }
+}
+
+//设置大中小屏幕的媒体查询  顺序 屏幕宽度从小写到大 例子如下
+p {}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+    p {}
+}
+
+@media (min-width: 1024px) {
+    p {}
+}
+
+//定义小屏，大屏 例子如下，全局定义写法
+$smallTable: "(min-width: 786px) and (max-width: 1023px)";
+$largeTable: "(min-width: 786px)";
+
+@media #{$smallTable} {}
+
+@media #{$largeTable} {}
+
+//使用mixin进行分装
+$small-tablet-width: 786px;
+$large-table-width: 1024px;
+
+@mixin smallTable {
+    @media (min-width: #{$small-tablet-width}) and (max-width: #{$large-table-width - 1px}) {
+        @content;
+    }
+}
+
+@mixin largeTable {
+    @media (min-width: #{$large-table-width}) {
+        @content;
+    }
+}
+
+// 当屏幕小于862px时
+@mixin lessThanSmallWidth {
+    @media only screen and (max-width: 862px) {
+        @content;
+    }
+}
+
+// 当屏幕大于862px时
+@mixin moreThanSmallWidth {
+    @media only screen and (min-width: 863px) {
+        @content;
+    }
+}
+
+@mixin transform($transform) {
+    -webkit-transform: $transform;
+    -moz-transform: $transform;
+    -ms-transform: $transform;
+    -o-transform: $transform;
+    transform: $transform;
+}
+
+@mixin transition($transition) {
+    -webkit-transition: $transition;
+    -moz-transition: $transition;
+  //-ms-transition: $transition;
+    -o-transition: $transition;
+    transition: $transition;
+}
+
+//圆角
+@mixin border-radius($radius) {
+    -webkit-border-radius: $radius;
+    -moz-border-radius: $radius;
+    border-radius: $radius;
+}
+
+//透明
+@mixin opacity($opacity) {
+    opacity: $opacity;
+    filter: alpha(opacity=($opacity*100));
+    -moz-opacity: $opacity;
+    -khtml-opacity: $opacity;
+}
+
+//阴影
+@mixin box-shadow($blackshadow) {
+    -webkit-box-shadow: $blackshadow;
+    -moz-box-shadow: $blackshadow;
+    box-shadow: $blackshadow;
+}
+
+//动画
+@mixin animation ($animation) {
+    -webkit-animation: $animation;
+    -o-animation: $animation;
+    animation: $animation;
+}
+
+//动画延迟
+@mixin animateDelay($time) {
+    -webkit-animation-delay: $time;
+    -moz-animation-delay: $time;
+    -ms-animation-delay: $time;
+    -o-animation-delay: $time;
+    animation-delay: $time;
+}
+
+//引用的动画名称
+@mixin animateName($name) {
+    -moz-animation-name: $name;
+    -ms-animation-name: $name;
+    -o-animation-name: $name;
+    animation-name: $name;
+}
+
+//盒子模型
+@mixin boxSizing($box-sizing) {
+    -webkit-box-sizing: $box-sizing;
+    -moz-box-sizing: $box-sizing;
+    box-sizing: $box-sizing;
+}
+
+//背景渐变
+@mixin linearGradient($linear-gradient, $defaultColor) {
+    background: $defaultColor;
+    /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient($linear-gradient);
+    /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient($linear-gradient);
+    /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient($linear-gradient);
+    /* For Firefox 3.6 to 15 */
+    background: linear-gradient($linear-gradient);
+    /* Standard syntax */
+}
+
+// 全局皮肤切换
+@mixin presentTheme($theme) {
+  //[menuTheme="#{$theme}"] & {
+  //    @content;
+  //}
+  .menuTheme-#{$theme} & {
+        @content;
+    }
+
+}
+//主题颜色切换
+@mixin primaryColorSet($primaryColor) {
+    [primaryColor="#{$primaryColor}"] & {
+        @content;
+    }
+}
+
+//全局主题切换  globalTheme
+
+@mixin globalTheme($gloBalTheme) {
+    [globalTheme="#{$gloBalTheme}"] & {
+        @content;
+    }
+}
+

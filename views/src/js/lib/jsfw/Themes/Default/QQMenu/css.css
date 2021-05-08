@@ -1,0 +1,32 @@
+.QQMenu_Title{
+	background-image: url('Title_BG.gif');
+	background-repeat: repeat-x;
+	height:23px;
+	width:100%;
+}
+.QQMenu_Title_Sel{
+	background-image: url('Title_BG.gif');
+	background-repeat: repeat-x;
+	height:23px;
+	width:100%;
+	font-weight:bold;
+}
+
+.QQMenu_Title legend{
+	padding-left:5px;
+	padding-top:3px;
+}
+.QQMenu_Title_Sel legend{
+	padding-left:5px;
+	padding-top:3px;
+}
+.QQMenu_Content{
+	overflow:auto;
+}
+
+.QQMenu_Content_Item{
+	border:none;
+	padding:0px;
+	margin:0px;
+	height:100%;
+}

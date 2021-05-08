@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+    <link class="favicon" href="../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link href="../../js/layui/css/layui.css" rel="stylesheet" />
+    <link href="../../css/public.css?v1.01" rel="stylesheet" />
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script charset="utf-8" src="../../js/common/plugin.js"></script>
+</head>
+
+<script type="text/html" id="systemNotice">
+    <div class="layui-card-body" style="background:#FBFBFB;">
+        <form class="layui-form layui-form-pane" name="xxx">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md12">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">公告标题</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="snTitle" id="snTitle"
+                                autocomplete="off" class="layui-input hyinput" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md12">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">公告正文</label>
+                        <div class="layui-input-block">
+                            <textarea type="text" id="snContent" autocomplete="off" class="layui-textarea" readonly></textarea>
+                        </div>
+                    </div>
+                </div>             
+            </div>
+        </form>
+    </div>
+</script>
+
+<body class="iframe-h">
+
+    <div class="content-wrap">
+        
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs8 ">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-xs6">
+                        <!-- <div class="layui-card">
+                        <div class="layui-card-header layui-card-header-custom"><span><i></i>制度类型统计</span></div>
+                        <div class="layui-card-body">
+                            <div id="zdChart" style="height: 360px;width: 100%;"></div>
+                        </div>
+                    </div> -->
+                        <div class="layui-card">
+                            <div class="layui-card-header layui-card-header-custom"><span><i></i>会议类型统计</span></div>
+                            <div class="layui-card-body">
+                                <div id="hyChart" style="height: 360px;width: 100%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6">
+                        <div class="layui-card">
+                            <!-- <div class="layui-card-header layui-card-header-custom"><span><i></i>议案类别统计</span></div>
+                        <div class="layui-card-body">
+                            <div id="yaChart" style="height: 360px;width: 100%;"></div>
+                        </div> -->
+                            <div class="layui-card-header layui-card-header-custom"><span><i></i>会议上报情况</span></div>
+                            <div class="layui-card-body">
+                                <div id="chart1" style="height: 360px;width: 100%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-xs12">
+                        <div class="layui-card">
+                            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+                                <ul class="layui-tab-title">
+                                    <li class="layui-this">最新制度</li>
+                                    <li>最新会议</li>
+                                    <li>最新议案</li>
+                                    <!--<li>最新议题</li>-->
+                                </ul>
+                                <div class="layui-tab-content" style="padding-top: 0;margin-bottom: 12px;">
+                                    <div class="layui-tab-item layui-show">
+                                        <div class="padding-10">
+                                            <table id="table1"></table>
+                                        </div>
+                                    </div>
+                                    <div class="layui-tab-item">
+                                        <div class="padding-10">
+                                            <table id="table2"></table>
+                                        </div>
+                                    </div>
+                                    <div class="layui-tab-item">
+                                        <div class="padding-10">
+                                            <table id="table3"></table>
+                                        </div>
+                                    </div>
+                                    <!--<div class="layui-tab-item">
+                                        <div class="padding-10">
+                                            <table id="table3"></table>
+                                        </div>
+                                    </div>-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-xs4 ">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-xs12">
+                        <div class="layui-card">
+                            <!-- <div class="layui-card-header layui-card-header-custom"><span><i></i>会议类型统计</span></div>
+                        <div class="layui-card-body">
+                            <div id="hyChart" style="height: 160px;width: 100%;"></div>
+                        </div> -->
+                            <div class="layui-card-header layui-card-header-custom"><span><i></i>议案类别统计</span></div>
+                            <div class="layui-card-body">
+                                <div id="yaChart" style="height: 180px;width: 100%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-xs12">
+                        <div class="layui-card">
+                            <div class="layui-card-header layui-card-header-custom"><span><i></i>制度类型统计</span></div>
+                            <div class="layui-card-body">
+                                <div id="zdChart" style="height: 160px;width: 100%;"></div>
+                            </div>
+                            <!-- <div class="layui-card-header layui-card-header-custom"><span><i></i>上报情况</span></div>
+                        <div class="layui-card-body">
+                            <div id="chart1" style="height: 180px;width: 100%"></div>
+                        </div> -->
+                        </div>
+                    </div>
+                    <div class="layui-col-xs12">
+                        <div class="layui-card">
+                            <div class="layui-card-header layui-card-header-custom"><span><i></i>会议上报率情况</span></div>
+                            <div class="layui-card-body">
+                                <div class="layui-card-body layadmin-takerates">
+                                    <div class="layui-progress" lay-showpercent="yes" id="exceptionProgress">
+                                        <h3>异常率</h3>
+                                        <div class="layui-progress-bar" lay-percent="0%" style="width: 0%;"><span
+                                                class="layui-progress-text">0%</span></div>
+                                    </div>
+                                    <div class="layui-progress" lay-showpercent="yes" id="reportedProgress">
+                                        <h3>上报率</h3>
+                                        <div class="layui-progress-bar layui-bg-red" lay-percent="0%"
+                                            style="width: 0%;"><span class="layui-progress-text">0%</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-xs12">
+                        <div class="layui-card">
+                            <div class="layui-card-header layui-card-header-custom"><span><i></i>系统公告</span></div>
+                            <div class="layui-card-body">
+                                <div class="infoList" id="meetingList" style="height: 200px;overflow: hidden">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../../js/layui/layui.js"></script>
+    <script charset="utf-8" src="../../js/lib/echarts-4.1.0.min.js"></script>
+    <script charset="utf-8" src="../../js/lib/echartTheme.js"></script>
+
+    <script>
+
+        layui.config({
+            base: '../../../src/js/',
+            version: new Date().getTime()
+        }).extend({
+            // custom: 'common/custom'
+        }).use(['layer', 'eleTree', 'table', 'form', 'element', 'util', 'common'], function () {
+            var table = layui.table;
+            var common = layui.common;
+            var element = layui.element;
+            var util = layui.util;
+            var layer = layui.layer;
+            var baseUrl = '../../../';
+
+            element.init();
+            common.themeSet();
+
+            //echart 区域
+            //会议上报情况
+            var chart1 = echarts.init(document.getElementById('chart1'), 'custom');
+            $('#chart1').css('width', $('#chart1').parent().parent().actual('width') + 'px');
+            chart1.setOption({
+                legend: {
+                    data: ['上报国资委', '上报上级单位']
+                },
+                color: ['#afa3f5', '#00d488'],
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '0%',
+                    containLabel: true
+                },
+                series: [
+                    {
+                        name: '占比情况',
+                        type: 'pie',
+                        radius: '50%',
+                        center: ['50%', '50%'],
+                        data: [
+                            { value: 0, name: '上报上级单位' },
+                            { value: 0, name: '上报国资委' }
+                        ],
+                        itemStyle: {
+                            emphasis: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    }
+                ]
+            });
+            common.fetchGet('meetingmgr/tiolMeeting/countMeetingReportInfo', function (res) {
+                if (res.success && res.object) {
+                    var chartDataChildList = res.object.chartDataChildList;
+                    chart1.setOption({ //加载数据图表
+                        legend: {
+                            data: [chartDataChildList[0].name, chartDataChildList[1].name]
+                        },
+                        color: ['#afa3f5', '#00d488'],
+                        grid: {
+                            left: '3%',
+                            right: '4%',
+                            bottom: '0%',
+                            containLabel: true
+                        },
+                        series: [
+                            {
+                                name: '占比情况',
+                                type: 'pie',
+                                radius: '50%',
+                                center: ['50%', '50%'],
+                                data: chartDataChildList,
+                                itemStyle: {
+                                    emphasis: {
+                                        shadowBlur: 10,
+                                        shadowOffsetX: 0,
+                                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                    }
+                                }
+                            }
+                        ]
+                    });
+                    var reportedProgress = res.object.progress;
+                    var content = '<h3>上报率</h3>' +
+                        '<div class="layui-progress-bar layui-bg-red" lay-percent="' + reportedProgress + '"' +
+                        'style="width: ' + reportedProgress + ';"><span class="layui-progress-text">' + reportedProgress + '</span></div>';
+                    $('#reportedProgress').html(content);
+
+                    var exceptionProgress = res.object.data;
+                    var exceptionContent = '<h3>异常率</h3>' +
+                        '<div class="layui-progress-bar layui-bg-red" lay-percent="' + exceptionProgress + '"' +
+                        'style="width: ' + exceptionProgress + ';"><span class="layui-progress-text">' + exceptionProgress + '</span></div>';
+                    $('#exceptionProgress').html(exceptionContent);
+                }
+            }, function () { });
+            //制度统计
+            var zdChart = echarts.init(document.getElementById('zdChart'), 'custom');
+            zdChart.setOption({
+                title: {
+                    // text: 'ECharts 入门示例'
+                },
+                tooltip: {},
+                legend: {
+                    data: ['制度类型']
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'category',
+                    //data: ['制度类型1', '制度类型2', '制度类型3', '制度类型4', '制度类型5']
+                    axisLabel: {
+                        interval: 0,
+                        rotate: 30
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    boundaryGap: [0, 0.01]
+                },
+                color: ['#67cbcc'],
+                series: [
+                    {
+                        name: '制度类型',
+                        type: 'bar',
+                        barMaxWidth: 30,
+                        //data: [5, 3, 5, 6, 7]
+                    }
+                ]
+            });
+            common.fetchGet('rulemgr/regulation/countRuleType', function (res) {
+                var xData;
+                var yData;
+                if (res.success && res.object) {
+                    xData = res.object.xDataList;
+                    yData = res.object.yDataList;
+                    zdChart.setOption({ //加载数据图表
+                        xAxis: {
+                            data: xData
+                        },
+                        series: [{
+                            name: ['制度类型'],
+                            data: yData
+                        }]
+                    })
+                }
+            }, function () { });
+
+            //议案类别统计
+            var yaChart = echarts.init(document.getElementById('yaChart'), 'custom');
+            yaChart.setOption({
+                title: {
+                    // text: 'ECharts 入门示例'
+                },
+                tooltip: {},
+                legend: {
+                    data: ['议案类别',]
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'category',
+                    //data: ["投资计划", "财务战略", "议案类别1", "议案类别2", "议案类别3"],
+                    axisLabel: {
+                        interval: 0,
+                        rotate: 30
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    boundaryGap: [0, 0.01]
+                },
+                series: [
+                    {
+                        name: '议案类别',
+                        type: 'bar',
+                        barMaxWidth: 30,
+                        //data: [11, 22, 23, 22, 34, 33]
+                    }
+                ],
+                dataZoom: [{
+                    type: 'inside',
+                    start: 0,
+                    end: 5
+                }, {
+                    start: 0,
+                    end: 5
+                }]
+            });
+            common.fetchGet('motionmgr/motiona/countMotionType', function (res) {
+                var xData;
+                var yData;
+                if (res.success && res.object) {
+                    xData = res.object.xDataList;
+                    yData = res.object.yDataList;
+                    yaChart.setOption({ //加载数据图表
+                        xAxis: {
+                            data: xData
+                        },
+                        series: [{
+                            name: ['议案类别'],
+                            data: yData
+                        }]
+                    })
+                }
+            }, function () { });
+
+            //会议统计
+            var hyChart = echarts.init(document.getElementById('hyChart'), 'custom');
+            hyChart.setOption({
+                title: {
+                    // text: 'ECharts 入门示例'
+                },
+                tooltip: {},
+                legend: {
+                    data: ['会议类型']
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                color: ['#00d488'],
+                xAxis: {
+                    type: 'category',
+                    //data: ["党委会", "董事会", "董事长办公会", "股东会", "总经理办公会"],
+                    axisLabel: {
+                        interval: 0,
+                        rotate: 30
+                        /*
+                        interval: 0,
+                        formatter:function(value){
+                                return value.split("").join("\n");
+                        }*/
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    boundaryGap: [0, 0.01]
+                },
+                series: [
+                    {
+                        name: '会议类型',
+                        type: 'bar',
+                        barMaxWidth: 30,
+                        //data: [5, 20, 36, 10, 20]
+                    }
+                ]
+            });
+            common.fetchGet('meetingmgr/tiolMeeting/countMeetingTypeInfo', function (res) {
+                var xData;
+                var yData;
+                if (res.success && res.object) {
+                    xData = res.object.xDataList;
+                    yData = res.object.yDataList;
+                    hyChart.setOption({ //加载数据图表
+                        xAxis: {
+                            data: xData
+                        },
+                        series: [{
+                            name: ['会议类型'],
+                            data: yData
+                        }]
+                    })
+                }
+            }, function () { });
+
+            //上报率
+            /**common.fetchGet('catalog/indexCount/countMeetingTypeRateInfo', function (res) {
+                if (res.success && res.object) {
+                    var reportedProgress = res.object.progress;
+                    var content = '<h3>上报率</h3>' +
+                        '<div class="layui-progress-bar layui-bg-red" lay-percent="' + reportedProgress + '"' +
+                        'style="width: ' + reportedProgress + ';"><span class="layui-progress-text">' + reportedProgress + '</span></div>';
+                    $('#reportedProgress').html(content);
+                }
+            }, function () { });**/
+
+
+            //table
+            //最新制度
+            table.render(common.tableInitParams({
+                elem: '#table1',
+                height: '485',
+                url: baseUrl + 'rulemgr/regulation/selectRule',
+                method: 'post',
+                cols: [
+                    [
+                        { "type": "numbers", "title": "序号" },
+                        { field: 'regulationName', title: '名称', sort: true },
+                        {
+                            field: 'ggCreateDatetime', title: '发起时间', sort: true
+                            // templet: function (rowData) {
+                            //     return common.dateFormat(rowData['ggCreateDatetime']);
+                            //     // return util.toDateString(rowData['ggCreateDatetime']);
+                            // }
+                        },
+                        { field: 'seName', title: '发起企业', sort: true }
+                    ]
+                ]
+            }));
+            //最新会议
+            table.render(common.tableInitParams({
+                elem: '#table2',
+                height: '485',
+                url: baseUrl + 'meetingmgr/tiolMeeting/selectNewMeetingPage',
+                method: 'post',
+                cols: [
+                    [
+                        { "type": "numbers", "title": "序号" },
+                        { field: 'meetingName', title: '名称', sort: true },
+                        {
+                            field: 'ggCreateDatetime', title: '发起时间', sort: true,
+                            templet: function (rowData) {
+                                return util.toDateString(rowData['ggCreateDatetime']);
+                            }
+                        },
+                        { field: 'seName', title: '发起企业', sort: true }
+                    ]
+                ]
+            }));
+            //最新议案
+            table.render(common.tableInitParams({
+                elem: '#table3',
+                height: '485',
+                url: baseUrl + 'motionmgr/motiona/selectMotion',
+                method: 'post',
+                cols: [
+                    [
+                        { "type": "numbers", "title": "序号" },
+                        { field: 'motionName', title: '名称', sort: true },
+                        {
+                            field: 'ggCreateDatetime', title: '发起时间', sort: true,
+                            templet: function (rowData) {
+                                return util.toDateString(rowData['ggCreateDatetime']);
+                            }
+                        },
+                        { field: 'soName', title: '发起部门', sort: true }
+                    ]
+                ]
+            }));
+
+            //最新议题
+            /*table.render(common.tableInitParams({
+                elem: '#table3',
+                height: '485',
+                url: baseUrl + 'catalog/indexCount/selectSubject',
+                method: 'post',
+                cols: [
+                    [
+                        { "type": "numbers", "title": "序号" },
+                        { field: 'subjectName', title: '名称', sort: true },
+                        {
+                            field: 'ggCreateDatetime', title: '发起时间', sort: true,
+                            templet: function (rowData) {
+                                return util.toDateString(rowData['ggCreateDatetime']);
+                            }
+                        },
+                        { field: 'soName', title: '发起部门', sort: true }
+                    ]
+                ]
+            }));*/
+
+            common.fetchGet('sysmgr/sysNotice/selectSysNoticeList', function (res) {
+                if (res.success && res.list.length > 0) {
+                    var content = '<ul class="clearFix">';
+
+                    for (var i = 0; i < res.list.length; i++) {
+                        content += '<li contents="' + res.list[i].snContent + '"><i class="icon iconfont icon-DEZJ-tongzhigonggao"></i>';
+                        content += '<span>' + res.list[i].snTitle + '</span>';
+                        content += '</li>';
+                    }
+
+                    content += '</ul>';
+                    $('#meetingList').html(content);
+                    common.listScroll($('#meetingList ul'));
+                    $('.clearFix li').on('click', function (obj) {
+                        var $tar = $(this);
+                        var snTitle = $tar.context.innerText;
+                        var snContent = $tar.attr('contents');
+                        var parent = $(obj.selector);
+                        var contentLayer = layer.open({
+                            title: '系统公告',
+                            area: ['50%', '500px'],
+                            btn: ['<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭'],
+                            content: $('#systemNotice').html(),
+                            type: '1',
+                            closeBtn: 0,
+                            btnAlign: 'c',
+                            success: function (obj) {
+                                $('#snTitle').val(snTitle);
+                                $('#snContent').val(snContent);
+                            }
+                        });
+                    });
+                }
+            }, function () { });
+
+            $('.sNodeMenu').off().on('click', function () {
+                if ($("[data-smid=" + $(this).attr('data-smid') + "]", parent.document)[0]) {
+                    $(parent.document).find("[data-smid=" + $(this).attr('data-smid') + "]").click();
+                    // $("[data-smid="+$(this).attr('data-smid')+"]", parent.document).click();
+                    parent.$("[data-smid=" + $(this).attr('data-smid') + "]", parent.document).trigger('click');
+                }
+            });
+
+            $(window).resize(function () {
+                common.chartResize(['chart1', 'zdChart', 'yaChart', 'hyChart'], [chart1, zdChart, yaChart, hyChart]);
+            });
+
+        });
+
+        $('.treeHeight').css({ 'height': $(document).height() - 120 + 'px' });
+
+
+
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="../../js/lib/html5.min.js"></script>
+    <script src="../../js/lib/respond.js"></script>
+    <![endif]-->
+</body>
+
+</html>

@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html  class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>会议成员维护-新增/编辑</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../../../js/layui/css/layui.css"/>
+    <link href="../../../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../../../js/lib/jquery.1.12.3.js"></script>
+    <style>
+        .hytitle{
+            font-size: 14px;
+        }
+        .hylabel{
+            border: 1px solid transparent!important;
+            background: transparent!important;
+        }
+        .hyinput{
+            border: 1px solid transparent!important;
+            border-bottom-color: red!important;
+        }
+
+        #memberInfoform .layui-unselect {
+            border-color: #f56c6c;
+            border-top-style: none;
+            border-right-style: none;
+            border-left-style: none;
+        }
+        .layui-form-select .layui-edge{
+            border-top-color: #f56c6c;
+        }
+        body{
+            background:#f8f8f8;
+        }
+        .load-btn,.check-btn,.right-btn{
+            position: absolute;
+            top:0;
+            right:0;
+            border-radius: 3px;
+        }
+        .right70{
+            right:70px;
+        }
+        .relative{
+            position: relative;
+        }
+        .padRt64{
+            padding-right: 64px;
+        }
+        li{
+            cursor: pointer;
+        }
+        .zsBga{
+            color:purple;
+            vertical-align: 1px;
+            opacity: 0.5;
+        }
+        .eleTree.ele5,
+        .eleTree.ele6{
+            height: auto;
+            width: 100%;
+            display: none;
+            position: absolute;
+            top:100%;
+            background-color: #fff;
+            z-index: 100;
+            border: 1px solid #ccc;
+        }
+        /* 去除弹窗侧面张开按钮 */
+        a.layui-layer-ico.layui-layer-max{
+            display: none;
+        }
+        a.layui-layer-ico.layui-layer-max.layui-layer-maxmin{
+            display:inline-block!important;
+        }
+    </style>
+    <style>
+        .layui-card-header-custom{
+            border-bottom: 1px dashed #e6e6e6;
+        }
+        .dirIcon{
+            text-align: center;
+            margin-top: 100px;
+            cursor: pointer;
+        }
+        .layui-table-tool-temp{
+            padding-right: 0!important;
+        }
+        .updownBtn{
+            float: right;
+            /* margin-top: 10px; */
+        }
+    </style>
+</head>
+<body class="iframe-h">
+    <div class="content-wrap">
+    <!-- 基本信息 -->
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-header layui-card-header-custom">
+                        <span><i></i>基本信息</span>
+                    </div>
+                    <div class="layui-card-body">
+                        <form class="layui-form layui-form-pane" id="memberInfoform" lay-filter="memberInfoform">
+                            <div class="layui-row layui-col-space15">
+                                <div class="layui-col-md6">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label hylabel"><b class="red">*</b>分组名称</label>
+                                        <div class="layui-input-block">
+                                            <input autocomplete="off" class="layui-input hyinput" name="tcgName" placeholder="请输入" type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md6">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label hylabel"><b class="red">*</b>上会类型</label>
+                                            <div class="layui-input-block">
+                                                <select name="tcgMeetingTypeId" lay-search lay-filter="tcgMeetingTypeId"></select>
+                                            </div>
+                                        </div>
+                                </div>
+                                <div class="layui-col-md12">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label hylabel"><b class="red">*</b>开始日期</label>
+                                        <div class="layui-input-block">
+                                            <input class="layui-input hyinput" placeholder="请选择" name="tcgStartDate" type="text" autocomplete="off">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs12">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label hylabel">备注</label>
+                                            <div class="layui-input-block">
+                                                <textarea class="layui-textarea hyinput" name="tcgRemark" placeholder="建议200个字,最长仅支持2000字"></textarea>
+                                            </div>
+                                        </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <!-- 出席 筛选 常设 名单列表 -->
+        <div class="layui-row layui-col-space15 hide" id="allTypeList" style="min-height: 400px;">
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-row">
+                        <div class="layui-col-md3">
+                            <div class="layui-card-header layui-card-header-custom">
+                                <span><i></i>出席名单</span>
+                            </div>
+                        </div>
+                        <div class="layui-col-md6">
+                            <div class="layui-card-header layui-card-header-custom">
+                                <span><i></i>筛选清单</span>
+                            </div>
+                        </div>
+                        <div class="layui-col-md3">
+                            <div class="layui-card-header layui-card-header-custom">
+                                <span><i></i>常设名单</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-card-body" style="padding-top: 0">
+                        <div class="layui-row">
+                            <div class="layui-col-md3" style="padding-top:10px;">
+                                <div class="layui-row">
+                                    <div class="layui-col-md11" >
+                                        <table id="attendTable" lay-filter="attendTable" lay-data="{id: 'attendTable'}"></table>
+                                        <script type="text/html" id="attendTableToolBar">
+                                            <div class="layui-btn-container" style="margin-top:10px;">
+                                                <button class="layui-btn layui-btn-sm layui-btn-primary updownBtn" permission-btn="" lay-event="down">
+                                                    <i class="layui-icon">&#xe61a;</i>向下
+                                                </button>
+                                                <button class="layui-btn layui-btn-sm layui-btn-primary updownBtn" permission-btn="" lay-event="up">
+                                                    <i class="layui-icon">&#xe619;</i>向上
+                                                </button>
+                                                <!-- <button class="layui-btn layui-btn-sm layui-btn-primary" lay-event="delete">
+                                                    <i class="fa fa-share-alt"></i> 选择
+                                                </button> -->
+                                            </div>
+                                        </script>
+                                    </div>
+                                    <div class="layui-col-md1 relative">
+                                        <div class="dirIcon">
+                                            <i class="layui-icon" id="addAttendBtn" title="添加出席人员">&#xe65a;</i> 
+                                        </div>
+                                        <div class="dirIcon">
+                                            <i class="layui-icon" id="removeAttendBtn" title="移除出席人员">&#xe65b;</i> 
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md6">
+                                <div class="layui-card-body" style="padding-top: 10px">
+                                    <div class="layui-row">
+                                        <div class="layui-col-md12">
+                                            <form action="" class="layui-form layui-form-pane" style="margin-top: 0;" name="originForm" lay-filter="originForm">
+                                                <div class="layui-row layui-col-space10">
+                                                    <div class="layui-col-md4">
+                                                        <div class="layui-form-item">
+                                                            <label class="layui-form-label"><b class="red">*</b>人员姓名</label>
+                                                            <div class="layui-input-block">
+                                                                <input autocomplete="off" class="layui-input" name="memberName" placeholder="请输入"
+                                                                        type="text">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-col-md4">
+                                                        <div class="layui-form-item">
+                                                            <label class="layui-form-label">是否离任</label>
+                                                            <div class="layui-input-block">
+                                                                <select name="tenureStatus">
+                                                                        <option value="">请选择</option>
+                                                                        <option value="1">在任</option>
+                                                                        <option value="0">离任</option>
+                                                                </select>
+                                                                <!-- <input type="checkbox" name="tenureStatus" id="tenureStatus" lay-filter="tenureStatus" title="是否离任" value=""> -->
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="toggle-area layui-col-space10">
+                                                    </div>
+                                                    <div class=" " style="text-align: center;margin-bottom: 5px">
+                                                        <button class="layui-btn" lay-filter="formSearch" lay-submit><i class="fa fa-search"></i>查询</button>
+                                                        <button class="layui-btn layui-btn-primary" type="reset" id="resetBtn"><i class="fa fa-eraser"></i>重置</button>
+                                                        <!-- <a class="toggle-btn">
+                                                            <span>展开</span>
+                                                            <i class="fa fa-angle-up"></i>
+                                                        </a> -->
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div> 
+                                        <div class="layui-col-md12" style="margin-top: 5px;">
+                                            <table id="originTable" lay-filter="originTable" lay-data="{id: 'originTable'}"></table>
+                                        </div> 
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md3" style="padding-top:10px;">
+                                <div class="layui-row">
+                                    <div class="layui-col-md1">
+                                        <div class="dirIcon">
+                                            <i class="layui-icon" id="removeLXBtn" title="移除常设列席人员">&#xe65a;</i> 
+                                        </div>
+                                        <div class="dirIcon">
+                                            <i class="layui-icon" id="addLXBtn" title="添加常设列席人员">&#xe65b;</i> 
+                                        </div>
+                                    </div>
+                                    <div class="layui-col-md11">
+                                        <table id="lxTable" lay-filter="lxTable" lay-data="{id: 'lxTable'}"></table>
+                                        <script type="text/html" id="lxTableToolBar">
+                                            <div class="layui-btn-container" style="margin-top:10px;">
+                                                <button class="layui-btn layui-btn-sm layui-btn-primary updownBtn" permission-btn="" lay-event="down">
+                                                    <i class="layui-icon">&#xe61a;</i>向下
+                                                </button>
+                                                <button class="layui-btn layui-btn-sm layui-btn-primary updownBtn" permission-btn="" lay-event="up">
+                                                    <i class="layui-icon">&#xe619;</i>向上
+                                                </button>
+                                                <!-- <button class="layui-btn layui-btn-sm layui-btn-primary" lay-event="delete">
+                                                    <i class="fa fa-share-alt"></i> 选择
+                                                </button> -->
+                                            </div>
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+ <!-- 保存 关闭按钮 -->
+ <div style="position: fixed;width: 100%;bottom: 12px;">
+    <div class="layui-card" style="margin-top: 10px">
+        <div class="layui-card-body" style="border-top: 1px solid #dfdfdf">
+            <div class="layui-form-item" style="text-align: center;">
+                <button class="layui-btn" id="saveBtn" ><i class="fa fa-check-circle"></i>保存</button>
+                <button class="layui-btn layui-btn-primary" id="closeBtn" ><i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--脚垫-->
+<div style="height: 80px;"></div>
+<script src="./../../../../js/layui/layui.js"></script>
+<script>
+(function ($) {
+    $.getUrlParam = function (name) {//获取父页面参数
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]);
+        return null;
+    }
+    $.reloadParentPage=function(){//获取父页面dom
+        if ($(top.window.document).find('#refresh')[0]) {
+            $(top.window.document).find('#refresh').trigger('click');
+        } else {
+            // $($(top.window.document).find('#mainTabContent .layui-show').find('.iframe')[0].contentWindow.document).find(toModule.toModuleDom).click();
+            $($(top.window.document).find('#menuContent').find('.iframe')[0].contentWindow.document).find('#refresh').click();
+        }
+    }
+})(jQuery);
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).use(['eleTree','layer','table','form','laytpl','common','element','laydate','upload'],function () {
+        var table=layui.table;
+        var form=layui.form;
+        var tree=layui.eleTree;
+        var common=layui.common;
+        var element = layui.element;
+        var laydate = layui.laydate;
+        var upload = layui.upload;
+        element.init();
+        var baseUrl='../../../../../';
+        common.themeSet();
+        // common.columnSide();
+        var edittcgId = common.getQueryVariable('groupId');
+        var attendanceList=[];//保存出席名单列表
+        var observerList=[];//保存列席名单列表
+        var meetingTypes=[];//查询出来的会议类型
+
+        //按钮权限
+        common.buttonLimit($("#currentMenuSmId",window.parent.document).val(),function (res) {
+            //输入所有可操作的按钮集合
+            var list=res['list']?res['list']:[];
+        });
+        var eventHandle={
+            domEvent:function(){
+            //上会类型选择 过滤筛选清单
+            form.on('select(tcgMeetingTypeId)', function (data) {
+                var groupDepartmentId=null;
+                if (data.value != "") {
+                    //获取上会类型id
+                    groupMeetingTypeId=(data.value).split('_')[0];
+                    //显示各名单
+                    $('#allTypeList').show();
+
+                }
+                else{
+                     //隐藏各名单
+                     $('#allTypeList').hide();
+                }
+                //清空查询条件
+                $('[name=originForm]').find('[name=memberName]').val('');//人员姓名
+                $('[name=originForm]').find('[name=tenureStatus]').val('');//是否离任
+                form.render('select');
+                //清空个列表数据
+                attendanceList=[];//保存出席名单列表
+                observerList=[];//保存列席名单列表
+                //初始化各个名单
+                eventHandle.attendTableInit(attendanceList);//出席人员
+                eventHandle.lxTableInit(observerList);//列席人员
+                var parmas={
+                    groupMeetingTypeId:groupMeetingTypeId
+                }
+                eventHandle.originTableInit(parmas);//所有人员
+                // eventHandle.tableReload({
+                //     groupMeetingTypeId:groupMeetingTypeId
+                // });
+            });
+            //筛选清单查询
+                eventHandle.formQuery();
+            //添加出席人员
+                $('#addAttendBtn').off('click').on('click',function(){
+                    var checkStatus = table.checkStatus('originTable');
+                    var data=checkStatus.data;
+                    if(data.length>0){
+                        $.map(data,function(item,index){//注意去重 出席名单对比筛选清单
+                            var isRepeat=false;
+                            if(attendanceList.length>0){
+                                $.map(attendanceList,function(attendances,i){
+                                    if(attendances['tcgmMemberId']==item['memberId']){
+                                        isRepeat=true;
+                                        layer.msg('人员: '+attendances.tcgmMemberName+' 列表中已存在!请勿重复添加');
+                                        return false;
+                                    }
+                                });
+                            }
+                            if(observerList.length>0){
+                                $.map(observerList,function(observers,i){
+                                    if(observers['tcgmMemberId']==item['memberId']){
+                                        isRepeat=true;
+                                        layer.msg('人员: '+observers.tcgmMemberName+' 常设名单中已存在!请勿添加');
+                                        return false;
+                                    }
+                                });
+                            }
+                            if(!isRepeat){
+                                attendanceList.push({
+                                    ggSort:index,//当前排序
+                                    tcgmMemberId:item.memberId,//人员id
+                                    tcgmMemberName:item.memberName,//人员姓名
+                                    tcgmMemberJobId:item.memberTypeId,//职务id
+                                    tcgmMemberJobName:item.jobName,//职务
+                                    tcgId:null,//分组id
+                                    tcgmId:null,//组件id
+                                    tcgmMemberType:0//人员类型
+                                });
+                            }
+                        });
+                        eventHandle.attendTableInit(attendanceList);
+                    }
+                    else{
+                        layer.msg('请勾选要添加的出席人员记录');
+                        return false;
+                    }
+                })
+            //移除出席人员
+                $('#removeAttendBtn').off('click').on('click',function(){
+                    var checkStatus = table.checkStatus('attendTable');
+                    var data=checkStatus.data;//勾选的数据
+                    if(data.length>0){
+                        var attendTableData=layui.table.cache['attendTable'];
+                        var tmp=[];
+                        $.map(data,function(item,index){
+                            $.map(attendTableData,function(attends,i){
+                                if(attends['tcgmMemberId']==item['tcgmMemberId']){
+                                    tmp.push(i);
+                                }
+                            });
+                        });
+                        if(tmp.length>0){
+                            common.sort(tmp,false);
+                            $.map(tmp,function(item){
+                                attendanceList.splice(item,1);
+                            });
+                            eventHandle.attendTableInit(attendanceList);
+                        }
+                    }
+                    else{
+                        layer.msg('当前未勾选或未有要移除的出席人员记录');
+                        return false;
+                    }
+                })
+            //移动出席人员
+                table.on('toolbar(attendTable)', function (obj) {
+                    var checkStatus = table.checkStatus(obj.config.id);
+                    switch (obj.event) {
+                        case "up":
+                        var checkStatus = table.checkStatus(obj.config.id);
+                        if (checkStatus.data.length == 1) {
+                            var curIndex;
+                            if(attendanceList.length>0){
+                                $.map(attendanceList,function(item,index){
+                                    if(item.tcgmMemberId==checkStatus.data[0].tcgmMemberId){
+                                        curIndex=index;
+                                        attendanceList[index]['ggSort']=index;
+                                    }
+                                });
+                            }
+                            if (curIndex=="0") {//已是第一条
+                                layer.msg('无法上移');
+                                return false;
+                            }
+                            var upFileLayer = layer.confirm("确定上移?", {
+                                btn: ['<i class="fa fa-check-circle"></i>确定', '<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>取消']
+                            }, function (index, layero) {
+                                if(attendanceList.length>1){
+                                    if(attendanceList[curIndex-1]){//如果前一行存在，将当前行与前一行序号置换
+                                        attendanceList[curIndex]['ggSort']=curIndex-1;
+                                        attendanceList[curIndex-1]['ggSort']=curIndex;
+                                        var temp=attendanceList[curIndex];
+                                        attendanceList[curIndex]=attendanceList[curIndex-1];
+                                        attendanceList[curIndex-1]=temp;
+                                    }
+                                    else{
+                                        layer.msg('已为第一个,无法上移');
+                                        return false;
+                                    }
+                                    eventHandle.attendTableInit(attendanceList);
+                                    layer.msg("上移成功");
+                                    layer.close(index);
+                                }
+                            });
+                        } else {
+                            layer.msg("请选择一行");
+                        }
+                        break;
+                        case 'down':
+                        var checkStatus = table.checkStatus(obj.config.id);
+                        if (checkStatus.data.length == 1) {
+                            var lastIndex=attendanceList.length-1;
+                            var curIndex;
+                            if(attendanceList.length>0){
+                                $.map(attendanceList,function(item,index){
+                                    if(item.tcgmMemberId==checkStatus.data[0].tcgmMemberId){
+                                        curIndex=index;
+                                        attendanceList[index]['ggSort']=index;
+                                    }
+                                });
+                            }
+                            if (curIndex==lastIndex) {//已是最后一条
+                                layer.msg('无法下移');
+                                return false;
+                            }
+                            var upFileLayer = layer.confirm("确定下移?", {
+                                btn: ['<i class="fa fa-check-circle"></i>确定', '<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>取消']
+                            }, function (index, layero) {
+
+                                if(attendanceList.length>1){
+                                    if(attendanceList[curIndex+1]){//如果前一行存在，将当前行与前一行序号置换
+                                        attendanceList[curIndex]['ggSort']=curIndex+1;
+                                        attendanceList[curIndex+1]['ggSort']=curIndex;
+                                        var temp=attendanceList[curIndex];
+                                        attendanceList[curIndex]=attendanceList[curIndex+1];
+                                        attendanceList[curIndex+1]=temp;
+                                    }
+                                    else{
+                                        layer.msg('已为最后一个,无法下移');
+                                        return false;
+                                    }
+                                    eventHandle.attendTableInit(attendanceList);
+                                    layer.msg("下移成功");
+                                    layer.close(index);
+                                }
+                            });
+                        } else {
+                            layer.msg("请选择一行");
+                        }
+                        break;
+                        default:break;
+                    }
+                });
+            //添加列席人员
+                $('#addLXBtn').off('click').on('click',function(){
+                    var checkStatus = table.checkStatus('originTable');
+                    var data=checkStatus.data;
+                    if(data.length>0){
+                        $.map(data,function(item,index){//注意去重
+                            var isRepeat=false;
+                            if(observerList.length>0){
+                                $.map(observerList,function(observers,i){
+                                    if(observers['tcgmMemberId']==item['memberId']){
+                                        layer.msg('人员: '+observers.tcgmMemberName+' 列表中已存在!请勿重复添加');
+                                        isRepeat=true;
+                                        return false;
+                                    }
+                                });
+                            }
+                            if(attendanceList.length>0){
+                                $.map(attendanceList,function(attendances,i){
+                                    if(attendances['tcgmMemberId']==item['memberId']){
+                                        isRepeat=true;
+                                        layer.msg('人员: '+attendances.tcgmMemberName+' 出席名单中已存在!请勿添加');
+                                        return false;
+                                    }
+                                });
+                            }
+                            if(!isRepeat){
+                                observerList.push({
+                                    ggSort:index,//当前排序
+                                    tcgmMemberId:item.memberId,//人员id
+                                    tcgmMemberName:item.memberName,//人员姓名
+                                    tcgmMemberJobId:item.memberTypeId,//职务id
+                                    tcgmMemberJobName:item.jobName,//职务
+                                    tcgId:null,//分组id
+                                    tcgmId:null,//组件id
+                                    tcgmMemberType:0//人员类型
+                                });
+                            }
+                        });
+                        eventHandle.lxTableInit(observerList);
+                    }
+                    else{
+                        layer.msg('请勾选要添加的列席人员记录');
+                        return false;
+                    }
+                })
+            //移除列席人员
+                $('#removeLXBtn').off('click').on('click',function(){
+                    var checkStatus = table.checkStatus('lxTable');
+                    var data=checkStatus.data;
+                    if(data.length>0){
+                        var lxTableData=layui.table.cache['lxTable'];
+                        var tmp=[];
+                        $.map(data,function(item,index){
+                            $.map(lxTableData,function(lxs,i){
+                                if(lxs['tcgmMemberId']==item['tcgmMemberId']){
+                                    tmp.push(i);
+                                }
+                            });
+                        });
+                        if(tmp.length>0){
+                            common.sort(tmp,false);
+                            $.map(tmp,function(item){
+                                observerList.splice(item,1);
+                            });
+                            eventHandle.lxTableInit(observerList);
+                        }
+                    }
+                    else{
+                        layer.msg('当前未勾选或未有要移除的列席人员记录');
+                        return false;
+                    }
+                })
+            //移动列席人员
+                table.on('toolbar(lxTable)', function (obj) {
+                    var checkStatus = table.checkStatus(obj.config.id);
+                    switch (obj.event) {
+                        case "up":
+                        var checkStatus = table.checkStatus(obj.config.id);
+                        if (checkStatus.data.length == 1) {
+                            var curIndex;
+                            if(observerList.length>0){
+                                $.map(observerList,function(item,index){
+                                    if(item.tcgmMemberId==checkStatus.data[0].tcgmMemberId){
+                                        curIndex=index;
+                                        observerList[index]['ggSort']=index;
+                                    }
+                                });
+                            }
+                            if (curIndex=="0") {//已是第一条
+                                layer.msg('无法上移');
+                                return false;
+                            }
+                            var upFileLayer = layer.confirm("确定上移?", {
+                                btn: ['<i class="fa fa-check-circle"></i>确定', '<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>取消']
+                            }, function (index, layero) {
+                                if(observerList.length>1){
+                                    if(observerList[curIndex-1]){//如果前一行存在，将当前行与前一行序号置换
+                                        observerList[curIndex]['ggSort']=curIndex-1;
+                                        observerList[curIndex-1]['ggSort']=curIndex;
+                                        var temp=observerList[curIndex];
+                                        observerList[curIndex]=observerList[curIndex-1];
+                                        observerList[curIndex-1]=temp;
+                                    }
+                                    else{
+                                        layer.msg('已为第一个,无法上移');
+                                        return false;
+                                    }
+                                    eventHandle.lxTableInit(observerList);
+                                    layer.msg("上移成功");
+                                    layer.close(index);
+                                }
+                            });
+                        } else {
+                            layer.msg("请选择一行");
+                        }
+                        break;
+                        case 'down':
+                        var checkStatus = table.checkStatus(obj.config.id);
+                        if (checkStatus.data.length == 1) {
+                            var lastIndex=observerList.length-1;
+                            var curIndex;
+                            if(observerList.length>0){
+                                $.map(observerList,function(item,index){
+                                    if(item.tcgmMemberId==checkStatus.data[0].tcgmMemberId){
+                                        curIndex=index;
+                                        observerList[index]['ggSort']=index;
+                                    }
+                                });
+                            }
+                            if (curIndex&&(curIndex==lastIndex)) {//已是最后一条
+                                layer.msg('无法下移');
+                                return false;
+                            }
+                            var upFileLayer = layer.confirm("确定下移?", {
+                                btn: ['<i class="fa fa-check-circle"></i>确定', '<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>取消']
+                            }, function (index, layero) {
+                                if(observerList.length>1){
+                                    if(observerList[curIndex+1]){//如果前一行存在，将当前行与前一行序号置换
+                                        observerList[curIndex]['ggSort']=curIndex+1;
+                                        observerList[curIndex+1]['ggSort']=curIndex;
+                                        var temp=observerList[curIndex];
+                                        observerList[curIndex]=observerList[curIndex+1];
+                                        observerList[curIndex+1]=temp;
+                                    }
+                                    else{
+                                        layer.msg('已为最后一个,无法下移');
+                                        return false;
+                                    }
+                                    eventHandle.lxTableInit(observerList);
+                                    layer.msg("下移成功");
+                                    layer.close(index);
+                                }
+                            });
+                        } else {
+                            layer.msg("请选择一行");
+                        }
+                        break;
+                        default:break;
+                    }
+                });
+            // 新增/编辑 保存
+                $('#saveBtn').off('click').on('click',function(){
+                    var url;//请求地址
+                    var params={};//请求参数
+                    if (edittcgId) {
+                        params.tcgId=edittcgId;
+                        url = 'meetingmgr/tiolCompanyGroup/updateTiolCompanyGroupVo';
+                    } else {
+                        url = 'meetingmgr/tiolCompanyGroup/addTiolCompanyGroupVo';
+                    }
+                //获取基本信息
+                    // 分组名称
+                    params.tcgName=$('#memberInfoform').find('[name="tcgName"]').val();
+                    if(params.tcgName==""){
+                        layer.msg('分组名称必填');
+                        return false;
+                    }
+                    // 上会类型
+                    var tcgMeetingTypeId=$('#memberInfoform').find('[name="tcgMeetingTypeId"]').val()//获取会议类型id
+                    if(tcgMeetingTypeId){// 处理会议id 32位
+                        tcgMeetingTypeId=(tcgMeetingTypeId.length>32)?tcgMeetingTypeId.slice(0,32):tcgMeetingTypeId;
+                    }
+                    params.tcgMeetingTypeId=tcgMeetingTypeId;
+                    params.tcgMeetingTypeName=$('[name=tcgMeetingTypeId]>option:selected').text();//获取会议类型名称
+                    // 开始日期
+                    params.tcgStartDate=$('#memberInfoform').find('[name="tcgStartDate"]').val();
+                    // 备注
+                    params.tcgRemark=$('#memberInfoform').find('[name="tcgRemark"]').val();
+                    //出席名单
+                    params.attendanceList=attendanceList;
+                    //列席名单
+                    params.observerList=observerList;
+                    //分组类型
+                    params.tcgType=1;
+                //发送请求
+                    var layerLoader = common.layerLoader();
+                    common.fetchPost(url, params, function (res) {
+                        layer.close(layerLoader);
+                        if (res.success) {
+                                parent.layer.closeAll();
+                                $.reloadParentPage();
+                                parent.layer.msg('保存成功');
+                            } else {
+                                layer.alert(res.resultMessage || '保存失败')
+                            }
+                    }, function (err) {
+                        layer.close(layerLoader);
+                            layer.alert(err.resultMessage || '保存失败');
+                    });
+                    return false
+                });
+            //关闭
+                $('#closeBtn').off('click').on('click',function(){
+                    parent.layer.closeAll();
+                });
+            },
+            originTableInit:function(params){//所有人员 table
+                params=params||{},
+                table.render(common.tableInitParams({
+                    elem: '#originTable',
+                    // url: baseUrl+'meetingmgr/tiolCompanyGroup/selectCompanyMemberJobList',
+                    url: baseUrl+'meetingmgr/tiolCompanyGroup/pageQueryCompanyMemberJobList',
+                    method:'post',
+                    height: '350px',
+                    page:false,
+                    limit:300,
+                    where:params,
+                    defaultToolbar:[],
+                    cols: [
+                        [
+                            {type: 'checkbox'},
+                            {type: 'numbers',align:'center', title: '序号'},
+                            {field: 'memberName',align:'center',title: '姓名',width:150, sort: true,
+                                templet: function (rowData) {
+                                return '<span title="' + (rowData.memberName?rowData.memberName:'-') + '">' + (rowData.memberName?rowData.memberName:'-') + '</span>'
+                                }
+                            },
+                            {field: 'jobName',align:'center',title: '职务',minWidth:100, sort: true,
+                                templet: function (rowData) {
+                                return '<span title="' + (rowData.jobName?rowData.jobName:'-') + '">' + (rowData.jobName?rowData.jobName:'-') + '</span>'
+                                }
+                            },
+                            {field: 'startDate', align:'center',title: '任职开始日期', width: 150, sort: true,
+                                templet: function (rowData) {
+                                return '<span title="' + (rowData.startDate?rowData.startDate:'-') + '">' + (rowData.startDate?rowData.startDate:'-') + '</span>'
+                                }
+                            },
+                            {field: 'endDate', align:'center',title: '任职结束日期', width: 150, sort: true,
+                                templet: function (rowData) {
+                                return '<span title="' + (rowData.endDate?rowData.endDate:'-') + '">' + (rowData.endDate?rowData.endDate:'-') + '</span>'
+                                }
+                            },
+                            {field: 'tenureStatus', align:'center',title: '任职状态',width:100, sort: true,
+                                templet: function (rowData) {
+                                return '<span title="' + (rowData.tenureStatus?rowData.tenureStatus:'-') + '">' + (rowData.tenureStatus?rowData.tenureStatus:'-') + '</span>'
+                                }
+                            }
+                        ]
+                    ]
+                }));
+            },
+            tableReload:function (params) {
+                params=params||{},
+                table.reload('originTable',{
+                    // url: baseUrl+'meetingmgr/tiolCompanyGroup/selectCompanyMemberJobList',
+                    url: baseUrl+'meetingmgr/tiolCompanyGroup/pageQueryCompanyMemberJobList',
+                    method:'post',
+                    where:params,
+                    page:false
+                });
+            },
+            formQuery:function(){//表单查询
+                form.on('submit(formSearch)', function (obj) {
+                    var params=obj.field;
+                    eventHandle.tableReload(params);
+                    return false;
+                });
+            },
+            attendTableInit:function(data){//出席人员 table
+                table.render(common.tableInitParams({
+                    elem: '#attendTable',
+                    data:data,
+                    page:false,
+                    // height: 'full-500',
+                    height: '350px',
+                    defaultToolbar:[],
+                    limit:300,
+                    toolbar:'#attendTableToolBar',
+                    cols: [
+                        [
+                            {type: 'checkbox'},
+                            {type: 'numbers',align:'center', title: '序号'},
+                            {field: 'tcgmMemberName',align:'center',title: '出席人员',width:150, sort: true,
+                                templet: function (rowData) {
+                                return '<span title="' + (rowData.tcgmMemberName?rowData.tcgmMemberName:'-') + '">' + (rowData.tcgmMemberName?rowData.tcgmMemberName:'-') + '</span>'
+                                }
+                            },
+                            {field: 'tcgmMemberJobName',align:'center',title: '职务',minWidth:100, sort: true,
+                                templet: function (rowData) {
+                                return '<span title="' + (rowData.tcgmMemberJobName?rowData.tcgmMemberJobName:'-') + '">' + (rowData.tcgmMemberJobName?rowData.tcgmMemberJobName:'-') + '</span>'
+                                }
+                            }
+                        ]
+                    ]
+                }));
+            },
+            lxTableInit:function(data){//常设列席人员 table
+                table.render(common.tableInitParams({
+                    elem: '#lxTable',
+                    data:data,
+                    page:false,
+                    // height: 'full-500',
+                     height: '350px',
+                    defaultToolbar:[],
+                    limit:300,
+                    toolbar:'#lxTableToolBar',
+                    cols: [
+                        [
+                            {type: 'checkbox'},
+                            {type: 'numbers',align:'center', title: '序号'},
+                            {field: 'tcgmMemberName',align:'center',title: '列席人员',width:150, sort: true,
+                                templet: function (rowData) {
+                                return '<span title="' + (rowData.tcgmMemberName?rowData.tcgmMemberName:'-') + '">' + (rowData.tcgmMemberName?rowData.tcgmMemberName:'-') + '</span>'
+                                }
+                            },
+                            {field: 'tcgmMemberJobName',align:'center',title: '职务',minWidth:100, sort: true,
+                                templet: function (rowData) {
+                                return '<span title="' + (rowData.tcgmMemberJobName?rowData.tcgmMemberJobName:'-') + '">' + (rowData.tcgmMemberJobName?rowData.tcgmMemberJobName:'-') + '</span>'
+                                }
+                            }
+                        ]
+                    ]
+                }));
+            },
+            initRender:function(){
+                // 日期时间选择器
+                laydate.render({
+                    elem: '[name="tcgStartDate"]',//开始日期
+                    type: 'month',
+                    format: 'yyyy-MM'
+                    ,trigger: 'click'
+                });
+            // 获取会议类型
+                common.selectDataSet({
+                    elem: $('[name=tcgMeetingTypeId]'),
+                    url: 'meetingmgr/tiolMeetingType/getTiolMeetingTypeSelect',
+                    responseList: 'list',
+                    method: 'get',//默认为get
+                    optionText: 'meetingTypeName',
+                    optionValue: 'meetingType',
+                    success: function (data) {
+                        form.render('select');
+                        if(edittcgId){
+                          meetingTypes=data.list||[];
+                        }
+                    }
+                });
+            },
+            output:function(){
+                //获取字典类型,获取人员名单
+                eventHandle.initRender();
+                //事件触发监听
+                eventHandle.domEvent();
+                //判断是新增还是编辑
+                if (edittcgId) {//编辑
+                    var layerLoader =common.layerLoader();
+                    //人员维护信息导入
+                    common.fetchPost('meetingmgr/tiolCompanyGroup/getTiolCompanyGroupVo?memberId=' + edittcgId,{},function (res) {
+                        layer.close(layerLoader);
+                        var data = res.object;
+                        if(meetingTypes.length>0){//会议类型过滤
+                            var tcgMeetingTypeId=null;
+                            $.map(meetingTypes,function(item,index){
+                                if(item.meetingType.indexOf(data.tcgMeetingTypeId)!=-1){
+                                    tcgMeetingTypeId=item.meetingType;
+                                }
+                            });
+                            form.val('memberInfoform', {
+                            "tcgName": data.tcgName, //分组名称
+                            "tcgMeetingTypeId":tcgMeetingTypeId, //上会类型
+                            "tcgStartDate":data.tcgStartDate,//开始日期
+                            "tcgRemark":data.tcgRemark,//备注
+                            });
+                            if(tcgMeetingTypeId){
+                                // 获取上会类型id
+                                var groupMeetingTypeId=tcgMeetingTypeId.split('_')[0];
+                                //显示各名单
+                                $('#allTypeList').show();
+                            }
+                            else{
+                                $('#allTypeList').hide();
+                            }
+                            //出席名单，常设名单
+                            attendanceList=data.attendanceList||[];//保存出席名单列表
+                            observerList=data.observerList||[];//保存列席名单列表
+                            eventHandle.attendTableInit(attendanceList);//出席人员
+                            eventHandle.lxTableInit(observerList);//列席人员
+                            //初始化各个名单
+                            var parmas={
+                                groupMeetingTypeId:groupMeetingTypeId
+                            }
+                            eventHandle.originTableInit(parmas);//所有人员
+                        }
+                    },function(err){
+                        layer.close(layerLoader);
+                        layer.msg('人员维护分组信息获取失败。'+err.resultMessage);
+                        return false
+                    });
+                } 
+                else{
+                    // 表格数据显示
+                    eventHandle.attendTableInit([]);//出席人员
+                    eventHandle.lxTableInit([]);//列席人员
+                    eventHandle.originTableInit({});//所有人员
+                }
+            }
+        };
+        eventHandle.output();
+    });
+      
+</script>
+
+<!--[if lt IE 9]>
+
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

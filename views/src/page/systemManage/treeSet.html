@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html  class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>三元管理</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../js/layui/css/layui.css"/>
+    <link href="../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script charset="utf-8" src="../../js/common/plugin.js"></script>
+
+    <style>
+        .content-wrap{
+            padding: 10px;
+        }
+        .red{
+            color: red;
+        }
+        .hide{
+            display: none;
+        }
+        .adapt{
+            margin-top: 15px;
+            margin-left: 10%;
+        }
+    </style>
+</head>
+
+<body class="iframe-h">
+
+<div class="content-wrap white-bg">
+    <div class="layui-row layui-col-space15">
+       <div class="layui-col-md12">
+           <div class="layui-tab" lay-filter="mainTab">
+
+               <ul class="layui-tab-title">
+                   <li lay-id="system" class="layui-this">系统管理员</li>
+                   <li lay-id="security">安全管理员</li>
+                   <li lay-id="auditor">审计管理员</li>
+               </ul>
+               <div class="layui-tab-content">
+                   <div class="layui-tab-item layui-show">
+                       <div class="layui-row">
+                           <div class="layui-col-md3 layui-col-xs3 layui-col-lg-3">
+                               <ul class="eleTree ele4" id="systemTree"></ul>
+                           </div>
+                           <div class="layui-col-md9 layui-col-xs9 layui-col-lg-9">
+                               <form class="layui-form layui-form-pane" name="systemLayer" lay-filter="systemLayer">
+                                   <div class="layui-form-item">
+                                       <label class="layui-form-label"><b class="red">*</b>登入账号</label>
+                                       <div class="layui-input-block">
+                                           <input type="text" name="account" required  lay-verify="required" placeholder="请输入登入账号" autocomplete="off" class="layui-input">
+                                       </div>
+                                   </div>
+                                   <div class="layui-form-item">
+                                       <label class="layui-form-label"><b class="red">*</b>用户姓名</label>
+                                       <div class="layui-input-block">
+                                           <input type="text" name="name" required  lay-verify="required" placeholder="请输入用户姓名" autocomplete="off" class="layui-input">
+                                       </div>
+                                   </div>
+                                   <div class="layui-form-item">
+                                       <label class="layui-form-label"><b class="red">*</b>登入密码</label>
+                                       <div class="layui-input-block">
+                                           <input type="password" name="password" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                                       </div>
+                                   </div>
+                                   <div class="layui-form-item">
+                                       <label class="layui-form-label"><b class="red">*</b>确认密码</label>
+                                       <div class="layui-input-block">
+                                           <input type="password" name="checkPassword" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                                       </div>
+                                   </div>
+                                   <div class="layui-form-item adapt">
+                                       <div class="layui-input-block">
+                                           <button class="layui-btn" lay-submit lay-filter="systemTreeSumit"> <i class="layui-icon">&#x1005;</i>保存</button>
+                                           <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                                       </div>
+                                   </div>
+                               </form>
+                           </div>
+                       </div>
+                   </div>
+                   <div class="layui-tab-item">
+                       <div class="layui-row">
+                           <div class="layui-col-md3 layui-col-xs3 layui-col-lg-3">
+                               <ul class="eleTree ele4" id="securityTree"></ul>
+                           </div>
+                           <div class="layui-col-md9 layui-col-xs9 layui-col-lg-9">
+                               <form class="layui-form layui-form-pane" name="securityLayer" lay-filter="securityLayer" >
+                                   <div class="layui-form-item">
+                                       <label class="layui-form-label"><b class="red">*</b>登入账号</label>
+                                       <div class="layui-input-block">
+                                           <input type="text" name="account" required  lay-verify="required" placeholder="请输入登入账号" autocomplete="off" class="layui-input">
+                                       </div>
+                                   </div>
+                                   <div class="layui-form-item">
+                                       <label class="layui-form-label"><b class="red">*</b>用户姓名</label>
+                                       <div class="layui-input-block">
+                                           <input type="text" name="name" required  lay-verify="required" placeholder="请输入用户姓名" autocomplete="off" class="layui-input">
+                                       </div>
+                                   </div>
+                                   <div class="layui-form-item">
+                                       <label class="layui-form-label"><b class="red">*</b>登入密码</label>
+                                       <div class="layui-input-block">
+                                           <input type="password" name="password" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                                       </div>
+                                   </div>
+                                   <div class="layui-form-item">
+                                       <label class="layui-form-label"><b class="red">*</b>确认密码</label>
+                                       <div class="layui-input-block">
+                                           <input type="password" name="checkPassword" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                                       </div>
+                                   </div>
+                                   <div class="layui-form-item adapt">
+                                       <div class="layui-input-block">
+                                           <button class="layui-btn" lay-submit lay-filter="securityTreeSumit"> <i class="layui-icon">&#x1005;</i>保存</button>
+                                           <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                                       </div>
+                                   </div>
+                               </form>
+                           </div>
+                       </div>
+                   </div>
+                <div class="layui-tab-item">
+                       <div class="layui-row">
+                           <div class="layui-col-md3 layui-col-xs3 layui-col-lg-3">
+                               <ul class="eleTree ele4" id="auditorTree"></ul>
+                           </div>
+                           <div class="layui-col-md9 layui-col-xs9 layui-col-lg-9">
+                               <form class="layui-form layui-form-pane" name="auditorLayer" lay-filter="auditorLayer" >
+                                   <div class="layui-form-item">
+                                       <label class="layui-form-label"><b class="red">*</b>登入账号</label>
+                                       <div class="layui-input-block">
+                                           <input type="text" name="account" required  lay-verify="required" placeholder="请输入登入账号" autocomplete="off" class="layui-input">
+                                       </div>
+                                   </div>
+                                   <div class="layui-form-item">
+                                       <label class="layui-form-label"><b class="red">*</b>用户姓名</label>
+                                       <div class="layui-input-block">
+                                           <input type="text" name="name" required  lay-verify="required" placeholder="请输入用户姓名" autocomplete="off" class="layui-input">
+                                       </div>
+                                   </div>
+                                   <div class="layui-form-item">
+                                       <label class="layui-form-label"><b class="red">*</b>登入密码</label>
+                                       <div class="layui-input-block">
+                                           <input type="password" name="password" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                                       </div>
+                                   </div>
+                                   <div class="layui-form-item">
+                                       <label class="layui-form-label"><b class="red">*</b>确认密码</label>
+                                       <div class="layui-input-block">
+                                           <input type="password" name="checkPassword" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                                       </div>
+                                   </div>
+                                   <div class="layui-form-item adapt">
+                                       <div class="layui-input-block">
+                                           <button class="layui-btn" lay-submit lay-filter="auditorTreeSumit"> <i class="layui-icon">&#x1005;</i>保存</button>
+                                           <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                                       </div>
+                                   </div>
+                               </form>
+                           </div>
+                       </div>
+
+                   </div>
+               </div>
+           </div>
+       </div>
+    </div>
+</div>
+
+<script src="./../../js/layui/layui.js"></script>
+<script>
+
+
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).use(['eleTree','layer','table','form','laytpl','util','common','element'],function () {
+        var common=layui.common;
+        var util = layui.util;
+        var form=layui.form;
+        var tree=layui.eleTree;
+        var element=layui.element;
+        // var index=layui.index;
+
+        var allData = {};
+
+        function storeAllData(list) {
+            if(list && list.length>0) {
+                $.each(list, function () {
+                    allData[this.id] = this;
+                });
+            }
+        }
+
+        common.themeSet();
+        var systemTree,securityTree,auditorTree;
+        //一进来 第一个tab 就加载系统管理员的tab
+
+        var treeTypeMap ={
+            'system':systemTree,
+            'security':securityTree,
+            'auditor':auditorTree
+        }
+
+        var layerLoader = common.layerLoader();
+
+        var height = window.innerHeight;
+        $('.eleTree').height(height-100);
+
+        initTree('system');
+        //安全管理员 审计管理员tab
+        element.on('tab(mainTab)',function (obj) {
+            ;
+            layerLoader = common.layerLoader();
+            var type = this.getAttribute('lay-id');
+            if(!$('#' + type + 'Tree').html()){
+                initTree(type);
+            }else{
+                layer.close(layerLoader);
+            }
+        });
+        //点击系统管理员保存按钮
+        $.map(treeTypeMap,function(value,key){
+            // console.log(key);
+            form.on('submit('+key +'TreeSumit)', function (obj) {
+                submitPublic(obj,key);
+                return false;
+            });
+        })
+
+        function initTree(type){
+            common.fetchGet('sysmgr/memberadmin/getMemberAdminMenuButtonList?suType='+type,function (res) {
+                if(res.success){
+                    layer.close(layerLoader);
+                }
+                treeTypeMap[type] = tree.render({
+                    elem: '#'+type + 'Tree',
+                    data: res.list,
+                    showCheckbox: true,
+                    checkStrictly: false,
+                    lazy: false,
+                    renderAfterExpand: true,
+                    defaultExpandAll: true,
+                    done: function(data){},
+                    load: function(data,callback) {},
+                    response: {                 // 对于后台数据重新定义名字
+                        dataName: "list"
+                    },
+                    request: {                  // 对后台返回的数据格式重新定义
+                        disabled: "nocheck",
+                    },
+                });
+            });
+            common.fetchGet('sysmgr/memberadmin/getInitMemberAdmin?suType=' + type,function(res){
+                if(res.success && res.object){
+                    form.val(type + "Layer", {
+                        "account": res.object.suLoginCode
+                        ,"name": res.object.suName
+                    })
+                }
+            });
+        }
+
+        function submitPublic(obj,adminType) {
+            if(!/^(?=.*[0-9].*)(?=.*[A-Z].*)(?=.*[a-z].*).{6,20}$/.test(obj.field.password)) {
+                layer.msg("密码必须包含大小写字母、数字和6-20位长度，请重新设置");
+                return ;
+            }
+
+            if(obj.field.password != obj.field.checkPassword) {
+                layer.msg("两次输入密码不同,请重新输入");
+                return ;
+            }
+            var pTree = treeTypeMap[adminType];
+            var selectAllDate = pTree.getChecked(false, true);
+            var menuAuthStr = "";
+            var buttonAuthStr = "";
+            for(var i = 0; i < selectAllDate.length; i++) {
+                if(selectAllDate[i].extendAttr == "menu") {
+                    if(menuAuthStr != "") {
+                        menuAuthStr += ",";
+                    }
+                    menuAuthStr += selectAllDate[i].id;
+                }
+                else if(selectAllDate[i].extendAttr == "button") {
+                    if(buttonAuthStr != "") {
+                        buttonAuthStr += ",";
+                    }
+                    buttonAuthStr += selectAllDate[i].id;
+                }
+            }
+            if(buttonAuthStr.length ==0 || menuAuthStr.length ==0){
+                layer.msg("请勾选菜单按钮权限!");
+                return ;
+            }
+            var params = {
+                adminType :adminType,
+                account :obj.field.account,
+                name :obj.field.name,
+                password :obj.field.password,
+                checkPassword:obj.field.checkPassword,
+                menuAuth:menuAuthStr,
+                buttonAuth:buttonAuthStr
+            };
+            var layerLoader = common.layerLoader();
+
+            common.fetchPost('sysmgr/memberadmin/saveMemberAdmin', params, function (res) {
+                layer.close(layerLoader);
+                // layer.msg(res.result);
+                if(res.success){
+                    // index.menuSet();
+                    layer.alert("保存成功!刷新页面获取新菜单", {
+                        icon: 6
+                    });
+                }
+            }, function () {
+                layer.close(layerLoader);
+            });
+            common.buttonLimit();
+        }
+    });
+</script>
+
+<!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

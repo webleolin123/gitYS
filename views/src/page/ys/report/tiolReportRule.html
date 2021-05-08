@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+
+<head>
+    <meta charset="UTF-8">
+    <title>上报单位</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../../js/layui/css/layui.css"/>
+    <link href="../../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../../js/lib/jquery.1.12.3.js"></script>
+    <script charset="utf-8" src="../../../js/common/plugin.js"></script>
+    <style>
+        .tip {
+            width: 300px;
+            position: absolute;
+            left: 380px;
+            top: 10px;
+        }
+        .layui-form-select dl{
+            z-index: 1866666666666;
+        }
+       
+    </style>
+</head>
+<!--添加按钮中的弹框-->
+<div class="tiolReportRuleLayer hide">
+    <div style="padding: 15px 20px">
+        <form class="layui-form layui-form-pane" name="tiolReportRuleLayer" lay-filter="tiolReportRuleForm">
+            <!-- 部门id -->
+            <input type="hidden" name="reportRuleId" id="reportRuleId" />
+            <!-- 是否修改密码 -->
+            <input type="hidden" name="seId" id="seId"/>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>单位名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="seName" id="seName"  class="layui-input" readonly>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>上报单位</label>
+                <div class="layui-input-block">
+                    <select name="superSeId" id="superSeId" lay-verify="required" lay-filter="superSeIdSelect" lay-search>
+                        <option value="0"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item" style="margin: 0;">
+                <div class="layui-input-block" style="margin:0 0 10px 0;text-align: center;">
+                    <button class="layui-btn" lay-submit lay-filter="formAdd" permission-btn="addTiolReportRule"> <i class="layui-icon">&#x1005;</i>保存</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="tiolReportRuleEditLayer hide">
+    <div style="padding: 15px 20px">
+        <form class="layui-form layui-form-pane" name="tiolReportRuleEditLayer" lay-filter="tiolReportRuleEditForm">
+            <!-- 部门id -->
+            <input type="hidden" name="reportRuleId" id="reportRuleId" />
+            <!-- 是否修改密码 -->
+            <input type="hidden" name="seId" id="seId"/>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>单位名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="seName" id="seName"  class="layui-input" readonly>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>上报单位</label>
+                <div class="layui-input-block">
+                    <select name="superSeId" id="superSeId" lay-verify="required" lay-filter="superSeIdSelect" lay-search>
+                        <option value="0"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item adapt">
+                <div class="layui-input-block" >
+                    <button class="layui-btn" lay-submit lay-filter="formEdit" pemission-btn="editTiolReportRule"> <i class="layui-icon">&#x1005;</i>保存</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<body class="iframe-h">
+    <div class="content-wrap">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-header layui-card-header-custom"><span><i></i>上报单位列表</span></div>
+                    <div class="layui-card-body">
+                        <form action="" class="layui-form layui-form-pane">
+                            <div class="layui-row layui-col-space10">
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">单位名称</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="seName" placeholder="请输入" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">状态</label>
+                                        <div class="layui-input-block">
+                                                <select name="ggEnStatus">
+                                                    <option value="">请选择</option>
+                                                    <option value="1">启用</option>
+                                                    <option value="0">禁用</option>
+                                                </select>
+                                            </div>
+                                    </div>
+                                </div>
+                                <div class="formSearch-btnArea">
+                                    <button class="layui-btn" lay-submit lay-filter="formSearch"><i class="fa fa-search"></i>查询</button>
+                                    <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="layui-card">
+                    <div class="layui-card-body" style="padding-top: 0">
+                        <table id="tiolReportRuleTable" lay-filter="tiolReportRuleTable"></table>
+                        <script type="text/html" id="tiolReportRuleTableToolBar">
+                            <div class="layui-btn-container">
+                                <button class="layui-btn layui-btn-sm" lay-event="adds" permission-btn="addTiolReportRules">
+                                    <i class="layui-icon">&#xe608;</i> 批量新增
+                                </button>
+                                <button class="layui-btn layui-btn-sm" lay-event="add" permission-btn="addTiolReportRule">
+                                    <i class="layui-icon">&#xe608;</i> 新增
+                                </button>
+                                <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete" permission-btn="delTiolReportRule">
+                                    <i class="layui-icon">&#xe640;</i> 删除
+                                </button>
+                                <button class="layui-btn layui-btn-sm" lay-event="enable" permission-btn="enableTiolReportRule">
+                                    <i class="layui-icon ">&#x1005;</i> 启用
+                                </button>
+                                <button class="layui-btn layui-btn-sm layui-btn-warm" lay-event="disable" permission-btn="disableTiolReportRule">
+                                    <i class="layui-icon ">&#x1007;</i> 禁用
+                                </button>
+                            </div>
+                        </script>
+                        <script type="text/html" id="tiolReportRuleTableOper">
+                            <a class="layui-btn layui-btn-xs" lay-event="edits" permission-btn="editTiolReportRules">批量编辑</a>
+                            <a class="layui-btn layui-btn-xs" lay-event="edit" permission-btn="editTiolReportRule">编辑</a>
+                            <a class="layui-btn layui-btn-xs" lay-event="singleDel" permission-btn="delTiolReportRule">删除</a>
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./../../../js/layui/layui.js"></script>
+    <script>
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).use(['eleTree','layer','table','form','laytpl','common','util','element'],function () {
+        var table=layui.table;
+        var form=layui.form;
+        var tree=layui.eleTree;
+        var common=layui.common;
+        var util=layui.util;
+        var element = layui.element;
+        element.init();
+        var baseUrl = '../../../../';
+        //跨域通信
+        common.themeSet();
+        common.toggleArea($('.toggle-btn'),$('.toggle-area'));
+
+        var currentMenuSmId=$("#currentMenuSmId",window.parent.document).val();
+        //审核规则分页
+        var tiolReportRulePageUrl = baseUrl + "reportmgr/tiolReportRule/queryTiolReportRulePage";
+        //审核规则删除
+        var tiolReportRuleDeleteUrl = baseUrl + "reportmgr/tiolReportRule/deleteTiolReportRule";
+        //审核规则户禁用
+        var tiolReportRuleDisableUrl = baseUrl + "reportmgr/tiolReportRule/disableTiolReportRule";
+        //审核规则启用
+        var tiolReportRuleEnableUrl = baseUrl + "reportmgr/tiolReportRule/enableTiolReportRule";
+        //审核规则新增
+        var tiolReportRuleSaveUrl = baseUrl + "reportmgr/tiolReportRule/saveTiolReportRule";
+        //审核规则更新
+        var tiolReportRuleUpdateUrl = baseUrl + "reportmgr/tiolReportRule/updateTiolReportRule";
+        //审核规则获取
+        var dictTypeUrl = baseUrl + "sysmgr/dicts/selectDictListByPcode?dictPCode=businessModule";
+
+        var dictCodeUrl = baseUrl + "sysmgr/autoCode/selectSysSelectDataList?table=SYS_ENTERPRISE&codeAtt=SE_ID&nameAtt=SE_NAME"
+
+        var userInfo = common.getUserInfo();
+        //分页查询参数
+        var pageInitialParam = {
+            pageNum : 1,
+            pareSize : 10,
+            curr:1
+        };
+        var selectTreeNode = {}
+        var eleTreeId = null;
+        var eventHandle={
+            tableReload:function (ele,url,param) {
+                //表格重载
+                table.reload(ele, {
+                    url: url,
+                    method: 'post',
+                    contentType: 'application/json',
+                    page: pageInitialParam,
+                    where: param,
+                    done:function(){
+                        //this.where={};
+                    }
+                });
+            },
+            dictInit:function(elem,url,selVal,selText, selectedVal){
+                var option = {
+                        elem: elem,
+                        url: url,
+                        method: 'get',
+                        responseList: 'list',
+                        optionText: selText,
+                        optionValue: selVal,
+                        isExpend: true,
+                        isSearch: true,
+                        success: function(obj) {
+                            $(elem).val(selectedVal);
+                            form.render("select");
+                        }
+                    }
+                    common.selectDataSet(option);
+            },
+            execCheckBoxRowsEvent:function(data,options){
+                if (data && data.length > 0) {
+                    layer.confirm(options.confirmText, {
+                        icon: 3,
+                        title: '提示',
+                        offset: '150px'
+                    }, function(index) {
+                        var delParam = "";
+                        $.each(data,function(index){
+                            if(index){
+                                delParam +=","
+                            }
+                            delParam += data[index][options.value];
+                        });
+                        common.fetch(options.url + '?' + options.key + '=' + delParam,options.type,{suIds:delParam}, function(res) {
+                            if (res.success) {
+                                layer.msg(options.successText, {
+                                    icon: 6
+                                });
+                                options.success(res.list)
+                            }else{
+                                layer.msg(options.errorText, {
+                                    icon: 5
+                                });
+                            }
+                        }, function() {
+                            options.error([])
+                        });
+                        layer.close(index);
+                    });
+                } else {
+                    layer.msg(options.emptyText);
+                }
+            },
+            tiolReportRuleTableReload:function(param){
+                this.tableReload('tiolReportRuleTable',tiolReportRulePageUrl,param)
+            },
+            tiolMgrOrgTargetTableReload:function(param){
+                this.tableReload('tiolMgrOrgTargetTable',tiolMgrOrgTargetPageUrl,param)
+            },
+        };
+
+        table.render(common.tableInitParams({
+            elem: '#tiolReportRuleTable',
+            url: tiolReportRulePageUrl,
+            method: 'post',
+            toolbar: '#tiolReportRuleTableToolBar',
+            where: {
+                seId:userInfo.seId
+            },
+            height:'full-175',
+            cols: [
+                [
+                    { type: 'checkbox' },
+                    {"type":"numbers", "title":"序号"},
+                    { field: 'seName', title: '单位名称',minWidth:200},
+                    { field: 'superSeName', title: '上报单位名称', width: 400},
+                    {
+                        field: 'ggEnStatus',
+                        title: '状态',
+                        width: 100,
+                        templet: function(rowData) {
+                            if(rowData['ggEnStatus'] === '1'){
+                                return '<span class="layui-badge" style="background-color:#66c33a">启用</span>'
+                            }else{
+                                return '<span class="layui-badge" style="background-color:#f56c6c">禁用</span>'
+                            }
+                        }
+                    },
+                    {field: '', title: '操作', width: 200, toolbar: '#tiolReportRuleTableOper', fixed: 'right'}
+                ]
+            ],
+            done:function(){
+                common.buttonLimit(currentMenuSmId);
+            }
+        }));
+
+        //userTable监听事件
+        table.on('toolbar(tiolReportRuleTable)', function(obj) {
+            var checkRows = table.checkStatus(obj.config.id);
+            switch (obj.event) {
+                case 'add':
+                    //点击添加按钮
+                    //  common.clearForm($('.userLayer'));
+                    var userWin = layer.open({
+                        offset: '10px',
+                        title: '新增',
+                        maxmin: false,
+                        type: 1, //页面层
+                        area: ['580px','460px'], //高度自适应
+                        maxHeight: '500px',
+                        shadeClose: false,
+                        content: $('.tiolReportRuleLayer').html(), //加载该区域的html
+                        // btn:['<i class="fa fa-check-circle"></i>确定','<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>取消'],
+                        success: function(obj) {
+                            $(obj.selector).find('#seName').val(userInfo.seName);
+                            var superSeIdSelect = $(obj.selector).find('#superSeId');
+                            eventHandle.dictInit(superSeIdSelect,dictCodeUrl,'code','name', '');
+                            form.render();
+                            form.on('submit(formAdd)', function (obj) {
+
+                                var params = {
+                                    seId: userInfo.seId,
+                                    seName: userInfo.seName,
+                                    superSeId: obj.field.superSeId,
+                                    superSeName:superSeIdSelect.find('option:checked').text(),
+                                };
+                                var loading = layer.msg('正在保存中.....', {
+                                    icon: 16,
+                                    shade: 0.3,
+                                    time: 5000
+                                });
+                                common.fetchPost(tiolReportRuleSaveUrl,params,function(res){
+                                    layer.close(loading);
+                                    if(res.success) {
+                                        layer.msg("保存成功！", {
+                                            icon: 6
+                                        });
+                                        eventHandle.tiolReportRuleTableReload()
+                                        layer.close(userWin);
+
+                                    } else {
+                                        layer.msg("保存失败！" + res.resultMessage, {
+                                            icon: 5
+                                        });
+                                    }
+                                },function(){layer.close(loading);});
+                                return false;
+                            });
+                        },
+
+                    });
+                    break;
+                case 'adds':
+                    //点击批量新增按钮
+                    var userWin = layer.open({
+                        // offset: '10px',
+                        title: '批量新增',
+                        maxmin: false,
+                        type: 2, //页面层
+                        area: ['580px','500px'], //高度自适应
+                        // maxHeight: '500px',
+                        shadeClose: false,
+                        content: baseUrl+'src/page/ys/report/tiolReportRuleAdd.html',
+                        // btn:['<i class="fa fa-check-circle"></i>确定','<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>取消'],
+                        success: function(obj) {
+                        },
+                        end:function(obj){
+                            eventHandle.tiolReportRuleTableReload();
+                        }
+                    });
+                    break;
+                case 'delete':
+                    //点击删除按钮
+                    var options = {
+                        url: tiolReportRuleDeleteUrl,
+                        type:'post',
+                        key:'ids',
+                        value:'reportRuleId',
+                        confirmText:'确定删除选中数据?',
+                        emptyText:'请选择删除记录！',
+                        successText:'删除上报规则成功!',
+                        errorText:'删除上报规则失败,请先删除管理信息!',
+                        success:function(obj){eventHandle.tiolReportRuleTableReload()},
+                        error:function(obj){}
+                    };
+                    eventHandle.execCheckBoxRowsEvent(checkRows.data, options);
+                    break;
+                case 'enable':
+                    //点击启用按钮
+                    var options = {
+                        url: tiolReportRuleEnableUrl,
+                        type:'post',
+                        key:'ids',
+                        value:'reportRuleId',
+                        confirmText:'确定启用选中数据?',
+                        emptyText:'请选择启用记录！',
+                        successText:'启用上报规则成功!',
+                        errorText:'启用上报规则失败!',
+                        success:function(obj){eventHandle.tiolReportRuleTableReload()},
+                        error:function(obj){}
+                    };
+                    eventHandle.execCheckBoxRowsEvent(checkRows.data, options);
+                    break;
+                case 'disable':
+                    //点击禁用按钮
+                    var options = {
+                        url: tiolReportRuleDisableUrl,
+                        type:'post',
+                        key:'ids',
+                        value:'reportRuleId',
+                        confirmText:'确定禁用选中数据?',
+                        emptyText:'请选择禁用记录！',
+                        successText:'禁用上报规则成功!',
+                        errorText:'禁用上报规则失败,请先禁用管理信息!',
+                        success:function(obj){eventHandle.tiolReportRuleTableReload()},
+                        error:function(obj){}
+                    };
+                    eventHandle.execCheckBoxRowsEvent(checkRows.data, options);
+                    break;
+            }
+        });
+
+
+        table.on('tool(tiolReportRuleTable)', function(obj) {
+            var data = obj.data;
+            switch (obj.event) {
+                case 'edit': //编辑
+                    //原始数据导入
+                    var editWin = layer.open({
+                        offset: '10px',
+                        title: '编辑',
+                        maxmin: false,
+                        type: 1, //页面层
+                        area: ['580px','300px'], //高度自适应
+                        shadeClose: false,
+                        content: $('.tiolReportRuleEditLayer').html(), //加载该区域的html
+                        success: function(obj) {
+                            form.val('tiolReportRuleEditForm', data);
+                            var superSeIdSelect = $(obj.selector).find('#superSeId');
+                            eventHandle.dictInit(superSeIdSelect,dictCodeUrl,'code','name', data.superSeId);
+
+                            form.on('submit(formEdit)', function (obj) {
+
+                                var loading = layer.msg('正在保存中.....', {
+                                    icon: 16,
+                                    shade: 0.3,
+                                    time: 5000
+                                });
+                                var params = obj.field
+                                params.superSeName =superSeIdSelect.find('option:checked').text();
+                                common.fetchPost(tiolReportRuleUpdateUrl,obj.field,function(res){
+                                    layer.close(loading);
+                                    if(res.success) {
+                                        layer.msg("保存成功！", {
+                                            icon: 6
+                                        });
+                                        eventHandle.tiolReportRuleTableReload();
+                                        layer.close(editWin);
+                                    } else {
+                                        layer.msg("保存失败！"  + res.resultMessage, {
+                                            icon: 5
+                                        });
+                                    }
+
+                                },function(){layer.close(loading);});
+                                return false;
+                            });
+                        }
+                    });
+                    break;
+                case 'edits':
+                    var userWin = layer.open({
+                        title: '批量编辑',
+                        maxmin: false,
+                        type: 2, //页面层
+                        area: ['580px','500px'], //高度自适应
+                        // maxHeight: '500px',
+                        shadeClose: false,
+                        content: baseUrl+'src/page/ys/report/tiolReportRuleAdd.html?superSeId=' + data.superSeId,
+                        // btn:['<i class="fa fa-check-circle"></i>确定','<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>取消'],
+                        success: function(obj) {
+                        },
+                        end:function(obj){
+                            eventHandle.tiolReportRuleTableReload();
+                        }
+                    });
+                    break;
+                case 'singleDel':
+                    var selectId = obj.data.reportRuleId;
+                    layer.confirm('确定删除?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                        var layerLoader = common.layerLoader();
+                        common.fetchPost(tiolReportRuleDeleteUrl + '?ids=' + selectId,{},function (res) {
+                            layer.close(layerLoader);
+                            if(res.success){
+                                eventHandle.tiolReportRuleTableReload();
+                                layer.msg('删除成功' , {
+                                    time: 4000, //20s后自动关闭
+                                });
+                            }else{
+                                layer.alert(res.resultMessage, {
+                                    icon: 5
+                                });
+                            }
+                        }, function () {
+                            layer.close(layerLoader);
+                        });
+                        layer.close(index);
+                    });
+                    break;
+            }
+        });
+
+        form.on('submit(formSearch)',function (obj) {
+            var params= {
+                ggEnStatus:obj.field.ggEnStatus,
+                seId:userInfo.seId,
+                seName:obj.field.seName,
+                superSeName:obj.field.superSeName
+            };
+            eventHandle.tiolReportRuleTableReload(params);
+            return false;
+        });
+
+        common.buttonLimit(currentMenuSmId);
+        common.columnSide();
+    });
+    </script>
+    <!--[if lt IE 9]>
+    <script src="../../js/lib/html5.min.js"></script>
+    <script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+
+</html>

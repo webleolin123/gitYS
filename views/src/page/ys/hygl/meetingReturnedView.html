@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+
+<head>
+    <meta charset="UTF-8">
+    <title>会议退回</title>
+    <meta content="webkit" name="renderer" />
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../../js/layui/css/layui.css" />
+    <link href="../../../css/public.css?v1.01" rel="stylesheet" />
+    <link href="../../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <script src="../../../js/lib/jquery.1.12.3.js"></script>
+    <style>
+        .hytitle {
+            font-size: 14px;
+        }
+
+        .hylabel {
+            border: 1px solid transparent !important;
+            background: transparent !important;
+        }
+
+        .hyinput {
+            border: 1px solid transparent !important;
+            border-bottom-color: red !important;
+        }
+
+        /*.layui-unselect {*/
+        /*border-color: #f56c6c;*/
+        /*border-top-style: none;*/
+        /*border-right-style: none;*/
+        /*border-left-style: none;*/
+        /*}*/
+        .layui-form-select .layui-edge {
+            border-top-color: #f56c6c;
+        }
+
+        /*body{*/
+        /*background:#f8f8f8;*/
+        /*}*/
+        .load-btn,
+        .check-btn,
+        .right-btn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            border-radius: 3px;
+        }
+
+        .right70 {
+            right: 70px;
+        }
+
+        .relative {
+            position: relative;
+        }
+
+        .padRt64 {
+            padding-right: 64px;
+        }
+
+        li {
+            cursor: pointer;
+        }
+
+        .zsBga {
+            color: purple;
+            vertical-align: 1px;
+            opacity: 0.5;
+        }
+
+        .eleTree.ele5,
+        .eleTree.ele6,
+        .eleTree.eleBill {
+            height: 300px;
+            width: 100%;
+            display: none;
+            position: absolute;
+            top: 100%;
+            background-color: #fff;
+            z-index: 100;
+            border: 1px solid #ccc;
+        }
+
+        /* 去除弹窗侧面张开按钮 */
+        /*a.layui-layer-ico.layui-layer-max{*/
+        /*display: none;*/
+        /*}*/
+        /*a.layui-layer-ico.layui-layer-max.layui-layer-maxmin{*/
+        /*display:inline-block!important;*/
+        /*}*/
+        .layui-table-tool {
+            min-height: 0px;
+        }
+    </style>
+
+</head>
+
+
+
+
+
+<body class="iframe-h">
+
+    <div class="content-wrap">
+        <div class="layui-row layui-col-space15">
+            <form class="layui-form layui-form-pane form-theme3" lay-filter="basicForm" name="regulationForm"
+                name="regulationForm">
+                <!-- 基本信息 -->
+                <div class="layui-card">
+                    <div class="layui-card-header layui-card-header-custom">
+                        <span><i></i>会议信息</span>
+                    </div>
+                    <div class="layui-card-body">
+                        <div class="layui-row layui-col-space15">
+                            <div class="layui-col-md15">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label hylabel"><b class="red">*</b>会议名称:</label>
+                                    <div class="layui-input-block">
+
+                                        <input autocomplete="off" class="layui-input hyinput" name="meetingName"
+                                            placeholder="请输入" type="text" value="">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="layui-row layui-col-space15">
+                            <div class="layui-col-md6">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label hylabel"><b class="red">*</b>会议日期:</label>
+                                    <div class="layui-input-block">
+
+                                        <input autocomplete="off" class="layui-input hyinput" name="meetingTime"
+                                            placeholder="请选择" readonly="readonly" type="text">
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md6">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label hylabel"><b class="red">*</b>会议地点:</label>
+                                    <div class="layui-input-block">
+                                        <input autocomplete="off" class="layui-input hyinput" name="meetingAddr"
+                                            placeholder="请选择" readonly="" type="text" />
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="layui-row layui-col-space15">
+                            <div class="layui-col-md6">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label hylabel">会议形式:</label>
+                                    <div class="layui-input-block">
+                                        <input autocomplete="off" class="layui-input hyinput" name="meetingModeName"
+                                            type="text" value="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md6">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label hylabel">审议形式:</label>
+                                    <div class="layui-input-block">
+                                        <input autocomplete="off" class="layui-input hyinput" name="deliberationName"
+                                            type="text" value="">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                    </div>
+                </div>
+                <!-- -----------参会情况------------ -->
+                <div class="layui-collapse white-bg" style="margin-top: 10px">
+
+                    <div class="layui-card">
+                        <div class="layui-card-header layui-card-header-custom">
+                            <span><i></i>参会情况</span>
+                        </div>
+                        <div class="layui-card-body">
+                            <div class="layui-row layui-col-space15">
+                                <div class="layui-col-md6">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label hylabel"><b class="red">*</b>召集人员:</label>
+                                        <div class="layui-input-block">
+                                            <input autocomplete="off" class="layui-input hyinput" name="convenor"
+                                                type="text" value="">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md6">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label hylabel"><b class="red">*</b>主持人员:</label>
+                                        <div class="layui-input-block">
+                                            <input autocomplete="off" class="layui-input hyinput" name="moderatorName"
+                                                type="text" value="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="layui-row layui-col-space15">
+                                <div class="layui-col-xs12">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label hylabel"><b class="red">*</b>出席人员:</label>
+                                        <div class="layui-input-block">
+                                            <input autocomplete="off" class="layui-input hyinput" name="attendeeNames"
+                                                type="text" value="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="layui-row layui-col-space15">
+                                <div class="layui-col-xs12">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label hylabel">缺席人员:</label>
+                                        <div class="layui-input-block">
+                                            <input autocomplete="off" class="layui-input hyinput" name="absentNames"
+                                                type="text" value="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="layui-row layui-col-space15">
+                                <div class="layui-col-xs12">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label hylabel">常设列席:</label>
+                                        <div class="layui-input-block">
+                                            <input autocomplete="off" class="layui-input hyinput" name="attenders"
+                                                type="text" value="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+
+                    </div>
+                </div>
+
+                <div class="layui-collapse white-bg" style="margin-top: 10px">
+
+                    <div class="layui-card">
+                        <div class="layui-card-header layui-card-header-custom">
+                            <span><i></i>退回情况</span>
+                        </div>
+                        <div class="layui-card-body">
+                            <div class="layui-row layui-col-space15">
+                                <div class="layui-col-md6">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label hylabel"><b class="red">*</b>退回操作单位:</label>
+                                        <div class="layui-input-block">
+                                            <input autocomplete="off" class="layui-input hyinput" name="auditSeName" type="text"
+                                                value="">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md6">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label hylabel"><b class="red">*</b>退回操作部门:</label>
+                                        <div class="layui-input-block">
+                                            <input autocomplete="off" class="layui-input hyinput" name="auditOrgName" type="text"
+                                                value="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="layui-row layui-col-space15">
+                                <div class="layui-col-xs12">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label hylabel"><b class="red">*</b>退回意见:</label>
+                                        <div class="layui-input-block">
+                                            <input autocomplete="off" class="layui-input hyinput" name="auditOpnion" type="text"
+                                                value="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="layui-row layui-col-space15">
+                                <div class="layui-col-xs6">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label hylabel">退回操作人:</label>
+                                        <div class="layui-input-block">
+                                            <input autocomplete="off" class="layui-input hyinput" name="auditSuName" type="text"
+                                                value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="layui-col-xs6">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label hylabel">退回时间:</label>
+                                        <div class="layui-input-block">
+                                            <input autocomplete="off" class="layui-input hyinput" name="auditDatetime" type="text"
+                                                value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- <div style="display: none">
+                <div class="layui-card" style="position: absolute;width: 100%;top: 99%;">
+                    <div class="layui-card-body">
+                        <div class="layui-layer-btn layui-layer-btn-c">
+                            <button class="layui-btn" lay-filter="saveRegulation" lay-submit> <i class="layui-icon">&#x1005;</i>保存</button>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+
+    <input name="regulationPid" type="hidden">
+
+    <div style="position: fixed;width: 100%;bottom: 17px;z-index: 999;" class="hide">
+        <div class="layui-card" style="margin-top: 10px">
+            <div class="layui-card-body">
+                <div class="layui-form-item" style="text-align: center;">
+                    <!-- <button type="button" lay-filter="saveRegulation" lay-submit class="layui-btn"> <i class="layui-icon">&#x1005;</i>保存</button>
+                    <button type="button" class="layui-btn layui-btn-danger" lay-submit
+                        lay-filter="submitRegulation"><i class="layui-icon">&#xe605;</i>提交</button> -->
+                    <button type="button" class="layui-btn layui-btn-primary btnClose"><i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    </div>
+
+
+    <script src="./../../../js/layui/layui.js"></script>
+    <script>
+
+        layui.config({
+            base: '../../../src/js/',
+            version: new Date().getTime()
+        }).use(['eleTree', 'layer', 'table', 'form', 'laytpl', 'common', 'element', 'laydate', 'upload'], function () {
+
+            var table = layui.table;
+            var form = layui.form;
+            var tree = layui.eleTree;
+            var common = layui.common;
+            var element = layui.element;
+            var laydate = layui.laydate;
+            var upload = layui.upload;
+            var util = layui.util;
+
+            var fileSortData;
+
+            var regulationTextMap = {};
+            var layerLoader;
+            //按钮权限
+            common.buttonLimit();
+            element.init();
+            var baseUrl = '../../../../';
+            common.themeSet();
+            var formEditData = {};
+
+
+
+            // common.fetchPost('rulemgr/regulation/backViewByAuditId', { flowAuditId }, function (res) {
+            //     
+
+            //     res.object.auditDatetime = common.toDateString(res.object.auditDatetime,'yyyy-MM-dd HH:mm:ss')
+            //     // res.object.approvalDate = common.toDateString(res.object.approvalDate,'yyyy-MM-dd')
+            //     res.object.effectiveDate = common.toDateString(res.object.effectiveDate,'yyyy-MM-dd')
+            //     res.object.expireDate = common.toDateString(res.object.expireDate,'yyyy-MM-dd')
+            //     res.object.signDate = common.toDateString(res.object.signDate,'yyyy-MM-dd')
+            //     res.object.implementDate = common.toDateString(res.object.implementDate,'yyyy-MM-dd')
+
+            //     form.val('basicForm', res.object)
+            //     $('.layui-card-body').click()
+            // }, function (err) {
+
+            // })
+
+            function renderViewMode() {
+                var view = common.getQueryVariable("view");
+                if (view == "view") {
+                    $("button").addClass("hide");
+                    $("input,select,textarea").attr("disabled", "disabled");
+                    $(".viewHiden").addClass("hide");
+                    $(".viewShow").removeClass("hide");
+
+                }
+            }
+            renderViewMode()
+            var flowAuditId = common.getQueryVariable('flowAuditId')
+            common.fetchPost('meetingmgr/tiolMeeting/selectBackMeetingById', { flowAuditId: flowAuditId }, function (data) {
+                if (data.success) {
+                    form.val('basicForm',data.object)
+                } else {
+                    layer.msg("查询会议信息失败:" + data.resultMessage);
+                }
+            }, function () {
+                layer.msg('查询会议信息失败');//失败后提示
+            });
+
+            $(".btnClose").on('click',function () { 
+                layer.closeAll()
+             })
+
+
+        });
+
+    </script>
+
+    <!--[if lt IE 9]>
+
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+
+</html>

@@ -1,0 +1,11 @@
+﻿[
+['$currentLevel1','当前用户所在公司'],
+['$currentLevel2','当前用户所在部门'],
+['$currentLevel3','当前用户所在处室'],
+['$currentLevel4','当前用户所在班组'],
+['$draftLevel1','起草人所在公司'],
+['$draftLevel2','起草人所在部门'],
+['$draftLevel3','起草人所在处室'],
+['$draftLevel4','起草人所在班组'],
+['$currentLevel','当前用户所在部门或处室或班组']
+]

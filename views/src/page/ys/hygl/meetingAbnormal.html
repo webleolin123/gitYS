@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+
+<head>
+    <meta charset="UTF-8">
+    <title>会议管理-会议列表-异常情况</title>
+    <meta content="webkit" name="renderer" />
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../../js/layui/css/layui.css" />
+    <link href="../../../css/public.css?v1.01" rel="stylesheet" />
+    <link href="../../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <script src="../../../js/lib/jquery.1.12.3.js"></script>
+</head>
+<style>
+    th>div {
+        text-align: center;
+    }
+</style>
+
+<body class="iframe-h">
+    <div class="content-wrap" style="padding: 15px;">
+        <div class="layui-row layui-col-space10">
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>异常列表</span></div>
+                <div class="layui-card-body">
+                    <form action="" class="layui-form layui-form-pane">
+                        <div class="layui-row layui-col-space10">
+                            <div class="layui-col-xs4">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">会议名称</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="meetingName" placeholder="请输入会议名称" autocomplete="off"
+                                            class="layui-input">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-xs4">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">解决状态</label>
+                                    <div class="layui-input-block">
+                                        <select name="confirmFlag">
+                                            <option value="">请选择</option>
+                                            <option value="abnormal">异常</option>
+                                            <option value="resolved">已解决</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="toggle-area layui-col-space10">
+                                <div class="layui-col-xs4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">会议日期</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="meetingTime" placeholder="请选择时间" autocomplete="off"
+                                                class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">会议类型</label>
+                                        <div class="layui-input-block">
+                                            <select name="meetingTypeId" id="meetingTypeId">
+                                                <option name="" value=""></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">异常类型</label>
+                                        <div class="layui-input-block">
+                                            <select name="exceptionType" id="exceptionType">
+                                                <option name="" value=""></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label" title="异常生成时间">异常生成时间</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="timeRange" placeholder="请选择时间" autocomplete="off"
+                                                class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="formSearch-btnArea">
+                                <button class="layui-btn" lay-submit lay-filter="formSearch"><i
+                                        class="fa fa-search"></i>查询</button>
+                                <button type="reset" class="layui-btn layui-btn-primary"><i
+                                        class="fa fa-eraser"></i>重置</button>
+                                <a class="toggle-btn">
+                                    <span>展开</span>
+                                    <i class="fa fa-angle-up"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="layui-card">
+                    <div class="layui-card-body" style="padding-top: 0">
+                        <table id="table1" lay-filter="table1"></table>
+                        <script type="text/html" id="tableToolBar">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-sm" lay-event="checkEx" permission-btn="exceptionCheck"><i class="fa fa-eye"></i>
+                               检查
+                            </button>
+                        </div>
+                    </script>
+
+                        <script type="text/html" id="tableOper">
+                        <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="view" permission-btn="exceptionView">查看</a>
+                    </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./../../../js/layui/layui.js"></script>
+    <script>
+
+        layui.config({
+            base: '../../../../src/js/',
+            version: new Date().getTime()
+        }).use(['layer', 'form', 'common', 'laydate', 'table'], function () {
+            var form = layui.form;
+            var common = layui.common;
+            var table = layui.table;
+            var laydate = layui.laydate;
+            var baseUrl = '../../../../';
+            var meetingTypeIdMap = {};
+            var exceptionTypeMap = {};
+            var exceptionUrl = baseUrl + 'meetingmgr/tiolMeetingException/selectTiolMeetingExceptionPage';
+            common.themeSet();
+            common.toggleArea($('.toggle-btn'), $('.toggle-area'));
+
+            common.selectDataSet({
+                elem: $('[name=exceptionType]'),
+                url: 'sysmgr/dicts/selectDictListByPcode?dictPCode=meeting_exception ',
+                responseList: 'list',
+                method: 'get',//默认为get
+                optionText: 'sdName',
+                optionValue: 'sdCode',
+                success: function (data) {
+                    if (data && data.list && data.list.length > 0) {
+                        $.map(data.list, function (item) {
+                            exceptionTypeMap[item.sdCode] = item;
+                        });
+                    }
+                    form.render('select');
+                }
+            });
+            common.selectDataSet({
+                elem: $('[name=meetingTypeId]'),
+                url: 'meetingmgr/tiolMeetingType/getHasPermMeetingTypeList',
+                responseList: 'list',
+                method: 'get',//默认为get
+                optionText: 'meetingTypeName',
+                optionValue: 'meetingTypeId',
+                success: function (data) {
+                    if (data && data.list && data.list.length > 0) {
+                        $.map(data.list, function (item) {
+                            meetingTypeIdMap[item.meetingTypeId] = item;
+                        });
+                    }
+                    form.render('select');
+                }
+            });
+
+            laydate.render({
+                elem: '[name=meetingTime]',
+                type: 'date',
+                trigger: 'click'
+            });
+            laydate.render({
+                elem: '[name=timeRange]',
+                range: true,
+                type: 'date',
+                trigger: 'click'
+            });
+
+            table.render(common.tableInitParams({
+                elem: '#table1',
+                url: exceptionUrl,
+                method: 'post',
+                toolbar: '#tableToolBar',
+                cols: [
+                    [
+                        { type: 'checkbox' },
+                        { type: 'numbers', title: '序号' },
+                        { field: 'meetingName', title: '会议名称', width: 200 },
+                        {
+                            field: 'meetingTime', title: '会议日期', width: 250, align: "center", templet: function (rowDta) {
+                                if (rowDta['meetingTime'] && rowDta['meetingTimeEnd']) {
+                                    if (rowDta['meetingTime'] != rowDta['meetingTimeEnd']) {
+                                        return rowDta['meetingTime'] + '至' + rowDta['meetingTimeEnd']
+                                    } else {
+                                        return rowDta['meetingTime']
+                                    }
+                                } else {
+                                    return '-'
+                                }
+                            }
+                        },
+                        { field: 'meetingTypeName', title: '会议类型', width: 110, align: "center" },
+                        {
+                            field: 'exceptionType', title: '异常类型', width: 150, templet: function (rowData) {
+                                if (rowData['exceptionType'] == "ATTENDEE") {
+                                    return "会议召开异常";
+                                } else {
+                                    return "";
+                                }
+                            }
+                        },
+                        { field: 'exceptionDesc', title: '异常信息', minWidth: 200, align: "center" },
+                        {
+                            field: 'ggCreateDatetime', title: '异常生成时间', width: 200, templet: function (rowData) {
+                                return common.dateFormat(rowData.ggCreateDatetime);
+                            }
+                        },
+                        {
+                            field: 'confirmFlag', title: '状态', width: 90, align: "center", templet: function (rowData) {
+                                if (rowData['confirmFlag'] == "resolved") {
+                                    return '<span class="green">已解决</span>';
+                                } else {
+                                    return '<span class="red">异常</span>';
+                                }
+                            }
+                        }
+                        // {field: '', title: '操作', width: 80, toolbar:'#tableOper',fixed: 'right'},
+                    ]
+                ],
+                height: "full-180",
+                done: function () {
+                    common.buttonLimit();
+                }
+            }));
+
+            table.on('toolbar(table1)', function (obj) {
+                var checkStatus = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+                    case 'checkEx'://检查
+                        //会议检查
+                        if (checkStatus.data.length > 0) {
+                            layer.confirm('确定检查选中项会议?', { icon: 3, title: '提示', offset: '150px' }, function (index) {
+                                var layerLoader = common.layerLoader();
+                                var meetingInfo = [];
+                                for (var i = 0; i < checkStatus.data.length; i++) {
+                                    meetingInfo.push(checkStatus.data[i]['meetingId'] + "#" + checkStatus.data[i]['meetingName'])
+                                }
+                                common.fetchPost('meetingmgr/tiolMeeting/checkMeetingsException',
+                                    {
+                                        "meetingInfo": meetingInfo.join(",")
+                                    }, function (res) {
+                                        layer.close(layerLoader);
+                                        if (res.success) {
+                                            layer.alert(res.object);
+                                        } else {
+                                            layer.alert(res.resultMessage);
+                                        }
+                                    }, function () {
+                                        layer.close(layerLoader);
+                                    });
+
+                                layer.close(index);
+                            });
+                        } else {
+                            layer.msg('请选择检查项')
+                        }
+                        break;
+                }
+            });
+
+            table.on('tool(table1)', function (obj) {
+                var data = obj.data;
+                var meetingId = data.meetingId;
+                switch (obj.event) {
+                    case 'view':
+                        //打开会议详情
+                        var viewMeeting = top.layer.open({
+                            title: ['会议查看'],
+                            type: 2,
+                            content: baseUrl + 'xxx' + data.meetingId,
+                            maxmin: true,
+                            //btn: ['<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭'],
+                            btnAlign: 'c',
+                            yes: function () {
+                                top.layer.close(viewMeeting);
+                                return false;
+                            },
+                            success: function (layero, index) {
+                            }
+                        });
+                        top.layer.full(viewMeeting);
+                        break;
+                }
+            });
+
+            form.on('submit(formSearch)', function (obj) {
+                //表格重载
+                table.reload('table1', {
+                    url: exceptionUrl,
+                    method: 'post',
+                    contentType: 'application/json',
+                    page: {
+                        curr: 1
+                    },
+                    where: obj.field,
+                });
+                return false;
+            });
+
+
+        });
+
+
+    </script>
+
+    <!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+
+</html>

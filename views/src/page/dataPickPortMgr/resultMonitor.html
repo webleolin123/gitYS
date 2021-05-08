@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>接口数据采集结果监控</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../js/layui/css/layui.css"/>
+    <link href="../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script src="../../js/common/plugin.js"></script>
+
+</head>
+
+<!-- 新增/编辑组件弹窗 -->
+<div class="tplLayer hide">
+    <div style="padding: 15px 20px">
+        <form class="layui-form layui-form-pane" lay-filter="addForm">
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width:130px;"><b class="red">*</b>导航页面名称</label>
+                <div class="layui-input-block" style="margin-left: 130px;">
+                    <input type="text" name="wumiChname" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width:100%">备注</label>
+                <div class="layui-input-block" style="margin-left:0;left:0">
+                    <textarea name="memo" placeholder="请输入" class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item adapt" style="margin-left: 30%">
+                <div class="layui-input-block">
+                    <button class="layui-btn " lay-submit lay-filter="formSavue"> <i class="layui-icon">&#x1005;</i>保存</button>
+                    <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                </div>
+            </div>
+        </form>
+        <div class="templateEditLayer hide" style="margin-top: 10px;">
+            <div>
+                <table id="table2" lay-filter="table2"></table>
+                <script type="text/html" id="tableOper2">
+                    <a class="layui-btn layui-btn-xs" lay-event="prop-edit" permission-btn="nav-prop-editConfig">编辑</a>
+                    <a class="layui-btn layui-btn-xs" lay-event="prop-check" permission-btn="nav-prop-checkConfig">查看</a>
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+<!--新增/编辑组件属性弹框-->
+<div id="propLayer" style="margin-top: 10px;display: none">
+    <div style="padding: 15px 20px;overflow-y:auto;overflow-x:hidden">
+        <form class="layui-form layui-form-pane" lay-filter="prop-addForm">
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>属性名</label>
+                <div class="layui-input-block">
+                    <input type="text" name="wtmpPropname" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>属性中文名</label>
+                <div class="layui-input-block">
+                    <input type="text" name="wtmpChname" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">属性值类型</label>
+                <div class="layui-input-block">
+                    <select name="wtmpPropvaltype"  id="wtmpPropvaltype">
+                        <option value="object">object</option>
+                        <option value="array">array</option>
+                        <option value="string">string</option>
+                        <option value="boolean">boolean</option>
+                        <option value="number">number</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item wtmpPropval">
+                <label class="layui-form-label" style="width:100%"><b class="red">*</b>属性值</label>
+                <div class="layui-input-block" style="margin-left:0;left:0">
+                    <textarea name="wtmpPropval" placeholder="请输入" required lay-verify="required"  class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">字典编码</label>
+                <div class="layui-input-block">
+                    <input type="text" name="wtmpDictCode" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">属性版本</label>
+                <div class="layui-input-block">
+                    <input type="text" name="wtmpVersioncode" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width:100%">备注</label>
+                <div class="layui-input-block" style="margin-left:0;left:0">
+                    <textarea name="ggMemo" placeholder="请输入" class="layui-textarea"></textarea>
+                </div>
+            </div>
+
+            <div class="layui-form-item adapt" style="margin-left: 15%">
+                <div class="layui-input-block">
+                    <button title="保存" class="layui-btn"
+                        lay-submit
+                        lay-filter="savePropInfo"
+                        authCode="savePropInfo">
+                        <i class="layui-icon">&#xe605;</i>保存
+                    </button>
+                    <!-- <button title="<i class="fa fa-eraser"></i>重置" type="reset"
+                        class="layui-btn layui-btn-primary">
+                        <i class="layui-icon">&#xe666;</i><i class="fa fa-eraser"></i>重置
+                    </button> -->
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!--查询组件属性详情弹框-->
+<div class="propCheckLayer hide">
+        <div style="padding: 15px 20px;overflow-y:auto;overflow-x:hidden">
+            <form class="layui-form layui-form-pane" name="propCheckLayer">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">属性名</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="wtmpPropname" class="layui-input" disabled>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">属性中文名</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="wtmpChname" class="layui-input" disabled>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">属性值类型</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="wtmpPropvaltype"  class="layui-input" disabled>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width:100%">属性值</label>
+                    <div class="layui-input-block" style="margin-left:0;left:0">
+                        <textarea name="wtmpPropval" placeholder="请输入" required  lay-verify="required" class="layui-textarea" disabled></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">字典编码</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="wtmpDictCode" class="layui-input" disabled>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">属性版本</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="wtmpVersioncode"  class="layui-input" disabled>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width:100%">备注</label>
+                    <div class="layui-input-block" style="margin-left:0;left:0">
+                        <textarea name="ggMemo" placeholder="请输入" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+            </form>
+        </div>
+</div>
+<body class="iframe-h">
+    <div class="content-wrap">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-header layui-card-header-custom"><span><i></i>数据采集结果列表</span></div>
+                    <div class="layui-card-body">
+                        <form action="" class="layui-form layui-form-pane">
+                            <div class="layui-row layui-col-space10">
+                            <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">任务名称</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="taskName" placeholder="请输入" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">作业名称</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="workName" placeholder="请输入" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- <div class="toggle-area layui-col-space10">
+                                    <div class="layui-col-md4">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">状态</label>
+                                            <div class="layui-input-block">
+                                                <select name="ggEnStatus" lay-verify="required">
+                                                    <option value="">请选择</option>
+                                                    <option value="stop">未执行</option>
+                                                    <option value="run">执行中</option>
+                                                    <option value="pause">暂停中</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> -->
+                                <div class="" style="text-align: center;margin-bottom: 5px">
+                                    <button class="layui-btn" lay-submit lay-filter="formSearch"><i class="fa fa-search"></i>查询</button>
+                                    <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                                    <!-- <a class="toggle-btn">
+                                        <span>展开</span>
+                                        <i class="fa fa-angle-up"></i>
+                                    </a> -->
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="layui-card">
+                    <div class="layui-card-body" style="padding-top: 0">
+                        <table id="table1" lay-filter="table1"></table>
+                        <script type="text/html" id="tableToolBar">
+                            <div class="layui-btn-container">
+                                <!-- <button class="layui-btn layui-btn-sm" lay-event="add" permission-btn="add_workInfoPortMgr">
+                                    <i class="layui-icon">&#xe608;</i> 新增
+                                </button> -->
+                                <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete" permission-btn="delete_resultMonitorPortMgr">
+                                    <i class="layui-icon">&#xe640;</i> 删除
+                                </button>
+                            </div>
+                        </script>
+                        <script type="text/html" id="tableOper">
+                            <!-- <a class="layui-btn layui-btn-xs" lay-event="edit" permission-btn="edit_workInfoPortMgr">编辑</a>
+                            <a class="layui-btn layui-btn-xs" lay-event="runOnece" permission-btn="runOnece_workInfoPortMgr">执行一次</a>
+                            <a class="layui-btn layui-btn-xs" lay-event="run" permission-btn="run_workInfoPortMgr">执行</a>
+                            <a class="layui-btn layui-btn-xs" lay-event="stop" permission-btn="stop_workInfoPortMgr">停止</a>
+                            <a class="layui-btn layui-btn-xs" lay-event="pause" permission-btn="pause_workInfoPortMgr">暂停</a>
+                            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="singleDel" permission-btn="singleDel_workInfoPortMgr">删除</a> -->
+                            <a class="layui-btn layui-btn-xs" lay-event="check" permission-btn="check_resultMonitorPortMgr">查看</a>
+                            <a class="layui-btn layui-btn-xs" lay-event="checkLog" permission-btn="checkLog_resultMonitorPortMgr">查看错误日志</a>
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<script src="./../../js/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).extend({
+    }).use(['layer','table','form','laytpl','common','element'],function () {
+        var table=layui.table;
+        var form=layui.form;
+        var common=layui.common;
+        var element = layui.element;
+        //分页初始参数
+        var pageInitialParam = {
+            pageNum : 1,
+            pareSize : 10,
+            curr:1
+        };
+        common.themeSet();
+        var pageRequest = {
+            pageName: 'pageNumber',//页码的参数名称，默认：page
+            limitName: 'pageSize' //每页数据量的参数名，默认：limit
+        }
+        var baseUrl='../../../';
+
+        // common.toggleArea($('.toggle-btn'),$('.toggle-area'));
+        var currentMenuSmId=$("#currentMenuSmId",window.parent.document).val();
+        var eventHandle={
+            tableReload:function () {
+                table.reload('table1',{
+                    url: baseUrl+'compmgr/webComponent/pageTopWebComponent',
+                    contentType:'application/json',
+                    method:'post',
+                    page:pageInitialParam,
+                    request:pageRequest,
+                    where:{paras:{wtmiTypecode:"navComp"}},
+                    done:function () {
+                      common.buttonLimit(currentMenuSmId);
+                    }
+                });
+            },
+            tableReload_child:function (id) {
+                table.reload('table2',{
+                    url: baseUrl+'compmgr/webcomponenttemplateproperty/page',
+                    contentType:'application/json',
+                    method:'post',
+                    page:pageInitialParam,
+                    request:pageRequest,
+                    done:function () {
+                        common.buttonLimit(currentMenuSmId);
+                    }
+                });
+            },
+            execCheckBoxRowsEvent:function(data,options){
+                if (data && data.length > 0) {
+                    layer.confirm(options.confirmText, {
+                        icon: 3,
+                        title: '提示',
+                        offset: '150px'
+                    }, function(index) {
+                        var delParam = "";
+                        $.each(data,function(index){
+                            if(index){
+                                delParam +=","
+                            }
+                            delParam += data[index][options.value];
+                        });
+                        common.fetch(options.url + '?' + options.key + '=' + delParam,options.type,{suIds:delParam}, function(res) {
+                            if (res.success) {
+                                layer.msg(options.successText, {
+                                    icon: 6
+                                });
+                                options.success(res.list)
+                            }else{
+                                layer.msg(options.errorText, {
+                                    icon: 5
+                                });
+                            }
+                        }, function() {
+                            options.error([])
+                        });
+                        layer.close(index);
+                    });
+                } else {
+                    layer.msg(options.emptyText);
+                }
+            }
+        };
+
+        table.render(common.tableInitParams({
+            elem: '#table1',
+            // url: baseUrl+'compmgr/webComponent/pageTopWebComponent',
+            // method: 'post',
+            data:[{
+                "taskName":"任务1",
+                "workName":"作业1",
+                "totalNum":"300",
+                "nomalNum":"278",
+                "abnomalNum":"22",
+                "startTime":"2019-07-24 00:00:00",
+                "endTime":"2019-07-25 00:00:00",
+            }],
+            height:'full-200',
+            toolbar: '#tableToolBar',
+            cols: [
+                [
+                    {type:'checkbox',width:50},
+                    {type: "numbers", title: "序号",width:60},
+                    {field: 'taskName',align:'center', title: '任务名称',sort: true},
+                    {field: 'workName',align:'center', title: '作业名称',sort: true},
+                    {field: 'totalNum',align:'center', title: '总数量',sort: true},
+                    {field: 'nomalNum',align:'center', title: '正常数量',sort: true},
+                    {field: 'abnomalNum',align:'center', title: '异常数量',sort: true},
+                    {field: 'startTime',align:'center', title: '开始时间',sort: true},
+                    {field: 'endTime',align:'center', title: '结束时间',sort: true},
+                    {field: '', title: '操作',align:'center',width:400, toolbar:'#tableOper',fixed: 'right'},
+                ]
+            ],
+            page:pageInitialParam,
+            // where:{paras:{wtmiTypecode:"navComp"}},
+            request:pageRequest,
+            done:function () {
+                common.buttonLimit(currentMenuSmId);
+            }
+        }));
+
+        //table监听事件
+        table.on('toolbar(table1)',function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch(obj.event) {
+                case 'add':
+                    layer.msg('新增');
+                    return
+                    var index_add=layer.open({
+                        offset: 't',
+                        title: '新增导航页面',
+                        maxmin: false,
+                        type: 1,//页面层
+                        area: ['100%','100%'],//高度自适应
+                        shadeClose: false,
+                        content: $('.tplLayer').html(),//加载该区域的html
+                        // btn:['保存','<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>取消'],
+                        success: function (obj) {
+                            $(obj.selector).find('.adapt').css('marginLeft','30%');
+                            $(obj.selector).find('.templateEditLayer').show();
+
+                            form.render();
+                            form.render('select');
+                            form.on('submit(formSavue)', function (obj) {
+                                var currentSetCompId=common.uuid();
+                                var params = [{
+                                    parentCompId:-1,
+                                    enable:'0',
+                                    tempId:'3c8ce92924ce4c10b84ea5b670bd65ad',
+                                    compId:currentSetCompId,
+                                    compName:obj.field.wumiChname,
+                                    memo: obj.field.memo
+                                }];
+                                layer.confirm('您确定要保存?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                                    var layerLoader = common.layerLoader();
+                                    common.fetchPost('compmgr/webComponent/componentInfo', params,function (res) {
+                                        // layer.alert(res.resultMessage);
+                                        layer.close(layerLoader);
+                                        layer.close(index);
+                                        if(res.success){
+                                         layer.close(index_add);
+                                         eventHandle.tableReload();
+                                        }else{
+                                            layer.msg('添加失败');
+                                        }
+                                    }, function () {
+                                        layer.msg('添加失败');//失败后提示
+                                        layer.close(index);
+                                        layer.close(layerLoader);
+                                    });
+                                });
+                                return false;
+                            });
+                            table.render(common.tableInitParams({
+                                elem: $(obj.selector).find('#table2'),
+                                url: baseUrl+'compmgr/webcomponenttemplateproperty/page',
+                                method: 'post',
+                                height: 'full-250',
+                                cols: [
+                                    [
+                                        // {type:'checkbox'},
+                                        {"type":"numbers", "title":"序号"},
+                                        {field: 'wtmpPropname', title: '属性名',sort:true},
+                                        {field: 'wtmpChname', title: '属性中文名',sort:true},
+                                        {field: 'wtmpPropval', title: '属性值',sort:true},
+                                        {field: 'wtmpVersioncode', title: '属性版本', sort: true},
+                                        {field: 'ggMemo', title: '备注', sort: true},
+                                        {field: '', title: '操作', width:'25%',toolbar:'#tableOper2',fixed: 'right'},
+                                    ]
+                                ],
+                                page:pageInitialParam,
+                                // where:{paras:{wtmiId:data.wtmiId}},
+                                where:{paras:{wtmiId:'3c8ce92924ce4c10b84ea5b670bd65ad'}},
+                                request:pageRequest,
+                                done:function () {
+                                     common.buttonLimit(currentMenuSmId);
+                                }
+                            }));
+                            //table2监听事件
+                            table.on('tool(table2)',function (obj) {
+                                var data = obj.data;
+                                switch(obj.event){
+                                    case 'prop-edit':
+                                        //点击添加按钮
+                                        var index_propEdit=layer.open({
+                                            offset: 't',
+                                            title:'编辑导航组件属性信息',
+                                            maxmin: false,
+                                            type: 1,//页面层
+                                            area: ['580px'],//高度自适应
+                                            shadeClose: false,
+                                            content: $('#propLayer').html(),//加载该区域的html
+                                            success:function(obj) {
+                                                $(obj.selector).find('textarea[name=wtmpPropval]').val(data.wtmpPropval);
+                                                $(obj.selector).find('input[name=wtmpChname]').val(data.wtmpChname);
+                                                $(obj.selector).find('input[name=wtmpPropname]').val(data.wtmpPropname);//不可修改
+                                                // $(obj.selector).find('input[name=wtmpPropname]').parent().parent().css('display','none');
+                                                $(obj.selector).find('input[name=wtmpPropname]').attr('disabled','disabled');
+
+                                                $(obj.selector).find('#wtmpPropvaltype').val(data.wtmpPropvaltype);
+                                                $(obj.selector).find('input[name=wtmpDictCode]').val(data.wtmpDictCode);
+                                                $(obj.selector).find('input[name=wtmpVersioncode]').val(data.wtmpVersioncode);
+                                                $(obj.selector).find('textarea[name=ggMemo]').val(data.ggMemo);
+                                                form.render();//此处必须要有form.render()
+                                                form.render('select');
+                                                form.on('submit(savePropInfo)', function (obj) {
+                                                    var params = {
+                                                        wtmiId: data.wtmiId,
+                                                        wtmpId: data.wtmpId,
+                                                        wtmpPropname: data.wtmpPropname,
+                                                        wtmpChname: obj.field.wtmpChname,
+                                                        wtmpPropval: obj.field.wtmpPropval.replace(/\s+/g, ""),
+                                                        wtmpPropvaltype: obj.field.wtmpPropvaltype,
+                                                        wtmpDictCode: obj.field.wtmpDictCode,
+                                                        wtmpVersioncode: obj.field.wtmpVersioncode,
+                                                        ggMemo: obj.field.ggMemo,
+                                                    };
+                                                    var layerLoader =common.layerLoader();
+                                                    common.fetchPost('compmgr/webcomponenttemplateproperty/updateProperty', params,function (res) {
+                                                        //表格重载
+                                                        layer.close(layerLoader);
+                                                        if(res.success){
+                                                            layer.close(index_propEdit);
+                                                            eventHandle.tableReload_child(data.wtmiId);
+                                                        }else{
+                                                            layer.alert(res.resultMessage);
+                                                        }
+                                                    }, function (err) {
+
+                                                        layer.close(layerLoader);
+                                                        layer.msg('添加失败');//失败后提示
+                                                    });
+                                                    return false;
+                                                });
+                                            }
+                                        });
+                                        break;
+                                    case 'prop-check'://查询
+                                        var index_pCheck=layer.open({
+                                            offset: 't',
+                                            title:'查看导航组件属性信息',
+                                            maxmin: false,
+                                            type: 1,//页面层
+                                            area: ['580px'],//高度自适应
+                                            shadeClose: false,
+                                            // btn: ['<i class="fa fa-check-circle"></i>确定'],
+                                            // btnAlign:'c',
+                                            // btn1:function(){
+                                            //     layer.close(index_pCheck);
+                                            // },
+                                            content: $('.propCheckLayer').html(),//加载该区域的html
+                                            success:function (obj) {
+                                                //初始化表格
+                                                form.render();
+                                                $(obj.selector).find('input[name=wtmpPropname]').val(data.wtmpPropname);
+                                                $(obj.selector).find('input[name=wtmpChname]').val(data.wtmpChname);
+                                                $(obj.selector).find('textarea[name=wtmpPropval]').val(data.wtmpPropval);
+                                                $(obj.selector).find('input[name=wtmpPropvaltype]').val(data.wtmpPropvaltype);
+                                                $(obj.selector).find('input[name=wtmpDictCode]').val(data.wtmpDictCode);
+                                                $(obj.selector).find('input[name=wtmpVersioncode]').val(data.wtmpVersioncode);
+                                                $(obj.selector).find('textarea[name=ggMemo]').val(data.ggMemo);
+                                            },
+                                        });
+                                    break;
+                                }
+                            });
+                        },
+                    });
+                    break;
+                case 'delete':
+                    //点击删除按钮
+                    if (checkStatus.data.length > 0) {
+                        layer.confirm('确定删除选中列?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                            layer.msg('删除');
+                                return
+                            var tIdArr = [];
+
+                            for (var i = 0; i < checkStatus.data.length; i++) {
+                                if(checkStatus.data[i].ggEnStatus==1){
+                                    layer.msg('包含已启用模板，不可删除!,请去除勾选');
+                                    return false;
+                                }
+                                else{
+                                    tIdArr.push(checkStatus.data[i]['wumiId']);
+                                }
+                            }
+                            var layerLoader = common.layerLoader();
+                            common.fetchDelete('compmgr/webComponent/topWebComponent?compIds=' + tIdArr.join(','),function (res) {
+                                // layer.alert(res.resultMessage);
+                                if(res.success){
+                                    layer.close(layerLoader);
+                                    eventHandle.tableReload();
+                                }else{
+                                    layer.msg('删除失败');
+                                }
+                            }, function (res) {
+                                layer.msg('删除失败');
+                                layer.close(layerLoader);
+                            });
+                            layer.close(index);
+                        });
+                    } else {
+                        layer.msg('请选择删除列')
+                    }
+                    break;
+            }
+        });
+
+        // table row 监听事件
+        table.on('tool(table1)', function(obj){
+            var data = obj.data;
+            var ggEnStatus = data.ggEnStatus;
+            switch(obj.event){
+                case 'edit'://编辑
+                     layer.msg('编辑');
+                                return
+                    var index_edit=layer.open({
+                        offset: 't',
+                        title:'编辑导航页面',
+                        maxmin: false,
+                        type: 1,//页面层
+                        area: ['100%','100%'],//高度自适应
+                        shadeClose: false,
+                        content: $('.tplLayer').html(),//加载该区域的html
+                        success:function (obj) {
+                            $(obj.selector).find('.templateEditLayer').show();
+                            //初始化表格
+                            form.render();
+
+                            $(obj.selector).find('input[name=wumiChname]').val(data.wumiChname);
+                            $(obj.selector).find('textarea[name=memo]').val(data.ggMemo);
+                            form.render('select');
+                            //点击保存按钮
+                            form.on('submit(formSavue)', function (obj) {
+                                var params = [{
+                                    parentCompId:-1,
+                                    tempId:'3c8ce92924ce4c10b84ea5b670bd65ad',
+                                    compId:data.wumiId,
+                                    compName:obj.field.wumiChname,
+                                    memo: obj.field.memo,
+                                    enable: data.ggEnStatus
+                                }];
+                                var layerLoader =common.layerLoader();
+                                common.fetchPost('compmgr/webComponent/componentInfo', params,function (res) {
+                                    layer.close(layerLoader);
+                                    //表格重载
+                                    if(res.success){
+                                        layer.close(index_edit);
+                                        eventHandle.tableReload();
+                                    }else{
+                                        layer.msg('修改失败');
+                                    }
+
+                                }, function () {
+                                    layer.close(layerLoader);
+                                    layer.close(index_edit);
+                                    layer.msg('修改失败');//失败后提示
+                                });
+                                return false;
+                            });
+
+                            table.render(common.tableInitParams({
+                                elem: $(obj.selector).find('#table2'),
+                                url: baseUrl+'compmgr/webcomponenttemplateproperty/page',
+                                method: 'post',
+                                height: 'full-250',
+                                cols: [
+                                    [
+                                        // {type:'checkbox'},
+                                        {field: 'wtmpPropname', title: '属性名',sort:true},
+                                        {field: 'wtmpChname', title: '属性中文名',sort:true},
+                                        {field: 'wtmpPropval', title: '属性值',sort:true},
+                                        {field: 'wtmpVersioncode', title: '属性版本', sort: true},
+                                        {field: 'ggMemo', title: '备注', sort: true},
+                                        {field: '', title: '操作', width:'25%',toolbar:'#tableOper2',fixed: 'right'},
+                                    ]
+                                ],
+                                page:pageInitialParam,
+                                where:{paras:{wtmiId:'3c8ce92924ce4c10b84ea5b670bd65ad'}},
+                                request:pageRequest,
+                                done:function () {
+                                    common.buttonLimit(currentMenuSmId);
+                                }
+                            }));
+                            //table2监听事件
+                            table.on('tool(table2)',function (obj) {
+                                var data = obj.data;
+                                switch(obj.event){
+                                    case 'prop-edit':
+                                    //点击添加按钮
+                                    var index_propEdit=layer.open({
+                                        offset: 't',
+                                        title:'编辑导航组件属性信息',
+                                        maxmin: false,
+                                        type: 1,//页面层
+                                        area: ['580px'],//高度自适应
+                                        shadeClose: false,
+                                        content: $('#propLayer').html(),//加载该区域的html
+                                        success:function(obj) {
+                                            form.render();//此处必须要有form.render()
+                                            $(obj.selector).find('textarea[name=wtmpPropval]').val(data.wtmpPropval);
+                                            $(obj.selector).find('input[name=wtmpChname]').val(data.wtmpChname);
+                                            $(obj.selector).find('input[name=wtmpPropname]').val(data.wtmpPropname);//不可修改
+                                            // $(obj.selector).find('input[name=wtmpPropname]').parent().parent().css('display','none');
+                                            $(obj.selector).find('input[name=wtmpPropname]').attr('disabled','disabled');
+
+                                            $(obj.selector).find('#wtmpPropvaltype').val(data.wtmpPropvaltype);
+                                            $(obj.selector).find('input[name=wtmpDictCode]').val(data.wtmpDictCode);
+                                            $(obj.selector).find('input[name=wtmpVersioncode]').val(data.wtmpVersioncode);
+                                            $(obj.selector).find('textarea[name=ggMemo]').val(data.ggMemo);
+                                            form.render('select');
+                                            form.on('submit(savePropInfo)', function (obj) {
+                                                var params = {
+                                                    wtmiId: data.wtmiId,
+                                                    wtmpId: data.wtmpId,
+                                                    wtmpPropname: data.wtmpPropname,
+                                                    wtmpChname: obj.field.wtmpChname,
+                                                    wtmpPropval: obj.field.wtmpPropval.replace(/\s+/g, ""),
+                                                    wtmpPropvaltype: obj.field.wtmpPropvaltype,
+                                                    wtmpDictCode: obj.field.wtmpDictCode,
+                                                    wtmpVersioncode: obj.field.wtmpVersioncode,
+                                                    ggMemo: obj.field.ggMemo,
+                                                };
+                                                var layerLoader =common.layerLoader();
+                                                common.fetchPost('compmgr/webcomponenttemplateproperty/updateProperty', params,function (res) {
+                                                    //表格重载
+                                                    layer.close(layerLoader);
+                                                    if(res.success){
+                                                        layer.close(index_propEdit);
+                                                        eventHandle.tableReload_child(data.wtmiId);
+                                                        if(ggEnStatus==="1"){//在用 配置后 刷新父页面
+                                                            parent.location.reload();
+                                                        }
+                                                    }else{
+                                                        layer.alert(res.resultMessage);
+                                                    }
+                                                }, function (err) {
+
+                                                    layer.close(layerLoader);
+                                                    layer.msg('添加失败');//失败后提示
+                                                });
+                                                return false;
+                                            });
+                                        }
+                                    });
+                                    break;
+                                    case 'prop-check'://查询
+                                        var index_pCheck=layer.open({
+                                            offset: 't',
+                                            title:'查看导航组件属性信息',
+                                            maxmin: false,
+                                            type: 1,//页面层
+                                            area: ['580px'],//高度自适应
+                                            shadeClose: false,
+                                            // btn: ['<i class="fa fa-check-circle"></i>确定'],
+                                            // btnAlign:'c',
+                                            // btn1:function(){
+                                            //     layer.close(index_pCheck);
+                                            // },
+                                            content: $('.propCheckLayer').html(),//加载该区域的html
+                                            success:function (obj) {
+                                                //初始化表格
+                                                form.render();
+                                                $(obj.selector).find('input[name=wtmpPropname]').val(data.wtmpPropname);
+                                                $(obj.selector).find('input[name=wtmpChname]').val(data.wtmpChname);
+                                                $(obj.selector).find('textarea[name=wtmpPropval]').val(data.wtmpPropval);
+                                                $(obj.selector).find('input[name=wtmpPropvaltype]').val(data.wtmpPropvaltype);
+                                                $(obj.selector).find('input[name=wtmpDictCode]').val(data.wtmpDictCode);
+                                                $(obj.selector).find('input[name=wtmpVersioncode]').val(data.wtmpVersioncode);
+                                                $(obj.selector).find('textarea[name=ggMemo]').val(data.ggMemo);
+                                            },
+                                        });
+                                    break;
+                                }
+                            });
+                            }
+                        });
+                    break;
+                case 'singleDel':
+                     layer.msg('删除');
+                            return
+                    var selectId = data.wumiId;
+                    layer.confirm('确定删除?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                        var layerLoader = common.layerLoader();
+                        common.fetchDelete('compmgr/webComponent/topWebComponent?compIds='+selectId,function (res) {
+                            layer.close(layerLoader);
+                            if(res.success){
+                                eventHandle.tableReload();
+                                layer.msg('删除成功');
+                            }else{
+                                layer.msg('删除成功')
+                            }
+                        }, function () {
+                            layer.close(layerLoader);
+                        });
+
+                        layer.close(index);
+                    });
+                    break;
+                case 'runOnece':
+                    layer.msg('执行一次');
+                    break;
+                case 'run':
+                    layer.msg('执行');
+                    break;
+                case 'stop':
+                    layer.msg('停止');
+                    break;
+                case 'pause':
+                    layer.msg('暂停');
+                    break;
+                case 'check':
+                    layer.msg('查看');
+                    break;
+                case 'checkLog':
+                    layer.msg('查看错误日志');
+                    break;
+            }
+        });
+        //查询
+        form.on('submit(formSearch)',function (obj) {
+            var name=obj.field.wumiChname;
+            table.reload('table1',{
+                page:{
+                    curr:0
+                },
+                where:{
+                    paras:{
+                        workName:obj.field.workName,
+                        bindTask:obj.field.bindTask,
+                        ggEnstatus:obj.field.ggEnstatus
+                    }
+                },
+                done:function () {
+                    common.buttonLimit(currentMenuSmId);
+                }
+            });
+            return false;
+        });
+    });
+</script>
+<!--[if lt IE 9]>
+    <script src="../../js/lib/html5.min.js"></script>
+    <script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META http-equiv=Content-Type content="text/html; charset=utf-8">
+	<TITLE>选择环节</TITLE>
+	<META NAME="Author" CONTENT="Witson">
+	<link rel="stylesheet" type="text/css" href="../images/style.css"/>
+	<style type="text/css">
+		.item{
+			float:left;
+			padding:3px;
+			width:140px;
+		}
+	</style>
+</HEAD>
+<script type="text/javascript">
+var strTem=self.location.href;
+strTem = strTem.substr(strTem.indexOf('.htm?parVal=')+12);
+var sNodeName=strTem.split(',')[0];
+var oInput = parent.document.getElementsByName(sNodeName)[0];
+
+function funOK(){
+	var objs=document.getElementsByName('chkItem');
+	var sVal='';
+	for (var i=0; i<objs.length; i++){
+		if (objs[i].checked){
+			if (sVal!='') sVal+=',';
+			sVal+=objs[i].value;
+		}
+	}
+	oInput.value = sVal;
+	parent.setCurrentObjAttr(oInput);
+	parent.closeDialog(self);
+}
+
+function loadData(){
+	var arr=oInput.value.split(',').delEmpty();
+	var oFlow = parent.oFlow;
+	var sHTML='';
+	//alert('Previous:' + oDiv.getPreviousNodes(oDiv.getCurrentObj())+'\nNext:'+oDiv.getNextNodes(oDiv.getCurrentObj()))
+	var curNode=oFlow.getCurrentObj();
+	//statescanbecanceled 下一节点
+	//statesmustbefinished 上一节点
+	if (sNodeName=='statesmustbefinished'){
+		var arrNod=oFlow.getPreviousNodes(oFlow.getCurrentObj()).split(',');
+	}else{
+		var arrNod=oFlow.getNextNodes(oFlow.getCurrentObj()).split(',');
+	}
+	//alert(arrNod.toString());
+	var oNodes = oFlow.getRoot().childNodes;
+	for (var i=0; i<oNodes.length; i++){
+		if ((oNodes[i].nodeName=='state') || (oNodes[i].nodeName=='join-state') 
+			|| (oNodes[i].nodeName=='junction') || (oNodes[i].nodeName=='compete-exe-state') 
+			|| (oNodes[i].nodeName=='compete-join-state') || (oNodes[i].nodeName=='subprocess-state')
+			 || (oNodes[i].nodeName=='serial-exe-state')){
+			var bChecked='';
+			for (var j=0; j<arr.length; j++){
+				if (arr[j]==oNodes[i].getAttribute('sid')){
+					bChecked=' checked ';
+					break;
+				}
+			}
+			var bFind=false;
+			for (var j=0; j<arrNod.length; j++){
+				if (oNodes[i].getAttribute('sid')==arrNod[j]) {
+					bFind=true;
+					break;
+				}
+			}
+			sHTML += '<div class="item">';
+			sHTML += '<input type="checkbox" '+bChecked+' name="chkItem" id="chkItem'+i+'" value="'+oNodes[i].getAttribute('sid')+'"/>';
+			sHTML += '<label for="chkItem'+i+'" '+(bFind?'style="font-weight:bold;color:blue;"':'')+'> '+oNodes[i].getAttribute('name')+'</label>';
+			sHTML += '</div>';
+		}
+	}
+	/*
+	for (var i=0; i<arrNod.length; i++){
+		if (arrNod[i]=='') continue;
+		var temNode=oFlow.findNode(arrNod[i]);
+		if ((oFlow.getNodeType(temNode)=='start-state')||(oFlow.getNodeType(temNode)=='end-state')) continue;
+		var bChecked='';
+		for (var j=0; j<arr.length; j++){
+			if (arr[j]==arrNod[i]){
+				bChecked=' checked ';
+				break;
+			}
+		}
+		sHTML += '<div class="item">';
+		sHTML += '<input type="checkbox" '+bChecked+' name="chkItem" id="chkItem'+i+'" value="'+temNode.getAttribute('sid')+'"/>';
+		sHTML += '<label for="chkItem'+i+'"> '+temNode.getAttribute('name')+'</label>';
+		sHTML += '</div>';
+	}*/
+	//var oNodes = oFlow.getRoot().childNodes;
+	/*for (var i=0; i<oNodes.length; i++){
+		if ((oFlow.getNodeType(oNodes[i])=='state') || (oFlow.getNodeType(oNodes[i])=='join-state') || (oFlow.getNodeType(oNodes[i])=='junction') || (oFlow.getNodeType(oNodes[i])=='compete-exe-state')){
+			var bChecked='';
+			for (var j=0; j<arr.length; j++){
+				if (arr[j]==oNodes[i].getAttribute('sid')){
+					bChecked=' checked ';
+					break;
+				}
+			}
+			sHTML += '<div class="item">';
+			sHTML += '<input type="checkbox" '+bChecked+' name="chkItem" id="chkItem'+i+'" value="'+oNodes[i].getAttribute('sid')+'"/>';
+			sHTML += '<label for="chkItem'+i+'"> '+oNodes[i].getAttribute('name')+'</label>';
+			sHTML += '</div>';
+		}
+	}
+	sHTML += '';*/
+	jsfw.$('tdMain').innerHTML=sHTML;
+}
+function selAll(){
+	var objs=document.getElementsByName('chkItem');
+	if (objs.length==0) return;
+	objs[0].checked = !objs[0].checked;
+	for (var i=1; i<objs.length; i++) objs[i].checked=objs[0].checked;
+}
+</script>
+
+<BODY loadWebUI="Toolbar" scroll="no" onload="loadData()">
+
+<table width="100%" style="table-layout:fixed;height:100%" border="0" cellpadding="0" cellspacing="0">
+	<tr>
+		<td height="28">
+			<div class="Toolbar" style="padding-left:10px;">
+			<xmp style="display:none">
+				<root>
+					<item text="确定" icon="../images/icon/check.gif" action="funOK();"/>
+					<item text="取消" icon="../images/icon/close.gif" action="parent.closeDialog(self);"/>
+					<item text=""/>
+					<item text="全选" icon="../images/icon/sel_all.gif" action="selAll();"/>
+				</root>
+			</xmp>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td valign="top" style="padding:3px;" id="tdMain">
+		</td>
+	</tr>
+	<tr>
+		<td height="28" style="padding:3px;color:gray" align="center">
+			蓝色粗体表示建议结点
+		</td>
+	</tr>
+</table>
+</BODY>
+</HTML>
+<script type="text/javascript" src="../jsfw/boot.js" loadClass="" loadPrototype="Array" loadWebUI="" Theme="Default"></script>

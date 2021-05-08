@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+
+<head>
+    <meta charset="UTF-8">
+    <title>有色门户集成 - 会议信息</title>
+    <meta content="webkit" name="renderer" />
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../../js/layui/css/layui.css" />
+    <link href="../../../css/public.css?v1.01" rel="stylesheet" />
+    <link href="../../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <script src="../../../js/lib/jquery.1.12.3.js"></script>
+    <script src="../../../js/common/plugin.js"></script>
+    <style>
+        .shqkTab {
+            display: inline-block;
+            border: 1px solid gray;
+            background: #ffff;
+            padding: 0 5px;
+            margin: 0 5px;
+            height: 26px;
+            line-height: 26px;
+            color: black;
+            opacity: 0.3;
+        }
+
+        .isYsh {
+            opacity: 1;
+        }
+
+        a.layui-layer-ico.layui-layer-max {
+            display: none;
+        }
+
+        a.layui-layer-ico.layui-layer-max.layui-layer-maxmin {
+            display: inline-block !important;
+        }
+    </style>
+</head>
+
+<body class="iframe-h">
+    <div class="content-wrap">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <div class="layui-card white-bg">
+                    <div class="layui-card-header layui-card-header-custom"><span><i></i>查询列表</span></div>
+                    <div class="layui-card-body">
+                        <!--layui-form-pane-->
+                        <form action="" class="layui-form layui-form-pane">
+                            <input type="hidden" name="releaseTime">
+                            <div class="layui-row layui-col-space10">
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">会议名称</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="meetingName" placeholder="请输入" autocomplete="off"
+                                                class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">会议类型</label>
+                                        <div class="layui-input-block">
+                                            <select name="meetingTypeId" id="meetingTypeId"
+                                                lay-filter="meetingTypeFilter">
+                                                <option name="" value="">请选择</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="toggle-area layui-col-space10">
+                                    <div class="layui-col-md4">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">会议日期</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" class="layui-input" readonly="readonly"
+                                                    name="meetingTime" placeholder="请选择">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="layui-col-xs4">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">企业名称</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" class="layui-input"
+                                                     readonly="readonly" placeholder="单击选择">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                <div class=" " style="text-align: center;margin-bottom: 5px">
+                                    <button class="layui-btn" lay-submit lay-filter="formSearch"><i
+                                            class="fa fa-search"></i>查询</button>
+                                    <button type="reset" class="layui-btn layui-btn-primary"><i
+                                            class="fa fa-eraser"></i>重置</button>
+                                    <a class="toggle-btn">
+                                        <span>展开</span>
+                                        <i class="fa fa-angle-up"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="layui-card">
+                    <div class="layui-card-body" style="padding-top: 0">
+                        <table id="table1" lay-filter="table1"></table>
+                        <script type="text/html" id="tableToolBar">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-sm " permission-btn="meetingMgrSubmit" lay-event="meetingSubmit">
+                                <i class="fa fa-check" style="margin-right: 2px"></i> 提交
+                            </button>
+                            <button class="layui-btn layui-btn-sm layui-btn-danger" permission-btn="meetingMgrDelete" lay-event="delete">
+                                <i class="layui-icon">&#xe640;</i> 删除
+                            </button>
+                        </div>
+                    </script>
+
+                        <script type="text/html" id="tableOper">
+                        <a class="layui-btn layui-btn-xs" permission-btn="meetingMgrEdit" lay-event="edit">编辑</a>
+                        <!--<a class="layui-btn layui-btn-xs" permission-btn="meetingMgrSubmit" lay-event="submit">提交</a>-->
+                    </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./../../../js/layui/layui.js"></script>
+    <script>
+
+        layui.config({
+            base: '../../../../src/js/',
+            version: new Date().getTime()
+        }).use(['layer', 'table', 'form', 'laytpl', 'common', 'element', 'laydate', 'eleTree'], function () {
+            var table = layui.table;
+            var form = layui.form;
+            var common = layui.common;
+            var element = layui.element;
+            var laydate = layui.laydate;
+            var tree = layui.eleTree;
+            var addMeetingFormLayer;
+            element.init();
+            var baseUrl = '../../../../';
+            common.themeSet();
+            common.toggleArea($('.toggle-btn'), $('.toggle-area'));
+
+            laydate.render({
+                elem: 'input[name=meetingTime]',
+                type: 'date'
+                , trigger: 'click'
+                // range: true,
+                // value:'2018-08-20 20:08:08'
+            });
+
+            var meetingModeMap = {};
+            var deliberationModeMap = {};
+            var meetingTypeIdMap = {};
+            var deliberationModeUrl = 'meetingmgr/tiolMeetingFormAlias/getTiolMeetingFormList';
+            dataObj = {};
+            //操作类型，默认为新增
+            formOperType = "add";
+            // // meetingMode
+            common.selectDataSet({
+                elem: $('[name=meetingMode]'),
+                url: 'sysmgr/dicts/selectDictListByPcode?dictPCode=MEETING_REVIEW_MODE',
+                responseList: 'list',
+                method: 'get',//默认为get
+                optionText: 'sdName',
+                optionValue: 'sdCode',
+                success: function (data) {
+                    if (data && data.list && data.list.length > 0) {
+                        $.map(data.list, function (item) {
+                            meetingModeMap[item.sdCode] = item;
+                        });
+                    }
+                    form.render('select');
+                }
+            });
+
+            common.fetchGet('meetingmgr/tiolMeetingFormAlias/getTiolMeetingFormList', function (data) {
+                if (data && data.list && data.list.length > 0) {
+                    $.map(data.list, function (item) {
+                        deliberationModeMap[item.meetingFormAliasId] = item;
+                    });
+                }
+            });
+            // common.selectDataSet({
+            //     elem: $('[name=deliberationMode]'),
+            //     url: 'meetingmgr/tiolMeetingFormAlias/getTiolMeetingFormList',
+            //     responseList: 'list',
+            //     method: 'get',//默认为get
+            //     optionText: 'meetingFormName',
+            //     optionValue: 'meetingFormAliasId',
+            //     success: function (data) {
+            //         if (data && data.list && data.list.length > 0) {
+            //             $.map(data.list, function (item) {
+            //                 deliberationModeMap[item.meetingFormAliasId] = item;
+            //             });
+            //         }
+            //         form.render('select');
+            //     }
+            // });
+
+            common.selectDataSet({
+                elem: $('[name=meetingTypeId]'),
+                url: 'meetingmgr/tiolMeetingType/getTiolMeetingTypeList',
+                responseList: 'list',
+                method: 'get',//默认为get
+                optionText: 'meetingTypeName',
+                optionValue: 'meetingTypeId',
+                success: function (data) {
+                    if (data && data.list && data.list.length > 0) {
+                        $.map(data.list, function (item) {
+                            meetingTypeIdMap[item.meetingTypeId] = item;
+                        });
+                    }
+                    form.render('select');
+                }
+            });
+
+            form.on('select(meetingTypeFilter)', function (data) {
+                var meetingTypeId = $("#meetingTypeId").val();
+                var meetingMode = $("#meetingMode").val();
+                if (meetingTypeId && meetingMode) {
+                    common.selectDataSet({
+                        elem: $('[name=deliberationMode]'),
+                        url: deliberationModeUrl + "?meetingTypeId=" + meetingTypeId + "&meetingMode=" + meetingMode,
+                        responseList: 'list',
+                        method: 'get',//默认为get
+                        optionText: 'meetingFormName',
+                        optionValue: 'meetingFormAliasId',
+                        success: function (data) {
+                            form.render('select');
+                        }
+                    });
+                } else {
+                    $("#deliberationMode").empty();
+                }
+            });
+            form.on('select(meetingModeFilter)', function (data) {
+                var meetingTypeId = $("#meetingTypeId").val();
+                var meetingMode = $("#meetingMode").val();
+                if (meetingTypeId && meetingMode) {
+                    common.selectDataSet({
+                        elem: $('[name=deliberationMode]'),
+                        url: deliberationModeUrl + "?meetingTypeId=" + meetingTypeId + "&meetingMode=" + meetingMode,
+                        responseList: 'list',
+                        method: 'get',//默认为get
+                        optionText: 'meetingFormName',
+                        optionValue: 'meetingFormAliasId',
+                        success: function (data) {
+                            form.render('select');
+                        }
+                    });
+                } else {
+                    $("#deliberationMode").empty();
+                }
+            });
+            form.on('select(deliberationModeFilter)', function (data) {
+                var meetingTypeId = $("#meetingTypeId").val();
+                var meetingMode = $("#meetingMode").val();
+                if (meetingTypeId == '') {
+                    alert("请先选择会议类型");
+                    return;
+                }
+                if (meetingMode == '') {
+                    alert("请先选择会议形式");
+                    return;
+                }
+            });
+
+            //按钮权限
+            common.buttonLimit($("#currentMenuSmId", window.parent.document).val(), function (res) {
+                //输入所有可操作的按钮集合
+                var list = res['list'] ? res['list'] : [];
+
+            });
+
+            var eventHandle = {
+                tableReload: function (params) {
+                    var meetingName = $('input[name=meetingName]')[0].value;
+                    var meetingTime = $('input[name=meetingTime]')[0].value;
+                    var meetingTypeId = $('select[name=meetingTypeId]')[0].value;
+                    var meetingMode = $('select[name=meetingMode]')[0].value;
+                    var deliberationMode = $('select[name=deliberationMode]')[0].value;
+                    table.reload('table1', {
+                        url: baseUrl + 'meetingmgr/tiolMeeting/selectDrafMeetingPage',
+                        method: 'post',
+                        contentType: 'application/json',
+                        page: {
+                            curr: 1
+                        },
+                        where: {
+                            "meetingName": meetingName,
+                            "meetingTimeRange": meetingTime,
+                            "meetingTypeId": meetingTypeId,
+                            "meetingMode": meetingMode,
+                            "deliberationMode": deliberationMode,
+                            "statusTypes": "0,2,5",
+                            "type": "tb"
+                        },
+
+                    });
+                }
+            };
+
+            table.render(common.tableInitParams({
+                elem: '#table1',
+                url: baseUrl + 'meetingmgr/tiolMeeting/selectDrafMeetingPage',
+                method: 'post',
+                where: { "statusTypes": "0,2,5", "type": "tb" },
+                // data:resData,
+                height: 'full-170',
+                toolbar: '#tableToolBar',
+                defaultToolbar: [],
+                cols: [
+                    [
+                        { type: 'checkbox' },
+                        { "type": 'numbers', title: '序号' },
+                        {
+                            field: 'meetingName', title: '会议名称', minWidth: 200, templet: function (rowData) {
+                                return '<span title="' + (rowData.meetingName ? rowData.meetingName : '-') + '">' + (rowData.meetingName ? rowData.meetingName : '-') + '</span>'
+                            }
+                        },
+                        {
+                            field: 'meetingTime', title: '会议日期', width: 220, align: "center", templet: function (rowDta) {
+                                if (rowDta['meetingTime'] && rowDta['meetingTimeEnd']) {
+                                    if (rowDta['meetingTime'] != rowDta['meetingTimeEnd']) {
+                                        return rowDta['meetingTime'] + '至' + rowDta['meetingTimeEnd']
+                                    } else {
+                                        return rowDta['meetingTime']
+                                    }
+                                } else {
+                                    return '-'
+                                }
+                            }
+                        },
+                        // {field: 'meetingTime', title: '会议开始时间',width:150},
+                        // {field: 'meetingTimeEnd', title: '会议结束时间',width:150},
+                        { field: 'meetingTypeName', title: '会议类型', width: 105, align: "center" },
+                        { field: 'meetingModeName', title: '会议形式', width: 105, align: "center" },
+                        { field: 'deliberationName', title: '审议形式', width: 105, align: "center" },
+                        {
+                            field: 'ggCreateDatetime', title: '填写日期', width: 150, align: "center", templet: function (rowData) {
+                                return common.dateFormat(rowData.ggCreateDatetime, 'yyyy-MM-dd');
+                            }
+                        },
+                        // {field: 'hyjy', title: '会议纪要', sort: true
+                        // },
+                        { field: '', title: '操作', toolbar: '#tableOper', fixed: 'right', width: 80, align: "center" },
+                    ]
+                ],
+                done: function () {
+                    common.buttonLimit();
+                }
+            }));
+
+            //table监听事件
+            table.on('toolbar(table1)', function (obj) {
+                var checkStatus = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+                    case 'add':
+                        formOperType = "add";
+                        dataObj = null;
+                        var addLayer = layer.open({
+                            title: ['会议类型选择'],
+                            type: 2,
+                            content: baseUrl + 'src/page/ys/hyTypeChoose.html',
+                            //offset: 't',
+                            maxmin: true,
+                            area: ['400px', '500px'],
+                            btnAlign: 'lc',
+                            yes: function () {
+                                layer.msg('已提交');
+                                return false;
+                            },
+                            btn2: function () {
+                                layer.close(addLayer);
+                            },
+                            success: function (layero, index) {
+                                //获取单页面的所有配置内容 传入compId
+
+                                // $("#compId", layero.find("iframe")[0].contentWindow.document).text(data['compId']);
+
+                            },
+                            end: function () { //此处用于演示
+                                eventHandle.tableReload();
+                            }
+                        });
+                        //layer.full(addLayer);
+                        break;
+                    case 'delete':
+                        //点击删除按钮
+                        if (checkStatus.data.length > 0) {
+                            layer.confirm('确定删除选中列?', { icon: 3, title: '提示', offset: '150px' }, function (index) {
+                                // layer.msg('演示 已删除');
+                                // return false;
+                                var meetingIdArr = [];
+
+                                for (var i = 0; i < checkStatus.data.length; i++) {
+                                    meetingIdArr.push(checkStatus.data[i]['meetingId'])
+                                }
+                                var layerLoader = common.layerLoader();
+                                common.fetchPost('meetingmgr/tiolMeeting/deleteTiolMeetingById', { "meetingIds": meetingIdArr.join(',') }, function (res) {
+                                    layer.close(layerLoader);
+                                    if (res.success) {
+                                        eventHandle.tableReload();
+                                        layer.alert('删除成功');
+                                    } else {
+                                        layer.alert(res.resultMessage);
+                                    }
+                                }, function () {
+                                    layer.close(layerLoader);
+                                });
+                                layer.close(index);
+                            });
+                        } else {
+                            layer.msg('请选择删除列')
+                        }
+                        break;
+
+                    case 'meetingSubmit'://提交
+                        if (checkStatus.data.length === 0) {
+                            layer.msg('请先选择会议');
+                            return false;
+                        }
+                        var meetingIds = [];
+                        var meetingNames = [];
+                        var flowStatusIds = [];
+                        for (var i = 0; i < checkStatus.data.length; i++) {
+                            meetingIds.push(checkStatus.data[i].meetingId);
+                            meetingNames.push(checkStatus.data[i].meetingName);
+                            flowStatusIds.push(checkStatus.data[i].flowStatusId);
+                        }
+                        layer.confirm('确定提交会议?', { icon: 3, title: '提示', offset: '150px' }, function (index) {
+                            var layerLoader = common.layerLoader();
+                            common.fetchPost('meetingmgr/tiolMeeting/batchValidMeetingException', {
+                                meetingIds: meetingIds.join(","),
+                                meetingNames: meetingNames.join(",")
+                            }, function (res) {
+                                if (res.success) {
+                                    if (res.object == "success") {
+                                        common.fetchPost('meetingmgr/tiolMeeting/batchCommitMeeting', {
+                                            "meetingIds": meetingIds.join(","),
+                                            "flowStatusIds": flowStatusIds.join(",")
+                                        }, function (res) {
+                                            if (res == null || res.resultCode == '-1') {
+                                                layer.alert(res.resultMessage);
+                                                return false;
+                                            } else {
+                                                eventHandle.tableReload();
+                                                layer.alert('提交成功，请到已提交和本企业会议报送模块进行下一步操作。');
+                                            }
+                                            layer.close(layerLoader);
+                                        }, function () {
+                                            layer.close(layerLoader);
+                                        });
+                                    } else if (res.object == "meetingEx") {
+                                        layer.close(layerLoader);
+                                        layer.confirm(res.resultMessage, function (innerConfirm) {
+                                            layer.close(innerConfirm);
+                                            var layerLoader1 = common.layerLoader();
+                                            common.fetchPost('meetingmgr/tiolMeeting/batchCommitMeeting', {
+                                                "meetingIds": meetingIds,
+                                                "flowStatusIds": flowStatusIds,
+                                            }, function (res) {
+                                                if (res == null || res.resultCode == '-1') {
+                                                    layer.alert(res.resultMessage);
+                                                } else {
+                                                    eventHandle.tableReload();
+                                                    layer.alert('提交成功，请到已提交和本企业会议报送模块进行下一步操作。');
+                                                }
+                                                layer.close(layerLoader1);
+                                            }, function () {
+                                                layer.close(layerLoader1);
+                                                layer.alert(res.resultMessage);
+                                            });
+                                        });
+                                    } else {
+                                        layer.close(layerLoader);
+                                        layer.alert(res.resultMessage);
+                                    }
+                                } else {
+                                    layer.close(layerLoader);
+                                    layer.alert(res.resultMessage);
+                                }
+                            });
+                            layer.close(index);
+                        });
+                        break;
+                }
+            });
+
+            // table row 监听事件
+            table.on('tool(table1)', function (obj) {
+                var data = obj.data;
+                dataObj = data.meetingId;
+                formOperType = "edit";
+                switch (obj.event) {
+                    case 'edit'://编辑
+                        // common.openNewWrap({
+                        //     url: '/src/page/ys/hygl/meetingAdd.html?flowStatusId=' + data.flowStatusId + '&formOperType=' + formOperType + '&dataObj=' + data.meetingId + '&meetingId=' + data.meetingId + '&meetingTypeName=' + encodeURIComponent(data.meetingTypeName) + '&meetingTypeId=' + data.meetingTypeId + '&meetingTypeCode=' + data.meetingTypeCode,
+                        //     title: data.meetingTypeName + '会议'
+                        // });
+
+                        var editLayer = layer.open({
+                                    title: [data.meetingTypeName + '会议'],
+                                    type: 2,
+                                    content: baseUrl + '/src/page/ys/hygl/meetingAdd.html?flowStatusId=' + data.flowStatusId + '&formOperType=' + formOperType + '&dataObj=' + data.meetingId + '&meetingId=' + data.meetingId + '&meetingTypeName=' + encodeURIComponent(data.meetingTypeName) + '&meetingTypeId=' + data.meetingTypeId + '&meetingTypeCode=' + data.meetingTypeCode,
+                                    maxmin: true,
+                                    end:function(){
+                                        table.reload("table1");
+                                    }
+                                });
+                                layer.full(editLayer);
+                                break;
+                        // break;
+                }
+
+            });
+
+            //查询
+            form.on('submit(formSearch)', function (obj) {
+                var meetingName = obj.field.meetingName;
+                var meetingTime = obj.field.meetingTime;
+                var meetingTypeId = obj.field.meetingTypeId;
+                var meetingMode = obj.field.meetingMode;
+                var deliberationMode = obj.field.deliberationMode;
+                //表格重载
+                table.reload('table1', {
+                    url: baseUrl + 'meetingmgr/tiolMeeting/selectDrafMeetingPage',
+                    method: 'post',
+                    contentType: 'application/json',
+                    page: {
+                        curr: 1
+                    },
+                    where: {
+                        "meetingName": meetingName,
+                        "meetingTimeRange": meetingTime,
+                        "meetingTypeId": meetingTypeId,
+                        "meetingMode": meetingMode,
+                        "deliberationMode": deliberationMode,
+                        "statusTypes": "0,2,5",
+                        "type": "tb"
+                    }
+                });
+                return false;
+            });
+
+        });
+
+    </script>
+
+    <!--[if lt IE 9]>
+<script src="../../../js/lib/html5.min.js"></script>
+<script src="../../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+
+</html>

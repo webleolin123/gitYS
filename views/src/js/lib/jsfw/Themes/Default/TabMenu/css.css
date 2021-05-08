@@ -1,0 +1,201 @@
+.TabMenu{
+	overflow:hidden;
+}
+.TabMenu_top_Tab{/*标签组*/
+	height:28px;
+	background-image: url('top_Tab_BG.gif');
+	background-repeat: repeat-x;
+	BACKGROUND-POSITION:100% 100%;
+	padding-left:160px;
+	/*background-color:#EEEEEE;*/
+}
+.TabMenu_top_Tab legend{text-align:center;width:100%;padding-top:5px;}
+.TabMenu_top_Tab_Begin{/*标签头 一般不用*/
+	float:left;display:none;
+}
+.TabMenu_top_Tab_End{/*标签尾 一般不用*/
+	float:left;display:none;
+}
+
+.TabMenu_top_Tab_Item{/*标签*/
+	border:0px solid red;
+	display:block;
+	float:left;
+	height:28px;
+	margin-left:5px;
+}
+.TabMenu_top_Tab_Item_Sel{/*标签*/
+	border:0px solid red;
+	display:block;
+	float:left;
+	height:28px;
+	margin-left:5px;
+}
+.TabMenu_top_Tab_Item_L{/*标签[左]*/
+	display:block;
+	float:left;
+	width:2px;
+	height:28px;
+	background-image: url('top_Tab_Item_L.gif');
+	background-repeat: no-repeat;
+}
+.TabMenu_top_Tab_Item_M{/*标签[中]*/
+	display:block;
+	float:left;
+	width:78px;
+	height:28px;
+	background-image: url('top_Tab_Item_M.gif');
+	background-repeat: repeat-x;
+	text-align:center;
+	cursor:default;
+}
+.TabMenu_top_Tab_Item_R{/*标签[右]*/
+	display:block;
+	float:left;
+	width:2px;
+	height:28px;
+	background-image: url('top_Tab_Item_R.gif');
+	background-repeat: no-repeat;
+}
+
+.TabMenu_top_Tab_Item_Sel .TabMenu_top_Tab_Item_L{/*选中标签[左]*/
+	display:block;
+	float:left;
+	width:2px;
+	height:28px;
+	background-image: url('top_Tab_Item_Sel_L.gif');
+	background-repeat: no-repeat;
+}
+.TabMenu_top_Tab_Item_Sel .TabMenu_top_Tab_Item_M{/*选中标签[中]*/
+	display:block;
+	float:left;
+	width:78px;
+	height:28px;
+	background-color:6C7897;
+	background-image: url('top_Tab_Item_Sel_M.gif');
+	background-repeat: repeat-x;
+	text-align:center;
+	color:white;
+	font-weight:bold;
+	cursor:default;
+}
+.TabMenu_top_Tab_Item_Sel .TabMenu_top_Tab_Item_R{/*选中标签[右]*/
+	display:block;
+	float:left;
+	width:2px;
+	height:28px;
+	background-image: url('top_Tab_Item_Sel_R.gif');
+	background-repeat: no-repeat;
+}
+
+
+.TabMenu_top_Content{
+	/*border: 0px !important;*/
+	/*border:1px solid #6C7897;*/
+	border-top:none;
+	overflow:auto;
+}
+.TabMenu_top_Content_Item{
+	border:none;
+	padding:0px;
+	height:100%;
+	margin:0px;
+}
+/*/////////////////////////////////////////////////////////////////////////////*/
+.TabMenu_left_Tab{/*标签组*/
+	width:28px;
+	background-image: url('left_Tab_BG.gif');
+	background-repeat: repeat-y;
+	BACKGROUND-POSITION:100% 100%;
+	display:block;
+	float:left;
+	height:100%;
+	/*background-color:#EEEEEE;*/
+}
+.TabMenu_left_Tab legend{text-align:center;height:100%;padding-right:4px;}
+.TabMenu_left_Tab_Begin{/*标签头 一般不用*/
+	display:none;
+}
+.TabMenu_left_Tab_End{/*标签尾 一般不用*/
+	display:none;
+}
+
+.TabMenu_left_Tab_Item{/*标签*/
+	border:0px solid red;
+	width:28px;
+	margin-top:5px;
+}
+.TabMenu_left_Tab_Item_Sel{/*标签*/
+	border:0px solid red;
+	width:28px;
+	margin-top:5px;
+}
+.TabMenu_left_Tab_Item_L{/*标签[左]*/
+	border:0px solid red;
+	height:2px;
+	width:28px;
+	background-image: url('left_Tab_Item_L.gif');
+	background-repeat: no-repeat;
+}
+.TabMenu_left_Tab_Item_M{/*标签[中]*/
+	height:78px;
+	width:28px;
+	background-image: url('left_Tab_Item_M.gif');
+	background-repeat: repeat-y;
+	text-align:center;
+	cursor:default;
+	direction: rtl!important;
+	direction:inherit;
+	writing-mode:tb-rl;
+	word-break:break-all;
+}
+.TabMenu_left_Tab_Item_R{/*标签[右]*/
+	height:2px;
+	width:28px;
+	background-image: url('left_Tab_Item_R.gif');
+	background-repeat: no-repeat;
+}
+
+.TabMenu_left_Tab_Item_Sel .TabMenu_left_Tab_Item_L{/*选中标签[左]*/
+	height:2px;
+	width:28px;
+	background-image: url('left_Tab_Item_Sel_L.gif');
+	background-repeat: no-repeat;
+}
+.TabMenu_left_Tab_Item_Sel .TabMenu_left_Tab_Item_M{/*选中标签[中]*/
+	height:78px;
+	width:28px;
+	background-color:6C7897;
+	background-image: url('left_Tab_Item_Sel_M.gif');
+	background-repeat: repeat-y;
+	text-align:center;
+	color:white;
+	font-weight:bold;
+	cursor:default;
+	direction: rtl!important;
+	direction:inherit;
+	writing-mode:tb-rl;
+	word-break:break-all;
+}
+.TabMenu_left_Tab_Item_Sel .TabMenu_left_Tab_Item_R{/*选中标签[右]*/
+	height:2px;
+	width:28px;
+	background-image: url('left_Tab_Item_Sel_R.gif');
+	background-repeat: no-repeat;
+}
+
+
+.TabMenu_left_Content{
+	/*border: 0px !important;*/
+	display:block;
+	float:left;
+	border:1px solid #6C7897;
+	border-left:none;
+	overflow:auto;
+}
+.TabMenu_left_Content_Item{
+	border:none;
+	padding:0px;
+	height:100%;
+	margin:0px;
+}

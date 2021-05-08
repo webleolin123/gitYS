@@ -1,0 +1,17 @@
+.Input_Select_Frame{
+	filter:Shadow(color=#999999,direction=135,strength=3);
+	padding-right:3px;
+	padding-bottom:3px;
+}
+.Input_Select_Div{
+	border:1px solid #638DD9;
+	background-Color: #FFFFE1;
+}
+.Input_Select_Tab_TR_Over td{background-color: #638DD9;color:white;cursor:default;}
+.Input_Select_Down{
+	width:16px;
+	background-image: url('DownArrow.gif');
+	background-repeat: no-repeat;
+	background-position: 50% 50%;
+	cursor:hand;
+}

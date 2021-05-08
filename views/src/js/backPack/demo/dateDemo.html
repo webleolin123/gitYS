@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+    <link href="../../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../lib/jquery.1.9.1.js"></script>
+</head>
+<body>
+    <div class="layui-row">
+        <div class="layui-col-lg6 layui-col-md6 layui-col-xs6">上传控件
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-lg6 layui-col-md6 layui-col-xs6">
+            <textarea id='uploadConfig' style="width:100%;height: 300px">
+                {
+                    "module": "test1",
+                    "name": "test1",
+                    "text": "选择文件",
+                    "accept": "file",
+                    "fileId": "fileTest",
+                    "multiple": true,
+                    "number": 0,
+                    "auto":true,
+                    "busType":"doc",
+                    "resId":"resId",
+                    "bindAction": "#button3"
+                   }
+
+            </textarea>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-lg6 layui-col-md6 layui-col-xs6">
+            <button class="layui-btn" id="button2">执行
+            </button>
+        </div>
+    </div>
+    <input id="resId" style="display: block" type="text">
+    <div class="layui-row">
+        <div class="layui-row">
+            <div id="module_test1" class="layui-col-lg12 layui-col-md12 layui-col-xs12" style="min-height:50px;background-color: #ffb800;"></div>
+        </div>
+        <div class="layui-row" style="height: 100px">
+            <button class="layui-btn" id="button3">上传文件
+            </button>
+        </div>
+    </div>
+</body>
+<script src="../../layui/layui.js"></script>
+<script>
+    layui.config({
+        base: './../../',
+        version: new Date().getTime()
+    }).extend({
+        zefuUpload: 'common/zefuUpload'
+    }).use(['tree', 'common', 'zefuUpload'], function () {
+        var common = layui.common;
+        var upload = layui.zefuUpload;
+        common.themeSet();
+        $("#button2").bind('click','',function(ele){
+            var configstr = $('#uploadConfig').val();
+            var config = null;
+            if($.trim(configstr)){
+                try{
+                    config = JSON.parse($.trim(configstr).replace(/\r\n/g,"").replace(/\n/g,"").replace(/\s/g,""));
+                }catch(e){
+                    alert('解析出错')
+                }
+                upload.init(config);
+            }
+        });
+    });
+</script>
+</html>

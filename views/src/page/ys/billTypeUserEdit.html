@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+
+<head>
+    <meta charset="UTF-8">
+    <title>用户管理</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../js/layui/css/layui.css" />
+    <link href="../../css/public.css?v1.01" rel="stylesheet" />
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script charset="utf-8" src="../../js/common/plugin.js"></script>
+    <style>
+        .tip {
+            width: 300px;
+            position: absolute;
+            left: 380px;
+            top: 10px;
+        }
+    </style>
+</head>
+
+<body class="iframe-h">
+    <div class="content-wrap">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+                <!-- layui tree-->
+                <div class="layui-card">
+                    <div class="layui-card-header layui-card-header-custom"><span><i></i>企业层级</span>
+                        <div class="columnSide"><i class="fa fa-toggle-left"></i></div>
+                    </div>
+                    <div class="layui-card-body">
+                        <div class="eleTree ele4" id="leftTree" lay-filter="leftTree"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
+                <div class="layui-card">
+                    <div class="layui-card-header layui-card-header-custom"><span><i></i>用户列表</span></div>
+                    <div class="layui-card-body">
+                        <form action="" class="layui-form layui-form-pane">
+                            <div class="layui-row layui-col-space10">
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">用户名称</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="suName" placeholder="请输入" autocomplete="off"
+                                                class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">用户账号</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="suLoginCode" placeholder="请输入" autocomplete="off"
+                                                class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="toggle-area layui-col-space10">
+                                    <div class="layui-col-md4">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">手机号码</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="suTel" placeholder="请输入" autocomplete="off"
+                                                    class="layui-input">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-col-md4">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">身份证号</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="suCnid" placeholder="请输入" autocomplete="off"
+                                                    class="layui-input">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-col-md4">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">性别</label>
+                                            <div class="layui-input-block">
+                                                <select name="suSex">
+                                                    <option value="">请选择</option>
+                                                    <option value="1">男</option>
+                                                    <option value="0">女</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="formSearch-btnArea">
+                                    <button class="layui-btn" lay-submit lay-filter="formSearch"><i class="fa fa-search"></i>查询</button>
+                                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                                    <a class="toggle-btn">
+                                        <span>展开</span>
+                                        <i class="fa fa-angle-up"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="layui-card">
+                    <div class="layui-card-body" style="padding-top: 0">
+                        <table id="userTable" lay-filter="userTable"></table>
+                        <script type="text/html" id="userTableToolBar">
+                            <div class="layui-btn-container">
+                                <button class="layui-btn layui-btn-sm" lay-event="enable" permission-btn="">
+                                    <i class="layui-icon ">&#x1005;</i> 关联
+                                </button>
+                            </div>
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./../../js/layui/layui.js"></script>
+    <script>
+        layui.config({
+            base: '../../../src/js/',
+            version: new Date().getTime()
+        }).use(['eleTree', 'layer', 'table', 'form', 'laytpl', 'common', 'util', 'element'], function () {
+            var table = layui.table;
+            var form = layui.form;
+            var tree = layui.eleTree;
+            var common = layui.common;
+            var util = layui.util;
+            var element = layui.element;
+            element.init();
+            var baseUrl = '../../../';
+            //跨域通信
+            common.themeSet();
+            common.toggleArea($('.toggle-btn'), $('.toggle-area'));
+
+            var userInfo = JSON.parse(common.getCookie('userInfo'));
+            var currEnterpriseId = userInfo.currEnterpriseVo.seId;
+
+            var currentMenuSmId = $("#currentMenuSmId", window.parent.document).val();
+            //组织机构URL
+            var sysEnterpriseTreeUrl = "sysmgr/sysEnterprise/selectSysEnterpriseOrganPostTreeAllList?treeType=postTree";
+            //用户分页
+            var sysUserPageUrl = baseUrl + "sysmgr/sysUser/selectSysUserPage";
+            //用户组织
+            var sysUserOrgPageUrl = baseUrl + "sysmgr/resUserOrgan/selectResUserOrganPage";
+
+            //分页初始参数
+            var pageInitialParam = {
+                pageNum: 1,
+                pareSize: 10,
+                curr: 1
+            };
+
+            //分页查询参数
+            var pageQueryParam = { "suName": "" };
+            var selectTreeNode = {}
+            var eleTreeId = null;
+            var eventHandle = {
+                treeInit: function () {
+                    formatTree();
+                    common.fetchGet(sysEnterpriseTreeUrl+'&id='+currEnterpriseId+'&extendAttr=enterprise', function (res) {
+                        //树信息的导入
+                        if (res.success && res.list) {
+                            eleTreeId = tree.render({
+                                elem: '#leftTree',
+                                data: res.list,
+                                checkOnClickNode: true,
+                                highlightCurrent: true,    // 是否高亮当前选中节点，默认值是 false。
+                                expandOnClickNode: false,    // 是否在点击节点的时候展开或者收缩节点， 默认值为 true，如果为 false，则只有点箭头图标的时候才会展开或者收缩节点。
+                                showCheckbox: false,
+                                lazy: true,
+                                load: function (data, callback) {
+                                    eventHandle.setQueryParam(data);
+                                    eventHandle.treeReload(data, callback);
+                                }
+                            });
+                            tree.on("nodeClick(leftTree)", function (obj) {
+                                obj.node.select();
+                                var curTreeNode = obj.data.currentData;
+                                pageQueryParam = { "suName": "" };
+                                eventHandle.setQueryParam(curTreeNode);
+                                eventHandle.userTableReload(pageQueryParam);
+                            });
+                        } else {
+                            //不存在数据时的显示
+                        }
+                    }, function () { });
+                },
+                treeReload: function (data, callback) {
+                    common.fetchGet(sysEnterpriseTreeUrl + '&id=' + data.id + '&extendAttr=' + data.extendAttr, function (res) {
+                        if (res.success && res.list) {
+                            callback(res.list)
+                        }
+                    }, function () {
+                        callback([])
+                    });
+                },
+                tableReload: function (ele, url, param) {
+                    //表格重载
+                    table.reload(ele, {
+                        url: url,
+                        method: 'post',
+                        contentType: 'application/json',
+                        page: pageInitialParam,
+                        where: param,
+                        done: function () {
+                            //this.where={};
+                        }
+                    });
+                },
+                userTableReload: function (param) {
+                    this.tableReload('userTable', sysUserPageUrl, param)
+                },
+                orgTableReload: function (param) {
+                    this.tableReload('orgTable', sysUserOrgPageUrl, param)
+                },
+                setQueryParam: function (curTreeNode) {
+                    pageQueryParam["seId"] = curTreeNode.seId;
+                    pageQueryParam["soId"] = curTreeNode.soId;
+                    pageQueryParam["spId"] = curTreeNode.spId;
+                    selectTreeNode["seId"] = curTreeNode.seId;
+                    selectTreeNode["soId"] = curTreeNode.soId;
+                    selectTreeNode["spId"] = curTreeNode.spId;
+                    if (curTreeNode.extendAttr == "enterprise") {
+                        selectTreeNode["seName"] = curTreeNode.name;
+                    }
+                    if (curTreeNode.extendAttr == "organ") {
+                        selectTreeNode["soName"] = curTreeNode.name;
+                    }
+                    if (curTreeNode.extendAttr == "post") {
+                        selectTreeNode["spName"] = curTreeNode.name;
+                    }
+                }
+            };
+            //初始化树
+            eventHandle.treeInit();
+            //初始化下拉列表
+            // eventHandle.initDict(['suJobCode','seId','spId','soId']);
+            // eventHandle.initDict(['editSuJobCode','orgSeId','orgSpId','orgSoId']);
+
+
+            table.render(common.tableInitParams({
+                elem: '#userTable',
+                url: sysUserPageUrl,
+                method: 'post',
+                toolbar: '#userTableToolBar',
+                where:{seId:currEnterpriseId},
+                height: 'full-175',
+                cols: [
+                    [
+                        { type: 'checkbox' },
+                        { "type": "numbers", "title": "序号" },
+                        { field: 'suName', title: '用户名称', width: 200, sort: true, },
+                        { field: 'suLoginCode', title: '用户账号', sort: true },
+                        {
+                            field: 'suSex',
+                            title: '性别',
+                            width: 80,
+                            sort: true,
+                            templet: function (rowData) {
+                                return (rowData["suSex"] === '1') ? '男' : '女';
+                            }
+                        },
+                        { field: 'suTel', title: '手机号码', sort: true },
+                        { field: 'suCnid', title: '身份证号', sort: true },
+                        {
+                            field: 'ggUpdateDatetime',
+                            title: '最后登入时间',
+                            sort: true,
+                            templet: function (rowData) {
+                                return util.toDateString(rowData['ggUpdateDatetime']);
+                            }
+                        },
+                        {
+                            field: 'ggEnStatus',
+                            title: '状态',
+                            width: 100,
+                            sort: true,
+                            templet: function (rowData) {
+                                if (rowData['ggEnStatus'] === '1') {
+                                    return '<span class="layui-badge" style="background-color:#66c33a">启用</span>'
+                                } else {
+                                    return '<span class="layui-badge" style="background-color:#f56c6c">禁用</span>'
+                                }
+                            }
+                        }
+                    ]
+                ],
+                done: function () {
+                    common.buttonLimit();
+                }
+            }));
+
+            //userTable监听事件
+            table.on('toolbar(userTable)', function (obj) {
+                var checkRows = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+                    case 'enable':
+                        var selectedArray = [];
+                        var billId = parent.billId.value;
+
+                        if (!billId) {
+                            layer.msg('议案类型ID未获取。');
+                            return false;
+                        }
+                        for (var j = 0, len = checkRows.data.length; j < len; j++) {
+                            selectedArray.push(checkRows.data[j]);
+                        }
+                        var parms = {
+                            users: selectedArray,
+                            billId: billId
+                        };
+                        var layerLoader = common.layerLoader();
+                        common.fetchPost("catalog/tiolBillTypeUser/saveTiolBillTypeUserByMap", parms, function (res) {
+                            if (res.success) {
+                                layer.msg('新增成功');
+                                parent.window.myTableReload();
+                                layer.close(layerLoader);
+                                parent.layer.closeAll();
+
+                            } else {
+                                layer.close(layerLoader);
+                                layer.alert(res.resultMessage);
+                            }
+                        }, function (res) {
+                            layer.close(layerLoader);
+                            layer.alert(res.resultMessage);
+                        });
+                        break;
+                }
+                return false;
+            });
+
+            form.on('submit(formSearch)', function (obj) {
+                var params = {
+                    suName: obj.field.suName,
+                    suCnid: obj.field.suCnid,
+                    suLoginCode: obj.field.suLoginCode,
+                    suSex: obj.field.suSex,
+                    suTel: obj.field.suTel
+                };
+                eventHandle.userTableReload(params);
+                return false;
+            });
+
+            common.buttonLimit();
+            common.columnSide();
+        });
+
+        /**
+         * 格式化树形控件
+         */
+        function formatTree() {
+            var cacluHeight = $(document).height() - $("#mainMenuTab").height() - $(".layui-card-header").height() - 77;
+            $("#leftTree").css({
+                "height": cacluHeight + "px",
+                "overflow-y": "auto"
+            });
+        }
+    </script>
+    <!--[if lt IE 9]>
+    <script src="../../js/lib/html5.min.js"></script>
+    <script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+
+</html>

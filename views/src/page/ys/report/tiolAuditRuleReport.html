@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+
+<head>
+    <meta charset="UTF-8">
+    <title>上报审核</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../../js/layui/css/layui.css"/>
+    <link href="../../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../../js/lib/jquery.1.12.3.js"></script>
+    <script charset="utf-8" src="../../../js/common/plugin.js"></script>
+    <style>
+        .tip {
+            width: 300px;
+            position: absolute;
+            left: 380px;
+            top: 10px;
+        }
+        .eleTree.eleFill {
+            height: auto;
+            width: 100%;
+            display: none;
+            position: absolute;
+            top:100%;
+            background-color: #fff;
+            z-index: 100;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<!--添加按钮中的弹框-->
+<div class="tiolAuditRuleLayer hide">
+    <div style="padding: 15px 20px">
+        <form class="layui-form layui-form-pane" name="tiolAuditRuleLayer" lay-filter="tiolAuditRuleForm">
+            <!-- 部门id -->
+            <input type="hidden" name="auditRuleId" id="auditRuleId" />
+            <!-- 是否修改密码 -->
+            <input type="hidden" name="seId" id="seId"/>
+            <div class="layui-form-item">
+                <label class="layui-form-label">*</b>企业</label>
+                <div class="layui-input-block">
+                    <input type="text" name="seName" id="seName" class="layui-input" readonly>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">*</b>审核模式</label>
+                <div class="layui-input-block">
+                    <select name="auditRuleMode" id="auditRuleMode">
+                        <option value="0">请选择</option>
+                        <option value="0">不审核</option>
+                        <option value="1">一键审核</option>
+                 <!--        <option value="2">流程引擎</option> -->
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item adapt">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formAdd" permission-btn="addTiolAuditRuleReport"> <i class="layui-icon">&#x1005;</i>保存</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="fillAuditTargetLayer hide">
+    <div style="padding: 15px 20px">
+        <form class="layui-form layui-form-pane" name="fillAuditTargetLayer" lay-filter="fillAuditTargetForm">
+            <input type="hidden" name="fillAuditTargetId" id="fillAuditTargetId"/>
+            <div class="layui-form-item">
+                <label class="layui-form-label">一级类型</label>
+                <div class="layui-input-block">
+                    <select name="targetType" id="targetType" lay-filter="targetTypeSelect">
+                        <option value="">请选择</option>
+                        <option value="ITEM">事项</option>
+                        <option value="REGULATION">制度</option>
+                        <option value="MEETING">会议</option>
+                        <option value="PROPOSAL">议案</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">子级类型</label>
+                <div class="layui-input-block">
+                    <input type="hidden" name="subTargetType" />
+                    <input type="text" name="subTargetTypeName" required="" lay-verify="required" placeholder="请选择" readonly="" autocomplete="off" class="layui-input hyinput">
+                    <div class="eleTree eleFill eleItem" id="itemTree" lay-filter="subTargetTypeData"></div>
+                    <div class="eleTree eleFill eleRegulation" id="regulationTree" lay-filter="subTargetTypeData"></div>
+                    <div class="eleTree eleFill eleMeeting" id="meetingTree" lay-filter="subTargetTypeData"></div>
+                    <div class="eleTree eleFill eleProPosal" id="proposalTree" lay-filter="subTargetTypeData"></div>
+                </div>
+            </div>
+            <div class="layui-form-item adapt">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="fillAuditTargetFormSave" permission-btn="addFillAuditTargetReport"> <i class="layui-icon">&#x1005;</i>保存</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="fillAuditTargetEditLayer hide">
+    <div style="padding: 15px 20px">
+        <form class="layui-form layui-form-pane" name="fillAuditTargetEditLayer" lay-filter="fillAuditTargetForm">
+            <input type="hidden" name="fillAuditTargetId" id="fillAuditTargetId"/>
+            <div class="layui-form-item">
+                <label class="layui-form-label">一级类型</label>
+                <div class="layui-input-block">
+                    <select name="targetType" id="targetType" lay-filter="targetTypeSelect">
+                        <option value="">请选择</option>
+                        <option value="ITEM">事项</option>
+                        <option value="REGULATION">制度</option>
+                        <option value="MEETING">会议</option>
+                        <option value="PROPOSAL">议案</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">子级类型</label>
+                <div class="layui-input-block">
+                    <input type="hidden" name="subTargetType" />
+                    <input type="text" name="subTargetTypeName" required="" lay-verify="required" placeholder="请选择" readonly="" autocomplete="off" class="layui-input hyinput">
+                    <div class="eleTree eleFill eleItem" id="itemTree" lay-filter="subTargetTypeData"></div>
+                    <div class="eleTree eleFill eleRegulation" id="regulationTree" lay-filter="subTargetTypeData"></div>
+                    <div class="eleTree eleFill eleMeeting" id="meetingTree" lay-filter="subTargetTypeData"></div>
+                    <div class="eleTree eleFill eleProPosal" id="proposalTree" lay-filter="subTargetTypeData"></div>
+                </div>
+            </div>
+            <div class="layui-form-item adapt">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="fillAuditTargetFormSave" permission-btn="editFillAuditTargetReport"> <i class="layui-icon">&#x1005;</i>保存</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div class="tiolAuditRuleEditLayer hide">
+    <div style="padding: 15px 20px">
+        <form class="layui-form layui-form-pane" name="tiolAuditRuleEditLayer" lay-filter="tiolAuditRuleEditForm">
+            <!-- 部门id -->
+            <input type="hidden" name="auditRuleId" id="auditRuleId" />
+            <!-- 是否修改密码 -->
+            <input type="hidden" name="seId" id="seId"/>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">*</b>企业</label>
+                <div class="layui-input-block">
+                    <input type="text" name="seName" id="seName"  class="layui-input" readonly>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">*</b>审核模式</label>
+                <div class="layui-input-block">
+                    <select name="auditRuleMode" id="auditRuleMode">
+                        <option value="0">请选择</option>
+                        <option value="0">不审核</option>
+                        <option value="1">一键审核</option>
+                       <!--  <option value="2">流程引擎</option> -->
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item adapt" style="margin-left: 20%">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formEdit" pemission-btn="editTiolAuditRuleReport"> <i class="layui-icon">&#x1005;</i>保存</button>
+                </div>
+            </div>
+        </form>
+        <div id="fillAuditTargetLayer" class="layui-card" style="margin-top: 10px;">
+            <div class="layui-card-body">
+                <table id="fillAuditTargetTable" lay-filter="fillAuditTargetTable"></table>
+                <script type="text/html" id="fillAuditTargetTableToolBar">
+                    <div class="layui-btn-container">
+                        <button class="layui-btn layui-btn-sm" lay-event="add" permission-btn="addFillAuditTargetReport">
+                            <i class="layui-icon">&#xe608;</i> 新增
+                        </button>
+                        <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete" permission-btn="delFillAuditTargetReport">
+                            <i class="layui-icon">&#xe640;</i> 删除
+                        </button>
+                    </div>
+                </script>
+                <script type="text/html" id="fillAuditTargetTableOper">
+                    <a class="layui-btn layui-btn-xs" lay-event="edit" permission-btn="editFillAuditTargetReport">编辑</a>
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+<body class="iframe-h">
+    <div class="content-wrap">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+
+                <div class="layui-card">
+                    <div class="layui-card-header layui-card-header-custom"><span><i></i>上报规则列表</span></div>
+                    <div class="layui-card-body">
+                        <form action="" class="layui-form layui-form-pane">
+                            <div class="layui-row layui-col-space10">
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">单位名称</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="seName" placeholder="请输入" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">状态</label>
+                                        <div class="layui-input-block">
+                                                <select name="ggEnStatus">
+                                                    <option value="">请选择</option>
+                                                    <option value="1">启用</option>
+                                                    <option value="0">禁用</option>
+                                                </select>
+                                            </div>
+                                    </div>
+                                </div>
+                                <div class="formSearch-btnArea">
+                                    <button class="layui-btn" lay-submit lay-filter="formSearch"><i class="fa fa-search"></i>查询</button>
+                                    <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="layui-card">
+                    <div class="layui-card-body" style="padding-top: 0">
+                        <table id="tiolAuditRuleTable" lay-filter="tiolAuditRuleTable"></table>
+                        <script type="text/html" id="tiolAuditRuleTableToolBar">
+                            <div class="layui-btn-container">
+                                <button class="layui-btn layui-btn-sm" lay-event="adds" permission-btn="addTiolAuditRuleReports">
+                                    <i class="layui-icon">&#xe608;</i> 批量新增
+                                </button>
+                                <button class="layui-btn layui-btn-sm" lay-event="add" permission-btn="addTiolAuditRuleReport">
+                                    <i class="layui-icon">&#xe608;</i> 新增
+                                </button>
+                                <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete" permission-btn="delTiolAuditRuleReport">
+                                    <i class="layui-icon">&#xe640;</i> 删除
+                                </button>
+                                <button class="layui-btn layui-btn-sm" lay-event="enable" permission-btn="enableTiolAuditRuleReport">
+                                    <i class="layui-icon ">&#x1005;</i> 启用
+                                </button>
+                                <button class="layui-btn layui-btn-sm layui-btn-warm" lay-event="disable" permission-btn="disableTiolAuditRuleReport">
+                                    <i class="layui-icon ">&#x1007;</i> 禁用
+                                </button>
+                            </div>
+                        </script>
+                        <script type="text/html" id="tiolAuditRuleTableOper">
+                            <a class="layui-btn layui-btn-xs" lay-event="edits" permission-btn="editTiolAuditRuleReports">批量编辑</a>
+                            <a class="layui-btn layui-btn-xs" lay-event="edit" permission-btn="editTiolAuditRuleReport">编辑</a>
+                            <a class="layui-btn layui-btn-xs" lay-event="singleDel" permission-btn="delTiolAuditRuleReport">删除</a>
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./../../../js/layui/layui.js"></script>
+    <script>
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).use(['eleTree','layer','table','form','laytpl','common','util','element'],function () {
+        var table=layui.table;
+        var form=layui.form;
+        var tree=layui.eleTree;
+        var common=layui.common;
+        var util=layui.util;
+        var element = layui.element;
+        element.init();
+        var baseUrl = '../../../../';
+        //跨域通信
+        common.themeSet();
+        common.toggleArea($('.toggle-btn'),$('.toggle-area'));
+
+        var currentMenuSmId=$("#currentMenuSmId",window.parent.document).val();
+        //审核规则分页
+        var tiolAuditRulePageUrl = baseUrl + "reportmgr/tiolAuditRule/queryTiolAuditRulePage";
+        //审核规则删除
+        var tiolAuditRuleDeleteUrl = baseUrl + "reportmgr/tiolAuditRule/deleteTiolAuditRule";
+        //审核规则户禁用
+        var tiolAuditRuleDisableUrl = baseUrl + "reportmgr/tiolAuditRule/disableTiolAuditRule";
+        //审核规则启用
+        var tiolAuditRuleEnableUrl = baseUrl + "reportmgr/tiolAuditRule/enableTiolAuditRule";
+        //审核规则新增
+        var tiolAuditRuleSaveUrl = baseUrl + "reportmgr/tiolAuditRule/saveTiolAuditRule";
+        //审核规则更新
+        var tiolAuditRuleUpdateUrl = baseUrl + "reportmgr/tiolAuditRule/updateTiolAuditRule";
+        //审核规则获取
+        var tiolAuditRuleGetUrl = baseUrl + "reportmgr/tiolAuditRule/selectSysUserInfo";
+        //填报审核对象表组织
+        var fillAuditTargetPageUrl = baseUrl + "reportmgr/fillAuditTarget/queryFillAuditTargetPage";
+        //填报审核对象表获取
+        var fillAuditTargetGetUrl = baseUrl + "reportmgr/fillAuditTarget/selectResUserOrganById";
+        //填报审核对象表保存
+        var fillAuditTargetSaveUrl = baseUrl + "reportmgr/fillAuditTarget/saveFillAuditTarget";
+        //填报审核对象表保存
+        var fillAuditTargetUpdateUrl = baseUrl + "reportmgr/fillAuditTarget/updateFillAuditTarget";
+        //填报审核对象表删除
+        var fillAuditTargetDeleteUrl = baseUrl + "reportmgr/fillAuditTarget/deleteFillAuditTarget";
+
+        //字典获取URL
+        var dictTypeUrl = baseUrl + "sysmgr/dicts/selectDictListByPcode?dictPCode=businessModule";
+
+        var userInfo = common.getUserInfo();
+        //分页查询参数
+        var pageInitialParam = {
+            pageNum : 1,
+            pareSize : 10,
+            curr:1
+        };
+        var subTargetType;
+        var tiolAuditRuleId = '';
+        var selectTreeNode = {}
+        var eleTreeId = null;
+        var eventHandle={
+            tableReload:function (ele,url,param) {
+                //表格重载
+                table.reload(ele, {
+                    url: url,
+                    method: 'post',
+                    contentType: 'application/json',
+                    page: pageInitialParam,
+                    where: param,
+                    done:function(){
+                        //this.where={};
+                    }
+                });
+            },
+            dictInit:function(elem,url,selVal,selText, selectedVal){
+                var option = {
+                        elem: elem,
+                        url: url,
+                        method: 'get',
+                        responseList: 'list',
+                        optionText: selText,
+                        optionValue: selVal,
+                        isExpend: true,
+                        success: function(obj) {
+                            $(elem).val(selectedVal);
+                            form.render("select");
+                        }
+                    }
+                    common.selectDataSet(option);
+            },
+            execCheckBoxRowsEvent:function(data,options){
+                if (data && data.length > 0) {
+                    layer.confirm(options.confirmText, {
+                        icon: 3,
+                        title: '提示',
+                        offset: '150px'
+                    }, function(index) {
+                        var delParam = "";
+                        $.each(data,function(index){
+                            if(index){
+                                delParam +=","
+                            }
+                            delParam += data[index][options.value];
+                        });
+                        common.fetch(options.url + '?' + options.key + '=' + delParam,options.type,{suIds:delParam}, function(res) {
+                            if (res.success) {
+                                layer.msg(options.successText, {
+                                    icon: 6
+                                });
+                                options.success(res.list)
+                            }else{
+                                layer.msg(options.errorText, {
+                                    icon: 5
+                                });
+                            }
+                        }, function() {
+                            options.error([])
+                        });
+                        layer.close(index);
+                    });
+                } else {
+                    layer.msg(options.emptyText);
+                }
+            },
+            tiolAuditRuleTableReload:function(param){
+                this.tableReload('tiolAuditRuleTable',tiolAuditRulePageUrl,param)
+            },
+            fillAuditTargetTableReload:function(param){
+                this.tableReload('fillAuditTargetTable',fillAuditTargetPageUrl,param)
+            },
+            selectInit(obj,type,callback){
+                $(obj.selector).find(".eleProPosal").hide();
+                $(obj.selector).find(".eleItem").hide();
+                $(obj.selector).find(".eleMeeting").hide();
+                $(obj.selector).find(".eleRegulation").hide();
+                var treeOption = {
+                        // elem: $(obj.selector).find("#subTargetTypeTree"),
+                        response: {                 // 对于后台数据重新定义名字
+                            statusName: "success",
+                            statusCode: "0",
+                            dataName: "list"
+                        },
+                        defaultExpandAll: true,
+                        expandOnClickNode: false,
+                        highlightCurrent: true,
+                        done:function(res){
+                            if(typeof(callback) === "function"){
+                                callback(res);
+                            }
+                        }
+                    }
+                var idStr = 'id';
+                var valueStr = 'name';
+                var eleTreeDiv = "";
+                if(type == "PROPOSAL"){
+
+                    treeOption.url = '/catalog/tiolBillType/queryTiolBillTypeTree';
+                    eleTreeDiv = 'eleProPosal';
+                    if($(obj.selector).find("." + eleTreeDiv).html().length <1){
+                        treeOption.elem = $(obj.selector).find("#proposalTree");
+                    }
+                    $(obj.selector).find("." + eleTreeDiv).show();
+                }else if(type == "ITEM"){
+                    treeOption.url = '/catalog/tiolCatalog/selectTiolCatalogTreeList';
+                    eleTreeDiv = 'eleItem';
+                    if($(obj.selector).find("." + eleTreeDiv).html().length <1){
+                        treeOption.elem = $(obj.selector).find("#itemTree");
+                    }
+                    $(obj.selector).find("." + eleTreeDiv).show();
+                }else if(type == "MEETING"){
+                    idStr = 'meetingTypeCode';
+                    valueStr = 'meetingTypeName';
+                    treeOption.url = '/meetingmgr/tiolMeetingType/getTiolMeetingTypeList';
+                    treeOption.request = {     // 对后台返回的数据格式重新定义
+                        name: "meetingTypeName",
+                        key: "meetingTypeCode",
+                    }
+                    eleTreeDiv = 'eleMeeting';
+                    if($(obj.selector).find("." + eleTreeDiv).html().length <1){
+                        treeOption.elem = $(obj.selector).find("#meetingTree");
+                    }
+                    $(obj.selector).find("." + eleTreeDiv).show();
+                }else if(type == "REGULATION"){
+                    idStr = 'regulationTypeId';
+                    valueStr = 'regulationName';
+                    // treeOption.method = 'post';
+                    treeOption.url = '/rulemgr/regulationTypeAlias/getAll';
+                    treeOption.request = {     // 对后台返回的数据格式重新定义
+                        name: "regulationName",
+                        key: "regulationTypeId",
+                    }
+                    eleTreeDiv = 'eleRegulation';
+                    if($(obj.selector).find("." + eleTreeDiv).html().length <1){
+                        treeOption.elem = $(obj.selector).find("#regulationTree");
+                    }
+                    $(obj.selector).find("." + eleTreeDiv).show();
+                }
+
+                $(obj.selector).find("input[name=subTargetTypeName]").off("click")
+                $(obj.selector).find("input[name=subTargetTypeName]").on("click", function(e){
+                    e.stopPropagation();
+                    subTargetType = tree.render(treeOption);
+                    $(obj.selector).find("." + eleTreeDiv).toggle();
+                });
+
+                tree.on("nodeClick(subTargetTypeData)",function(item) {
+                    if(type == "PROPOSAL" || type == "ITEM"){
+                        if (item.data.currentData.isParent) return;
+                    }
+                    $(obj.selector).find("input[name='subTargetTypeName']").val(item.data.currentData[valueStr]);
+                    $(obj.selector).find("input[name='subTargetType']").val(item.data.currentData[idStr]);
+                    $(obj.selector).find("." + eleTreeDiv).hide();
+                });
+            }
+        };
+
+        table.render(common.tableInitParams({
+            elem: '#tiolAuditRuleTable',
+            url: tiolAuditRulePageUrl,
+            method: 'post',
+            toolbar: '#tiolAuditRuleTableToolBar',
+            where: {
+                seId:userInfo.seId,
+                auditRuleType: 'REPORT'
+            },
+            height:'full-175',
+            cols: [
+                [
+                    { type: 'checkbox' },
+                    {"type":"numbers", "title":"序号"},
+                    { field: 'seName', title: '单位名称' },
+                    {
+                        field: 'ggEnStatus',
+                        title: '状态',
+                        width: 100,
+                        templet: function(rowData) {
+                            if(rowData['ggEnStatus'] === '1'){
+                                return '<span class="layui-badge" style="background-color:#66c33a">启用</span>'
+                            }else{
+                                return '<span class="layui-badge" style="background-color:#f56c6c">禁用</span>'
+                            }
+                        }
+                    },
+                    {
+                        field: 'auditRuleMode',
+                        title: '审核模式',
+                        width: 300,
+                        templet: function(rowData) {
+                            if(rowData['auditRuleMode'] === 0){
+                                return '不审核'
+                            }else if(rowData['auditRuleMode'] === 1){
+                                return '一键审核'
+                            }else if(rowData['auditRuleMode'] === 2){
+                                return '流程引擎'
+                            }else{
+                                return '其他'
+                            }
+                        }
+                    },
+                    {field: '', title: '操作', width: 200, toolbar: '#tiolAuditRuleTableOper', fixed: 'right'}
+                ]
+            ],
+            done:function(){
+                common.buttonLimit(currentMenuSmId);
+            }
+        }));
+
+        //userTable监听事件
+        table.on('toolbar(tiolAuditRuleTable)', function(obj) {
+            var checkRows = table.checkStatus(obj.config.id);
+            switch (obj.event) {
+                case 'add':
+                    //点击添加按钮
+                    //  common.clearForm($('.userLayer'));
+                    var userWin = layer.open({
+                        offset: '10px',
+                        title: '新增',
+                        maxmin: false,
+                        type: 1, //页面层
+                        area: ['580px','300px'], //高度自适应
+                        maxHeight: '500px',
+                        shadeClose: false,
+                        content: $('.tiolAuditRuleLayer').html(), //加载该区域的html
+                        // btn:['<i class="fa fa-check-circle"></i>确定','<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>取消'],
+                        success: function(obj) {
+
+                            // $(obj.selector).find('#tiolAuditRuleEditLayer').hide();
+                            $(obj.selector).find('#seName').val(userInfo.seName);
+                            form.on('select(targetTypeSelect)',function(data){
+                                eventHandle.selectInit(obj,data.value);
+                                //　根据不同的一级度展示不同的数据
+                                // eventHandle.initDict(['soId'],$(obj.selector),"se_id='" + data.value +"'");
+                            });
+                            form.render();
+                            form.on('submit(formAdd)', function (obj) {
+                                var params = {
+                                    auditRuleId: '',
+                                    seId: userInfo.seId,
+                                    seName: userInfo.seName,
+                                    auditRuleMode: obj.field.auditRuleMode,
+                                    auditRuleType: 'REPORT'
+                                };
+                                var loading = layer.msg('正在保存中.....', {
+                                    icon: 16,
+                                    shade: 0.3,
+                                    time: 5000
+                                });
+                                common.fetchPost(tiolAuditRuleSaveUrl,params,function(res){
+                                    layer.close(loading);
+                                    if(res.success) {
+                                        layer.msg("保存成功！", {
+                                            icon: 6
+                                        });
+                                        eventHandle.tiolAuditRuleTableReload()
+                                        layer.close(userWin);
+
+                                    } else {
+                                        layer.msg("保存失败！" + res.resultMessage, {
+                                            icon: 5
+                                        });
+                                    }
+                                },function(res){
+                                    if(res && res.resultMessage){
+                                        layer.msg("保存失败！"  + res.resultMessage, {
+                                            icon: 5
+                                        });
+                                    }
+                                    layer.close(loading);
+                                });
+                                return false;
+                            });
+                        },
+
+                    });
+                    break;
+                case 'adds':
+                    //点击批量新增按钮
+                    var userWin = layer.open({
+                        // offset: '10px',
+                        title: '批量新增',
+                        maxmin: false,
+                        type: 2, //页面层
+                        area: ['580px','550px'], //高度自适应
+                        // maxHeight: '500px',
+                        shadeClose: false,
+                        content: baseUrl+'src/page/ys/report/tiolAuditRuleReportAdd.html',
+                        success: function(obj) {
+                        },
+                        end:function(obj){
+                            eventHandle.tiolAuditRuleTableReload();
+                        }
+                    });
+                    break;
+                case 'delete':
+                    //点击删除按钮
+                    var options = {
+                        url: tiolAuditRuleDeleteUrl,
+                        type:'post',
+                        key:'ids',
+                        value:'auditRuleId',
+                        confirmText:'确定删除选中数据?',
+                        emptyText:'请选择删除记录！',
+                        successText:'删除上报规则成功!',
+                        errorText:'删除上报规则失败,请先删除管理信息!',
+                        success:function(obj){eventHandle.tiolAuditRuleTableReload()},
+                        error:function(obj){}
+                    };
+                    eventHandle.execCheckBoxRowsEvent(checkRows.data, options);
+                    break;
+                case 'enable':
+                    //点击启用按钮
+                    var options = {
+                        url: tiolAuditRuleEnableUrl,
+                        type:'post',
+                        key:'ids',
+                        value:'auditRuleId',
+                        confirmText:'确定启用选中数据?',
+                        emptyText:'请选择启用记录！',
+                        successText:'启用上报规则成功!',
+                        errorText:'启用上报规则失败!',
+                        success:function(obj){eventHandle.tiolAuditRuleTableReload()},
+                        error:function(obj){}
+                    };
+                    eventHandle.execCheckBoxRowsEvent(checkRows.data, options);
+                    break;
+                case 'disable':
+                    //点击禁用按钮
+                    var options = {
+                        url: tiolAuditRuleDisableUrl,
+                        type:'post',
+                        key:'ids',
+                        value:'auditRuleId',
+                        confirmText:'确定禁用选中数据?',
+                        emptyText:'请选择禁用记录！',
+                        successText:'禁用上报规则成功!',
+                        errorText:'禁用上报规则失败,请先禁用管理信息!',
+                        success:function(obj){eventHandle.tiolAuditRuleTableReload()},
+                        error:function(obj){}
+                    };
+                    eventHandle.execCheckBoxRowsEvent(checkRows.data, options);
+                    break;
+            }
+        });
+
+        //orgTable监听事件
+        table.on('toolbar(fillAuditTargetTable)', function(data) {
+            var checkRows = table.checkStatus(data.config.id);
+            switch (data.event) {
+                case 'add':
+                    var index = layer.open({
+                        offset: '10px',
+                        title: '新增',
+                        maxmin: false,
+                        type: 1, //页面层
+                        area: ['580px','400px'], //高度自适应
+                        maxHeight: '400px',
+                        shadeClose: false,
+                        content: $('.fillAuditTargetLayer').html(), //加载该区域的html
+                        // btn:['<i class="fa fa-check-circle"></i>确定','<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>取消'],
+                        success: function(obj) {
+                            $(obj.selector).find('adapt').css('marginLeft','10%');
+                            var targetTypeSelect = $(obj.selector).find('#targetType');
+                            form.on('select(targetTypeSelect)',function(data){
+                                $(obj.selector).find("input[name='subTargetTypeName']").val('');
+                                $(obj.selector).find("input[name='subTargetType']").val('');
+                                eventHandle.selectInit(obj,data.value);
+                            });
+                            form.render();
+
+                            form.on('submit(fillAuditTargetFormSave)', function (obj) {
+                                var loading = layer.msg('正在保存中.....', {
+                                    icon: 16,
+                                    shade: 0.3,
+                                    time: 5000
+                                });
+                                var param  = obj.field;
+                                param.targetTypeName = targetTypeSelect.find('option:checked').text();
+                                param.auditRuleId = tiolAuditRuleId;
+                                common.fetchPost(fillAuditTargetSaveUrl,param,function(res){
+                                    layer.close(loading);
+                                    if(res.success) {
+                                        layer.msg("保存成功！", {
+                                            icon: 6
+                                        });
+                                        eventHandle.fillAuditTargetTableReload();
+                                        eventHandle.tiolAuditRuleTableReload();
+                                        layer.close(index);
+                                    } else {
+                                        layer.msg("保存失败！" + res.resultMessage, {
+                                            icon: 5
+                                        });
+                                    }
+
+                                },function(){layer.close(loading);});
+                                return false;
+                            });
+                        },
+
+                    });
+                    break;
+                case 'delete':
+                    //点击删除按钮
+                    var options = {
+                        url: fillAuditTargetDeleteUrl,
+                        type:'post',
+                        key:'ids',
+                        value:'fillAuditTargetId',
+                        confirmText:'确定删除选中数据?',
+                        emptyText:'请选择删除记录！',
+                        successText:'删除上报审核对象成功!',
+                        errorText:'删除上报审核对象失败!',
+                        success:function(obj){eventHandle.fillAuditTargetTableReload()},
+                        error:function(obj){}
+                    };
+                    eventHandle.execCheckBoxRowsEvent(checkRows.data, options);
+                    break;
+            }
+        });
+
+        table.on('tool(tiolAuditRuleTable)', function(obj) {
+            var data = obj.data;
+            switch (obj.event) {
+                case 'edit': //编辑
+                    //原始数据导入
+                    var editWin = layer.open({
+                        offset: '10px',
+                        title: '编辑',
+                        maxmin: false,
+                        type: 1, //页面层
+                        area: ['800px','600px'], //高度自适应
+                        shadeClose: false,
+                        content: $('.tiolAuditRuleEditLayer').html(), //加载该区域的html
+                        success: function(obj) {
+                            form.val('tiolAuditRuleEditForm', data);
+                            //初始化表格
+                            tiolAuditRuleId = data.auditRuleId;
+                            table.render(common.tableInitParams({
+                                elem: $(obj.selector).find('#fillAuditTargetTable'),
+                                url: fillAuditTargetPageUrl,
+                                method: 'post',
+                                height: 'full-200',
+                                toolbar: '#fillAuditTargetTableToolBar',
+
+                                where: {auditRuleId: data.auditRuleId},
+                                cols: [
+                                    [
+                                        { type: 'checkbox' },
+                                        {"type":"numbers", "title":"序号"},
+                                        { field: 'targetTypeName', title: '一级类型', width:200},
+                                        { field: 'subTargetTypeName', title: '子级类型',  width: 200},
+                                        { field: '', title: '操作', width: 80, toolbar: '#fillAuditTargetTableOper', fixed: 'right'}
+                                    ]
+                                ],
+                                done:function(){
+                                    common.buttonLimit(currentMenuSmId);
+                                }
+                            }));
+                            form.on('submit(formEdit)', function (obj) {
+                                var loading = layer.msg('正在保存中.....', {
+                                    icon: 16,
+                                    shade: 0.3,
+                                    time: 5000
+                                });
+                                var param = obj.field;
+                                param.auditRuleType = 'REPORT';
+                                common.fetchPost(tiolAuditRuleUpdateUrl,obj.field,function(res){
+                                    layer.close(loading);
+                                    if(res.success) {
+                                        layer.msg("保存成功！", {
+                                            icon: 6
+                                        });
+                                        eventHandle.tiolAuditRuleTableReload();
+                                        layer.close(editWin);
+                                    } else {
+                                        layer.msg("保存失败！"  + res.resultMessage, {
+                                            icon: 5
+                                        });
+                                    }
+
+                                },function(res){
+                                    if(res && res.resultMessage){
+                                        layer.msg("保存失败！"  + res.resultMessage, {
+                                            icon: 5
+                                        });
+                                    }
+                                    layer.close(loading);
+                                });
+                                return false;
+                            });
+                        }
+                    });
+                    break;
+                case 'edits': //编辑
+                    //原始数据导入
+                    
+                    var editWin = layer.open({
+                        title: '批量编辑',
+                        maxmin: false,
+                        type: 2, //页面层
+                        area: ['580px','550px'], //高度自适应
+                        // maxHeight: '500px',
+                        shadeClose: false,
+                        content: baseUrl+'src/page/ys/report/tiolAuditRuleReportAdd.html?auditRuleMode=' + data.auditRuleMode,
+                        // btn:['<i class="fa fa-check-circle"></i>确定','<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>取消'],
+                        success: function(obj) {
+                        },
+                        end:function(obj){
+                            eventHandle.tiolAuditRuleTableReload();
+                        }
+                    });
+                    break;
+                case 'singleDel':
+                    var selectId = obj.data.auditRuleId;
+                    layer.confirm('确定删除?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                        var layerLoader = common.layerLoader();
+                        common.fetchPost(tiolAuditRuleDeleteUrl + '?ids=' + selectId,{},function (res) {
+                            layer.close(layerLoader);
+                            if(res.success){
+                                eventHandle.tiolAuditRuleTableReload();
+                                layer.msg('删除成功' , {
+                                    time: 4000, //20s后自动关闭
+                                });
+                            }else{
+                                layer.alert(res.resultMessage, {
+                                    icon: 5
+                                });
+                            }
+                        }, function () {
+                            layer.close(layerLoader);
+                        });
+                        layer.close(index);
+                    });
+                    break;
+            }
+        });
+
+        table.on('tool(fillAuditTargetTable)', function(obj) {
+            var data = obj.data;
+            switch (obj.event) {
+                case 'edit': //编辑
+                    var index = layer.open({
+                        offset: '10px',
+                        title: '编辑',
+                        maxmin: false,
+                        type: 1, //页面层
+                        area: ['580px','400px'], //高度自适应
+                        maxHeight: '400px',
+                        shadeClose: false,
+                        content: $('.fillAuditTargetEditLayer').html(), //加载该区域的html
+                        success: function(obj) {
+                            form.val('fillAuditTargetForm', data);
+                            var targetTypeSelect = $(obj.selector).find('#targetType');
+                            eventHandle.selectInit(obj,data.targetType);
+                            form.on('select(targetTypeSelect)',function(data){
+                                $(obj.selector).find("input[name='subTargetTypeName']").val('');
+                                $(obj.selector).find("input[name='subTargetType']").val('');
+                                eventHandle.selectInit(obj,data.value);
+                            });
+                            //初始化表格
+                            form.render();
+                            var seMap = {};
+                            form.on('submit(fillAuditTargetFormSave)', function (obj) {
+                                var loading = layer.msg('正在保存中.....', {
+                                    icon: 16,
+                                    shade: 0.3,
+                                    time: 5000
+                                });
+                                var param  = obj.field;
+                                param.targetTypeName = targetTypeSelect.find('option:checked').text()
+                                param.auditRuleId = tiolAuditRuleId;
+                                common.fetchPost(fillAuditTargetUpdateUrl,param,function(res){
+                                    layer.close(loading);
+                                    if(res.success) {
+                                        layer.msg("保存成功！", {
+                                            icon: 6
+                                        });
+                                        eventHandle.fillAuditTargetTableReload();
+                                        eventHandle.tiolAuditRuleTableReload();
+                                        layer.close(index);
+                                    } else {
+                                        layer.msg("保存失败！"  + res.resultMessage, {
+                                            icon: 5
+                                        });
+                                    }
+                                },function(res){
+                                    if(res && res.resultMessage){
+                                        layer.msg("保存失败！"  + res.resultMessage, {
+                                            icon: 5
+                                        });
+                                    }
+                                    layer.close(loading);
+                                });
+                                return false;
+                            });
+
+                        }
+                    });
+                    break;
+            }
+        });
+
+        form.on('submit(formSearch)',function (obj) {
+            var params= {
+                ggEnStatus:obj.field.ggEnStatus,
+                seId:userInfo.seId,
+                seName:obj.field.seName
+            };
+            eventHandle.tiolAuditRuleTableReload(params);
+            return false;
+        });
+
+        common.buttonLimit(currentMenuSmId);
+        common.columnSide();
+    });
+    </script>
+    <!--[if lt IE 9]>
+    <script src="../../js/lib/html5.min.js"></script>
+    <script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+
+</html>

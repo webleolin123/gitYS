@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>角色权限</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../js/layui/css/layui.css"/>
+    <link href="../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script charset="utf-8" src="../../js/common/plugin.js"></script>
+</head>
+<style>
+    .content{
+        height:100%;
+        width:100%;
+        position:fixed;
+    }
+    .auth-right-padding {
+        padding: 0 0 0 12px;
+        height: 90%;
+    }
+
+</style>
+
+<body class="iframe-h">
+
+<div class="content">
+    <div class="layui-row" id="authContainerFirstRowId"
+         style="width:100%;height:100%; overflow-y: hidden;">
+        <!-- 左边一列 -->
+        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6  auth-right-padding" id="authTreeDivMd1" >
+            <div style="height:100%;overflow-y: auto;overflow-x: hidden;">
+                <blockquote class="layui-elem-quote">菜单按钮树</blockquote>
+                <div class="left_menu_tree" style="padding:0px 0px 0px 6px;width: 95%;height:auto;">
+                    <ul class="eleTree ele4" id="leftTree" lay-filter="leftTree" style="overflow:hidden"></ul>
+                </div>
+            </div>
+        </div>
+        <!-- 右边一列 -->
+        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6  auth-right-padding" id="authTreeDivMd2">
+            <div style="height: 100%;overflow-y: auto;overflow-x: hidden;">
+                <blockquote class="layui-elem-quote">企业用户树</blockquote>
+                <div class="left_menu_tree" style="padding:0px 0px 0px 6px;width: 95%;height:auto;">
+                    <ul class="eleTree ele4" id="rightTree" lay-filter="rightTree"></ul>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block" style="text-align:center;margin-left:0px;padding-top:10px;">
+                <button class="layui-btn" id="saveAuthInfo" permission-btn="saveAuthInfo" title="提交">
+                    <i class="iconfont icon-SZYD-qiyong"></i> 提交</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+<script src="./../../js/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).use(['eleTree','layer','table','form','laytpl','common','element'], function () {
+        var table = layui.table;
+        var form = layui.form;
+        var tree = layui.eleTree;
+        var common = layui.common;
+        var element = layui.element;
+        element.init();
+        var baseUrl = '../../../';
+        var currentMenuSmId=$("#currentMenuSmId",top.window.parent.document).val();
+        common.themeSet();
+
+        var leftTree;
+        var rightTree;
+        var allData = {};
+
+        function storeAllData(list) {
+            if(list && list.length>0) {
+                $.each(list, function () {
+                    allData[this.id] = this;
+                });
+            }
+        }
+
+
+        /*function setCheckedNode(tree, list, id) {
+            if(list && list.length>0){
+                var array = [];
+                $.each(list, function () {
+                    array.push(this[id]);
+                });
+                tree.setChecked(array, false);
+            }
+        }*/
+
+        var eventHandler={
+            //菜单按钮树初始化
+            leftTreeInit: function() {
+                leftTree = tree.render({
+                    elem: '#leftTree',
+                    //url: baseUrl+'sysmgr/menu/selectSysMenuButtonTreeOfRole?isAll=1&srId='+parent.lineData.srId,
+                    url: baseUrl + 'sysmgr/menu/selectAllSysMenuButtonTreeOfRole?srId=' + parent.lineData.srId,
+                    done: function(data){
+                        //console.debug(data.list);
+                        storeAllData(data.list);
+                        $('#leftTree .eleTree-node-content').each(function () {
+                            $(this).click();
+                        });
+                        //加载后展开所有节点
+                        leftTree.expandAll();
+                    },
+                    checkStrictly: false,
+                    showCheckbox: true,
+                    lazy: false,
+                    renderAfterExpand: true,
+                    //defaultExpandAll: true,
+                    load: function(data,callback) {
+                       /*
+                        common.fetchGet(baseUrl+'sysmgr/menu/selectSysMenuButtonTreeOfRole?srId='+parent.lineData.srId+'&smId='+data.id,function (res) {
+                            if(res.success && res.list){
+                                storeAllData(res.list);
+                                callback(res.list);
+
+                                $('#leftTree div.eleTree-node[data-id='+data.id+'] .eleTree-node-group .eleTree-node-content').each(function () {
+                                    $(this).click();
+                                });
+                            }
+                        },function () {
+                            callback([])
+                        });
+                        */
+                    },
+                    response: {                 // 对于后台数据重新定义名字
+                        dataName: "list"
+                    },
+                    request: {                  // 对后台返回的数据格式重新定义
+                        disabled: "nocheck",
+                    },
+                });
+
+            },
+            //菜单按钮树重新载入
+            leftTreeReload: function(){
+
+            },
+            //企业用户树初始化
+            rightTreeInit: function() {
+                rightTree = tree.render({
+                    elem: '#rightTree',
+                    url: baseUrl+'sysmgr/sysEnterprise/selectSysEnterpriseOrganUserTreeOfRole?srId='+parent.lineData.srId+'&seId='+parent.lineData.seId,
+                    done: function(data){
+                        storeAllData(data.list);
+                        $('#rightTree .eleTree-node-content').each(function () {
+                            $(this).click();
+                        })
+                    },
+                    checkStrictly: false,
+                    showCheckbox: true,
+                    lazy: true,
+                    load: function(data,callback) {
+                        common.fetchGet(baseUrl+'sysmgr/sysEnterprise/selectSysEnterpriseOrganUserTreeOfRole?srId='+parent.lineData.srId+'&seId='+parent.lineData.seId+'&extendAttr='+data.extendAttr+'&id='+data.id,function (res) {
+                            if(res.success && res.list){
+                                storeAllData(res.list);
+                                callback(res.list);
+                                $('#rightTree div.eleTree-node[data-id='+data.id+'] .eleTree-node-group .eleTree-node-content').each(function () {
+                                    $(this).click();
+                                });
+                            }
+                        },function () {
+                            callback([])
+                        });
+                    },
+                    response: {
+                        dataName: "list"
+                    },
+                    request:{
+                        disabled:"nocheck"
+                    }
+                });
+            },
+            //企业用户树重新载入
+            rightTreeReload: function(){
+
+            },
+            reloadMenu2Redis:function(){
+                common.fetchGet('sysmgr/menu/initMenuAndButtonAuthByUrl2Redis',function (res) {},function (ero) {});
+            }
+        }
+        $("#saveAuthInfo").on("click",function(){
+            var menuIds = '';
+            var buttonIds = '';
+            var userIds = '';
+            leftTree.getChecked(false, true).forEach(function (value, index, data) {
+                //console.debug(data[index].extendAttr + ":" + value.id);
+                if("button" == data[index].extendAttr){
+                    buttonIds += (buttonIds.length>0?",":"") + value.id;
+                }
+                else if("menu" == data[index].extendAttr){
+                    menuIds += (menuIds.length>0?",":"") + value.id;
+                }
+                /*
+                if(allData[value.id] && "button" == allData[value.id].extendAttr){
+                    buttonIds += (buttonIds.length>0?",":"") + value.id;
+                }
+                else if(allData[value.id] && "menu" == allData[value.id].extendAttr){
+                    menuIds += (menuIds.length>0?",":"") + value.id;
+                }
+                */
+            });
+            rightTree.getChecked(false, false).forEach(function (value, index, data) {
+                if(allData[value.id] && "user" == allData[value.id].extendAttr){
+                    userIds += (userIds.length>0?",":"") + value.id;
+                }
+            });
+            if(userIds.length==0 && (menuIds.length==0 && buttonIds.length==0)){
+                layer.msg("请选择用户或菜单按钮后再提交");
+                return false;
+            }
+            var params = {
+                roleId: parent.lineData.srId,
+                menuIds: menuIds,
+                buttonIds: buttonIds,
+                userIds: userIds
+            };
+            var loadingIndex = layer.load(1, {shade: [0.1,'#fff']});
+            common.fetchPost('sysmgr/sysRole/saveSysAuthInfo', params, function (data) {
+                layer.close(loadingIndex);
+                if(data.success){
+                    eventHandler.reloadMenu2Redis();//异步重新加载菜单与权限关系至Redis。
+                    layer.msg('更新成功');
+                    parent.layer.close(parent.layer.index);
+                }
+                else{
+                    layer.msg(data.resultMessage);
+                }
+            }, function () {
+                layer.close(loadingIndex);
+                layer.msg('更新失败');//失败后提示
+            });
+
+        });
+
+
+        eventHandler.leftTreeInit();
+        eventHandler.rightTreeInit();
+        common.buttonLimit();
+    });
+
+
+</script>
+</body>
+</html>

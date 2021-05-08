@@ -1,0 +1,48 @@
+.jsfw_PopMsg{
+	border:1px solid #98BBEF;
+	background-color:white;
+	padding-top:1px;
+	padding-left:1px;
+	padding-right:1px;
+	padding-bottom:1px;
+	overflow:hidden;
+/*	bottom:10px;
+	width:200px;
+	height:102px;*/
+}
+.jsfw_PopMsg .MsgTitle{
+	height:24px;
+	background-image: url('Title_BG.gif');
+	background-repeat: repeat-x;
+}
+.jsfw_PopMsg .MsgTitle .Title{
+	padding-left:10px;
+	font-weight:bold;
+	cursor:default;
+}
+.jsfw_PopMsg .MsgTitle .Close{
+	width:20px;
+	background-image: url('Close.gif');
+	background-repeat: no-repeat;
+	BACKGROUND-POSITION:50% 40%;
+	cursor:hand;
+}
+.jsfw_PopMsg .MsgContent{
+	padding-top:3px;
+	padding-left:3px;
+	padding-right:3px;
+	padding-bottom:3px;
+/*	width:100%;*/
+/*	height:80px;*/
+	background-color:#F1F7FE;
+	background-image: url('Content_BG.gif');
+	background-repeat: repeat-x;
+	overflow:auto;
+}
+.jsfw_PopMsg .MsgContent .OneLine{
+	width:100%;
+	text-decoration:none; 
+	white-space:nowrap; 
+	text-overflow:ellipsis; 
+	overflow:hidden; 
+}

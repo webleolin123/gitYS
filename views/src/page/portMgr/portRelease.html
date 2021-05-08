@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+    <title>接口发布</title>
+    <link href="../../js/layui/css/layui.css" rel="stylesheet"/>
+    <link href="../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script charset="utf-8" src="../../js/common/plugin.js"></script>
+</head>
+<body class="iframe-h">
+
+<div class="content-wrap">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>接口发布列表</span></div>
+                <div class="layui-card-body">
+                    <form action="" class="layui-form layui-form-pane">
+                        <div class="layui-row layui-col-space10">
+                            <div class="layui-col-xs4">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">接口名称</label>
+                                    <div class="layui-input-block">
+                                        <input autocomplete="off" class="layui-input"
+                                               name="intfName" placeholder="请输入名称" type="text">
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <div class="formSearch-btnArea">
+                                <button class="layui-btn" lay-filter="formSearch" lay-submit><i class="fa fa-search"></i>查询</button>
+                                <button class="layui-btn  layui-btn-primary" type="reset"><i class="fa fa-eraser"></i>重置</button>
+                            </div> -->
+                            <div class="" style="text-align: left;margin-bottom: 5px">
+                                <div class="layui-input-inline" style="padding-left: 20px">
+                                    <button name="searchSubmit" class="layui-btn  " lay-filter="formSearch" lay-submit><i class="fa fa-search"></i>查询</button>
+                                    <button name="reset" lay-filter="reset" type="reset" class="layui-btn layui-btn-primary  "><i class="fa fa-eraser"></i>重置</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="layui-card">
+                <div class="layui-card-body" style="padding-top: 0">
+                    <ul class="portCard layui-row layui-col-space10" id="portList" style="height:700px;">
+                        <!--<li class="layui-col-md2 layui-col-xs4">
+                            <div>
+                                <i class="portIcon fa fa-id-card"></i>
+                                <span class="portName">接口1</span>
+                                <button class="enterBtn layui-btn-normal layui-btn">点击进入</button>
+                            </div>
+                        </li>-->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="./../../js/layui/layui.js"></script>
+<script charset="utf-8" src="../../js/lib/echarts-4.1.0.min.js"></script>
+<script charset="utf-8" src="../../js/lib/echartTheme.js"></script>
+<script>
+
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).extend({
+        custom: 'common/custom'
+    }).use(['custom', 'common', 'table','form'], function () {
+        var common = layui.common;
+        var form = layui.form;
+        common.themeSet();
+        var eventHandle = {
+            intfs:function(param){
+                common.fetchPost('intfmgr/outer/list',param, function (res) {
+                    if (res.page) {
+                        var parent = $('#portList');
+                        var templateHtml = '';
+                        if (res.page.list && res.page.list.length > 0) {
+                            $.map(res.page.list, function (item, index) {
+                                templateHtml += '<li class="layui-col-md2 layui-col-xs4">\n' +
+                                    '                            <div>\n' +
+                                    '                                <i class="portIcon fa fa-id-card"></i>\n' +
+                                    '                                <span class="portName" data-intfInfoId="' + item.intfInfoId + '">' + item.intfName + '</span>\n' +
+                                    '                                <button class="enterBtn layui-btn-normal layui-btn">点击进入</button>\n' +
+                                    '                            </div>\n' +
+                                    '                        </li>';
+                            });
+                        }
+                        parent.empty().html(templateHtml);
+                        $('.portCard li').off().on('click', function () {
+                            // $(window.parent.document).find('.iframe').attr('src', './src/page/portMgr/portDetail.html')
+                            var intfInfoId = $(this).find('.portName').attr('data-intfInfoId');
+                            var portDetail = top.layer.open({
+                                title: '接口详情',
+                                maxmin: false,
+                                type: 2,
+                                shadeClose: false,
+                                content: './../../../src/page/portMgr/portDetail.html',
+                                success: function (layero, index) {
+                                    $("#portData", layero.find("iframe")[0].contentWindow.document).val(intfInfoId);
+                                }
+                            });
+                            top.layer.full(portDetail);
+                        });
+                    }
+                })
+            }
+        }
+        //全部
+        eventHandle.intfs({});
+         //查询
+        form.on('submit(formSearch)',function (obj) {
+            var param={intfName:obj.field.intfName};
+            eventHandle.intfs(param);
+            return false;
+        });
+    });
+
+</script>
+
+<!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

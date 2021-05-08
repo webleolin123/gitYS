@@ -1,0 +1,440 @@
+a {color: black; text-decoration:none;}
+a:hover{text-decoration:none;}
+
+.idx_bottom {background:#257D75 url('bgx.png') repeat-x 0px 0px;}
+.idx_bottom td{color:white; padding:0px 10px;}
+
+.idx_top    {background:white url('bgx.png') repeat-x 0px -50px; color:#264B7D;}
+.idx_top a  {color:#264B7D;}
+.idx_top_bg_0 {background:url('idx_top_bg_0.png') no-repeat 0px 0px; width:864px; height:72px; z-index:0; position:absolute; top:0px; right:0px;}
+
+.idx_top_small {background:white url('bgx.png') repeat-x 0px -125px;}
+
+.idx_top .idx_top_bg_0, .idx_top .idx_Search, .idx_top #imgLogo{display: block;}
+.idx_top_small .idx_top_bg_0, .idx_top_small .idx_Search, .idx_top_small #imgLogo{display: none;}
+
+.idx_top #imgLogoSmall {display: none;}
+.idx_top_small #imgLogoSmall{display: block;}
+
+.idx_top .idx_Links{ top:10px; right:23px;}
+.idx_top .idx_Links a{ color:#003F3C;}
+.idx_top_small .idx_Links{ top:5px; right:45px;}
+.idx_top_small .idx_Links a{ color:#F0FEFD;}
+
+.idx_top .idx_UpDown{ background: url('bg.gif') no-repeat -50px -50px; width:20px;height:20px; cursor: pointer;}
+.idx_top_small .idx_UpDown{ background: url('bg.gif') no-repeat -50px 0px; width:20px;height:20px; cursor: pointer;}
+
+/*.idx_LeftMenu  { background-color: #C0D7F2; }
+.idx_LeftTree  { background-color: #DEE7F6; border-left: 1px solid #A3BED9;}*/
+.idx_Left{background-color: white;}
+.idx_LeftTop{background-color:#118078;}
+.idx_LeftTop_Right{float: right; background: url('bg.png') no-repeat 0px -250px; width: 51px; height: 9px;}
+.idx_Left{border:1px solid #ABD6CE; border-top:none;}
+.idx_LeftBody{background-color:#FDFEFD;}
+
+
+.idx_top #idx_TopMenu {position:absolute;left: 47px; bottom: 0px;}
+.idx_top_small #idx_TopMenu {position:absolute;left: 310px; bottom: 0px;}
+
+.topMenuItem{
+	position:relative;
+	display:inline-block; vertical-align:middle; cursor:pointer; 
+	background: url('bg.png') no-repeat 0px -150px;
+	margin-right: 5px; padding:2px 25px 0px 10px; height:26px !important; height:28px; line-height: 22px;
+	color: #F0FEFD;
+}
+.topMenuItem{*display:inline;} /*写成两行，并且加*是为了解决IE7显示不正常的问题*/
+.topMenuItemSel { background: url('bg.png') repeat-x 0px -100px; color:black; font-weight: bold;}
+.topMenuItem_Right { position:absolute; right:0px; top:0px; background:url('bg.png') no-repeat -200px -150px; width:2px; height:27px;}
+.topMenuItemSel .topMenuItem_Right { position:absolute; right:0px; top:0px; background:url('bg.png') no-repeat -200px -100px; width:2px; height:27px;}
+.topMenuItem_Down {background: url('bg.gif') no-repeat -100px -50px; width: 6px; height: 6px; position: absolute; right: 10px; top:12px;}
+.topMenuItemSel .topMenuItem_Down {background: url('bg.gif') no-repeat -100px 0px;}
+
+.topMenu_Sub{border-bottom: 2px solid #fd8425; width: 110px; }
+.topMenu_SubItem {background-color: #def4f2; color:black; height: 30px; line-height: 28px; border-bottom: 1px solid #f5fcfb; padding-left: 15px; cursor: default;}
+.topMenu_SubItemOver {background-color: #117f7c; color:white; }
+
+
+
+.idx_middle {background-color:#E3F0ED; }
+.idx_middle .SplitBar{background:url('bgy.png') repeat-y 0px 0px;}
+#SplitBar_btn {width:14px; height:73px; position:absolute; left:0px; top:45%;}
+.toleft  {background:url('bg.png') no-repeat -200px 0px;}
+.toright {background:url('bg.png') no-repeat -250px 0px;}
+.SplitBar_top    {background-color:#E3F0ED; height:11px; width:14px; position:absolute; left:0px; top:0px;}
+.SplitBar_bottom {background-color:#E3F0ED; height:6px; width:14px; position:absolute; left:0px; bottom:0px;}
+
+
+body.BodyIndex { overflow: hidden; }
+body.BodyDesktop {background-color: #e3f0ed;}
+body.BodyLeftTree { overflow: hidden; background-color: #f1faf7;}
+
+/*左侧导航树  BEGIN*/
+.BodyLeftTree .jtTreeViewLite .jtTreeNode { border-left: 3px solid #f1faf7; border-top: 1px solid #f1faf7; border-bottom: 1px solid #f1faf7; background-color: #f1faf7; padding-left: 25px;}
+.BodyLeftTree .jtTreeSub { border-top: 1px solid #e0f1ed; }
+.BodyLeftTree .jtTreeViewLite .jtTreeSub .jtTreeNode{ border-left: 3px solid white; border-top: 1px solid white; border-bottom: 1px solid white; background-color: white; }
+.BodyLeftTree .jtTreeViewLite .NodeOver, .BodyLeftTree .jtTreeViewLite .jtTreeSub .NodeOver { border-left: 3px solid #2a837b; border-top: 1px solid #daeee9; border-bottom: 1px solid #daeee9; background-color: #f1f9f7; }
+.BodyLeftTree .jtTreeNode .tnText{ line-height:25px;}
+.BodyLeftTree .jtTreeSub .jtTreeNode .tnText{ line-height:23px;}
+.BodyLeftTree .jtTreeViewLite .NodeFocus{ font-weight: bold; color:#005e5a;}
+
+.BodyLeftTree .jtTreeNode .tnPreExpCol, .BodyLeftTree .IE6 .jtTreeNode .tnPreExpCol{ background:url('bg.gif') no-repeat -100px -100px; }
+.BodyLeftTree .jtTreeNode .tnPreExp, .BodyLeftTree .IE6 .jtTreeNode .tnPreExp    {background:url('bg.gif') no-repeat 0px -100px;}
+.BodyLeftTree .jtTreeNode .tnPreCol, .BodyLeftTree .IE6 .jtTreeNode .tnPreCol    {background:url('bg.gif') no-repeat -50px -100px;}
+.BodyLeftTree .jtTreeSub  .jtTreeNode .tnPreExpCol{ background:url('bg.gif') no-repeat -150px -100px; }
+.BodyLeftTree .NoIcon .tnLeaf, .BodyLeftTree .NoIcon .tnFolder{ display: none;}
+/*左侧导航树  END*/
+
+/*body.BodyIndex .SplitBar{ background: white url('bgy.png') repeat-y 0px 0px; border-left: 1px solid #B7C9E5;}*/
+
+.frameMain_desk {}
+.frameMain {border-left: 1px solid #cfdbda; border-bottom: 1px solid #cfdbda;}
+
+body.BodyList { overflow: hidden; }
+body.BodyTreeList { overflow: hidden; }
+body.BodyTreeList .SplitBar{ background-color: #EDF4FD;}
+body.BodyEdit { overflow: hidden; background-color: white;}
+
+#divCurPosition{padding: 3px; line-height: 25px; padding-left: 20px; background-color: #e1fbf4;}
+
+#divSitebar{ height:30px; position: relative; }
+#divGridSearch,.divGridSearch{ position: absolute; right:20px; top: 3px; }
+#divGridSearch .Button{ margin-left: 1px; }
+.Search_UpDown{ width:20px;height:20px; cursor: pointer;}
+.Search_UpDown_Up{ background: url('bg.gif') no-repeat 0px -50px; cursor: pointer;}
+.Search_UpDown_Down{ background: url('bg.gif') no-repeat 0px 0px; cursor: pointer;}
+#divSearch{ background-color: #fbfafa; border-top: 1px solid #e5e6e6;}
+.searchItem {display: inline-block}
+.searchItem {*display:inline;} /*写成两行，并且加*是为了解决IE7显示不正常的问题*/
+.searchItem .tit{width: 60px; text-align: right;}
+.searchItem .cnt{width: 120px;}
+.searchItem .cnt .input {width: 120px;}
+.searchItem .cnt select {width: 120px; line-height: 24px; height: 24px;}
+.SearchBack { color: red; } 
+
+
+.QueryTable{ border: 1px solid #e0e0e0; border-collapse: collapse;}
+.QueryTable thead td{
+	text-align: center; font-weight: bold; height: 30px; border: 1px solid #e0e0e0;
+	background: url('bgx.png') repeat-x 0px -400px;
+}
+.QueryTable .tit{
+	border-top: 1px solid white; border-right: 1px solid #e0e0e0; background-color: #f7f7f7; 
+	height: 31px; text-align: center;
+}
+.QueryTable .cnt{width: 120px;}
+.QueryTable .cnt .input{width: 450px;}
+
+
+#divFixCnt, #divFixLeft, #divFixMain{overflow:auto;}
+#divFixCnt.GridOnly, #divFixMain.GridOnly{overflow: hidden;}
+.GridOnly{overflow: hidden;}
+
+.GridPageTable td,.GridPageTable a{color: #555}
+.GridPageTable .PageBar_NavDisable{color: #AAA;}
+
+.TableEdit {border: 0px solid #DDDDDD; table-layout:fixed; }
+.TableEdit .must{ background: no-repeat url('must.gif') 100% 0px;}
+.TableEdit .tit{ padding: 6px; width: 120px; text-align: right; border-bottom: 1px solid #DDDDDD; background-color: #FCFCFC; color: #666666; font-weight: bold;}
+.TableEdit .cnt{ padding: 6px; border-left: 1px solid #F5F5F5; border-bottom: 1px solid #DDDDDD;}
+.TableEdit .desc{ color: gray; border-left: 1px solid #F5F5F5; border-bottom: 1px solid #DDDDDD;}
+
+.input {
+	height: 24px; border: 1px solid #AAAAAA;
+}
+.button,.MsgAlertButton {
+	padding: 3px 12px; height: 24px;
+	background: url('bgx.png') no-repeat 0px -450px;
+	border:1px solid #b3d1d4;
+}
+
+.BottomButton{ text-align: right; padding: 10px 3px;}
+input.btnOK,button.btnOK{
+	padding: 3px 22px; height: 24px;
+	background: url('bgx.png') no-repeat 0px -450px;
+	border:1px solid #b3d1d4;
+}
+input.btnCancel,button.btnCancel{
+	padding: 3px 22px; height: 24px;
+	background: url('bgx.png') no-repeat 0px -450px;
+	border:1px solid #b3d1d4;
+}
+
+.TableEdit .cnt .ReadOnly {background-color: #F2F2F2;}
+
+.TableEdit .cnt .Input,
+.TableEdit .cnt .Input_Select,
+.TableEdit .cnt select, 
+.TableEdit .cnt textarea,
+.TableEdit .cnt .CodeEditor,
+.TableEdit table.Input_Button{
+	width:85%;
+}
+
+.jtGridPar .jtGridFoot .PageBar_SelPageSize{width:auto}
+
+.TableEdit table.Input_Button{
+	border: 1px solid #AAAAAA; 
+}
+td.Input_Button_Button{width: 50px; border-left: 1px solid #AAAAAA}
+
+.TableEdit table.Input_Button .Input_Button_Input{
+	width: 100%; border:none;
+}
+.TableEdit table.Input_Button input.Input_Button_Button{
+	width: 50px; border:none; height: 24px; background-color: #DDDDDD; 
+}
+
+
+.imgSubmit {position: absolute;top: -1000px;}
+
+
+.GridHead .GridCell { text-align:center; }
+
+
+.tabItem{
+	display:inline-block; vertical-align:middle; cursor:pointer; 
+	height:31px; line-height:28px; padding:0px; width: 111px; text-align: center; margin-right: -1px; margin-bottom: -1px;
+	background: url('bgx.png') no-repeat 50% -350px;
+	border-left: 1px solid #d1d1d1; border-right: 1px solid #d1d1d1;
+	background-color:#EEE;
+}
+.tabItem{*display:inline;} /*写成两行，并且加*是为了解决IE7显示不正常的问题*/
+.tabItemOver{ }
+.tabItemSel { background: url('bgx.png') no-repeat 50% -300px; }
+.tabCnt     { border:1px solid #e3e3e3; /*background-color: #FAFAFA;*/}
+
+
+.inTabItem{
+	display:inline-block; vertical-align:middle; cursor:pointer; 
+	height:25px; line-height:22px; padding:0px 10px; min-width: 30px; text-align: center; margin-right: -1px; margin-bottom: -1px;
+	border: 1px solid #AAA; border-bottom: 0px solid #d1d1d1;
+	background-color:#f3f3f3;
+}
+.inTabItem{*display:inline;} /*写成两行，并且加*是为了解决IE7显示不正常的问题*/
+.inTabItemOver{ }
+.inTabItemSel { background-color:#CCC; }
+.inTabCnt     { border:1px solid #e3e3e3; /*background-color: #FAFAFA;*/}
+
+
+/******工作桌面[Begin]******/
+.MainTable {margin-bottom: -5px; margin-top: -5px;}
+div.deskItem .tit{ /*后台管理用*/
+	background-color: #99CCFF;
+	height: 20px;
+	position: relative;
+}
+
+table.deskItem     {margin-bottom: 5px;}
+.deskItem .f_LT    {background:url('bg.png') no-repeat -300px -200px; height: 33px; width:7px; }
+.deskItem .f_RT    {background:url('bg.png') no-repeat -310px -200px; height: 33px; width:7px; }
+.deskItem .f_T     {background:url('bgx.png') repeat-x 0px -200px; height: 33px; }
+.deskItem .f_LB    {background:url('bg.png') no-repeat -320px -200px; height: 7px; width:7px; }
+.deskItem .f_RB    {background:url('bg.png') no-repeat -330px -200px; height: 7px; width:7px; }
+.deskItem .f_B     {background:url('bgx.png') repeat-x 0px -250px; height: 7px;}
+.deskItem .f_L     {background: url('bgy.png') repeat-y -100px 0px; width:7px; }
+.deskItem .f_R     {background: url('bgy.png') repeat-y -110px 0px; width:7px; }
+.deskItem .f_CNT   {background-color: white; }
+
+.deskItem .tit_more { float: right; width: 30px; height: 30px; background:url('bg.gif') no-repeat -150px -150px; cursor: pointer; }
+.deskItem .tit_title{
+	background:#00837B url('bg.png') no-repeat 0px -200px; width:220px; height:33px; padding-left:35px; font-weight:bold; color:white; line-height: 34px;
+}
+
+.deskItem .cnt{
+	height: 180px;
+	overflow: auto;
+}
+.deskItem .jtGridPar {border-top: none;}
+/*
+.MainTable {margin-bottom: -5px;}
+.deskItem .tit{
+	background-color: #99CCFF;
+	height: 20px;
+	position: relative;
+}
+.deskItem .tit_title{
+	position:absolute; top: 3px;
+	left: 10px;
+}
+.deskItem .tit_more{
+	position:absolute; top: 3px;
+	right: 3px;
+}
+.deskItem .cnt{
+	border: 1px solid #99CCFF;
+	height: 180px;
+	margin-bottom: 5px;
+	overflow: auto;
+}
+*/
+/******工作桌面[End]******/
+
+/******表单[Begin]******/
+.docTopInfo{ line-height: 30px; text-align: left; }
+.BodyDoc .docTitle{ font-family: 黑体,楷体_GB2312; font-size: 20px; line-height: 30px; text-align: center; word-wrap: break-word; padding-bottom: 10px;}
+
+.BodyDoc .docFav{ cursor:pointer; color: #b0c2c6; padding-left: 25px; height: 30px; line-height: 20px;} 
+.BodyDoc .docFav0{ cursor:pointer; background:url('bg.gif') no-repeat -150px 0px; }
+.BodyDoc .docFav1{ cursor:pointer; background:url('bg.gif') no-repeat -150px -50px; }
+
+
+/**表单表格**/
+.FormTable{ border-collapse1:collapse; table-layout: fixed; margin-bottom:-1px; border-top: 1px solid #E0E0E0; border-left:1px solid #E0E0E0; border-right: none; border-bottom: none;
+}
+
+.FormTable .tit0{ 
+	line-height: 22px; text-align: center;  padding: 5px 0px;
+	background-color: #F3F3F3; border-right: 1px solid #E0E0E0; border-bottom: 1px solid #E0E0E0; border-top: 1px solid white; border-left: none;
+}
+.FormTable .tit{ 
+	width:100px; line-height: 22px; text-align: center;  padding: 5px 0px;
+	background-color: #F3F3F3; border-right: 1px solid #E0E0E0; border-bottom: 1px solid #E0E0E0; border-top: 1px solid white; border-left: none;
+}
+
+
+.FormTable .cnt{ border-right: 1px solid #E0E0E0; border-bottom: 1px solid #E0E0E0; border-top: 1px solid white; border-left: none;}
+.FormTable .must{ background:#F3F3F3 no-repeat url('must.gif') 100% 0px; }
+.FormTable .cnt .input{
+	line-height: 20px; border: 1px solid #b8c8dc; width:100%; display: inline;
+}
+.FormTable .cnt select{
+	width:100%;
+}
+
+.FormTable .cnt input.input{
+	height: 25px;
+}
+
+.FormTable .cnt input.button_select{
+	height: 25px; width: 36px; padding: 0px; text-align: center; border: none; margin-left: 3px;
+	background:#e9f5f6 no-repeat url('bg.png') -100px -250px; 
+}
+
+.FormTable .AttachmentItem{
+	padding: 3px;
+}
+.FormTable .AttachmentItem a {color: #003366;}
+.FormTable .AttachmentItem a:hover{color: blue;}
+
+
+.docFrame #dtCnt_BaseInfo{
+	padding-top: 10px;
+}
+
+.FormTableTitle {
+	background: url('bgx.png') repeat-x 0px -400px;
+	height:30px; line-height: 30px; font-size: 14px; border: 1px solid #dddddd; margin-bottom:5px; margin-top:10px; padding-left: 15px; 
+}
+.FormTableTitle_UpDown{ float: right; width:20px;height:20px; cursor: pointer; margin: 5px 5px 0px 0px;}
+.FormTableTitle_UpDown_Up{ background: url('bg.gif') no-repeat 0px -50px; }
+.FormTableTitle_UpDown_Down{ background: url('bg.gif') no-repeat 0px 0px; }
+
+.FormTableSub{ width:812px !important; width:820px;}
+
+
+
+
+
+.BodyDoc01 {overflow: hidden;}
+.BodyDoc01 #divFixCnt{ background-color: #e9e9e7;}
+.BodyDoc01 .td_docFrame{border: 1px solid #abd6ce;}
+.BodyDoc01 .docFrame{
+	width: 840px !important; width: 900px;min-height: 100%; overflow: visible; text-align: left; padding: 0px 30px;
+	background:white repeat-x url('doc01_bg.png') 0px 0px; 
+}
+.BodyDoc01 .docFrame .tabCnt{ background-color: #fafafa; padding: 10px; }
+.BodyDoc01 .FormTableTitle {width:795px !important; width:820px;}
+.BodyDoc01 .FormTable{ width:812px !important; width:820px; }
+.BodyDoc01 .docTitle{padding-top:10px;}
+
+.BodyDoc02 {overflow: hidden;}
+.BodyDoc02 #divFixCnt{min-height: 100%; background-color: #e3e2e2;}
+.BodyDoc02 .td_docFrame{width: 880px;}
+.BodyDoc02 .docFrame_Paper{ background:#e3e2e2 repeat-x url('doc02_bg.png') 0px 0px; min-height: 100%; }
+.BodyDoc02 .docFrame{
+	width: 828px !important; width: 880px;min-height: 100%; overflow: visible; text-align: left; padding: 0px 26px;
+}
+.BodyDoc02 .docFrame_m{ background: repeat-y url('doc02_frm_m.png') 0px 0px; width: 880px;}
+.BodyDoc02 .docFrame_t{ background: no-repeat url('doc02_frm_t.png') 0px 0px; min-height: 75px; }
+.BodyDoc02 .docFrame_b{ background: no-repeat url('doc02_frm_b.png') 0px 0px; height: 3px; }
+.BodyDoc02 .docFrame .tabCnt{ border:none;}
+.BodyDoc02 #divTabItemPar{ border-bottom: 1px solid #cccccc;}
+
+.SubFrame_Title{ height:24px !important; height: 34px; padding-top: 10px; padding-left: 10px; background: no-repeat url('doc02_lfrm_t.png') 0px 0px; }
+.SubFrame_Content{ background: repeat-y url('doc02_lfrm_m.png') 0px 0px; padding: 0px 4px;}
+/*.SubFrame_Content_IFrame{ width:292px;}*/
+.SubFrame_Bottom{ background: no-repeat url('doc02_lfrm_b.png') 0px 0px; height: 3px; margin-bottom: 5px; }
+.SubFrame_Title .FormTableTitle_UpDown{ margin-top: 0px; margin-right: 10px;}
+
+.BodyDoc02 .docTitle{ color:#000; padding: 20px 30px;}
+.BodyDoc02 .docTopInfo{ }
+
+.BodyDoc02 .FormTable .tit{ 
+	background-color: #f6f6f6;
+}
+
+
+.FormTable .FormTable,.FormTable .FormTableSub{ width:100% !important; width: 100%;}
+/**右侧发送窗口**/
+body.BodySendTo { overflow: hidden; background-color: #e3e2e2;}
+body.BodySendToSelectUser { overflow: hidden; background-color: #f5f5f5; padding:5px; box-sizing: border-box;}
+.BodySendTo .Block{ width: 100%; margin-bottom: 5px;}
+.BodySendTo .BlockTit{font-weight: bold; line-height: 25px; color:#366998;}
+.BodySendTo .BlockCnt{border: 1px solid #d9e6f8; background-color: white; padding: 3px;}
+.BodySendTo .BlockCnt #divMyOpinion{background-color: #ebf5ff;}
+.BodySendTo .BlockDesc{line-height: 25px;}
+.BodySendTo .OpinItem div.title{
+	width: 95%; padding: 0px 3px; line-height: 22px; cursor: pointer;
+	white-space:nowrap; text-overflow:ellipsis; overflow:hidden; 
+}
+.BodySendTo .OpinItemOver{ background-color: #d9e6f8; }
+.BodySendTo .OpinItem .del{display: none;}
+.BodySendTo .OpinItemOver .del{display: inline;}
+
+.FlowPathItem{
+	margin-top: 3px;
+	background:#d8e6f8 no-repeat url('doc02_flowpath.png') 0px 0px;
+	width: 246px; height: 38px; cursor: pointer;  box-sizing: border-box;
+	line-height: 32px; padding-left: 32px; padding-right: 28px;
+	white-space:nowrap; text-overflow:ellipsis; overflow:hidden; 
+}
+
+/******表单[End]******/
+
+.ReaddoTab{
+	text-align: right;
+	margin-top:10px;
+	padding-right:10px;
+}
+
+.ReaddoTab img{
+	margin-top:5px;
+}
+
+.ReaddoContentPane{
+	border:1px solid #E0E0E0;
+	width: 100%;
+	height:auto !important;
+	margin-bottom:5px;
+	margin-right:5px;
+	padding-bottom:10px;
+}
+
+.importantText{
+	font-weight: bold; color: red;
+}
+
+
+
+/****** 扩展控件 ******/
+div.CodeEditor { border: 1px solid #AAAAAA; overflow: auto; }
+div.CodeEditorHighlight { font-family: 'Courier New'; font-size:12px; line-height: 16px; }
+#EUS_List { overflow: auto; }
+#EUS_Tree_TD { border: 1px solid #AAAAAA; padding: 0px; background-color:white; }
+#EUS_List_TD { border: 1px solid #AAAAAA; padding: 0px; background-color:white; }
+#EUS_Tree { overflow: auto; }
+
+.EUS_List_Item { padding: 3px; cursor: pointer; }
+.EUS_List_Item_Over { background-color: #fff3cb; }
+

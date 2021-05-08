@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>版本更新</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../js/layui/css/layui.css"/>
+    <link href="../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script charset="utf-8" src="../../js/common/plugin.js"></script>
+    <style>
+        .white-bg{
+            background: white;
+        }
+        .iframe-h{
+            height: 100%;
+        }
+        .content-wrap{
+            padding: 10px;
+        }
+        .red{
+            color: red;
+            padding-left: 5px;
+        }
+        .hide{
+            display: none;
+        }
+        .upload{
+            margin-top: 15px;
+            margin-left: 20%;
+        }
+        .adapt{
+            margin-top: 15px;
+            margin-left: 10%;
+        }
+    </style>
+</head>
+<!--添加按钮中的弹框-->
+<div class="userLayer hide">
+    <div style="padding: 15px 20px">
+        <form class="layui-form layui-form-pane" name="userLayer">
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>版本号</label>
+                <div class="layui-input-block">
+                    <input type="text" name="versionName" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item" id="versionPath">
+                <label class="layui-form-label"><b class="red">*</b>版本路径</label>
+                <div class="layui-input-block">
+                    <input type="text" name="versionPath"  autocomplete="off" class="layui-input" disabled>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width:100%">备注</label>
+                <div class="layui-input-block" style="margin-left:0;left:0">
+                    <textarea name="versionDesc" placeholder="请输入"  class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item upload">
+                <div class="layui-input-block">
+                    <button type="button" class="layui-btn" id="uploadDemo">选择文件</button>
+                </div>
+            </div>
+            <div class="layui-form-item adapt">
+                <div class="layui-input-block">
+                    <button id="formDemo" class="layui-btn" lay-submit lay-filter="formDemo"> <i class="layui-icon">&#x1005;</i>保存</button>
+                    <button  class="form-close layui-btn layui-btn-primary"><i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>取消</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+</div>
+<body class="iframe-h">
+<div class="content-wrap">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+            <div class="layui-collapse white-bg">
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title white-bg">查询条件</h2>
+                    <div class="layui-colla-content">
+                        <!--layui-form-pane-->
+                        <form action="" class="layui-form layui-form-pane">
+                            <div class="layui-row layui-col-space1">
+                                <div class="layui-col-md6">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">版本号</label>
+                                        <div class="layui-input-block">
+                                            <input id="versionName" type="text" name="versionName"  placeholder="请输入" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-input-block">
+                                        <button class="layui-btn" lay-submit lay-filter="formSearch"><i class="fa fa-search"></i>查询</button>
+                                        <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-card" style="margin-top: 10px">
+                <div class="layui-card-body">
+                    <table id="table1" lay-filter="table1"></table>
+                    <script type="text/html" id="tableToolBar">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-sm" lay-event="add">
+                                <i class="layui-icon">&#xe608;</i> 新增
+                            </button>
+                            <button class="layui-btn layui-btn-sm" lay-event="delete">
+                                <i class="layui-icon">&#xe640;</i> 删除
+                            </button>
+                        </div>
+                    </script>
+
+                    <script type="text/html" id="tableOper">
+                        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="verUp">升级或更新</a>
+                    </script>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="./../../js/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).extend({
+    }).use(['layer','table','form','laytpl','upload','common','element'],function () {
+        var table=layui.table,
+            form=layui.form,
+            upload = layui.upload,
+            common =layui.common,
+            baseUrl='../../../',
+            certLocalPath='';
+        var element = layui.element;
+        element.init();
+        common.themeSet();
+
+        table.render(common.tableInitParams({
+            elem: '#table1',
+            url: baseUrl+'sysmgr/sysVersion/selectSysVersionPage',
+            method:'post',
+            toolbar:'#tableToolBar',
+            cols: [
+                [
+                    {type:'checkbox'},
+                    {field: 'versionName', title: '版本号', width:120, sort: true},
+                    {field: 'versionPath', title: '版本路径',sort:true},
+                    {field: 'versionDesc', title: '备注',sort:true},
+                    {field: '', title: '操作', width: 150, toolbar:'#tableOper',fixed: 'right'},
+                ]
+            ],
+            done: function () {
+                common.buttonLimit();
+            }
+        }));
+
+        var eventHandle={
+            tableReload:function (params) {
+                table.reload('table1',{
+                    url: baseUrl+'sysmgr/sysVersion/selectSysVersionPage',
+                    method:'post',
+                    contentType:'application/json',
+                    page:{
+                        curr:1
+                    },
+                    where:{
+                        smPidOrSmId:params,
+                    }
+
+                });
+            }
+        };
+
+        //table监听事件
+        table.on('toolbar(table1)',function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch(obj.event){
+                case 'add':
+                    //点击添加按钮
+                    //  common.clearForm($('.userLayer'));
+                    layer.open({
+                        offset: '10px',
+                        title:'新增版本升级',
+                        maxmin: false,
+                        type: 1,//页面层
+                        area: ['580px'],//高度自适应
+                        shadeClose: false,
+                        content: $('.userLayer').html(),//加载该区域的html
+
+                        success:function(obj){
+                            form.render();
+                            upload.render(common.uploaderInitParam({
+                                elem:$(obj.selector).find('#uploadDemo'),
+                                url:baseUrl+'sysmgr/sysVersion/uploadPatchFile',
+                                method:'post',
+                                exts:'war', //允许上传的文件后缀
+                                auto:false,
+                                bindAction:$(obj.selector).find('#formDemo'),//指向一个按钮上传
+                                data:{
+                                    versionName:function () {
+                                        return $(obj.selector).find('[name=versionName]').val()
+                                    }
+                                },
+                                choose:function(obj){
+
+                                },
+                                done:function (res, index, upload) {
+
+                                    if(res.success ){
+                                        layer.msg('上传成功',{zIndex:20180510});
+
+                                    }else{
+                                        layer.msg('上传失败',{zIndex:20180510});
+                                    }
+                                }
+                            }));
+
+                            //点击保存按钮
+                            form.on('submit(formDemo)', function (obj) {
+
+                                var params = {
+                                    currentVersion: "",
+                                    file:obj.field.file,
+                                    ggDelStatus: "",
+                                    versionDesc: obj.field.versionDesc,
+                                    versionId: "",
+                                    versionName: obj.field.versionName,
+                                    versionPath: "/home/bigdata/app/version/"+ obj.field.versionName+"/"+$(obj.form).find('.layui-upload-choose').text(),
+                                };
+                                var layerLoader =common.layerLoader();
+
+                                common.fetchGet('sysmgr/sysVersion/findSysVersionVail?validFieldName=VERSION_NAME&versionId=&validFieldValue='+obj.field.versionName, null, function () {});
+
+                                common.fetchPost('sysmgr/sysVersion/saveSysVersionInfo', params, function (data) {
+                                    layer.close(layerLoader);
+                                    eventHandle.tableReload();
+                                    layer.closeAll();
+                                }, function () {
+                                    layer.close(layerLoader);
+                                    layer.msg('添加失败');//失败后提示
+                                    layer.closeAll();
+
+                                });
+                                return false;
+
+
+                            });
+                            //点击取消按钮
+
+                        },
+
+                    });
+                    break;
+                case 'delete':
+                    //点击删除按钮
+                    if(checkStatus.data.length>0){
+                        layer.confirm('确定删除选中列?', {icon: 3, title:'提示',offset: '150px'}, function(index){
+                            var smIdArr=[];
+
+                            for(var i=0;i<checkStatus.data.length;i++){
+                                smIdArr.push(checkStatus.data[i]['versionId'])
+                            }
+                            var layerLoader =common.layerLoader();
+                            common.fetch('sysmgr/sysVersion/deleteSysVersionByIds?versionIds='+smIdArr.join(','),'delete',null,function () {
+                                layer.close(layerLoader);
+                                //成功之后刷新表格
+                                eventHandle.tableReload();
+                                layer.msg('删除成功');
+                            },function () {
+                                layer.close(layerLoader);
+                            });
+
+                            layer.close(index);
+                        });
+                    }else{
+                        layer.msg('请选择删除列')
+                    }
+                    break;
+            }
+        });
+
+        table.on('tool(table1)', function(obj){
+            var data = obj.data;
+            switch(obj.event){
+                case 'verUp':
+                    layer.confirm('是否升级?', {icon: 3, title:'提示',offset: '150px'}, function(index){
+                        layer.msg('升级过程中请您耐心等待几分钟,如果等待超过3分钟请尝试手动刷新浏览器...');
+                        common.fetchPost('sysmgr/sysVersion/upgrade',{'versionId':data.versionId},function () {
+                            // window.location.reload();
+                            history.go(0);
+                        });
+
+                    });
+                    break;
+                case 'edit'://编辑
+                    //原始数据导入
+                    layer.open({
+                        offset: '10px',
+                        title:'编辑',
+                        maxmin: false,
+                        type: 1,//页面层
+                        area: ['580px'],//高度自适应
+                        shadeClose: false,
+                        content: $('.userLayer').html(),//加载该区域的html
+                        success:function (obj) {
+
+                            //初始化表格
+                            form.render();
+                            $(obj.selector).find('input[name=versionName]').val(data.versionName);
+                            $(obj.selector).find('input[name=versionPath]').val(data.versionPath);
+                            $(obj.selector).find('textarea[name=versionDesc]').val(data.versionDesc);
+
+
+                        }
+                    });
+                    break;
+            }
+
+        });
+
+
+        //查询
+        form.on('submit(formSearch)',function (obj) {
+            //表格重载
+            table.reload('table1',{
+                url: baseUrl+'sysmgr/sysVersion/selectSysVersionPage',
+                method:'post',
+                contentType:'application/json',
+                page:{
+                    curr:1
+                },
+                where:{
+                    versionName:obj.field.versionName
+                },
+
+            });
+            return false;
+        });
+
+    });
+
+</script>
+
+<!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+</body>
+</html>

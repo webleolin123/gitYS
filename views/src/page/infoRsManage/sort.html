@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>目录分类</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../js/layui/css/layui.css"/>
+    <link href="../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script src="../../js/common/plugin.js"></script>
+</head>
+
+<!-- 新增/编辑组件弹窗 -->
+<div class="ccLayer hide">
+    <div style="padding: 15px 20px">
+        <form class="layui-form layui-form-pane" lay-filter="addForm">
+                <input type="hidden" name="ccId" id="ccId">
+                <input type="hidden" name="ccPid" id="ccPid">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><b class="red">*</b>名称</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="ccName" required lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><b class="red">*</b>编码</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="ccCode" required lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="layui-col-md12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">单位编码</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="UnitCode" placeholder="请输入" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">单位名称</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="soName" placeholder="请输入" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div> -->
+                    <div class="layui-col-md12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">最终节点</label>
+                            <div class="layui-input-block">
+                                <select name="ccFinal">
+                                    <option value="1">是</option>
+                                    <option value="0">否</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">主题节点</label>
+                            <div class="layui-input-block">
+                                <select name="ccTitle">
+                                    <option value="1">是</option>
+                                    <option value="0">否</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="layui-col-md12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">行政区划编码</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="ccArea" placeholder="请输入" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div> -->
+                    <div class="layui-col-md12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><b class="red">*</b>序号</label>
+                            <div class="layui-input-block">
+                                <input type="number" name="ccOrder" required lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <div class="layui-form-item adapt">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formSavue" currentMenuSmId="updateContentCatagoryAuth" permission-btn="submitContentCategory"><i class="fa fa-check-circle"></i>确定</button>
+                    <button class="layui-btn layui-btn-primary" id="formClose"><i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<body class="iframe-h">
+<div class="content-wrap">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+            <!-- layui tree-->
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>目录分类树</span><div class="columnSide"><i class="fa fa-toggle-left"></i></div></div>
+                <div class="layui-card-body">
+                    <ul id="leftTree" lay-filter="leftTree" class="layuiTree eleTree ele4"></ul>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>目录分类列表</span></div>
+                <div class="layui-card-body">
+                    <form class="layui-form layui-form-pane">
+                        <div class="layui-row layui-col-space10">
+                            <div class="layui-col-md4 layui-col-ms4">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">目录名称</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="ccName" placeholder="请输入" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md4 layui-col-ms4">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">目录编码</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="ccCode" placeholder="请输入" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md4 layui-col-ms4">
+                                <button class="layui-btn" lay-submit lay-filter="formSearch" currentMenuSmId="queryContentCatagoryAuth"><i class="fa fa-search"></i>查询</button>
+                                <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="layui-card">
+                <div class="layui-card-body" style="padding-top: 0">
+                    <table id="table1" lay-filter="table1"></table>
+                    <script type="text/html" id="tableToolBar">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-sm" lay-event="add" currentMenuSmId="addContentCatagoryAuth" permission-btn="addContentCatagoryAuth">
+                                    <i class="layui-icon">&#xe608;</i> 新增
+                            </button>
+                            <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete" currentMenuSmId="delContentCatagoryAuth" permission-btn="delContentCatagoryAuth">
+                                <i class="layui-icon">&#xe640;</i> 删除
+                            </button>
+                            <button class="layui-btn layui-btn-sm" lay-event="enable" currentMenuSmId="updateContentCatagoryAuth" permission-btn="enableContentCategory">
+                                <i class="layui-icon">&#x1005;</i> 启用
+                            </button>
+                            <button class="layui-btn layui-btn-sm" lay-event="disable" currentMenuSmId="updateContentCatagoryAuth" permission-btn="disableContentCategory">
+                                <i class="layui-icon">&#x1007;</i> 禁用
+                            </button>
+                        </div>
+                    </script>
+                    <script type="text/html" id="tableOper">
+                        <a class="layui-btn layui-btn-xs" lay-event="edit" currentMenuSmId="updateContentCatagoryAuth" permission-btn="updateContentCatagoryAuth">
+                            <i class="layui-icon layui-icon-edit"></i> 编辑
+                        </a>
+                        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="singleDel"
+                           currentMenuSmId="delContentCatagoryAuth" permission-btn="delContentCatagoryAuth">
+                            <i class="layui-icon">&#xe640;</i>删除
+                        </a>
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="./../../js/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).extend({
+    }).use(['layer','table','form','laytpl','common','element','eleTree',],function () {
+        var table=layui.table;
+        var form=layui.form;
+        var common=layui.common;
+        var element = layui.element;
+        var tree = layui.eleTree;
+        element.init();
+        var baseUrl='../../../';
+        common.themeSet();
+        var currentMenuSmId=$("#currentMenuSmId", top.window.parent.document).val();
+
+        var catalogTreeUrl = "sysmgr/contentCatagory/queryContentCatagory4Tree";
+        var queryCatalogTreeUrl = "sysmgr/contentCatagory/queryContentCatagory4Page";
+        var saveCatalogUrl = "sysmgr/contentCatagory/saveContentCatagory";
+        var delCatalogUrl = "sysmgr/contentCatagory/deleteContentCatagoryByIds";
+        var enStatusUrl = "sysmgr/contentCatagory/enStatusByIds";
+        var disStatusUrl = "sysmgr/contentCatagory/disStatusByIds";
+
+        var sdPid = "-1";
+        var sdPname = "-1";
+        var sdPidAll = "-1";
+
+        var eleTreeId;
+
+        // var loading = layer.msg('后台忙碌中.....', {
+        //         icon: 16,
+        //         shade: 0.3
+        // });
+        //tree
+        var eventHandle={
+            treeInit:function () {
+                formatTree();
+                common.fetchGet(catalogTreeUrl,function (res) {
+                    //树信息的导入
+                    if(res.success && res.list){
+                        eleTreeId = tree.render({
+                            elem: '#leftTree',
+                            data: res.list,
+                            showCheckbox: false,
+                            lazy: true,
+                            checkOnClickNode: true,
+                            highlightCurrent: true,
+                            load: function(data, callback) {
+                                common.fetchGet(catalogTreeUrl + '?id=' + data.id, function (res) {
+                                    if (res.success && res.list) {
+                                        callback(res.list)
+                                    }
+                                }, function () {
+                                    callback([])
+                                });
+                            }
+                        });
+                        tree.on("nodeClick(leftTree)",function(obj) {
+                            sdPid = obj.data.currentData.id;
+                            sdPname = obj.data.currentData.name;
+                            sdPidAll = obj.data.currentData.pidAll + "," + obj.data.currentData.id;
+                            eventHandle.tableReload(sdPid);
+                        });
+                    }else{
+                        //不存在数据时的显示
+
+                    }
+
+                },function () {});
+            },
+            treeReload:function () {
+                common.fetchGet(catalogTreeUrl,function (res) {
+                    if(res.success && res.list){
+                        eleTreeId.reload({data:res.list});
+                    }
+                });
+            },
+            tableInit: function(){
+                table.render(common.tableInitParams({
+                elem: '#table1',
+                url: baseUrl + queryCatalogTreeUrl,
+                // contentType:'text/plain',
+                method:'post',
+                // request:null,
+                height:  'full-200',
+                defaultToolbar:[],
+                toolbar:'#tableToolBar',
+                cols: [
+                    [
+                        {type:'checkbox'},
+                        {"type":"numbers", "title":"序号"},
+                        {field: 'ccName', title: '目录名称', sort: true},
+                        {field: 'ccCode', title: '目录编码', sort: true},
+                        //{field: 'ccArea', title: '行政区划编码', sort: true},
+                        //{field: 'UnitCode', title: '单位编码', sort: true},
+                        //{field: 'soName', title: '单位名称', sort: true},
+                        {field: '1', title: '最终节点', sort: true,
+                            templet: function(rowData) {
+                                if(rowData['ccFinal'] == 0){
+                                    return '<span>否</span>'
+                                }
+                                else{
+                                    return '<span>是</span>'
+                                }
+                            }
+                        },
+                        {field: '2', title: '主题节点', sort: true,
+                            templet: function(rowData) {
+                                if(rowData['ccTitle'] == 0){
+                                    return '<span>否</span>'
+                                }
+                                else{
+                                    return '<span>是</span>'
+                                }
+                            }
+                        },
+                        {field: '3', title: '状态', width: 100, sort: true,
+                                templet:function (rowData) {
+                                    if (rowData.ggEnStatus == '0') {
+                                        return '<span class="layui-badge" style="background-color:#f56c6c">禁用</span>';
+                                    } else {
+                                        return '<span class="layui-badge" style="background-color:#66c33a">启用</span>';
+                                    }
+                                }
+                        },
+                        {field: '', title: '操作', width:150, toolbar:'#tableOper'}
+                    ]
+                ],
+                done: function(){
+                    common.buttonLimit(currentMenuSmId);
+                },
+                page:true
+            }));
+
+            //table监听事件
+            table.on('toolbar(table1)',function (obj) {
+                var checkStatus = table.checkStatus(obj.config.id);
+                switch(obj.event) {
+                    case 'add':
+                    var index_add=layer.open({
+                        offset: '10px',
+                        title: '新增',
+                        maxmin: false,
+                        type: 1,//页面层
+                        area: ['580px'],//高度自适应
+                        shadeClose: false,
+                        content: $('.ccLayer').html(),//加载该区域的html
+                        // btn:['保存','<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>取消'],
+                        success: function (obj) {
+                            form.render();
+                            $(obj.selector).find('#formClose').off().on('click',function(){
+                                    layer.close(index_add);
+                                    return false;
+                            });
+                            form.render('select');
+                            form.on('submit(formSavue)', function (obj) {
+                                var params = {
+                                    ccId:"",
+                                    ccPid:sdPid,
+                                    ccName:obj.field.ccName,
+                                    ccCode:obj.field.ccCode,
+                                    ccFinal:obj.field.ccFinal,
+                                    ccTitle:obj.field.ccTitle,
+                                    //ccArea:obj.field.ccArea,
+                                    //UnitCode:obj.field.UnitCode,
+                                    ccOrder:obj.field.ccOrder
+                                };
+                                layer.confirm('您确定要保存?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                                    var layerLoader = common.layerLoader();
+                                    common.fetchPost(saveCatalogUrl, params,function (res) {
+                                        //layer.alert(res.resultMessage);
+
+                                        if(res.success){
+                                            layer.close(layerLoader);
+                                            layer.close(index);
+                                            layer.close(index_add);
+                                            layer.alert("成功添加目录分类信息。", {
+                                                icon: 6
+                                            });
+                                            eventHandle.treeReload();
+                                            eventHandle.tableReload();
+                                        }
+                                    }, function () {
+                                        layer.msg('添加失败');//失败后提示
+                                        layer.close(index);
+                                        layer.close(layerLoader);
+                                    });
+                                });
+                                return false;
+                            });
+                        },
+                    });
+                    break;
+                    case 'delete':
+                        //点击删除按钮
+                        if (checkStatus.data.length > 0) {
+                            layer.confirm('确定删除选中列?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                                var tIdArr = [];
+
+                                for (var i = 0; i < checkStatus.data.length; i++) {
+                                    tIdArr.push(checkStatus.data[i].ccId)
+                                }
+
+                                var layerLoader = common.layerLoader();
+                                common.fetchDelete(delCatalogUrl + '?ids=' + tIdArr.join(','),function (res) {
+                                    //layer.alert(res.resultMessage);
+                                    if(res.success){
+                                        layer.close(layerLoader);
+                                        eventHandle.treeReload();
+                                        eventHandle.tableReload();
+                                        layer.alert("成功删除目录分类信息。", {
+                                            icon: 6
+                                        });
+                                    }
+                                }, function (res) {
+                                    layer.msg('删除失败');
+                                    layer.close(layerLoader);
+                                });
+                                layer.close(index);
+                            });
+                        } else {
+                            layer.msg('请选择删除列')
+                        }
+                        break;
+                    case 'refresh':
+                        // eventHandle.tableReload();
+                        break;
+                    case 'init':
+                        layer.msg('已初始化');
+                        break;
+                        case 'enable':
+                    //点击启用按钮
+                    var options = {
+                        url: enStatusUrl,
+                        type:'put',
+                        key:'ids',
+                        value:'ccId',
+                        confirmText:'确定启用选中数据?',
+                        emptyText:'请选择启用记录！',
+                        successText:'启用成功!',
+                        errorText:'启用失败!',
+                        success:function(obj){eventHandle.tableReload()},
+                        error:function(obj){}
+                    }
+                    eventHandle.execCheckBoxRowsEvent(checkStatus.data,options)
+                    break;
+                case 'disable':
+                    //点击禁用按钮
+                    var options = {
+                        url: disStatusUrl,
+                        type:'put',
+                        key:'ids',
+                        value:'ccId',
+                        confirmText:'确定禁用选中数据?',
+                        emptyText:'请选择禁用记录！',
+                        successText:'禁用成功!',
+                        errorText:'禁用失败!',
+                        success:function(obj){eventHandle.tableReload()},
+                        error:function(obj){}
+                    }
+                    eventHandle.execCheckBoxRowsEvent(checkStatus.data,options)
+                    break;
+                }
+            });
+
+            // table row 监听事件
+            table.on('tool(table1)', function(obj){
+                var data = obj.data;
+
+                switch(obj.event){
+                    case 'edit'://编辑
+                        var index_edit=layer.open({
+                            offset: '10px',
+                            title:'编辑',
+                            maxmin: false,
+                            type: 1,//页面层
+                            area: ['580px'],//高度自适应
+                            shadeClose: false,
+                            content: $('.ccLayer').html(),//加载该区域的html
+                            success:function (obj) {
+                                //初始化表格
+                                form.render();
+                                $(obj.selector).find('input[name=ccId]').val(data.ccId);
+                                $(obj.selector).find('input[name=ccPid]').val(data.ccPid);
+                                $(obj.selector).find('input[name=ccName]').val(data.ccName);
+                                $(obj.selector).find('input[name=ccCode]').val(data.ccCode);
+                                $(obj.selector).find('select[name=ccFinal]').val(data.ccFinal);
+                                $(obj.selector).find('select[name=ccTitle]').val(data.ccTitle);
+                                $(obj.selector).find('input[name=ccOrder]').val(data.ccOrder);
+                                // $(obj.selector).find('input[name=ccArea]').val(data.ccArea);
+                                // $(obj.selector).find('input[name=UnitCode]').val(data.UnitCode);
+
+                                $(obj.selector).find('#formClose').off().on('click',function(){
+                                    layer.close(index_edit);
+                                    return false;
+                                });
+                                form.render('select');
+                                //点击保存按钮
+                                form.on('submit(formSavue)', function (obj) {
+                                    var params = {
+                                        ccId:obj.field.ccId,
+                                        ccPid:obj.field.ccPid,
+                                        ccName:obj.field.ccName,
+                                        ccCode:obj.field.ccCode,
+                                        ccFinal:obj.field.ccFinal,
+                                        ccTitle:obj.field.ccTitle,
+                                        // ccArea:obj.field.ccArea,
+                                        // UnitCode:obj.field.UnitCode,
+                                        ccOrder:obj.field.ccOrder
+                                    };
+                                    var layerLoader =common.layerLoader();
+                                    common.fetchPost(saveCatalogUrl, params, function (res) {
+                                        //layer.alert(res.resultMessage);//成功提示
+                                        layer.close(layerLoader);
+                                        //layer.close(index);
+                                        layer.close(index_edit);
+                                        layer.alert("成功修改目录分类信息。", {
+                                            icon: 6
+                                        });
+                                        //表格重载
+                                        eventHandle.treeReload();
+                                        eventHandle.tableReload();
+                                    }, function () {
+                                        layer.close(layerLoader);
+                                        layer.close(layer.index_edit);
+                                        layer.msg('修改失败');//失败后提示
+                                    });
+                                    return false;
+                                });
+                            }
+                        });
+                        break;
+                    case 'singleDel':
+                        var selectId = data.ccId;
+                        layer.confirm('确定删除?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                        var layerLoader = common.layerLoader();
+                        common.fetchDelete(delCatalogUrl + '?ids=' + selectId,function () {
+                            layer.close(layerLoader);
+                            eventHandle.treeReload();
+                            eventHandle.tableReload();
+                            layer.alert("成功删除目录分类信息。", {
+                                icon: 6
+                            });
+                        }, function () {
+                            layer.close(layerLoader);
+                        });
+
+                        layer.close(index);
+                    });
+                        break;
+                }
+                });
+            },
+            tableReload:function (pid) {
+
+                table.reload('table1',{
+                    url: baseUrl+queryCatalogTreeUrl,
+                    method:'post',
+                    contentType:'application/json',
+                    page:{
+                        curr:1
+                    },
+                    where:{
+                        ccPid:pid
+                    }
+                });
+            },
+            execCheckBoxRowsEvent:function(data,options){
+                if (data && data.length > 0) {
+                    layer.confirm(options.confirmText, {
+                        icon: 3,
+                        title: '提示',
+                        offset: '150px'
+                    }, function(index) {
+                        var delParam = "";
+                        $.each(data,function(index){
+                            if(index){
+                                delParam +=","
+                            }
+                            delParam += data[index][options.value];
+                        });
+                        common.fetch(options.url + '?' + options.key + '=' + delParam,options.type,{ids:delParam}, function(res) {
+                            if (res.success) {
+                                layer.msg(options.successText, {
+                                    icon: 6
+                                });
+                                options.success(res.list)
+                            }else{
+                                layer.msg(options.errorText, {
+                                    icon: 5
+                                });
+                            }
+                        }, function() {
+                            options.error([])
+                        });
+                        layer.close(index);
+                    });
+                } else {
+                    layer.msg(options.emptyText);
+                }
+            },
+            formInit: function(){
+                form.on('submit(formSearch)',function (obj) {
+
+                    //表格重载
+                    table.reload('table1',{
+                        url: baseUrl+queryCatalogTreeUrl,
+                        method:'post',
+                        contentType:'application/json',
+                        page:{
+                            curr:1
+                        },
+                        where:{
+                            ccPid:'',
+                            ccName:obj.field.ccName,
+                            ccCode:obj.field.ccCode,
+                        },
+            });
+            return false;
+                });
+            }
+        };
+        //初始化树
+        eventHandle.treeInit();
+        //初始表格
+        eventHandle.tableInit();
+        //初始化查询表单
+        eventHandle.formInit();
+
+        common.buttonLimit();
+        common.columnSide();
+    });
+
+    /**
+     * 格式化树形控件
+     */
+    function formatTree(){
+        var cacluHeight = $(document).height() - $("#mainMenuTab").height() - $(".layui-card-header").height() - 77;
+        $("#leftTree").css({
+            "height": cacluHeight + "px",
+            "overflow-y": "auto"
+        });
+    }
+</script>
+<!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

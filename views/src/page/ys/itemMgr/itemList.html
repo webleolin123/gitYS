@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh" xml:lang="zh" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>事项清单</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+    <link href="../../../js/layui/css/layui.css" rel="stylesheet"/>
+    <link href="../../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../../js/lib/jquery.1.12.3.js"></script>
+    <script charset="utf-8" src="../../../js/common/plugin.js"></script>
+
+    <style>
+        .layui-table tbody tr:hover, .layui-table-click, .layui-table-header, .layui-table-hover, .layui-table-mend, .layui-table-patch, .layui-table-tool, .layui-table-total, .layui-table-total tr, .layui-table[lay-even] tr:nth-child(even) {
+            background-color: transparent;
+        }
+        .ver-list li.selected {
+            border: 1px solid #d30001;
+        }
+        .addColBtn {
+            cursor: pointer;
+        }
+
+        [name=itemAddForm] .layui-form-label {
+            width: 115px;
+        }
+
+        [name=itemAddForm] .layui-input-block {
+            margin-left: 145px;
+        }
+
+        .bg-f7 {
+            font-weight: bold;
+            text-align: center;
+            width: 130px;
+        }
+
+
+        /*事项清单 荣虎add*/
+        .ver-list li {
+            margin-bottom: 10px;
+            border: solid 1px #bcc9d8;
+            height: 64px;
+            position: relative;
+            border-radius: 6px;
+        }
+
+        .ver-list li:hover {
+            border: 1px solid #d30001;
+        }
+
+        .ver-list li span {
+            display: inline-block;
+            float: left;
+            height: 64px;
+        }
+
+        .ver-list li .name {
+            width: 130px;
+            margin-left: 30px;
+            line-height: 64px;
+            overflow: hidden;
+            white-space: nowrap;
+            font-size: 16px;
+        }
+
+        .ver-list li .btn-op {
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 100%;
+            width: 50px;
+            background: #bcc9d8 url(../../../images/icon/icon-op.png) no-repeat center;
+            float: right;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+        }
+
+        .ver-list li .btn-op:hover {
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 100%;
+            width: 50px;
+            background: #d30001 url(../../../images/icon/icon-op.png) no-repeat center;
+            float: right;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+        }
+
+        .ver-list li .icon-status {
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-radius: 5px 0 0 0;
+            width: 39px;
+            height: 41px;
+            background: url(../../../images/icon/bg-ver-list2.png) white no-repeat;
+            background-size: 100%;
+        }
+
+        .ver-list .status-success {
+            border: solid 1px #d30001;
+        }
+
+        .ver-list .status-success .btn-op {
+            background-color: #d30001;
+        }
+
+        .ver-list .status-success .icon-status {
+            background: url(../../../images/icon/bg-ver-list1.png) white no-repeat;
+        }
+
+        .ver-list .operBox {
+            display: none;
+            background: #d30001;
+            position: absolute;
+            top: -1px;
+            right: -103px;
+            z-index: 2;
+            width: 100px;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .ver-list .operBox div {
+            padding: 10px 15px;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .ver-list .operBox div:hover {
+            background: #d30001;
+        }
+
+    </style>
+
+</head>
+<body class="iframe-h itemList">
+<script class="itemMgrLayer" type="text/html">
+    <div class="moduleBox">
+        <form class="layui-form form-theme-table" name="itemAddForm" lay-filter="itemAddForm">
+
+            <div class="layui-form-item">
+                <div class="layui-form-label"><b class="red">*</b>事项名称：</div>
+                <div class="layui-input-block">
+                    <input type="text" class="layui-input" placeholder="请输入事项名称" required name="itemName">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-form-label">目录编码：</div>
+                <div class="layui-input-block">
+                    <input type="text" class="layui-input" value="D03" readonly>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-form-label">事项编码：</div>
+                <div class="layui-input-block">
+                    <input type="text" class="layui-input" value="D03-2019-023" readonly>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-form-label">经法律审核：</div>
+                <div class="layui-input-block">
+                    <input checked="" name="isLaw" title="是" type="radio" value="yes">
+                    <input name="isLaw" title="否" type="radio" value="no">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-form-label">决策会议顺序：</div>
+                <div class="layui-input-block">
+                    <input name="order" lay-filter="order" title="股东会" type="checkbox" value="1">
+                    <input name="order" lay-filter="order" title="董事会办公会" type="checkbox" value="2">
+                    <input name="order" lay-filter="order" title="总裁办公会" type="checkbox" value="2">
+                    <input name="order" lay-filter="order" title="领导办公会" type="checkbox" value="3">
+                </div>
+            </div>
+            <!-- <div class="layui-row layui-layer-btn layui-layer-btn-c" style="margin-top: 20px">
+                 <button class="layui-btn saveItem" lay-submit lay-filter="saveItem"><i class="fa fa-check-circle"></i>确定</button>
+                 <button class="layui-btn layui-btn-primary closeLayer"><i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>取消</button>
+             </div>-->
+        </form>
+    </div>
+</script>
+<script type="text/html" id="oneKeyVeision">
+        <div class="moduleBox">
+            <form class="layui-form form-theme-table" name="oneKeyVeision-add"
+                  lay-filter="oneKeyVeision">
+                  <div class="layui-row layui-col-space4">
+                        <div class="form-theme-table-col layui-col-md6">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">版本:</label>
+                                    <div class="layui-input-block">
+                                        <input class="layui-input" lay-verify="nonChinese" name="listVersion" placeholder="请输入版本号:201901"
+                                               type="number">
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                    <div class="layui-col-md12">
+                        <div class="layui-layer-btn layui-layer-btn-c">
+                            <button class="layui-btn" id="oneKeyAddItemList" lay-submit lay-filter="oneKeyVeision"><i class="fa fa-check-circle"></i>确定</button>
+                            <button type="button" class="layui-btn layui-btn-primary btnClose"><i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+</script>
+<div class="content-wrap">
+    <div class="layui-row layui-col-space10" style="position: relative">
+
+        <div class="layui-col-xs12" style="position: relative">
+            <div class="gloBg">
+                <div class="mainTitle" id="currentEnterprise">-</div>
+                <!--<form action="" class="layui-form" lay-filter="qiyeForm"-->
+                <!--style="position: absolute;right: 10px;top: 10px;">-->
+                <!--<select class="layui-select" lay-fiter="currentEnterpriseSelect"-->
+                <!--name="currentEnterpriseSelect"></select>-->
+                <!--</form>-->
+                <div class="qiyeTreeSet" id="qiyeTreeSet"><i class="fa fa-list"></i><span>下级企业</span></div>
+            </div>
+        </div>
+        <div class="layui-col-xs3" style="position: absolute;left: 0;top: 70px;width: 303px;z-index: 1">
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom" style="border-bottom: none">
+                    <span><i></i>事项清单版本列表</span>
+                </div>
+                <div class="" style="text-align: center;height: 30px">
+                    <button class="layui-btn " id="addItemList" style="width: 72px;height: 35px;margin-right: 3px" permission-btn="itemAdd"><i class="layui-icon">&#xe608;</i>新增
+                    </button>
+                    <button class="layui-btn layui-btn-primary" id="importItemList" permission-btn="itemAdd"
+                            style="width: 72px;height: 35px;margin-right: 8px"><i class="fa fa-sign-out" aria-hidden="true"></i>导入
+                    </button>
+                    <button class="layui-btn layui-btn-primary" id="downloadTemplate" permission-btn="itemTemplate"
+                            style="width: 102px;height: 35px;margin-right: 3px"><i class="fa fa-download" aria-hidden="true"></i>模板下载
+                    </button>
+                </div>
+                <div class="" style="text-align: center;height: 30px">
+                    <button id="oneKeyItemList" class="layui-btn layui-btn-sm layui-btn-primary" style="width: 270px;height: 35px;margin-top: 7px;margin-right: 3px;"
+                     lay-event="oneKeyVeision" permission-btn="oneKeyItemList"><i class="fa fa-list" aria-hidden="true"></i>一键生成清单</button>
+                </div>
+                <div class="layui-card-body" id="versionListBox" style="padding-bottom: 140px;">
+                    <form action="" class="layui-form">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" style="width: 80px;padding-right: 0">版本年限：</label>
+                            <div class="layui-input-block" style="margin-left: 95px">
+                                <select lay-filter="versionYear" name="versionYear">
+                                    <option value="2022">2023</option>
+                                    <option value="2022">2022</option>
+                                    <option value="2021">2021</option>
+                                    <option value="2020">2020</option>
+                                    <option checked=true value="2019">2019</option>
+                                    <option value="2018">2018</option>
+                                    <option value="2017">2017</option>
+                                    <option value="2016">2016</option>
+                                    <option value="2015">2015</option>
+                                    <option value="2014">2014</option>
+                                    <option value="2013">2013</option>
+                                    <option value="2012">2012</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                    <!--<div class="emptyBox" style="margin-top: 20px;text-align: center;color: #999">暂无数据</div>-->
+                    <ul class="clearFix versionList ver-list">
+                        <!--<li>-->
+                        <!--<div class="status-success box">-->
+                        <!--<span class="name">2019323232306</span>-->
+                        <!--&lt;!&ndash;<span class="status ">有效</span>&ndash;&gt;-->
+                        <!--<div class="operIcon">-->
+                        <!--<i class="fa fa-cog"></i>-->
+                        <!--<div class="operBox">-->
+                        <!--<div><i class="fa fa-copy"></i>复制</div>-->
+                        <!--<div><i class="fa fa-edit"></i>修改</div>-->
+                        <!--<div><i class="icon iconfont icon-button-sc-2"></i>删除</div>-->
+                        <!--</div>-->
+                        <!--</div>-->
+                        <!--</div>-->
+                        <!--</li>-->
+                    </ul>
+                    <!--<div style="padding: 10px;text-align: center">-->
+                    <!--<div class="layui-btn layui-btn-lg layui-btn-primary" id="addItemList" style="width: 100%;"> +-->
+                    <!--新增-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    <!--<div style="padding: 10px;text-align: center">-->
+                    <!--<div class="layui-btn layui-btn-lg layui-btn-primary" id="importItemList" style="width: 100%;"> +-->
+                    <!--导入-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    <!-- <div style="padding: 10px;text-align: center">
+                    <div class="layui-btn layui-btn-lg layui-btn-primary" id="historyStone" style="width: 100%;">
+                        历史数据升迁
+                    </div>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs12" style="padding-left: 308px;z-index: 0">
+            <div class="moduleBox">
+                <!--<div class="gloStep" style="padding-top: 10px">
+                    <ul>
+                        <li class="selected step1">
+                            <span>选择目录项</span>
+                            <b class="line"></b>
+                        </li>
+                        <li class="step2">
+                            <span>调整事项</span>
+                        </li>
+                    </ul>
+                </div>-->
+                <div style="padding: 0 10px 10px 10px">
+                    <!--新增编辑面板-->
+                    <div class="addEditItemDetail" style="display: none">
+                        <form action="" class="layui-form form-theme-table" lay-fiter="detailForm">
+                            <div class="layui-row layui-col-space4">
+                                <input name="gloItemId" type="hidden">
+                                <div class="form-theme-table-col layui-col-md6 listNameArea">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">清单名称:</label>
+                                        <div class="layui-input-block">
+                                            <input class="layui-input" name="listName" placeholder="请输入清单名称"
+                                                   type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-theme-table-col layui-col-md6">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">版本:</label>
+                                        <div class="layui-input-block">
+                                            <input class="layui-input" lay-verify="nonChinese" name="listVersion" placeholder="请输入版本号:201901"
+                                                   type="number">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-theme-table-col layui-col-md6">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">有效时间:</label>
+                                        <div class="layui-input-block">
+                                            <input class="layui-input" name="date1" placeholder="请选择时间" type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-theme-table-col layui-col-md6 systemFlowSetArea">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">流程配置:</label>
+                                        <div class="layui-input-block">
+                                            <div style="position: relative;padding-right: 70px">
+                                                <input name="flowLabel" type="hidden">
+                                                <input class="layui-input" name="flowName" placeholder="请选择配置流程"
+                                                       readonly
+                                                       style="display: inline-block;z-index: 0"
+                                                       type="text">
+                                                <div class="layui-btn layui-btn-primary" id="configFlowBtn"
+                                                     style="position: absolute;right: 0;top: 3px;z-index: 1">配置
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-theme-table-col layui-col-md6 remarkArea">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">描述:</label>
+                                        <div class="layui-input-block">
+                                            <textarea class="layui-textarea" name="remark"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-theme-table-col layui-col-md6 fileUploadListArea"
+                                     style="margin-top: 10px">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">佐证:</label>
+                                        <div class="layui-input-block">
+                                            <div class="fileUploadList" id="fileUploadListBox">
+                                                <ul class="clearFix" style="border-bottom: none;padding-top: 0">
+                                                    <li class="firstBox" id="fileUploadList">
+                                                        <i class="fa fa-plus"></i>
+                                                    </li>
+                                                    <!--<li filename="这是个文件名称这是个文件名称这是个文件名称">
+                                                        <div class="fileSingleBox">
+                                                            <p class="fileName" title="这是个文件名称这是个文件名称这是个文件名称">
+                                                                这是个文件名称这是个文件名称这是个文件名称
+                                                            </p>
+                                                            <p>
+                                                                <i class="fa fa-file-text-o"></i><b
+                                                                    class="fileSize">74.kb</b>
+                                                            </p>
+                                                            <div class="box-close-btn fileDelete">
+                                                                <i class="fa fa-close"></i>
+                                                            </div>
+                                                        </div>
+                                                    </li>-->
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <!--<div class="form-theme-table" style="margin-top: 10px">-->
+                        <!--<div class="layui-form-item">-->
+                        <!--<label class="layui-form-label">佐证:</label>-->
+                        <!--<div class="layui-input-block">-->
+                        <!--<div class="fileUploadList" id="fileUploadListBox">-->
+                        <!--<ul class="clearFix" style="border-bottom: none;padding-top: 0">-->
+                        <!--<li class="firstBox" id="fileUploadList">-->
+                        <!--<i class="fa fa-plus"></i>-->
+                        <!--</li>-->
+                        <!--&lt;!&ndash;<li filename="这是个文件名称这是个文件名称这是个文件名称">-->
+                        <!--<div class="fileSingleBox">-->
+                        <!--<p class="fileName" title="这是个文件名称这是个文件名称这是个文件名称">-->
+                        <!--这是个文件名称这是个文件名称这是个文件名称-->
+                        <!--</p>-->
+                        <!--<p>-->
+                        <!--<i class="fa fa-file-text-o"></i><b-->
+                        <!--</p>-->
+                        <!--<div class="box-close-btn fileDelete">-->
+                        <!--<i class="fa fa-close"></i>-->
+                        <!--</div>-->
+                        <!--</div>-->
+                        <!--</li>&ndash;&gt;-->
+                        <!--</ul>-->
+                        <!--</div>-->
+                        <!--</div>-->
+                        <!--</div>-->
+                        <!--</div>-->
+                        <!--  <div class="layui-row layui-layer-btn layui-layer-btn-c">
+                              <button class="layui-btn  " id="saveFormData"> <i class="layui-icon">&#x1005;</i>保存</button>
+                              <button class="layui-btn layui-btn-primary" type="reset"><i class="fa fa-eraser"></i>重置</button>
+                          </div>-->
+                    </div>
+                    <!--查看面板-->
+                    <div class="viewItemDetail" style="display: none">
+                        <div class="itemDetailName" style="font-size: 18px;text-align: center;line-height: 40px">-</div>
+                        <table class="layui-table">
+                            <tr>
+                                <td class="bg-f7 systemFlowSetArea" style="width: 80px">流程名称</td>
+                                <td class="flowName systemFlowSetArea" style="background: white">-</td>
+                            </tr>
+                            <tr>
+                                <td class="bg-f7">佐证</td>
+                                <td style="background: white">
+                                    <div class="a-link fileName">-</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-f7 ">有效期</td>
+                                <td class="listDate" style="background: white"></td>
+                            </tr>
+                            <tr>
+                                <td class="bg-f7 ">描述</td>
+                                <td class="descName" style="background: white"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+
+                <div id="refreshBtn" style="display: none"></div>
+            </div>
+            <div class="layui-col-xs12" style="margin-top: 10px">
+                <div class="layui-tab layui-tab-card  gloBg" lay-filter="stepTep">
+                    <ul class="layui-tab-title whiteTab">
+                        <li class="layui-this">清单列表</li>
+                        <!--<li class="ydListTab" style="display: none">流程图</li>-->
+                    </ul>
+                    <div class="layui-tab-content" style="min-height: 200px;padding-bottom: 80px">
+                        <div class="layui-tab-item layui-show" style="position: relative">
+                            <div class="step-one">
+                                <div class="addOrEditPanel" style="display: none">
+                                    <div class="" style="font-size: 14px;padding: 10px;color: #666;">
+                                        <i class="fa fa-info-circle" style="margin-right: 10px"></i>
+                                        提示：通过点击事项目录编码进行筛选
+                                    </div>
+
+                                    <table class="layui-table item-table" id="mergeTable" lay-filter="mergeTable">
+                                        <thead>
+                                        <tr class="bg-f7">
+                                            <th colspan="3">事项目录</th>
+                                            <th style="width: 90px">事项目录编码</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                    <div class="itemBtnAbsolute">
+                                        <button class="layui-btn layui-btn-lg" id="nextStep">
+                                            <i class="fa fa-arrow-down" aria-hidden="true"></i>
+                                            下一步
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="viewPanel" style="display: none">
+                                    <table class="layui-table item-table" id="mergeViewTable"
+                                           lay-filter="mergeViewTable">
+                                        <thead>
+                                        <tr class="bg-f7">
+                                            <th colspan="3">事项目录</th>
+                                            <th style="width: 135px">事项目录编码</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="step-two" style="display: none;min-height: 300px">
+
+                                <div class="headerArea clearFix" style="padding: 0 0 10px;">
+                                    <div class="fright">
+                                        <ul class="clearFix colorDesList">
+                                            <li>
+                                                <i class="fa fa-square primary"></i>已上报
+                                                <span></span>
+                                            </li>
+                                            <li>
+                                            <i class="fa fa-square danger"></i>删除
+                                                <span></span>
+                                            </li>
+                                            <li>
+                                                <i class="fa fa-square green"></i>有效
+                                                <span></span>
+                                            </li>
+                                            <li>
+                                                <i class="fa fa-square warning"></i>未生效
+                                                <span></span>
+                                            </li>
+                                            <li>
+                                                <i class="fa fa-square gray"></i>已失效
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="itemBtnAbsolute">
+                                        <button class="layui-btn layui-btn-primary layui-btn-lg" id="prevStep"><i class="fa fa-arrow-up"></i>上一步
+                                        </button>
+                                        <button class="layui-btn layui-btn-lg" id="saveData" permission-btn="itemEdit"><i class="layui-icon">&#xe605;</i>提交</button>
+                                    </div>
+                                </div>
+
+                                <table class="layui-table item-table" id="selectedTable" lay-filter="selectedTable">
+                                    <thead>
+                                    <tr class="bg-f7">
+                                        <th colspan="3">事项目录</th>
+                                        <th style="width: 135px">事项目录编码</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                        <!--<div class="layui-tab-item ydListTab" style="display: none">-->
+                        <!--&lt;!&ndash;流程引擎&ndash;&gt;-->
+                        <!--<div style="min-height: 400px"></div>-->
+                        <!--</div>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="leftContendBox" id="leftContendBox1">
+
+    <div class="header-custom"><i></i>企业层级</div>
+    <div style="padding: 5px 10px">
+        <!--下级企业层级导入-->
+        <!-- <div class="searchInput">
+            <i class=" layui-icon layui-icon-search"></i>
+            <input class="layui-input " id="searchTree" placeholder="请输入关键字" type="text">
+        </div> -->
+        <div class="layuiTree eleTree ele4" id="leftTree" lay-filter="leftTree"
+             style="overflow-y: auto;margin-top: 10px"></div>
+    </div>
+    <div style="text-align: center;bottom: 10px;position: absolute;width: 100%;left: 0;background: white;padding: 10px 0;">
+        <button class="layui-btn " id="qiyeSet"><i class="fa fa-check-circle"></i>确定</button>
+        <button class="layui-btn layui-btn-primary" id="qiyeClose"><i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>取消</button>
+    </div>
+</div>
+<div class="leftContendBox" id="leftContendBox2">
+
+    <!--<div class="moduleBox">
+        &lt;!&ndash;<div class="custom-title">流程日志</div>&ndash;&gt;
+        <div class="gloEmptyBox flowDataBox" style="display: none">
+            <div class="emptyDataArea emptyDatFlow">
+                <img alt="" src="../../../images/emptyImg.png">
+                <span>流程信息</span>
+            </div>
+            &lt;!&ndash;<div class="verticalTimeLine " style="width: 50%">
+                &lt;!&ndash;  <div class="timeItem">
+                      <i class="lineIcon fa fa-send-o"></i>
+                      <span class="time">环节1 <b
+                              style="font-weight: normal;margin-left: 10px;display: inline-block">2019-09-01</b></span>
+                      <div class="content">
+                          <table class="layui-table custom-table">
+                              <tr>
+                                  <td class="bg-f7">
+                                      <div class="userHeader small-size"
+                                           style="padding: 0">
+                                          <img alt="" src="../../../images/erweima.jpg">
+                                      </div>
+                                      <div style="display: inline-block">
+                                          张三&#45;&#45; 国资委公共厅
+                                      </div>
+                                      <div class="status passIcon"></div>
+                                  </td>
+                              </tr>
+                              <tr>
+                                  <td>
+                                      同意申请
+                                  </td>
+                              </tr>
+
+                          </table>
+                      </div>
+                  </div>
+                  <div class="timeItem">
+                      <i class="lineIcon fa fa-send-o"></i>
+                      <span class="time">环节2 <b
+                              style="font-weight: normal;margin-left: 10px;display: inline-block">2019-09-01</b></span>
+                      <div class="content">
+                          <table class="layui-table custom-table">
+                              <tr>
+                                  <td class="bg-f7">
+                                      <div class="userHeader small-size"
+                                           style="padding: 0">
+                                          <img alt="" src="../../../images/erweima.jpg">
+                                      </div>
+                                      <div style="display: inline-block">张三&#45;&#45;
+                                          国资委公共厅
+                                      </div>
+                                      <div class="status unpassIcon"></div>
+                                  </td>
+                              </tr>
+                              <tr>
+                                  <td>
+                                      不同意申请
+                                  </td>
+                              </tr>
+
+                          </table>
+                      </div>
+                  </div>&ndash;&gt;
+            </div>&ndash;&gt;
+
+            &lt;!&ndash;http://114.116.50.179:8080/src/page/process/newTemplateByBizDisplay.html&ndash;&gt;
+
+        </div>
+
+        &lt;!&ndash;<div class="newTemplateByBizDisplay"></div>&ndash;&gt;
+    </div>-->
+    <div id="editFlow" style="height: 100%"></div>
+    <div id="showFlow"></div>
+    <div style="text-align: center;bottom: 20px;position: absolute;width: 100%;left: 0">
+        <button class="layui-btn " id="saveFlowBtn"><i class="fa fa-check-circle"></i>确定</button>
+        <button class="layui-btn layui-btn-primary" id="cancleFlowBtn"><i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>取消</button>
+    </div>
+</div>
+<div class="mainMack"></div>
+<script src="../../../js/layui/layui.js"></script>
+<script charset="utf-8" src="../../../js/lib/echarts-4.1.0.min.js"></script>
+<script charset="utf-8" src="../../../js/lib/echartTheme.js"></script>
+<script src="../../../js/module/ys/itemMgr/itemList.js"></script>
+<!--[if lt IE 9]>
+<script src="../../../js/lib/html5.min.js"></script>
+<script src="../../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

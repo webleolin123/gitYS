@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html  class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>制度统计</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../../js/layui/css/layui.css"/>
+    <link href="../../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../../js/lib/jquery.1.9.1.js"></script>
+</head>
+
+<style>
+
+    /*  .layui-table-cell, .layui-table-tool-panel li {
+          white-space: normal;
+      }
+
+      thead .layui-table-cell {
+          min-height: 28px;
+          height: auto;
+      }*/
+    .layui-table-cell {
+        height: auto;
+        line-height: 28px;
+        padding: 0 15px;
+        position: relative;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: normal;
+        box-sizing: border-box;
+    }
+</style>
+<body class="iframe-h">
+
+<div class="content-wrap">
+    <div class="layui-row layui-col-space15">
+        <!-- <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+
+            <div class="layui-card" >
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>组织架构树</span><div class="columnSide"><i class="fa fa-toggle-left"></i></div></div>
+                <div class="layui-card-body" >
+                    <input type="text" placeholder="请输入关键字进行查询" autocomplete="off" class="layui-input eleTree-search">
+                    <div class="eleTree ele4" id="leftTree"  lay-filter="leftTree"></div>
+                </div>
+            </div>
+        </div> -->
+        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>制度统计列表</span></div>
+                <div class="layui-card-body">
+                    <form action="" class="layui-form layui-form-pane">
+                        <div class="layui-row layui-col-space10">
+                            <div class="layui-col-md4">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">制度类型</label>
+                                    <div class="layui-input-block">
+                                        <select name="huyi1" id="huiyi1">
+                                            <option value="">请选择</option>
+                                            <option value="1">类型1</option>
+                                            <option value="2">类型2</option>
+                                            <option value="3">类型3</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md4">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">制度名称</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="title" required  lay-verify="required" placeholder="请输入名称" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="toggle-area layui-col-space10">
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">制度时间</label>
+                                        <div class="layui-input-block">
+                                            <input autocomplete="off" class="layui-input" id="date1"  lay-verify="required" name="title" placeholder="请输入时间" required type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--<div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label" title="三重一大事项">三重一大事项</label>
+                                        <div class="layui-input-block">
+                                            <select name="huyi1" >
+                                                <option value="">三重一大事项</option>
+                                                <option value="1">事项1</option>
+                                                <option value="2">事项2</option>
+                                                <option value="3">事项3</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>-->
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">是否上报</label>
+                                        <div class="layui-input-block">
+                                            <select name="huyi1" >
+                                                <option value="">请选择</option>
+                                                <option value="1">是</option>
+                                                <option value="2">否</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label" title="是否含有三重一大议题">是否含有三重一大议题</label>
+                                        <div class="layui-input-block">
+                                            <select name="huyi1" >
+                                                <option value="">是否含有三重一大议题</option>
+                                                <option value="1">是</option>
+                                                <option value="2">否</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label" title="是否已上报国资委">是否已上报国资委</label>
+                                        <div class="layui-input-block">
+                                            <select name="huyi1" >
+                                                <option value="">是否已上报国资委</option>
+                                                <option value="1">是</option>
+                                                <option value="2">否</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--<div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label" title="异常情况">异常情况</label>
+                                        <div class="layui-input-block">
+                                            <select name="huyi1" >
+                                                <option value="">异常情况</option>
+                                                <option value="1">正常</option>
+                                                <option value="2">异常</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>-->
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label" title="上报议题数量">上报议题数量</label>
+                                        <div class="layui-input-block">
+                                            <input autocomplete="off" class="layui-input" lay-verify="required"  name="title" placeholder="上报议题数量" required type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <div class="" style="text-align: center;margin-bottom: 5px">
+                                <button class="layui-btn"><i class="fa fa-search"></i>查询</button>
+                                <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                                <a class="toggle-btn">
+                                    <span>展开</span>
+                                    <i class="fa fa-angle-up"></i>
+                                </a>
+                            </div> -->
+                            <div class=""
+                                 style="text-align: center; margin-bottom: 5px;position: absolute;width: 33%;right: 0;bottom: 8px;">
+                                <div class="layui-input-inline" style="padding-left: 20px">
+                                    <button name="searchSubmit" class="layui-btn  " lay-submit="" lay-filter="formSearch" ><i class="fa fa-search"></i>查询</button>
+                                    <button name="reset" lay-filter="reset" type="reset" class="layui-btn layui-btn-primary  "><i class="fa fa-eraser"></i>重置</button>
+                                    <a class="toggle-btn">
+                                    <span>展开</span><i class="fa fa-angle-up"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="layui-card" >
+                <div class="">
+
+                    <div class="layui-card-header layui-card-header-custom"><span><i></i>上报统计情况</span></div>
+                    <div class="layui-card-body">
+                        <div class="echartArea">
+                            <div class="layui-row layui-col-space10">
+                                <div class="layui-col-sm4">
+                                    <div class="box-title" style="margin-bottom: 10px">三重一大制度占比</div>
+                                    <div >
+                                        <div id="echart1" style="height: 180px;width: 100%;"></div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-sm4">
+                                    <div class="box-title"  style="margin-bottom: 10px">三重一大制度上报占比</div>
+                                    <div >
+                                        <div id="echart2" style="height: 180px;width: 100%;"></div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-sm4">
+                                    <div class="box-title"  style="margin-bottom: 10px">三重一大制度上报情况</div>
+                                    <div >
+                                        <div id="echart3" style="height: 180px;width: 100%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <table id="table1" lay-filter="table1"></table>
+                        <script type="text/html" id="tableToolBar">
+                            <!--
+                            <div class="layui-btn-container">
+                                <button class="layui-btn layui-btn-sm" lay-event="add1">
+                                        <i class="layui-icon layui-icon-senior"></i>
+                                    数据校验
+                                </button>
+                                <button class="layui-btn layui-btn-sm" lay-event="add2">
+                                        <i class="layui-icon layui-icon-file-b"></i>
+                                    上报日志查看
+                                </button>
+                                <button class="layui-btn layui-btn-sm" lay-event="add3">
+                                        <i class="layui-icon layui-icon-return"></i>
+                                    退回
+                                </button>
+                                <button class="layui-btn layui-btn-sm" lay-event="add5">
+                                        <i class="layui-icon layui-icon-tabs"></i>
+                                    撤回
+                                </button>
+                                <button class="layui-btn layui-btn-sm" lay-event="add6">
+                                        <i class="layui-icon layui-icon-file-b"></i>
+                                    上报国资委
+                                </button>
+                            </div>
+                            -->
+                        </script>
+
+                        <script type="text/html" id="tableOper">
+                            <a class="layui-btn layui-btn-xs" lay-event="edit1">上报</a>
+                            <!--<a class="layui-btn layui-btn-xs" lay-event="edit2">查看</a>-->
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="./../../../js/layui/layui.js"></script>
+<script src="../../../js/lib/echarts-4.1.0.min.js" charset="utf-8"></script>
+<script src="../../../js/lib/echartTheme.js" charset="utf-8"></script>
+<script>
+
+    layui.config({
+        base: '../../../../src/js/',
+        version: new Date().getTime()
+    }).extend({
+        custom:'common/custom'
+    }).use(['layer','eleTree','table','form','laytpl','element','custom','laydate'],function () {
+        var table=layui.table;
+        var form=layui.form;
+        var common=layui.common;
+        var element = layui.element;
+        var tree = layui.eleTree;
+        var laydate = layui.laydate;
+        element.init();
+        var baseUrl='../../../../';
+        common.themeSet();
+
+        laydate.render({
+            elem: '#date1' //指定元素
+            ,range: true
+            ,trigger: 'click'
+        });
+        common.toggleArea($('.toggle-btn'),$('.toggle-area'));
+
+        // var eleTreeId=tree.render({
+        //     elem: '#leftTree',
+        //     data: [{'name':'中国有色集团'},{'name':'集团'}],
+        //     showCheckbox: false,
+        //     lazy: true,
+        //     done:function(data){
+
+        //     },
+        //     load: function(data,callback) {
+        //         callback([{'name':'二级公司1'},{'name':'二级公司二'}])
+        //     }
+        // });
+        // $(".eleTree-search").on("change",function() {
+        //     eleTreeId.search($(this).val());
+        // });
+
+        var chart1 = echarts.init(document.getElementById('echart1'));
+        chart1.setOption({
+            title: {
+                // text: 'ECharts 入门示例'
+            },
+            tooltip: {},
+            legend: {
+                data:['制度类型']
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: ['制度类型1','制度类型2','制度类型3','制度类型4','制度类型5']
+            },
+            yAxis: {
+                type: 'value',
+                boundaryGap: [0, 0.01]
+            },
+            color:['#67cbcc'],
+            series: [
+                {
+                    name: '制度类型',
+                    type: 'bar',
+                    barMaxWidth:30,
+                    data: [5,3,5,6,7]
+                }
+            ]
+        });
+        var chart2 = echarts.init(document.getElementById('echart2'));
+        chart2.setOption({
+            title: {
+                // text: 'ECharts 入门示例'
+            },
+            tooltip: {},
+            legend: {
+                data:['上报','未上报']
+            },
+            color:['#499cda','#efb00d'],
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: ["三重一大"]
+            },
+            yAxis: {
+                type: 'value',
+                boundaryGap: [0, 0.01]
+            },
+            series: [
+                {
+                    name: '上报',
+                    type: 'bar',
+                    barMaxWidth:80,
+                    data: [5, 20]
+                },{
+                    name: '未上报',
+                    type: 'bar',
+                    barMaxWidth:80,
+                    data: [11, 22]
+                }
+            ]
+        });
+
+        var chart3 = echarts.init(document.getElementById('echart3'));
+        chart3.setOption({
+            title: {
+                // text: 'ECharts 入门示例'
+            },
+            tooltip: {},
+            legend: {
+                data:['退回','撤回','正常']
+            },
+            color:['#3dda62','#ef5627','#4a75cc'],
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+
+            series: [
+               /* {
+                    name: '正常上报',
+                    type: 'bar',
+                    barMaxWidth:80,
+                    data: [5, 20]
+                },{
+                    name: '异常上报',
+                    type: 'bar',
+                    barMaxWidth:80,
+                    data: [11, 22]
+                }*/
+                {
+                    name: '上报数',
+                    type: 'pie',
+                    radius : '50%',
+                    center: ['50%', '50%'],
+                    data:[
+                        {value:335, name:'退回'},
+                        {value:310, name:'撤回'},
+                        {value:310, name:'正常'}
+                    ],
+                    itemStyle: {
+                        emphasis: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }
+            ]
+        });
+
+
+
+        table.render(common.tableInitParams({
+            elem: '#table1',
+            height:'full-200',
+            data:[
+                {
+                    "index1":1,
+                    "index2":'HUIYI-1',
+                    index3:'类型1',
+                    index4:"2019-03-12",
+                    index5:"是",
+                    index6:"是",
+                    index7:"是",
+                    index8:"正常",
+                    index9:"2019-03-12",
+                    index10:"30",
+                },
+                {
+                    "index1":2,
+                    "index2":'HUIYI-2',
+                    index3:'类型2',
+                    index4:"2019-03-12",
+                    index5:"是",
+                    index6:"否",
+                    index7:"是",
+                    index8:"异常",
+                    index9:"2019-03-12",
+                    index10:"22",
+                }
+            ],
+            method:'post',
+            toolbar:'#tableToolBar',
+            cols: [
+                [
+                    {type:'checkbox',width:50},
+                    {"type": 'numbers', title: '序号',width:40},
+                    // {type: "numbers", title: "序号",width:60},
+                    {field: 'index2', align:'center',title: '制度名称', sort: true},
+                    {field: 'index3', align:'center',title: '制度类型', sort: true},
+                    {field: 'index4', align:'center',title: '制度时间', sort: true},
+                    {field: 'index5', align:'center',title: '三重已发要求', sort: true},
+                    {field: 'index6', align:'center',title: '是否上报', sort: true},
+                    {field: 'index7', align:'center',title: '已上报国资委', sort: true},
+                    {field: 'index9', align:'center',title: '最后上报日期', sort: true},
+                    {field: 'index10', align:'center',title: '议题数量', sort: true}
+                    //,{field: '', align:'center',title: '操作',width:80, toolbar: '#tableOper', fixed: 'right'}
+                ]
+            ],
+            done:function () {
+                setTimeout(function () {
+                    $('#leftTree').css({'height':$(document).height()-180+'px'});
+                },100);
+
+            }
+        }));
+
+        //table监听事件
+        table.on('toolbar(table1)',function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch(obj.event){
+                case 'add2':
+                    layer.open({
+                        offset: '10px',
+                        title:'上报日志查看',
+                        maxmin: false,
+                        type: 1,//页面层
+                        area: ['600px','380px'],//高度自适应
+                        shadeClose: false,
+                        content:'<div id="tablel11"></div>',
+                        success:function(obj){
+                            table.render(common.tableInitParams({
+                                elem: $(obj.selector).find('#tablel11'),
+                                height:'300',
+                                data:[
+                                    {
+                                        "index2":'HUIYI-1',
+                                        index3:'动作1',
+                                        index4:"原因2",
+                                        index5:"操作人1",
+                                        index6:"2019-03-12 00:00:00"
+                                    },
+                                    {
+                                        "index2":'HUIYI-2',
+                                        index3:'动作2',
+                                        index4:"原因2",
+                                        index5:"操作人1",
+                                        index6:"2019-03-12 00:00:00"
+                                    }
+                                ],
+                                cols: [
+                                    [
+                                        // {type:'checkbox'},
+                                        {field: 'index2', title: '制度名称',width:120, sort: true},
+                                        {field: 'index3', title: '操作动作',width:120, sort: true},
+                                        {field: 'index4', title: '原因', sort: true},
+                                        {field: 'index5', title: '操作人', sort: true},
+                                        {field: 'index6', title: '操作时间', sort: true}
+                                    ]
+                                ]
+                            }))
+                        }
+                    });
+                    break;
+                case 'add3':
+                case 'add5':
+                    layer.open({
+                        offset: '10px',
+                        title:'退回',
+                        maxmin: false,
+                        type: 1,//页面层
+                        area: ['600px','250px'],//高度自适应
+                        shadeClose: false,
+                        content:'<form style="margin-top: 20px;padding: 0 20px; overflow: hidden" action="" class="layui-form layui-form-pane" >\n' +
+                            '                        <div class="layui-row layui-col-space10">\n' +
+                            '                            <div class="layui-col-md12">\n' +
+                            '                                <div class="layui-form-item">\n' +
+                            '                                    <label class="layui-form-label">原因</label>\n' +
+                            '                                    <div class="layui-input-block">\n' +
+                            '                                        <input type="text" class="layui-input" placeholder="请输入原因">'+
+                            '                                    </div>\n' +
+                            '                                </div>\n' +
+                            '                            </div>\n' +
+                            '                            <div class="layui-col-md12">\n' +
+                            '                                <div class="layui-form-item">\n' +
+                            '                                    <label class="layui-form-label">时间</label>\n' +
+                            '                                    <div class="layui-input-block">\n' +
+                            '                                        <input type="text" name="title" required  lay-verify="required" placeholder="请输入时间" autocomplete="off" class="layui-input">\n' +
+                            '                                    </div>\n' +
+                            '                                </div>\n' +
+                            '                            </div>\n' +
+                            '                            <div class="layui-col-md12">\n' +
+                            '                                <div class="layui-form-item" style="text-align: center">\n' +
+                            '                                    <button class="layui-btn layui-btn-sm">关联异常信息</button>\n' +
+                            '                                </div>\n' +
+                            '                            </div>\n' +
+                            '                        </div>\n' +
+                            '                    </form>',
+                        success:function(obj){
+
+                        }
+                    });
+                    break;
+                case 'add4':
+
+                    layer.open({
+                        offset: '10px',
+                        title:'异常信息查看',
+                        maxmin: false,
+                        type: 1,//页面层
+                        area: ['620px','380px'],//高度自适应
+                        shadeClose: false,
+                        content:'<div id="table33"></div>',
+                        success:function(obj){
+                            table.render(common.tableInitParams({
+                                elem: $(obj.selector).find('#table33'),
+                                height:'300',
+                                data:[
+                                    {
+                                        "index1":'HUIYI-1',
+                                        index2:'议题1',
+                                        index3:"类型1",
+                                        index4:"信息1",
+                                        index5:"是",
+                                        index6:"2019-03-12 00:00:00"
+                                    },
+                                    {
+                                        "index1":'HUIYI-2',
+                                        index2:'议题2',
+                                        index3:"类型2",
+                                        index4:"信息1",
+                                        index5:"是",
+                                        index6:"2019-03-12 00:00:00"
+                                    }
+                                ],
+                                cols: [
+                                    [
+                                        {type:'checkbox'},
+                                        {field: 'index1', title: '制度名称',width:120, sort: true},
+                                        {field: 'index2', title: '议题名称', sort: true},
+                                        {field: 'index3', title: '议题类型', sort: true},
+                                        {field: 'index4', title: '议题信息', sort: true},
+                                        {field: 'index5', title: '是否确认', sort: true},
+                                        {field: 'index6', title: '创建时间', sort: true},
+                                        {field: 'index7', title: '操作' ,sort: true}
+                                    ]
+                                ]
+                            }))
+                        }
+                    });
+                    break;
+            }
+        });
+
+        table.on('tool(table1)',function (obj) {
+            var data = obj.config;
+            switch(obj.event){
+                case 'edit1':
+                case 'edit2':
+                    layer.msg('上报成功');
+
+
+                    break;
+            }
+        });
+        common.columnSide();
+
+    });
+
+</script>
+
+<!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

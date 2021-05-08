@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+
+<head>
+    <meta charset="UTF-8">
+    <title>角色管理</title>
+    <meta content="webkit" name="renderer" />
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../js/layui/css/layui.css" />
+    <link href="../../css/public.css?v1.01" rel="stylesheet" />
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script charset="utf-8" src="../../js/common/plugin.js"></script>
+    <style>
+        .white-bg {
+            background: white;
+        }
+
+        .iframe-h {
+            height: 100%;
+        }
+
+        .content-wrap {
+            padding: 10px;
+        }
+
+        .red {
+            color: red;
+            padding-left: 5px;
+        }
+
+        .hide {
+            display: none;
+        }
+
+        .adapt {
+            margin-top: 15px;
+            margin-left: 10%;
+        }
+    </style>
+</head>
+<!--添加按钮中的弹框-->
+<div class="userLayer hide">
+    <div style="padding: 15px 20px">
+        <form class="layui-form layui-form-pane" name="userLayer">
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>角色名称</label>
+                <div class="layui-input-block">
+                    <input type="hidden" name="srId" id="srId">
+                    <input type="hidden" name="seId" id="seId">
+                    <input type="text" name="srName" maxlength="25" required lay-verify="required" placeholder="请输入"
+                        autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>排序</label>
+                <div class="layui-input-block">
+                    <input type="number" name="ggSort"
+                        oninput="if( this.value.length > 22 )  this.value = this.value.slice(0,22)" required
+                        lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item" style="display: none">
+                <label class="layui-form-label">是否隐藏</label>
+                <div class="layui-input-block">
+                    <select name="srHide" id="srHide" lay-verify="" class="layui-input">
+                        <option value="0">否</option>
+                        <option value="1">是</option>
+                    </select>
+                    <div class="layui-unselect layui-form-select">
+                        <div class="layui-select-title"><input type="text" placeholder="请选择" value="否" readonly=""
+                                class="layui-input layui-unselect"><i class="layui-edge"></i></div>
+                        <dl class="layui-anim layui-anim-upbit">
+                            <dd lay-value="" class="layui-select-tips">请选择</dd>
+                            <dd lay-value="1" class="">是</dd>
+                            <dd lay-value="0" class="layui-this">否</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width:100%">备注</label>
+                <div class="layui-input-block" style="margin-left:0;left:0">
+                    <textarea name="srRemarks" placeholder="请输入" maxlength="60" class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item adapt">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formSubmit"> <i
+                            class="layui-icon">&#x1005;</i>保存</button>
+                    <button class="layui-btn layui-btn-primary" id="formClose"><i
+                            class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<body class="iframe-h">
+
+    <div class="content-wrap">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+                <!-- layui tree-->
+
+                <div class="layui-card">
+                    <div class="layui-card-header layui-card-header-custom"><span><i></i>企业层级</span>
+                        <div class="columnSide"><i class="fa fa-toggle-left"></i></div>
+                    </div>
+
+                    <div class="layui-card-body">
+                        <ul class="eleTree ele4" class="layuiTree" id="leftTree" lay-filter="leftTree"></ul>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
+
+                <div class="layui-card">
+                    <div class="layui-card-header layui-card-header-custom"><span><i></i>角色列表</span></div>
+                    <div class="layui-card-body">
+                        <form class="layui-form layui-form-pane">
+                            <div class="layui-row layui-col-space10">
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">角色名称</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="srName" required placeholder="请输入角色名称"
+                                                autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">企业名称</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="seName" required placeholder="请输入企业名称"
+                                                autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">启用状态</label>
+                                        <div class="layui-input-block">
+                                            <input checked name="ggEnStatus" title="全部" type="radio"
+                                                value="">
+                                            <input name="ggEnStatus" title="启用" type="radio"
+                                                value="1">
+                                            <input name="ggEnStatus" title="禁用" type="radio"
+                                                value="0">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="formSearch-btnArea">
+                                    <button class="layui-btn" lay-submit lay-filter="formSearch"
+                                        permission-btn="searchSysRoleAuth"><i class="fa fa-search"></i>查询</button>
+                                    <button type="reset" class="layui-btn layui-btn-primary"><i
+                                            class="fa fa-eraser"></i>重置</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="layui-card">
+                    <div class="layui-card-body" style="padding-top: 0">
+                        <table id="table1" lay-filter="table1"></table>
+                        <script type="text/html" id="tableToolBar">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-sm" lay-event="add" permission-btn="addSysRoleAuth">
+                                <i class="layui-icon">&#xe608;</i> 新增
+                            </button>
+                            <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete" permission-btn="delSysRoleAuth">
+                                <i class="layui-icon">&#xe640;</i> 删除
+                            </button>
+                            <button class="layui-btn layui-btn-sm" lay-event="enable" permission-btn="enableRole">
+                                <i class="layui-icon ">&#x1005;</i> 启用
+                            </button>
+                            <button class="layui-btn layui-btn-sm layui-btn-warm" lay-event="disable" permission-btn="enableRole">
+                                <i class="layui-icon ">&#x1007;</i> 禁用
+                            </button>
+                            <button class="layui-btn layui-btn-sm layui-btn-warm" lay-event="copyAuth" permission-btn="copyAuth">
+                                <i class="layui-icon ">&#x1007;</i> 复制权限
+                            </button>
+                        </div>
+                    </script>
+
+                        <script type="text/html" id="tableOper">
+                        <a class="layui-btn layui-btn-xs" lay-event="edit" permission-btn="editSysRoleAuth">编辑</a>
+                        <a class="layui-btn layui-btn-danger layui-btn-xs layui-btn-danger" lay-event="singleDel" permission-btn="singleDelSysRoleAuth">删除</a>
+                        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="auth-setting"
+                           permission-btn="settingSysRoleAuth">权限配置</a>
+                        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="copyRole" permission-btn="copyRole">复制</a>
+                    </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./../../js/layui/layui.js"></script>
+    <script>
+
+        layui.config({
+            base: '../../../src/js/',
+            version: new Date().getTime()
+        }).use(['eleTree', 'layer', 'table', 'form', 'laytpl', 'common', 'element'], function () {
+            var table = layui.table;
+            var form = layui.form;
+            var tree = layui.eleTree;
+            var common = layui.common;
+            var element = layui.element;
+            element.init();
+            var baseUrl = '../../../';
+
+            common.themeSet();
+            var treeNodeData = null;
+            var eleTreeId;
+            var currentMenuSmId = $("#currentMenuSmId", window.parent.document).val();
+            lineData = {};//不用var修饰的话可在子页面获取数据此数据。table中某一行的数据
+            eventHandle = {
+                treeInit: function () {
+                    common.fetchGet('sysmgr/sysEnterprise/selectSysEnterpriseOrganPostTreeAllList?treeType=enterpriseTree', function (res) {
+                        //树信息的导入
+                        if (res.success && res.list) {
+                            eleTreeId = tree.render({
+                                elem: '#leftTree',
+                                data: res.list,
+                                showCheckbox: false,
+                                highlightCurrent: true,
+                                lazy: true,
+                                load: function (data, callback) {
+                                    common.fetchGet('sysmgr/sysEnterprise/selectSysEnterpriseOrganPostTreeAllList?treeType=enterpriseTree' + '&id=' + data.id + "&extendAttr=" + data.extendAttr, function (res) {
+                                        if (res.success && res.list) {
+                                            callback(res.list)
+                                        }
+                                    }, function () {
+                                        callback([])
+                                    });
+                                }
+                            });
+                            tree.on("nodeClick(leftTree)", function (obj) {
+                                treeNodeData = obj.data.currentData;
+                                eventHandle.tableReload({ seId: treeNodeData.id });
+                            });
+                        } else {
+                            //不存在数据时的显示
+                        }
+
+                    }, function () { });
+                },
+                treeReload: function () {
+                    common.fetchGet('sysmgr/sysEnterprise/selectSysEnterpriseOrganPostTreeAllList?treeType=enterpriseTree', function (res) {
+                        if (res.success && res.list) {
+                            eleTreeId.reload({ data: res.list });
+                        }
+                    });
+                },
+                tableInit: function () {
+                    table.render(common.tableInitParams({
+                        url: baseUrl + 'sysmgr/sysRole/selectSysRolePage',
+                        method: 'post',
+                        toolbar: '#tableToolBar',
+                        height: 'full-175',
+                        request: {
+                            pageName: 'pageNum',//页码的参数名称，默认：page
+                            limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                        },
+                        cols: [
+                            [
+                                { type: 'checkbox' },
+                                { "type": "numbers", "title": "序号" },
+                                { field: 'srName', title: '角色名称', sort: true },
+                                { field: 'seName', title: '企业名称', width: 200, sort: true },
+                                { field: 'srRemarks', title: '备注', width: 200, sort: true },
+                                {
+                                    field: 'ggEnStatus',
+                                    title: '状态',
+                                    width: 100,
+                                    sort: true,
+                                    templet: function (rowData) {
+                                        if (rowData['ggEnStatus'] === '1') {
+                                            return '<span class="layui-badge" style="background-color:#66c33a">启用</span>'
+                                        } else {
+                                            return '<span class="layui-badge" style="background-color:#f56c6c">禁用</span>'
+                                        }
+                                    }
+                                },
+                                { field: '', title: '操作', width: 250, toolbar: '#tableOper', fixed: 'right' }
+                            ]
+                        ],
+                        done: function () {
+                            common.buttonLimit();
+                        }
+                    }));
+
+                    //监听行工具事件
+                    //table监听事件
+                    table.on('toolbar(table1)', function (obj) {
+                        var checkStatus = table.checkStatus(obj.config.id);
+                        switch (obj.event) {
+                            case 'add':
+                                if (!treeNodeData) {
+                                    layer.msg('请选择企业');
+                                    return;
+                                }
+
+                                //点击添加按钮
+                                //  common.clearForm($('.userLayer'));
+                                var roleAddLayer = layer.open({
+                                    offset: '10px',
+                                    title: '新增',
+                                    maxmin: false,
+                                    type: 1,//页面层
+                                    area: ['580px'],//高度自适应
+                                    shadeClose: false,
+                                    content: $('.userLayer').html(),//加载该区域的html
+                                    // btn:['<i class="fa fa-check-circle"></i>确定','<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>取消'],
+                                    success: function (obj) {
+                                        form.render();
+                                        $(obj.selector).find('input[name=seId]').val(treeNodeData.id);
+                                        form.render('select');
+
+                                        //绑定关闭按钮事件
+                                        $(obj.selector).find('#formClose').off().on('click', function () {
+                                            layer.close(roleAddLayer);
+                                            return false;
+                                        });
+
+                                        form.on('submit(formSubmit)', function (obj) {
+                                            var loadingIndex = layer.load(1, { shade: [0.1, '#fff'] });
+                                            var params = obj.field;
+                                            common.fetchPost('sysmgr/sysRole/saveSysRoleInfo', params, function (data) {
+                                                layer.close(loadingIndex);
+                                                if (data.success) {
+                                                    //表格重载
+                                                    eventHandle.tableReload();
+                                                    layer.close(roleAddLayer);
+                                                }
+                                                else {
+                                                    layer.msg(data.resultMessage);
+                                                }
+                                            }, function () {
+                                                layer.close(loadingIndex);
+                                                layer.msg('更新失败');//失败后提示
+                                                layer.close(roleAddLayer);
+                                            });
+                                            return false;
+                                        });
+                                    }
+
+                                });
+                                break;
+                            case 'delete':
+                                //点击删除按钮
+                                if (checkStatus.data.length > 0) {
+                                    layer.confirm('确定删除选中项?', { icon: 3, title: '提示', offset: '150px' }, function (index) {
+                                        var loadingIndex = layer.load(1, { shade: [0.1, '#fff'] });
+                                        var idsArray = [];
+                                        for (var j = 0, len = checkStatus.data.length; j < len; j++) {
+                                            idsArray.push(checkStatus.data[j].srId);
+                                        }
+                                        common.fetchDelete("sysmgr/sysRole/deleteSysRoleBySrIds?srIds=" + idsArray.join(","), function (res) {
+                                            layer.close(loadingIndex);
+                                            if (res.success) {
+                                                eventHandle.tableReload();
+                                                eventHandle.reloadMenu2Redis();//异步重新加载菜单与权限关系至Redis。
+                                                layer.close(index);
+                                            }
+                                            else {
+                                                layer.alert(res.resultMessage);
+                                            }
+                                        }, function (res) {
+                                            layer.close(loadingIndex);
+                                            layer.alert(res.resultMessage);
+                                        });
+                                    });
+                                } else {
+                                    layer.msg('请选择删除行')
+                                }
+                                break;
+                            case 'enable':
+                                //点击启用按钮
+                                var isOk = true;
+                                if (checkStatus.data.length > 0) {
+                                    for (var i = 0; i < checkStatus.data.length; i++) {
+                                        if (checkStatus.data[i]['ggEnStatus'] == '1') {
+                                            isOk = false;
+                                            break;
+                                        }
+                                    }
+                                    if (isOk) {
+                                        layer.confirm('确定启动选中项?', { icon: 3, title: '提示', offset: '150px' }, function (index) {
+                                            var idsArray = [];
+                                            for (var j = 0, len = checkStatus.data.length; j < len; j++) {
+                                                idsArray.push(checkStatus.data[j].srId);
+                                            }
+                                            var loadingIndex = layer.load(1, { shade: [0.1, '#fff'] });
+                                            common.fetchPost("sysmgr/sysRole/enableOrDisableRole?enable=true&roleIds=" + idsArray.join(","), {}, function (res) {
+                                                layer.close(loadingIndex);
+                                                if (res.success) {
+                                                    eventHandle.tableReload();
+                                                    layer.close(index);
+                                                }
+                                                else {
+                                                    layer.alert(res.resultMessage);
+                                                }
+                                            }, function (res) {
+                                                layer.close(loadingIndex);
+                                                layer.alert(res.resultMessage);
+                                            });
+                                        });
+                                    } else {
+                                        layer.msg('存在选项已经启用,不可再次启用');
+                                    }
+                                }
+                                else {
+                                    layer.msg('请选择启用行')
+                                }
+                                break;
+                            case 'disable':
+                                //点击禁用按钮
+                                var isOk = true;
+                                if (checkStatus.data.length > 0) {
+                                    for (var i = 0; i < checkStatus.data.length; i++) {
+                                        if (checkStatus.data[i]['ggEnStatus'] == '0') {
+                                            isOk = false;
+                                            break;
+                                        }
+                                    }
+                                    if (isOk) {
+                                        layer.confirm('确定禁用选中项?', { icon: 3, title: '提示', offset: '150px' }, function (index) {
+                                            var idsArray = [];
+                                            for (var j = 0, len = checkStatus.data.length; j < len; j++) {
+                                                idsArray.push(checkStatus.data[j].srId);
+                                            }
+                                            var loadingIndex = layer.load(1, { shade: [0.1, '#fff'] });
+                                            common.fetchPost("sysmgr/sysRole/enableOrDisableRole?enable=false&roleIds=" + idsArray.join(","), {}, function (res) {
+                                                layer.close(loadingIndex);
+                                                if (res.success) {
+                                                    eventHandle.tableReload();
+                                                    layer.close(index);
+                                                }
+                                                else {
+                                                    layer.alert(res.resultMessage);
+                                                }
+                                            }, function (res) {
+                                                layer.close(loadingIndex);
+                                                layer.alert(res.resultMessage);
+                                            });
+                                        });
+                                    } else {
+                                        layer.msg('存在选项已经禁用,不可再次禁用');
+                                    }
+                                }
+                                else {
+                                    layer.msg('请选择禁用行')
+                                }
+                                break;
+                            case 'copyAuth':
+                                layer.open({
+                                    offset: '10px',
+                                    title: '复制权限',
+                                    maxmin: false,
+                                    type: 2,//页面层
+                                    area: ['70%', '85%'],//高度自适应
+                                    shadeClose: false,
+                                    content: 'copyAuth.html',//加载该区域的html
+                                    success: function () {
+                                        // common.buttonLimit($("#currentMenuSmId",top.window.parent.document).val());
+                                    }
+                                });
+                                break;
+                        }
+                    });
+
+                    table.on('tool(table1)', function (obj) {
+                        var data = obj.data;
+                        lineData = obj.data;
+                        switch (obj.event) {
+                            case 'auth-setting':
+                                layer.open({
+                                    offset: '10px',
+                                    title: '角色授权',
+                                    maxmin: false,
+                                    type: 2,//页面层
+                                    area: ['60%', '80%'],//高度自适应
+                                    shadeClose: false,
+                                    content: 'roleAuth.html',//加载该区域的html
+                                    success: function () {
+                                        // common.buttonLimit($("#currentMenuSmId",top.window.parent.document).val());
+                                    }
+                                });
+                                break;
+                            case 'edit'://编辑
+                                //原始数据导入
+                                var roleEditLayer = layer.open({
+                                    offset: '10px',
+                                    title: '编辑',
+                                    maxmin: false,
+                                    type: 1,//页面层
+                                    area: ['580px'],//高度自适应
+                                    shadeClose: false,
+                                    content: $('.userLayer').html(),//加载该区域的html
+                                    success: function (obj) {
+
+                                        //初始化表格
+                                        form.render();
+                                        $(obj.selector).find('input[name=srId]').val(data.srId);
+                                        $(obj.selector).find('input[name=seId]').val(data.seId);
+                                        $(obj.selector).find('input[name=srName]').val(data.srName);
+                                        $(obj.selector).find('input[name=ggSort]').val(data.ggSort);
+                                        $(obj.selector).find('textarea[name=srRemarks]').val(data.srRemarks);
+                                        form.render('select');
+
+                                        //绑定关闭按钮事件
+                                        $(obj.selector).find('#formClose').off().on('click', function () {
+                                            layer.close(roleEditLayer);
+                                            return false;
+                                        });
+
+                                        form.on('submit(formSubmit)', function (obj) {
+                                            var loadingIndex = layer.load(1, { shade: [0.1, '#fff'] });
+                                            var params = obj.field;
+                                            common.fetchPost('sysmgr/sysRole/saveSysRoleInfo', params, function (data) {
+                                                layer.close(loadingIndex);
+                                                if (data.success) {
+                                                    //表格重载
+                                                    eventHandle.tableReload();
+                                                    layer.close(roleEditLayer);
+                                                    layer.alert("修改成功。", {
+                                                        icon: 6
+                                                    });
+                                                }
+                                                else {
+                                                    layer.msg(data.resultMessage);
+                                                }
+                                            }, function () {
+                                                layer.close(loadingIndex);
+                                                layer.msg('更新失败');//失败后提示
+                                                layer.close(roleEditLayer);
+                                            });
+                                            return false;
+                                        });
+                                    },
+                                });
+                                break;
+                            case 'singleDel':
+                                var selectId = obj.data.srId;
+                                layer.confirm('确定删除?', { icon: 3, title: '提示', offset: '150px' }, function (index) {
+                                    var layerLoader = common.layerLoader();
+                                    common.fetchDelete("sysmgr/sysRole/deleteSysRoleBySrIds?srIds=" + selectId, function (res) {
+                                        layer.close(layerLoader);
+                                        if (res.success) {
+                                            eventHandle.tableReload();
+                                            eventHandle.reloadMenu2Redis();//异步重新加载菜单与权限关系至Redis。
+                                            layer.close(index);
+                                            layer.msg('删除成功', {
+                                                time: 4000, //20s后自动关闭
+                                            });
+                                        } else {
+                                            layer.alert(res.resultMessage);
+                                        }
+                                    }, function () {
+                                        layer.close(layerLoader);
+                                    });
+                                    layer.close(index);
+                                });
+                                break;
+                            case 'copyRole':
+                                layer.open({
+                                    offset: '10px',
+                                    title: '复制角色',
+                                    maxmin: false,
+                                    type: 2,//页面层
+                                    area: ['60%', '85%'],//高度自适应
+                                    shadeClose: false,
+                                    content: 'copyRole.html',//加载该区域的html
+                                    success: function () {
+                                        // common.buttonLimit($("#currentMenuSmId",top.window.parent.document).val());
+                                    }
+                                });
+                                break;
+                        }
+                    });
+                },
+                tableReload: function (params) {
+                    if (!params) params = {};
+                    table.reload('table1', {
+                        url: baseUrl + 'sysmgr/sysRole/selectSysRolePage',
+                        method: 'post',
+                        contentType: 'application/json',
+                        page: {
+                            curr: 1
+                        },
+                        where: params
+                    });
+                },
+                formInit: function () {
+                    form.on('submit(formSearch)', function (obj) {
+                        //表格重载
+                        eventHandle.tableReload({
+                            srName: obj.field.srName,
+                            seName: obj.field.seName,
+                            ggEnStatus: obj.field.ggEnStatus
+                        });
+                        return false;
+                    });
+                },
+                reloadMenu2Redis: function () {
+                    common.fetchGet('sysmgr/menu/initMenuAndButtonAuthByUrl2Redis', function (res) { }, function (ero) { });
+                }
+            };
+
+            //初始化树
+            eventHandle.treeInit();
+            //初始表格
+            eventHandle.tableInit();
+            //初始化查询表单
+            eventHandle.formInit();
+            $('#leftTree').css({
+                height: ($(document).height() - 118) + 'px'
+            });
+            // common.buttonLimit();
+            common.columnSide();
+        });
+
+    </script>
+
+    <!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+
+</html>

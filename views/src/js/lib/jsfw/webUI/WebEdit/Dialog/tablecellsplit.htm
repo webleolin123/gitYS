@@ -1,0 +1,118 @@
+<HTML>
+<HEAD>
+<META content="text/html; charset=utf-8" http-equiv=Content-Type>
+<link rel="stylesheet" href="css.css" type="text/css" media="all">
+<script type="text/javascript" src="dialog.js"></script>
+<title>拆分单元格</title>
+
+<script language="JavaScript">
+
+// 判断值是否大于0
+function MoreThanOne(obj, sErr){
+	var b=false;
+	if (obj.value!=""){
+		obj.value=parseFloat(obj.value);
+		if (obj.value!="0"){
+			b=true;
+		}
+	}
+	if (b==false){
+		BaseAlert(obj,sErr);
+		return false;
+	}
+	return true;
+}
+
+// 预览
+function doView(opt){
+	if (opt=="col"){
+		getObj('d_col').checked=true;
+		getObj('d_row').checked=false;
+	}else{
+		getObj('d_col').checked=false;
+		getObj('d_row').checked=true;
+	}
+	if (getObj('d_col').checked){
+		getObj('d_view').innerHTML = "<table border=1 cellpadding=0><tr><td width=25>&nbsp;</td><td width=25>&nbsp;</td></tr></table>";
+		getObj('d_label').innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;列数:";
+	}
+	if (getObj('d_row').checked){
+		getObj('d_view').innerHTML = "<table border=1 cellpadding=0 width=50><tr><td>&nbsp;</td></tr><tr><td>&nbsp;</td></tr></table>";
+		getObj('d_label').innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;行数:";
+	}
+}
+
+//点击确定-----------------------
+function funSubmit(aForm){
+	// 行列数的有效性
+	if (!MoreThanOne(getObj('d_num'),'无效的行列数，必须大于1！')) return;
+	
+	self.exProperty.Window.objSelectionForTable = self.exProperty;
+	if (getObj('d_row').checked){
+		self.exProperty.Window.TableRowSplit(parseInt(getObj('d_num').value));
+	}
+	if (getObj('d_col').checked){
+		self.exProperty.Window.TableColSplit(parseInt(getObj('d_num').value));
+	}
+
+	self.exProperty.Window.focus();
+	self.closeWindow();
+	return false;
+}
+</SCRIPT>
+
+</head>
+<body>
+<center>
+<form onsubmit="return funSubmit(this);">
+<table border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr>
+		<td>
+			<table border="0" cellpadding="0" cellspacing="0">
+				<tr>
+					<td colspan="3" height="5"></td>
+				</tr>
+				<tr>
+					<td>
+						<input type="radio" id="d_col" checked onclick="doView('col')"><label for="d_col">拆分为列</label></td>
+					<td rowspan="3" width="30"></td>
+					<td width="60" rowspan="3" id="d_view" valign="middle" align="center"></td>
+				</tr>
+				<tr>
+					<td height="5"></td>
+				</tr>
+				<tr>
+					<td>
+						<input type="radio" id="d_row" onclick="doView('row')"><label for="d_row">拆分为行</label></td>
+				</tr>
+				<tr>
+					<td height="5" colspan="3"></td>
+				</tr>
+				<tr>
+					<td id="d_label"></td>
+					<td></td>
+					<td>
+						<input type="text" id="d_num" size="8" value="2" onkeypress="event.returnValue=IsDigit();"
+							maxlength="3"></td>
+				</tr>
+			</table>
+	</tr>
+	<tr>
+		<td height="5"></td>
+	</tr>
+	<tr>
+		<td align="right">
+			<input class="button" id="Ok" type="submit" value="  确定  ">
+			<input class="button" onclick="closeDialog()" type="button" value="  取消  ">
+		</td>
+	</tr>
+</table>
+
+</form>
+</center>
+<Script Language=JavaScript>
+doView('col');
+</Script>
+
+</body>
+</html>

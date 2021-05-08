@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>添加接口</title>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link href="../../js/layui/css/layui.css" rel="stylesheet"/>
+    <link href="../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script src="../../js/common/plugin.js"></script>
+    <style>
+        .layui-card .layui-table{
+            width:100%;
+        }
+        .width100{
+            width:100%!important;
+        }
+        .margin-left0{
+            margin-left: 0!important;
+            left: 0!important;
+        }
+    </style>
+</head>
+<!-- 编辑参数信息弹窗 -->
+<div class="tplLayer hide">
+    <div style="padding: 15px 20px">
+        <form class="layui-form layui-form-pane" lay-filter="dapEditForm">
+            <div class="layui-row layui-col-space10">
+                    <div class="layui-col-xs6">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" >参数名称</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="daapName" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                    </div>
+                    <div class="layui-col-xs6">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" >参数类型</label>
+                            <div class="layui-input-block">
+                                    <select name="daapValueType"  lay-filter="daapValueType_edit" id="daapValueType_edit" required  lay-verify="required">
+                                            <option value="">请选择</option>
+                                            <option value="object">object</option>
+                                            <option value="array">array</option>
+                                            <option value="string">string</option>
+                                            <option value="boolean">boolean</option>
+                                            <option value="number">number</option>
+                                    </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="daapValueSource_req" style="display: none;">
+                         <div class="layui-col-xs6">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" >数据来源</label>
+                            <div class="layui-input-block">
+                                <select name="daapValueSource" lay-filter="daapValueSource_edit">
+                                    <option value="">请选择</option>
+                                    <option value="fixed" selected>固定值</option>
+                                    <option value="time">系统时间</option>
+                                    <option value="sql">数据库获取</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" >是否必填</label>
+                            <div class="layui-input-block">
+                                <select name="daapRequired" required  lay-verify="required">
+                                    <!-- <option value="">请选择</option> -->
+                                    <option value="0">否</option>
+                                    <option value="1">是</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-xs12">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" >参数值</label>
+                                <div class="layui-input-block" id="daapValue_edit">
+                                        <input type="text" name="daapValue" placeholder="请先选择数据来源"  autocomplete="off" class="layui-input" disabled>
+                                </div>
+                            </div>
+                    </div>
+                    <div class="layui-col-xs12 hide">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" >自定义时间格式</label>
+                                <div class="layui-input-block">
+                                        <input type="text" name="daapValueTimeFormat" id="daapValueTimeFormat_edit" placeholder="请输入自定义时间格式"  autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                    </div>
+                    </div>
+                    <div class="layui-col-xs12">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" style="width:100%">备注</label>
+                            <div class="layui-input-block" style="margin-left:0;left:0">
+                                <textarea name="ggMemo" placeholder="请输入" class="layui-textarea"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 请求参数XML下，参数属性名-值设置 -->
+                    <div id="reqXmlParam" style="display: none;">
+                            <div class="layui-row layui-col-space15">
+                                <div class="layui-col-xs4">
+                                    参数属性名
+                                </div>
+                                <div class="layui-col-xs4">
+                                    参数属性值
+                                </div>
+                            </div>
+                            <div class="layui-row layui-col-space15 reqXmlParam">
+                                <div class="layui-col-xs4">
+                                    <input class="layui-input paramKey" type="text">
+                                </div>
+                                <div class="layui-col-xs4">
+                                    <input class="layui-input paramValue" type="text">
+                                </div>
+                                <div class="layui-col-xs4">
+                                    <i class="fa fa-plus-square formLineAdd add1"></i>
+                                </div>
+                            </div>
+                    </div>
+                    <!-- 返回参数下 数据节点路径，关联指标设置 -->
+                    <div id="resBindIndexParam" style="display: none;">
+                        <div class="layui-col-xs12">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label" >数据节点路径</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="daapResDataNode"   placeholder="从数据根节点下一层算起(不含根节点)多层级用.分开" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="layui-col-xs12">
+                                <div class="layui-form-item">
+                                    <!-- <label class="layui-form-label">关联指标项</label> -->
+                                    <label class="layui-form-label">关联指标项Id</label>
+                                    <div class="layui-input-block">
+                                        <!-- <input autocomplete="off" class="layui-input"
+                                                name="cfName"
+                                                data-cfid=""
+                                                data-cfcode=""
+                                                placeholder="请选择" readonly required type="text"> -->
+                                        <input autocomplete="off" class="layui-input"
+                                               name="cfId"
+                                               placeholder="请选择" readonly required type="text">
+                                        <span class="icon-btn" id="bindIndex-choose"><i class="layui-icon layui-icon-more"></i></span>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin-left:23%">
+                        <div class="layui-input-block">
+                            <button class="layui-btn " lay-submit lay-filter="formSavue_reqInfo"> <i class="layui-icon">&#x1005;</i>保存</button>
+                            <button class="layui-btn layui-btn-primary close-btn"><i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭</button>
+                        </div>
+                    </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- 绑定目录弹窗 -->
+<div class="methodTmp" style="display: none">
+    <div class="padding-10">
+        <div class="tableTip" style="left: 30px"><i class="fa fa-info-circle"></i>双击选择目录</div>
+        <table id="methodTmp" lay-filter="methodTmp"></table>
+    </div>
+</div>
+<!-- 绑定关联指标弹窗 -->
+<div class="bindIndex" style="display: none">
+    <div class="padding-10">
+        <div class="tableTip" style="left: 30px"><i class="fa fa-info-circle"></i>双击选择关联指标</div>
+        <table id="bindIndex" lay-filter="bindIndex"></table>
+    </div>
+</div>
+
+<body class="iframe-h">
+
+<div class="content-wrap">
+    <input id="editData" type="hidden">
+    <div class="layui-row layui-col-space15">
+        <!-- treeGrid -->
+        <!-- <div class="layui-col-xs12">
+            <div class="layui-card">
+                <table class="layui-table" id="indexTable" style="display: none" lay-filter="indexTable"></table>
+            </div>
+        </div> -->
+    <!-- 基础信息 -->
+        <div class="layui-col-xs12">
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>基础信息</span></div>
+                <div class="layui-card-body">
+                    <form action="" class="layui-form layui-form-pane" id="baseInfoForm" lay-filter="baseInfoForm">
+                        <div class="layui-row layui-col-space10">
+                            <div class="layui-col-xs6">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label"><b class="red">*</b>名称：</label>
+                                    <div class="layui-input-block">
+                                        <input name="daaName" autocomplete="off" class="layui-input" lay-verify="required"
+                                                placeholder="请输入" required type="text">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-xs6">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label"><b class="red">*</b>URL：</label>
+                                    <div class="layui-input-block">
+                                        <input name="daaUri" autocomplete="off" class="layui-input" lay-verify="required"
+                                                placeholder="请输入" required type="text">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-xs6">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label"><b class="red">*</b>请求协议：</label>
+                                    <div class="layui-input-block">
+                                        <select name="daaProtocol" lay-verify="required">
+                                                <!-- <option value="">请选择</option> -->
+                                                <option value="http">http</option>
+                                                <option value="https">https</option>
+                                                <option value="webservice">webservice</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-xs6">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label"><b class="red">*</b>请求方法：</label>
+                                    <div class="layui-input-block">
+                                        <select name="daaRequestType" lay-verify="required">
+                                                <!-- <option value="">请选择</option> -->
+                                                <option value="post">post</option>
+                                                <option value="get">get</option>
+                                                <option value="put">put</option>
+                                                <option value="delete">delete</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-xs12">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label"><b class="red">*</b>绑定目录：</label>
+                                    <div class="layui-input-block">
+                                        <input autocomplete="off" class="layui-input" lay-verify="required"
+                                               name="ciName"
+                                               data-ciid="" data-cicode=""
+                                               name="methodName" placeholder="请选择" readonly required type="text">
+                                        <span class="icon-btn" id="port-choose"><i class="layui-icon layui-icon-more"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    <!-- 请求信息 -->
+        <div class="layui-col-xs12">
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>请求信息</span></div>
+                <div class="layui-tab layui-tab-brief" lay-filter="reqInfoTab" id="reqInfoTab">
+                    <ul class="layui-tab-title">
+                        <li class="layui-this" lay-id="11">请求头部</li>
+                        <li lay-id="22">请求参数</li>
+                        <li lay-id="33">GET/URL参数</li>
+                        <li lay-id="44">REST参数</li>
+                    </ul>
+                    <div class="layui-tab-content">
+                        <!-- 请求头 -->
+                        <div class="layui-tab-item layui-show">
+                            <form action="" class="layui-form" id="reqHeadForm" lay-filter="reqHeadForm">
+                                <div class="layui-row layui-col-space15">
+                                    <div class="layui-col-xs3">
+                                        标签
+                                    </div>
+                                    <div class="layui-col-xs3">
+                                        内容
+                                    </div>
+                                    <div class="layui-col-xs3">
+                                        必填
+                                    </div>
+                                </div>
+                                <div class="layui-row layui-col-space15 reqHeadForm">
+                                    <div class="layui-col-xs3">
+                                        <select name="daahName" lay-verify="required">
+                                            <option value="">请选择</option>
+                                            <option value="Accept">Accept</option>
+                                            <option value="Accept-Charset">Accept-Charset</option>
+                                            <option value="Accept-Encoding">Accept-Encoding</option>
+                                            <option value="Accept-Language">Accept-Language</option>
+                                            <option value="Accept-Ranges">Accept-Ranges</option>
+                                            <option value="Content-Type">Content-Type</option>
+                                        </select>
+                                    </div>
+                                    <div class="layui-col-xs3">
+                                        <input class="layui-input" name="daahValue" placeholder="application/json"
+                                               type="text">
+                                    </div>
+                                    <div class="layui-col-xs3">
+                                        <select name="daahRequired" lay-verify="required">
+                                                <!-- <option value="">请选择</option> -->
+                                                <option value="0">否</option>
+                                                <option value="1">是</option>
+                                        </select>
+                                        <!-- <input class="layui-input" name="formLine2" placeholder="描述" type="text"> -->
+                                    </div>
+                                    <div class="layui-col-xs3">
+                                        <i class="fa fa-plus-square formLineAdd add1"></i>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- 请求参数 -->
+                        <div class="layui-tab-item">
+                            <div class="layui-form">
+                                <form action="" class="layui-form" id="reqBodyForm" lay-filter="reqBodyForm">
+                                    <div class="layui-row layui-col-space15">
+                                        <div class="layui-col-xs12">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label"><b class="red">*</b>参数类型：</label>
+                                                <div class="layui-input-block">
+                                                    <input lay-filter="form-row" name="form-row" title="json" type="radio" value="json" checked>
+                                                    <input lay-filter="form-row" name="form-row" title="xml" type="radio" value="xml">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <!-- JSON -->
+                            <div class="json-box" style="width: 100%;padding: 10px 0;">
+                                <div class="layui-form-item">
+                                    <form action="" class="layui-form">
+                                    <!-- JSON根类型 -->
+                                        <div class="layui-row layui-col-space15">
+                                            <div class="layui-col-xs3">
+                                                <div class="layui-form-item">
+                                                    <label class="layui-form-label" style="width:100px;"><b class="red">*</b>JSON根类型：</label>
+                                                    <div class="layui-input-block" style="margin-left: 130px;">
+                                                        <select name="daaRequestJsonRootType" lay-verify="required">
+                                                            <!-- <option value="">请选择</option> -->
+                                                            <option value="object">object</option>
+                                                            <option value="array">array</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <!-- 输入表格 -->
+                                    <div class="layui-row layui-col-space15">
+                                        <div class="layui-col-xs12">
+                                                <div class="layui-card">
+                                                    <table class="layui-table" id="reqJsonParamTable" style="display: none" lay-filter="reqJsonParamTable"></table>
+                                                </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- XML -->
+                            <div class="xml-box" style="width: 100%;padding: 10px 0;display: none">
+                                <div class="layui-form-item">
+                                    <form action="" class="layui-form">
+                                        <div class="layui-row layui-col-space15">
+                                            <div class="layui-col-xs2">
+                                                参数名
+                                            </div>
+                                            <div class="layui-col-xs2">
+                                                类型
+                                            </div>
+                                            <div class="layui-col-xs2">
+                                                必填
+                                            </div>
+                                            <div class="layui-col-xs2">
+                                                说明
+                                            </div>
+                                        </div>
+                                    </form>
+                                     <!-- 输入表格 -->
+                                     <div class="layui-row layui-col-space15">
+                                            <div class="layui-col-xs12">
+                                                    <div class="layui-card">
+                                                        <table class="layui-table" id="reqXmlParamTable" style="display: none" lay-filter="reqXmlParamTable"></table>
+                                                    </div>
+                                            </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- GET/URL参数 -->
+                        <div class="layui-tab-item">
+                             <!-- 输入表格 -->
+                             <div class="layui-row layui-col-space15">
+                                    <div class="layui-col-xs12">
+                                        <div class="layui-card">
+                                            <table class="layui-table" id="getUrlParamTable" style="display: none" lay-filter="getUrlParamTable"></table>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                        <!-- REST参数 -->
+                        <div class="layui-tab-item">
+                                 <!-- 输入表格 -->
+                             <div class="layui-row layui-col-space15">
+                                    <div class="layui-col-xs12">
+                                        <div class="layui-card">
+                                            <table class="layui-table" id="restParamTable" style="display: none" lay-filter="restParamTable"></table>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <!-- 响应信息 -->
+        <div class="layui-col-xs12">
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom">
+                    <span><i></i>响应信息</span>
+                </div>
+                <div class="layui-tab layui-tab-brief" lay-filter="resInfoTab" id="resInfoTab">
+                    <ul class="layui-tab-title">
+                        <li class="layui-this">返回头部</li>
+                        <li>返回参数</li>
+                    </ul>
+                    <div class="layui-tab-content">
+                        <!-- 返回头部 -->
+                        <div class="layui-tab-item layui-show">
+                            <form action="" class="layui-form" id="resHeadForm" lay-filter="resHeadForm">
+                                <div class="layui-row layui-col-space15">
+                                    <div class="layui-col-xs3">
+                                        标签
+                                    </div>
+                                    <div class="layui-col-xs3">
+                                        内容
+                                    </div>
+                                    <div class="layui-col-xs3">
+                                        必填
+                                    </div>
+                                </div>
+                                <div class="layui-row layui-col-space15 resHeadForm">
+                                        <div class="layui-col-xs3">
+                                            <select name="daahName" lay-verify="required">
+                                                <option value="">请选择</option>
+                                                <option value="Accept">Accept</option>
+                                                <option value="Accept-Charset">Accept-Charset</option>
+                                                <option value="Accept-Encoding">Accept-Encoding</option>
+                                                <option value="Accept-Language">Accept-Language</option>
+                                                <option value="Accept-Ranges">Accept-Ranges</option>
+                                                <option value="Content-Type">Content-Type</option>
+                                            </select>
+                                        </div>
+                                        <div class="layui-col-xs3">
+                                            <input class="layui-input" name="daahValue" placeholder="application/json"
+                                                   type="text">
+                                        </div>
+                                        <div class="layui-col-xs3">
+                                            <select name="daahRequired" lay-verify="required">
+                                                    <!-- <option value="">请选择</option> -->
+                                                    <option value="0">否</option>
+                                                    <option value="1">是</option>
+                                            </select>
+                                            <!-- <input class="layui-input" name="formLine2" placeholder="描述" type="text"> -->
+                                        </div>
+                                        <div class="layui-col-xs3">
+                                            <i class="fa fa-plus-square formLineAdd add1"></i>
+                                        </div>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- 返回参数 -->
+                        <div class="layui-tab-item">
+                            <form class="layui-form" id="resBodyForm" lay-filter="resBodyForm">
+                                <div class="layui-row layui-col-space15">
+                                    <div class="layui-col-xs12">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label"><b class="red">*</b>参数类型：</label>
+                                            <div class="layui-input-block">
+                                                <input lay-filter="form-row" name="form-row" title="json" type="radio" value="json" checked>
+                                                <input lay-filter="form-row" name="form-row" title="xml" type="radio" value="xml">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                             <!-- JSON -->
+                             <div class="json-box" style="width: 100%;padding: 10px 0;">
+                                    <form action="" class="layui-form">
+                                        <div class="layui-row layui-col-space15">
+                                            <div class="layui-col-xs4">
+                                                数据根节点路径
+                                            </div>
+                                            <div class="layui-col-xs4">
+                                                错误状态节点路径(从根节点开始)
+                                            </div>
+                                            <div class="layui-col-xs4">
+                                                错误状态值
+                                            </div>
+                                        </div>
+                                        <div class="layui-row layui-col-space15">
+                                            <div class="layui-col-xs4">
+                                                    <input name="daaResRootDataNode" autocomplete="off" class="layui-input" lay-verify="required"
+                                                    placeholder="指定了业务数据是在哪个节点下,多层级用英文逗号隔开" required type="text">
+                                            </div>
+                                            <div class="layui-col-xs4">
+                                                    <input name="daaResFailNode" autocomplete="off" class="layui-input"
+                                                    placeholder="无此节点则不用设置" type="text">
+                                            </div>
+                                            <div class="layui-col-xs4">
+                                                    <input name="daaResFailNodeValue" autocomplete="off" class="layui-input"
+                                                    placeholder="无此参数则不用设置" type="text">
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <!-- 输入表格 -->
+                                    <div class="layui-row layui-col-space15">
+                                            <div class="layui-col-xs12">
+                                                <div class="layui-card">
+                                                    <table class="layui-table" id="resJsonParamTable" style="display: none" lay-filter="resJsonParamTable"></table>
+                                                </div>
+                                            </div>
+                                        </div>
+                             </div>
+                            <!-- XML -->
+                            <div class="xml-box" style="width: 100%;padding: 10px 0;display: none">
+                                <form action="" class="layui-form">
+                                    <div class="layui-row layui-col-space15">
+                                        <div class="layui-col-xs6">
+                                            数据根节点路径
+                                        </div>
+                                        <div class="layui-col-xs6">
+                                            数据类型
+                                        </div>
+                                    </div>
+                                    <div class="layui-row layui-col-space15">
+                                        <div class="layui-col-xs6">
+                                                <input name="daaResRootDataNode" autocomplete="off" class="layui-input" lay-verify="required"
+                                                placeholder="指定了业务数据是在哪个节点下,多层级用英文逗号隔开" required type="text">
+                                        </div>
+                                        <div class="layui-col-xs6">
+                                                <select name="daaResRootDataType" lay-verify="required">
+                                                        <option value="xml">xml</option>
+                                                        <option value="json">json</option>
+                                                        <option value="string">string</option>
+                                                </select>
+                                        </div>
+                                    </div>
+                                </form>
+                                <!-- 输入表格 -->
+                                <div class="layui-row layui-col-space15">
+                                        <div class="layui-col-xs12">
+                                                <div class="layui-card">
+                                                    <table class="layui-table" id="resXmlParamTable" style="display: none" lay-filter="resXmlParamTable"></table>
+                                                </div>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <!-- 成功失败示例 -->
+        <div class="layui-col-xs12">
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>成功失败示例</span></div>
+                <div class="layui-tab layui-tab-brief" lay-filter="successOrFailureDeomo" id="successOrFailureDeomo">
+                    <ul class="layui-tab-title">
+                        <li class="layui-this">成功示例</li>
+                        <li>失败示例</li>
+                    </ul>
+                    <div class="layui-tab-content" style="min-height: 220px;">
+                           <!-- 成功示例 -->
+                           <div class="layui-tab-item layui-show">
+                                <form action="" class="layui-form">
+                                    <div class="layui-row layui-col-space15">
+                                        <div class="layui-col-xs6">
+                                            Http Status Code
+                                        </div>
+                                        <div class="layui-col-xs6">
+                                            Content-Type
+                                        </div>
+                                    </div>
+                                    <div class="layui-row layui-col-space15">
+                                        <div class="layui-col-xs6">
+                                            <input class="layui-input" name="daaSuccessStatusCode" placeholder="请输入状态码" type="text">
+                                        </div>
+                                        <div class="layui-col-xs6">
+                                            <select name="daaSuccessContentType" lay-verify="required">
+                                                <option value="">请选择</option>
+                                                <option value="application/json">application/json</option>
+                                                <option value="text/html; charset=UTF-8">text/html; charset=UTF-8</option>
+                                                <option value="text/xml">text/xml</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        <div class="layui-tab-item">
+                                <form action="" class="layui-form">
+                                        <div class="layui-row layui-col-space15">
+                                            <div class="layui-col-xs6">
+                                                Http Status Code
+                                            </div>
+                                            <div class="layui-col-xs6">
+                                                Content-Type
+                                            </div>
+                                        </div>
+                                        <div class="layui-row layui-col-space15">
+                                            <div class="layui-col-xs6">
+                                                <input class="layui-input" name="daaFailureStatusCode" placeholder="请输入状态码" type="text">
+                                            </div>
+                                            <div class="layui-col-xs6">
+                                                <select name="daaFailureContentType" lay-verify="required">
+                                                    <option value="">请选择</option>
+                                                    <option value="application/json">application/json</option>
+                                                    <option value="text/html; charset=UTF-8">text/html; charset=UTF-8</option>
+                                                    <option value="text/xml">text/xml</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <!-- 保存关闭 -->
+        <div class="layui-form-item adapt" style="margin-left: 30%">
+            <div class="layui-input-block">
+                <button class="layui-btn " id="saveBtn"> <i class="layui-icon">&#x1005;</i>保存</button>
+                <button type="cancel" class="layui-btn layui-btn-primary" id="closeBtn"><i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="tableToolBar">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="addLine1">
+            <i class="layui-icon">&#xe608;</i> 新增一行
+        </button>
+        <button class="layui-btn layui-btn-sm" lay-event="print">
+            <i class="layui-icon">&#xe608;</i> 打印缓存对象
+        </button>
+        <button class="layui-btn layui-btn-sm" lay-event="openAll">
+            <i class="layui-icon">&#xe608;</i> 展开或折叠全部
+        </button>
+    </div>
+</script>
+<script type="text/html" id="tableOper">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="add">添加子字段</a>
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<script src="./../../js/layui/layui.js"></script>
+<script src="./../../js/module/addPickPort.js"></script>
+
+<!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

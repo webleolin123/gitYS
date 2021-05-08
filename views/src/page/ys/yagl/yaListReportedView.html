@@ -1,0 +1,1388 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>议案管理-已提交-查看</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href=" ./../../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href=" ./../../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href=" ./../../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../../js/layui/css/layui.css"/>
+    <link href="../../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../../js/lib/jquery.1.12.3.js"></script>
+    <style>
+
+        .hylabel {
+            border: 1px solid transparent !important;
+            background: transparent !important;
+        }
+
+        .hyinput {
+            border: 1px solid transparent !important;
+            border-bottom-color: red !important;
+        }
+
+        .layui-unselect {
+            border-color: #f56c6c;
+            border-top-style: none;
+            border-right-style: none;
+            border-left-style: none;
+        }
+        .layui-table-cell .layui-unselect {
+            border-color: #d2d2d2;
+        }
+
+        .layui-form-select .layui-edge {
+            border-top-color: #f56c6c;
+        }
+
+        body {
+            background: #f8f8f8;
+        }
+
+        .load-btn, .upload-btn, .check-btn, .right-btn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            border-radius: 3px;
+        }
+
+        .right140 {
+            /*right: 140px;*/
+            right: 70px;
+        }
+
+        .right70 {
+            right: 70px;
+        }
+
+        .relative {
+            position: relative;
+        }
+
+        .padRt64 {
+            padding-right: 64px;
+        }
+
+        li {
+            cursor: pointer;
+        }
+
+        .zsBga {
+            color: purple;
+            vertical-align: 1px;
+            opacity: 0.5;
+            font-weight: normal;
+        }
+
+        .blueBg {
+            padding: 5px;
+            background: blue;
+            opacity: 0.5;
+            color: #fff;
+        }
+
+        .grayBg {
+            padding: 5px;
+            background: gray;
+            opacity: 0.5;
+            color: #fff;
+        }
+
+        a.layui-layer-ico.layui-layer-max {
+            display: none;
+        }
+
+        a.layui-layer-ico.layui-layer-max.layui-layer-maxmin {
+            display: inline-block !important;
+        }
+    </style>
+    <style>
+        /* 表格工具位置样式重置 */
+        .layui-table-tool-temp{
+            padding-right: 0!important;
+        }
+        .versionLabel{
+            text-align: center;
+        }
+    </style>
+    <style>
+        .layui-table-body,.layui-table-body .layui-none{
+            border-bottom: 1px solid #e6e6e6;
+        }
+        /* 统一图标尺寸 */
+        .layui-btn .layui-icon{
+            font-size: 12px!important;
+        }
+    </style>
+    <style>
+        /* .meetingTypeFlowUl{
+            text-align: left;
+        } */
+        .meetingTypeFlowUl li{
+            position: relative;
+            border: 1px solid #dfdfdf;
+            display: inline-block;
+            padding: 10px;
+            /* width: 31%;
+            margin-right: 1%; */
+            cursor: pointer;
+            list-style: none;
+            font-weight: bolder;
+        }
+        .meetingTypeFlowUl li div{
+            text-align: center
+        }
+        #syqkLayer .layui-form-label{
+            text-align: center;
+            width: 80px;
+        }
+        .hideClass{
+            display:none!important;
+        }
+        .bg-gray{
+            background-color: #FFB800 !important;
+            color: black !important;
+        }
+        .meetingTypeFlowUl li {
+            background-color: #D30001;
+            color:white;
+        }
+    </style>
+</head>
+
+<body class="iframe-h">
+
+<!-- 页面主体 -->
+<div class="content-wrap">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs12 hide">
+            <ul class="clearFix gloBg meetingTypeFlowUl">
+            </ul>
+        </div>
+        <div class="layui-col-xs12">
+            <div class="gloBg">
+                <div class="mainTitle" id="mainTitle">议案</div>
+            </div>
+        </div>
+        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" id="motionMain" style="padding-top: 0;">
+            <!-- 议案信息 -->
+            <div class="layui-form layui-form-pane" name="motionaLayer" lay-filter="motionaForm">
+                <input type="hidden" name="motionId">
+                <div class="layui-card">
+                        <div class="layui-card-header layui-card-header-custom">
+                            <span>
+                                <i></i>议案信息
+                            </span>
+                        </div>
+                    <!-- 暂时保存 -->
+                        <input type="hidden" name="meetingId" id="meetingId">
+                        <input type="hidden" name="exceptionFlag" id="exceptionFlag">
+                        <input type="hidden" name="formOperType" id="formOperType">
+                        <div class="layui-card-body">
+                        <!-- 议案名称 -->
+                        <div class="layui-row layui-col-space15">
+                            <div class="layui-col-xs12">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label hylabel"><b class="red">*</b>议案名称:</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="motionName" placeholder="请输入" autocomplete="off" class="layui-input hyinput"  value="" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 提出部门 议案类别-->
+                        <div class="layui-row layui-col-space15">
+                            <div class="layui-col-xs6">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label hylabel"><b class="red">*</b>提出部门:</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="soName" autocomplete="off" class="layui-input hyinput" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" name="soId">
+                            <div class="layui-col-xs6">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label hylabel"><b class="red">*</b>议案类别:</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="motionTypeName" autocomplete="off" class="layui-input hyinput" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 上会类型 审议类型-->
+                        <div class="layui-row layui-col-space15">
+                            <div class="layui-col-xs6">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label hylabel"><b class="red">*</b>上会类型:</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="meetingTypeName"
+                                        readonly="" autocomplete="off" class="layui-input hyinput">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-xs6">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label hylabel"><b class="red">*</b>审议类型:</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="deliberationName"
+                                        readonly="" autocomplete="off" class="layui-input hyinput">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 创建日期 三重一大-->
+                        <div class="layui-row layui-col-space15">
+                            <div class="layui-col-xs6">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label hylabel"><b class="red">*</b>创建日期:</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="motionCreateTime" class="layui-input hyinput" value="" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-xs6 hide isRel">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label hylabel"><b class="red">*</b>三重一大:</label>
+                                    <div class="layui-input-block">
+                                        <input type="radio" name="tiolFlag" value="0" lay-filter="tiolFlag" title="否"
+                                                checked>
+                                        <input type="radio" name="tiolFlag" value="1" lay-filter="tiolFlag" title="是">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 主要内容 -->
+                        <div class="layui-row layui-col-space15">
+                            <div class="layui-col-xs12">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label hylabel">主要内容:</label>
+                                    <div class="layui-input-block">
+                                        <textarea name="motionContemt" class="layui-textarea hyinput" value="" readonly></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 提案表 -->
+                        <div class="layui-row layui-col-space15">
+                            <div class="layui-col-md12">
+                                <div class="layui-form-item" style="position: relative">
+                                    <label class="layui-form-label hylabel">&#x3000;<b class="red">*</b>提案表:</label>
+                                    <div class="layui-input-block" style="padding-right: 160px">
+                                            <input type="hidden" name="motionDatum" id="motionDatum">
+                                            <input type="text" name="motionDatumName" lay-verify="motionDatum"  id="motionDatumName" placeholder="请点击上传按钮上传提案表" autocomplete="off" class="layui-input hyinput" readonly>
+                                    </div>
+                                    <div style="position: absolute;top: 1px; right: 0">
+                                        <button class="layui-btn" id="tbPreviewBtn" style="padding: 0 14px;"><i class=" layui-icon layui-icon-search"></i>预览</button>
+                                        <button class="layui-btn layui-btn-warm" id="tbLoadBtn" style="margin-left: 10px;"><i class="layui-icon">&#xe601;</i> 下载</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 汇报人员 -->
+                        <div class="layui-row layui-col-space15">
+                            <div class="layui-col-md12">
+                                <div class="layui-form-item relative">
+                                    <label class="layui-form-label hylabel"><b class="red">*</b>汇报人员:</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="msSpeaker" lay-verify="msSpeaker"  id="msSpeaker" placeholder="请点击编辑按钮进行修改,点击选择按钮重选"  autocomplete="off" class="layui-input hyinput" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 列席人员 -->
+                        <div class="layui-row layui-col-space15">
+                            <div class="layui-col-md12">
+                                <div class="layui-form-item relative">
+                                    <label class="layui-form-label hylabel"><b class="red">*</b>列席人员:</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="attendanceListStr" lay-verify="attendanceListStr"  id="attendanceListStr" placeholder="请点击编辑按钮进行修改,点击选择按钮重选" autocomplete="off" class="layui-input hyinput" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--议案材料-->
+            <div class="layui-collapse white-bg" style="margin-top: 10px;">
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title white-bg">议案材料</h2>
+                    <div class="layui-colla-content ">
+                        <div class="layui-card">
+                            <div class="layui-card-body">
+                                <div class="layui-col-xs1 layui-col-sm1 layui-col-md1" style="width: 100px;">
+                                    <div class="versionLabel">最终版本:</div>
+                                </div>
+                                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="padding-left: 111px;position: relative;top: -20px;">
+                                    <table id="motionDatumList" lay-filter="motionDatumList"></table>
+                                </div>
+                                <script type="text/html" id="motionDatumListOper">
+                                    <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="preview">预览</a>
+                                    <a class="layui-btn layui-btn-xs layui-btn-primary" lay-event="load">下载</a>
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 前置审核 -->
+            <div class="layui-collapse white-bg" style="margin-top:10px;">
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title white-bg">前置审核</h2>
+                    <div class="layui-colla-content ">
+                        <div class="layui-card">
+                            <div class="layui-card-body">
+                                <div class="layui-col-xs1 layui-col-sm1 layui-col-md1"style="width: 100px;">
+                                    <div class="versionLabel">最终版本:</div>
+                                </div>
+                                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12"style="padding-left: 111px;position: relative;top: -20px;">
+                                    <table id="addMotionAuditList" lay-filter="addMotionAuditList"></table>
+                                </div>
+
+                                <script type="text/html" id="hyzlListOper">
+                                    <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="preview">预览</a>
+                                    <a class="layui-btn layui-btn-xs layui-btn-primary" lay-event="load">下载</a>
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 审议情况 -->
+            <div class="layui-collapse white-bg hideClass" style="margin-top:10px;" id="syqkLayer">
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title white-bg">审议情况</h2>
+                    <div class="layui-colla-content ">
+                        <div class="layui-card">
+                            <div class="layui-card-body">
+                            <!-- 会议名称 -->
+                            <div class="layui-row layui-col-space15">
+                                <div class="layui-col-md12">
+                                    <div class="layui-form-item" style="position: relative">
+                                        <label class="layui-form-label hylabel"><b class="red">*</b>会议名称:</label>
+                                        <div class="layui-input-block" style="padding-right: 80px">
+                                                <input type="text" id="meetingName" name="meetingName" autocomplete="off" class="layui-input hyinput" value="" readonly>
+                                        </div>
+                                        <div style="position: absolute;top: 1px; right: 0">
+                                            <button class="layui-btn" id="meetingView" style="padding: 0 14px;"><i class=" layui-icon layui-icon-search"></i>详情</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 会议日期 会议地点-->
+                            <div class="layui-row layui-col-space15">
+                                    <div class="layui-col-xs6">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label hylabel"><b class="red">*</b>会议日期:</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="meetingTime"  class="layui-input hyinput" value="" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-col-xs6">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label hylabel"><b class="red">*</b>会议地点:</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="meetingAddr"  class="layui-input hyinput" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </div>
+                             <!-- 审议类型 决议类别-->
+                             <div class="layui-row layui-col-space15">
+                                    <div class="layui-col-xs6">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label hylabel"><b class="red">*</b>审议类型:</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="deliberationName"
+                                                readonly="" autocomplete="off" class="layui-input hyinput">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-col-xs6">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label hylabel"><b class="red">*</b>决议类别:</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="resultTypeName"
+                                                readonly="" autocomplete="off" class="layui-input hyinput">
+                                            </div>
+                                        </div>
+                                    </div>
+                            </div>
+                             <!-- 审议结果 -->
+                             <div class="layui-row layui-col-space15">
+                                <div class="layui-col-md12">
+                                    <div class="layui-form-item" style="position: relative">
+                                        <label class="layui-form-label hylabel"><b class="red">*</b>审议结果:</label>
+                                        <div class="layui-input-block" style="padding-right: 80px">
+                                                <input type="hidden" name="passFlag" id="passFlag">
+                                                <input type="text" name="passFlagName" id="passFlagName" autocomplete="off" class="layui-input hyinput" value="" readonly>
+                                        </div>
+                                        <div style="position: absolute;top: 1px; right: 0">
+                                            <button class="layui-btn" id="passFlagDetail" style="padding: 0 14px;"><i class=" layui-icon layui-icon-search"></i>详情</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 审议结论 -->
+                            <div class="layui-row layui-col-space15">
+                                <div class="layui-col-xs12">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label hylabel"><b class="red">*</b>审议结论:</label>
+                                        <div class="layui-input-block">
+                                            <textarea  name="subjectResult" class="layui-textarea hyinput" value="" readonly></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-row layui-col-space15">
+                                <div class="layui-col-xs1 layui-col-sm1 layui-col-md1" style="width:130px">
+                                    <div class="versionLabel">相关附件:</div>
+                                </div>
+                                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12"style="padding-left: 135px;position: relative;top: -20px;">
+                                    <table id="subjectFileTable" lay-filter="subjectFileTable"></table>
+                                </div>
+                                <script type="text/html" id="subjectFileTableOper">
+                                    <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="preview">预览</a>
+                                    <a class="layui-btn layui-btn-xs layui-btn-primary" lay-event="load">下载</a>
+                                </script>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--关联议案-->
+            <div class="layui-collapse white-bg" style="margin-top: 10px;">
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title white-bg">关联议案</h2>
+                    <div class="layui-colla-content ">
+                        <div class="layui-card">
+                            <div class="layui-card-body">
+                                <div class="layui-col-xs1 layui-col-sm1 layui-col-md1"style="width: 100px;">
+                                    <div class="versionLabel">关联议案:</div>
+                                </div>
+                                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12"style="padding-left: 111px;position: relative;top: -20px;">
+                                    <table id="glyaList" lay-filter="glyaList"></table>
+                                </div>
+                                <script type="text/html" id="glyaListOper">
+                                    <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="check">查看</a>
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--议案执行-->
+            <div class="layui-collapse white-bg" style="margin-top: 10px;" id="yazxLayer">
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title white-bg">议案执行</h2>
+                    <div class="layui-colla-content ">
+                        <div class="layui-card">
+                            <div class="layui-card-body">
+                                <div class="layui-col-xs1 layui-col-sm1 layui-col-md1"style="width: 100px;">
+                                    <div class="versionLabel">执行明细:</div>
+                                </div>
+                                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12"style="padding-left: 111px;position: relative;top: -20px;">
+                                    <table id="yazxList" lay-filter="yazxList"></table>
+                                </div>
+                                <script type="text/html" id="yazxListOper">
+                                    <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="checkYazx">查看</a>
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="position: fixed;width: 100%;bottom: 12px;" class="hide">
+    <div class="layui-card" style="margin-top: 10px">
+        <div class="layui-card-body">
+            <div class="layui-form-item" style="text-align: center;">
+                <button class="layui-btn layui-btn-sm layui-btn-primary" id="closeBtn">
+                    <i class="icon iconfont icon-button-cha-2"></i><i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--脚垫-->
+<div style="height: 80px;"></div>
+<!--审议情况-编辑-->
+<script type="text/html" id="edit-syForm">
+    <div  class="edit-syForm">
+        <div class="layui-card-body">
+            <div class="layui-card" id="bjxq">
+                <div class="layui-card-header layui-card-header-custom">
+                    <span><i></i>表决详情
+                        <b class="zsBga"></b>
+                    </span>
+                </div>
+                <div class="layui-card-body">
+                    <div class="layui-row layui-col-space15">
+                        <div class="layui-col-md12">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label hylabel layui-col-md2">表决情况</label>
+                                <div class="layui-input-block">
+                                    <input type="text" readonly name="bjqk" placeholder="根据下方列表自动生成" autocomplete="off" class="layui-input hyinput">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-row layui-col-space15">
+                        <div class="layui-col-md12">
+                            <table id="bjTable" lay-filter="bjTable"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script src="./../../../js/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../../src/js/',
+        version: new Date().getTime()
+    }).use(['eleTree', 'layer', 'table', 'form', 'laytpl', 'common', 'element', 'laydate', 'upload'], function () {
+
+        var table = layui.table;
+        var form = layui.form;
+        var tree = layui.eleTree;
+        var common = layui.common;
+        var element = layui.element;
+        var laydate = layui.laydate;
+        var upload = layui.upload;
+        var laytpl = layui.laytpl;
+        var motionObj = null;
+        var meetingTypeId;
+        var fileSortData, fileSortData1,attendanceSortData;
+        var motionId = common.getQueryVariable("motionId") || $("[name='motionId']").val();
+        var attendStatusMap={};//参会状态
+        var deliberationResultMap={};//审议结果
+
+        element.init();
+        var baseUrl = '../../../../';
+        common.themeSet();
+          //页面刚进来，需要先选择会议类型，获取对应会议类型ID Code Name
+        var meetingTypeId,
+        meetingTypeCode,
+        meetingTypeName,
+        meetingIdForm = common.getQueryVariable('dataObj') || common.uuid('', 32);
+        var curStatusType=common.getQueryVariable('statusType');
+        var newMotionSave=false;//下个会是否保存
+        var curIndex;
+        //操作类型，add:新增；edit：编辑
+        var formOperType = common.getQueryVariable('formOperType');
+        var flowStatusId = common.getQueryVariable('flowStatusId');
+        //是否异常
+        var exceptionFlag = false;
+        var editFlowStatusId = common.getQueryVariable('flowStatusId');
+        //------------------------预留layer节点报错
+        var addMotionAuditIndex = null;
+        var addMotionRelatedCourse = null;
+        var formMotionCloseIndex = window.parent.layer.index;
+
+        // --------------------------------初始化END--------------------------------
+
+        //按钮权限
+        common.buttonLimit($("#currentMenuSmId", window.parent.document).val(), function (res) {
+            //输入所有可操作的按钮集合
+            var list = res['list'] ? res['list'] : [];
+
+        });
+        //table监听事件
+        var motionAuditUpload = null;
+        var motion_Info = {};
+        var motionAudit_info = {};
+        // ------------------------------------功能实现
+
+        var mId = "";
+        var eventHandle={
+            getMotiona:function(motionId,statusType){// 议案信息导入
+                var layerLoader = common.layerLoader();
+                common.fetchPost('motionmgr/motiona/findMotiona', {motionId: motionId}, function (data) {
+                    layer.close(layerLoader);
+                    if (data.success) {
+                        eventHandle.loadFormValue(data);
+                        eventHandle.reloadGlyaTable();
+                        eventHandle.reloadYazxTable();
+                        eventHandle.qzshTableReload();
+                        motionObj = data.object;
+                        eventHandle.initRel(motionObj);
+                    } else {
+                        layer.msg("查询议案信息失败:" + data.resultMessage);
+                    }
+
+                    eventHandle.motionAboutTableFlush();//议案材料
+                    if(statusType&&(statusType=="2"||statusType=="3")){
+                        eventHandle.aboutSYQKInit(motionId);//审议情况信息导入
+                        eventHandle.aboutFileInit(motionId);//审议情况相关附件
+                    }
+                    else{
+
+                    }
+
+                }, function () {
+                    layer.close(layerLoader);
+                    layer.msg('查询议案信息失败');//失败后提示
+                });
+            },
+            getMeetingTypeFlow:function(motionId){//获取会议类型流程信息
+                motionId=motionId||null
+                common.fetchPost('motionmgr/motiona/selectRelMotionList', {
+                    motionId: motionId
+                }, function (res) {
+                    var data = res.list || [];
+                    var html = '';
+                    if (data.length > 0) {
+                        for (var i = 0; i < data.length; i++) {
+                            html += 
+                            '<li class="bg-gray '+(data[i].motionId==motionId?'defaultClickIndex':'')+'" data-motionId="'+data[i].motionId+'" data-meetingTypeId="'+
+                            data[i].meetingTypeId+'" data-statusType="'+data[i].statusType+'" data-flowStatusId="'+((data[i].tails&&data[i].tails.flowStatusId)?data[i].tails.flowStatusId:'')+'">'+
+                            '    <div class="yaMeetingType">'+
+                            '        <span name="meetingTypeName">'+(data[i].meetingTypeName?data[i].meetingTypeName:'')+'</span>议案'+
+                            '    </div>'+
+                            '    <div class="curStatus">'+
+                            '        <span name="statusTypeName">('+((data[i].tails&&data[i].tails.statusTypeName)?data[i].tails.statusTypeName:'')+')</span>'+
+                            '    </div>'+
+                            '</li>';
+                        }
+
+                        $('.meetingTypeFlowUl').empty().html(html);
+                        $('.meetingTypeFlowUl').parent().show();
+                        //点击事件
+                        $('.meetingTypeFlowUl li').off().on('click', function (e) {
+                            e.stopPropagation();
+                            var $tar=$(this);
+                            curIndex=$tar.index();
+                            var statusType=$tar.attr('data-statusType');
+                            if(statusType=="2"||statusType=="3"){
+                                $('#syqkLayer').removeClass('hideClass');
+                            }
+                            else{
+                                $('#syqkLayer').addClass('hideClass');//当前状态1（已提交）草稿0 退回4 情况下不显示审议情况
+                            }
+                            var hasClass=$tar.hasClass('bg-gray');
+                                if(!hasClass){//不包含
+                                return false;
+                            }
+                            $tar.removeClass('bg-gray').siblings().addClass('bg-gray');
+                            var curMeetingTypeName=$tar.find('[name=meetingTypeName]').text();
+                            var curMotionId= $tar.attr('data-motionId');
+                            $('#mainTitle').text(curMeetingTypeName+ '议案').show();
+                            eventHandle.getMotiona(curMotionId,statusType);
+                        });
+                        $('.meetingTypeFlowUl').find('li').eq(data.length-1).trigger('click');
+                    }
+                    else{
+                        $('.meetingTypeFlowUl').parent().hide();
+                    }
+                    $('.meetingTypeFlowUl').find('li.defaultClickIndex').trigger('click');
+                });
+            },
+            motionAboutTableInit:function(data){
+                table.render(common.tableInitParams({//议案材料
+                    elem: '#motionDatumList',
+                    // url: baseUrl + 'dfsmgr/file/getFileByResId?id=' + mId+'&type=SUBJECT',
+                    id: "motionDatumList",
+                    // method: 'post',
+                    // where: {
+                    //     type: "related"
+                    // },
+                    data:data,
+                    defaultToolbar:[],
+                    height: 'full-200',
+                    height:false,
+                    page: false,
+                    cols: [
+                        [
+                            {type:'checkbox'},
+                            {type: "numbers", align:'center',title: "序号"},
+                            {
+                                field: 'fiName', title: '文件名称',align:'center', minWidth: 120, sort: true,
+                                //  templet: function (rowData) {
+                                //     return rowData.fiName + '.' + rowData.fiSuffix;
+                                // }
+                            },
+                            {field: '', title: '操作', align:'center',width: 120, toolbar: '#motionDatumListOper', fixed: 'right'}
+                        ]
+                    ],
+                    done: function (data) {
+                        fileSortData = common.arraySort(data.data ? data.data : [], 'ggSort');
+                    },
+                    error:function(res, curr, count){
+                    }
+                }));
+            },
+            errTableInit:function(data){
+                table.render(common.tableInitParams({//议案材料
+                    text: {
+                        none: '请求异常,请联系管理员'
+                    },
+                    elem: '#motionDatumList',
+                    // url: baseUrl + 'dfsmgr/file/getFileByResId?id=' + mId+'&type=SUBJECT',
+                    id: "motionDatumList",
+                    // method: 'post',
+                    // where: {
+                    //     type: "related"
+                    // },
+                    data:data,
+                    defaultToolbar:[],
+                    height: 'full-200',
+                    height:false,
+                    page: false,
+                    cols: [
+                        [
+                            {type:'checkbox'},
+                            {type: "numbers", align:'center',title: "序号"},
+                            {
+                                field: 'fiName', title: '文件名称',align:'center', minWidth: 120, sort: true,
+                                //  templet: function (rowData) {
+                                //     return rowData.fiName + '.' + rowData.fiSuffix;
+                                // }
+                            },
+                            {field: '', title: '操作', align:'center',width: 120, toolbar: '#motionDatumListOper', fixed: 'right'}
+                        ]
+                    ],
+                    done: function (data) {
+                        fileSortData = common.arraySort(data.data ? data.data : [], 'ggSort');
+                    },
+                    error:function(res, curr, count){
+                    }
+                }));
+            },
+            motionAboutTableFlush:function(){
+                try {
+                    var data=[];
+                    mId=$("[name='motionId']").val();
+                    var loadingIndex = layer.load();
+                    common.fetchGet('../../../../dfsmgr/file/getFileByResId?id=' + mId+'&type=SUBJECT',function (res) {
+                        layer.close(loadingIndex);
+                        if (res.success && res.list) {
+                            data=res.list||[];
+                        }else{
+                            parent.layer.msg('议案材料列表获取失败' , {
+                                time: 3000, //3s后自动关闭
+                            });
+                        }
+                        eventHandle.motionAboutTableInit(data);
+                        },
+                        function (err) {
+                            layer.close(loadingIndex);
+                            if(err.resultMessage){
+                                parent.layer.alert(err.resultMessage);
+                            }
+                            else{
+                                parent.layer.msg('议案材料列表获取失败');
+                            }
+                            eventHandle.errTableInit([]);
+                            return false;
+                        });
+                } catch (e) {
+                    eventHandle.errTableInit([]);
+                    parent.layer.msg('议案材料列表获取失败,请联系系统管理员');
+                }
+            },
+            shqkInit: function (subjectId) {
+                common.fetchPost('meetingmgr/tiolDeliberation/selectTiolDeliberationTj?subjectId=' + subjectId, null, function (res) {
+                    $('input[name=bjqk]').val(res.object);
+                    form.render();
+                }, function () { });
+            },
+            aboutSYQKInit: function (motionId) {
+                motionId=motionId||$("[name='motionId']").val();
+                common.fetchGet('motionmgr/motiona/selectSubjectInfo?motionId=' + motionId, function (res) {
+                    var defaultObj={
+                        "meetingId": "",
+                        "meetingName": "",
+                        "meetingTime": "",
+                        "meetingTimeEnd": "",
+                        "meetingAddr": "",
+                        "deliberationName": "",
+                        "resultTypeName": "",
+                        "passFlagName": "",
+                        "subjectResult": ""
+                    };
+                    var data=res.object||defaultObj;
+                    $('[name=meetingName]').val(data.meetingName);//会议名称
+                    $('[name=meetingTime]').val(data.meetingTime);//会议日期
+                    $('[name=meetingAddr]').val(data.meetingAddr);//会议地点
+                    $('[name=deliberationName]').val(data.deliberationName);//审议类型
+                    $('[name=resultTypeName]').val(data.resultTypeName);//决议类别
+                    $('[name=passFlagName]').val(data.passFlagName);//审议结果
+                    $('[name=subjectResult]').val(data.subjectResult);//审议结论
+                    form.render();
+                }, function (err) {
+                    layer.msg('审议情况信息获取失败:'+err.resultMessage);
+                    return false;
+                });
+            },
+            aboutFileInit:function(motionId){//审议情况相关附件
+                motionId=motionId||$("[name='motionId']").val();
+                table.render(common.tableInitParams({
+                    elem: '#subjectFileTable',
+                    url: baseUrl + 'dfsmgr/file/getFileByResIdAndFileType?id=' + mId+'&type=OTHER_SUBJECT',
+                    id: "subjectFileTable",
+                    method: 'post',
+                    where: {
+                        type: "related"
+                    },
+                    defaultToolbar:[],
+                    height:false,
+                    page: false,
+                    cols: [
+                        [
+                            {type:'checkbox'},
+                            {type: "numbers", align:'center',title: "序号"},
+                            {
+                                field: 'fiName', title: '文件名称',align:'center', minWidth: 120, sort: true,
+                                //  templet: function (rowData) {
+                                //     return rowData.fiName + '.' + rowData.fiSuffix;
+                                // }
+                            },
+                            {field: '', title: '操作', align:'center',width: 120, toolbar: '#subjectFileTableOper', fixed: 'right'}
+                        ]
+                    ],
+                    done: function (data) {
+                        fileSortData = common.arraySort(data.data ? data.data : [], 'ggSort');
+                    }
+                }));
+            },
+            glyaTableInit:function(){
+                table.render(common.tableInitParams({//关联议案
+                    elem: '#glyaList',
+                    url: baseUrl + 'motionmgr/motiona/selectMotionOnMeetingMotionPage',
+                    id: "glyaList",
+                    method:'post',
+                    where: {
+                        motionId: motionId,
+                        type: "related"
+                    },
+                    height: 'full-200',
+                    defaultToolbar:[],
+                    height:false,
+                    page:false,
+                    cols: [
+                        [
+                            {type: 'checkbox'},
+                            {type: "numbers", title: "序号",align:'center'},
+                            {field: 'motionName', title: '议案名称',minWidth:120, sort: true},
+                            {field: 'motionTypeName', title: '议案类别',width:150,align:'center', sort: true},
+                            {field: 'soName', title: '提出部门',width:150,align:"left", sort: true},
+                            {field: 'motionCreateTime', title: '提交日期',width:120,align:'center', sort: true},
+                            {field: '', title: '操作', width:80,align:'center', toolbar: '#glyaListOper', fixed: 'right'},
+                        ]
+                    ]
+                }));
+            },
+            yazxTableInit:function(){
+                table.render(common.tableInitParams({//议案执行
+                    elem: '#yazxList',
+                    url: baseUrl + 'meetingmgr/tiolExecution/pageQueryExecution',
+                    id: "yazxList",
+                    method:'post',
+                    where: {
+                        subjectId: motionId
+                    },
+                    height: 'full-200',
+                    defaultToolbar:[],
+                    height:false,
+                    page:false,
+                    cols: [
+                        [
+                        { type: 'checkbox' },
+                        { "type": 'numbers', title: '序号' },
+                        { field: 'leadDept', align:'center', title: '牵头部门'},
+                        { field: 'leadPerson', align:'center', title: '牵头人'},
+                        { field: 'implementationStatus', align:'center', title: '执行状态'},
+                        {
+                            field: 'reportToSasac', title: '报国资委', align:'center', templet: function (rowDta) {
+                                return rowDta.reportToSasac === "1" ? '<span class="green">是</span>' : '<span class="red">否</span>';
+                            }
+                        },
+                        {
+                            field: 'ggCreateDatetime', title: '填写日期', align:'center', templet: function (rowDta) {
+                                return rowDta.ggCreateDatetime == null? "": common.timestampToTime(rowDta.ggCreateDatetime);
+                            }
+                        },
+                        {
+                            field: 'submitDatetime', title: '提交日期', align:'center', templet: function (rowDta) {
+                                return rowDta.submitDatetime == null? "": common.timestampToTime(rowDta.submitDatetime);
+                            }
+                        },
+                        {
+                            field: 'submitGzwTime', title: '报国资委日期', align:'center', templet: function (rowDta) {
+                                if ("6" === rowDta.uploadStatus) {
+                                    return "作废";
+                                }
+                                else {
+                                    return rowDta.submitGzwTime == null? "": common.timestampToTime(rowDta.submitGzwTime);
+                                }
+                            }
+                        },
+                        { title: '操作', toolbar: '#yazxListOper', fixed: 'right', width:80, align:'center',}
+                        ]
+                    ],
+                    done:function(res){
+                        if(res.count=='0'){
+                            $('#yazxLayer').addClass('hideClass');
+                        }else{
+                            $('#yazxLayer').removeClass('hideClass');
+                        }
+                    }
+                }));
+            },
+            reloadGlyaTable:function(){
+                table.reload('glyaList', {
+                    where: {
+                        motionId: $("[name='motionId']").val(),
+                        type: "related"
+                    }
+                });
+            },
+            reloadYazxTable:function(){
+                table.reload('yazxList', {
+                    where: {
+                        subjectId: $("[name='motionId']").val()
+                    }
+                });
+            },
+            loadFormValue:function(data){
+                form.val("motionaForm", data.object);
+                if (data.object.tails.attendanceListStr) {
+                    $("[name='attendanceListStr']").val(data.object.tails.attendanceListStr);
+                }
+                $("#motionMain div.white-bg").show();
+            },
+            setReport:function(reportIds,reportNames,motionId){
+                common.fetchPost('motionmgr/tiolAttendance/setReport', {attendanceIds:reportIds.join(','),motionId:motionId}, function (data) {
+                        if (data.success) {
+                            $("[name='msSpeaker']").val(reportNames.toString());
+                        } else {
+                        	layer.msg('编辑议案列席人失败');//失败后提示
+                        }
+                    }, function () {
+                        layer.msg('编辑议案列席人失败');//失败后提示
+                    });
+            },
+            chooseTiolAttendances:function(list){
+                var motionId = $("[name='motionId']").val();
+                	common.fetchPost('motionmgr/tiolAttendance/chooseTiolAttendances', {attendanceList:list,motionId:motionId}, function (data) {
+                        if (data.success) {
+                        } else {
+                        	layer.msg('选择议案列席人失败');//失败后提示
+                        }
+                    }, function () {
+                        layer.msg('保存议案列席人信息失败');//失败后提示
+                });
+            },
+            meetingTypeSelectLayer:function () {
+                var meetingTypeSelectLayer= layer.open({
+                    title:'会议类型',
+                    area:['400px','500px'],
+                    btn:['<i class="layui-icon">&#xe605;</i>确定'],
+                    content:$('.meetingTypeSelectLayer').html(),
+                    type:'1',
+                    closeBtn:0,
+                    btnAlign:'c',
+                    success:function (obj) {
+                        var parent=$(obj.selector);
+                        common.selectDataSet({
+                            elem: parent.find('[name=meetingType]'),
+                            url: 'meetingmgr/tiolMeetingType/getTiolMeetingTypeSelect',
+                            responseList: 'list',
+                            method: 'get',//默认为get
+                            optionText: 'meetingTypeName',
+                            optionValue: 'meetingType',
+                            success: function (data) {
+                                form.render('select');
+                            }
+                        });
+                    },
+                    yes:function (index,layero) {
+                        var parent = $(layero.selector);
+                        if (!parent.find('[name=meetingType]').val()) {
+                            layer.msg('请选择会议类型');
+                            return false;
+                        }
+                        var select = parent.find('[name=meetingType]');
+                        var meetingTypeValue = select.val();//值
+                        meetingTypeName = parent.find('[name=meetingType]').find('option:checked').text();//显示的内容
+                        meetingTypeId = meetingTypeValue.split("_")[0];
+                        meetingTypeCode = meetingTypeValue.split("_")[1];
+
+                        $("#meetingTypeId").val(meetingTypeId);
+                        $("#meetingTypeCode").val(meetingTypeCode);
+                        $("#meetingTypeName").val(meetingTypeName);
+                        $("#meetingId").val(meetingIdForm);
+                        $("#formOperType").val(formOperType);
+                        $('#mainTitle').text(meetingTypeName + '议案').show();
+                        form.render('select');
+
+                        layer.close(meetingTypeSelectLayer);
+                    }
+                });
+            },
+            qzshTableInit:function(){//前置审核列表
+                table.render(common.tableInitParams({//前置审核
+                    elem: '#addMotionAuditList',
+                    id: 'addMotionAuditList',
+                    url: baseUrl + 'motionmgr/motiona/findModifyMotionAuditList',
+                    method: 'post',
+                    where: {
+                        motionId: motionId
+                    },
+                    defaultToolbar:[],
+                    height: 'full-200',
+                    height:false,
+                    page:false,
+                    cols: [
+                        [
+                            {type: 'checkbox'},
+                            {type: 'numbers', align:'center',title: '序号'},
+                            {
+                                field: 'auditTypeName', align:'center',title: '审核类型', width: 200
+                            },
+                            {field: 'maFileName', align:'center',title: '文件名称',minWidth:120, sort: true},
+                            {field: '', title: '操作', align:'center',width:120, toolbar: '#hyzlListOper', fixed: 'right'},
+                        ]
+                    ],
+                    done: function (data) {
+                        fileSortData1 = common.arraySort(data.data ? data.data : [], 'ggSort');
+                    }
+                }));
+            },
+            qzshTableReload:function () {
+                mId=$("[name='motionId']").val();
+                table.reload('addMotionAuditList',{
+                    where: {
+                        motionId: mId
+                    }
+                });
+            },
+            domEvent:function(){//事件监听
+                //会议详情查看
+                $('#meetingView').off('click').on('click',function(){
+                    currentDom
+                    var currentDom=$('#meetingName');
+                    var meetingId=$('#meetingId').val();
+                    var meetingTypeName=currentDom.val();
+                    var urlParams='';
+                    var meetingViewLayer = layer.open({
+                        title: ['会议详情'],
+                        type: 2,
+                        content: baseUrl + 'src/page/ys/hygl/meetingView.html?meetingId=' + meetingId+'&meetingTypeName='+meetingTypeName,
+                        offset: 't',
+                        area: ["90%", "100%"],
+                    });
+                });
+                //审议结果
+                $('#passFlagDetail').off('click').on('click',function(){
+                    currentDom
+                    var currentDom=$('#passFlagName');
+                    var passFlagId=$('#passFlagId').val();
+                    var passFlagName=currentDom.val();
+                    var bjxqLayer = layer.open({
+                            offset: '10px',
+                            title: '表决详情',
+                            maxmin: false,
+                            type: 1,//页面层
+                            area: ['90%','80%'],//高度自适应
+                            zIndex :980,
+                            // area: ['580px'],//高度自适应
+                            shadeClose: false,
+                            btn: ['<i class="layui-icon">&#xe605;</i>确定', '<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>取消'],
+                            btnAlign: 'c',
+                            yes: function () {
+                                // $("[lay-filter='formSubjectEdit']").click();
+                                layer.close(bjxqLayer);
+                            },
+                            btn2: function () {
+                                layer.close(bjxqLayer);
+                            },
+                            content: $('#edit-syForm').html(),//加载该区域的html
+                            success: function (obj) {
+                                //表决情况
+                                eventHandle.shqkInit(motionId);
+                                //保存参会状态
+                                common.fetchGet('sysmgr/dicts/selectDictListByPcode?dictPCode=attendStatus', function (data) {
+                                    if (data && data.list && data.list.length > 0) {
+                                        attendStatusList = data.list;
+                                        $.map(data.list, function (item) {
+                                            attendStatusMap[item.sdCode] = item;
+                                        });
+                                    }
+                                });
+                                //审议结果
+                                common.fetchGet('sysmgr/dicts/selectDictListByPcode?dictPCode=DELIBERATIONRESULT', function (data) {
+                                    if (data && data.list && data.list.length > 0) {
+                                        deliberationResultList = data.list;
+                                        $.map(data.list, function (item) {
+                                            deliberationResultMap[item.sdCode] = item;
+                                        });
+                                    }
+                                });
+                                table.render(common.tableInitParams({//表决情况表
+                                    elem: $(obj.selector).find('#bjTable'),
+                                    id: "#bjTable",
+                                    url: baseUrl + 'meetingmgr/tiolDeliberation/selectTiolDeliberationPage?subjectId=' + motionId,
+                                    where: {
+                                        subjectId: motionId
+                                    },
+                                    method: 'post',
+                                    height: false,
+                                    //toolbar:'#deliberationToolBar',
+                                    defaultToolbar: [],
+                                    cols: [[
+                                        { type: 'numbers', title: '序号', width: 80 },
+                                        { field: 'deliberationPersonnel',align:'center',width:120, title: '姓名' },
+                                        { field: 'job', title: '职务' },
+                                        {
+                                            field: 'attendStatus',align:'center',width:120, title: '参会状态',
+                                            templet: function (rowData) {
+                                                if (rowData['attendStatus'] && attendStatusMap[rowData['attendStatus']]) {
+                                                    return attendStatusMap[rowData['attendStatus']]['sdName'];
+                                                } else {
+                                                    return '';
+                                                }
+                                            }
+                                        }
+                                        , { field: 'reason',align:'center',minWidth:120, title: '缺席原因' }
+                                        , {
+                                            field: 'deliberationResult',align:'center',minWidth:120, title: '审议结果',
+                                            templet: function (rowData) {
+                                                if (rowData['deliberationResult'] && deliberationResultMap[rowData['deliberationResult']]) {
+                                                    if(rowData['deliberationResult'] == "同意"){
+                                                return '<span class="green">同意</span>'
+                                            }else if(rowData['deliberationResult'] == "反对"){
+                                                return '<span class="red">反对</span>'
+                                            }else{
+                                                return '<span class="green3">弃权</span>'
+                                            };
+                                                } else {
+                                                    return '';
+                                                }
+                                            }
+                                        }
+                                        , { field: 'remark', align:'center',minWidth:120,title: '备注' }
+                                    ]]
+                                }));
+                            }
+                    });
+                });
+                $('#closeBtn').off('click').on('click',function(){//关闭当前页面
+                    parent.layer.closeAll();
+                });
+                // 提案表-预览
+                $('#tbPreviewBtn').off('click').on("click", function () {
+                    var $current = $("#motionDatum");
+                    var fileId=$current.val();
+                    var fileName = $("#motionDatumName").val();
+                    if(fileName==""&&!fileId){
+                        layer.msg('提案表文件不存在');
+                        return false;
+                    }
+                    common.pdfPreview(fileId, fileName?(fileName.split('.')[1]):'pdf');//非pdf会下载
+                });
+                // 提案表-下载
+                var isClick = true;
+                $('#tbLoadBtn').off('click').on("click", function () {
+                    if(isClick) {//防重复点击或点击过快
+                        isClick = false;
+                        var $current = $("#motionDatum");
+                        var fileId=$current.val();
+                        var fileName = $("#motionDatumName").val();
+                        if(fileName==""&&!fileId){
+                            layer.msg('提案表文件不存在');
+                            return false;
+                        }
+                        common.fileDownload(fileId);
+                        //定时器
+                        setTimeout(function() {
+                            isClick = true;
+                        }, 1000);//一秒内不能重复点击
+                    }
+                });
+            //议案材料 预览下载
+                table.on('tool(motionDatumList)', function (obj) {
+                    var data = obj.data;
+                    switch (obj.event) {
+                        case "preview":// 预览
+                            common.pdfPreview(obj.data.fiId, obj.data.fiSuffix);
+                            break;
+                        case 'load':
+                            if (data.fiId) {
+                                common.fileDownload(data.fiId);
+                            } else {
+                                layer.msg('未上传文件');
+                                return false;
+                            }
+                            break;
+                        default:break;
+                    }
+                });
+            //审议情况 预览下载
+                table.on('tool(subjectFileTable)', function (obj) {
+                    var data = obj.data;
+                    switch (obj.event) {
+                        case "preview":// 预览
+                            common.pdfPreview(obj.data.fiId, obj.data.fiSuffix);
+                            break;
+                        case 'load':
+                            if (data.fiId) {
+                                common.fileDownload(data.fiId);
+                            } else {
+                                layer.msg('未上传文件');
+                                return false;
+                            }
+                            break;
+                        default:break;
+                    }
+                });
+            // 前置审核 预览下载
+                table.on('tool(addMotionAuditList)', function (obj) {
+                    var data = obj.data;
+                    switch (obj.event) {
+                        case "preview":// 预览
+                                common.pdfPreview(data.maFile, data.maFiSuffix?data.maFiSuffix:'pdf');
+                                break;
+                        case 'load':
+                            if (data.maFile) {
+                                common.fileDownload(data.maFile);
+                            } else {
+                                layer.msg('未上传文件');
+                                return false;
+                            }
+                            break;
+                    }
+                });
+            // 关联议案 --查看
+                table.on('tool(glyaList)', function (obj) {
+                      var data = obj.data;
+                      switch (obj.event) {
+                      case 'check'://编辑
+                          var editLayer = layer.open({
+                              title: ['查看'],
+                              type: 2,
+                              content: './yaListReportedView.html?view=view&motionId='+data.motionId ,
+                              maxmin: true,
+                              offset: 't',
+                              btnAlign: 'lc',
+                              success: function (layero, index) {
+                              }
+                          });
+                          layer.full(editLayer);
+                          break;
+                      default:
+                          break;
+                  }
+                });
+            // 关联议案 --查看
+                table.on('tool(glyaList)', function (obj) {
+                      var data = obj.data;
+                      switch (obj.event) {
+                      case 'check'://编辑
+                          var editLayer = layer.open({
+                              title: ['查看'],
+                              type: 2,
+                              content: './yaListReportedView.html?view=view&motionId='+data.motionId ,
+                              maxmin: true,
+                              offset: 't',
+                              btnAlign: 'lc',
+                              success: function (layero, index) {
+                              }
+                          });
+                          layer.full(editLayer);
+                          break;
+                      default:
+                          break;
+                  }
+                });
+            // 议案执行 --查看
+                table.on('tool(yazxList)', function (obj) {
+                      var data = obj.data;
+                      switch (obj.event) {
+                      case 'checkYazx'://查看
+                          var editLayer = layer.open({
+                            title: '查看',
+                            type: 2,
+                            content: baseUrl + 'src/page/ys/yazx/yazxAdd.html?view=view&executionId='+data.executionId+'&subjectId='+ data.subjectId + '&meetingId='+meetingIdForm+ '&meetingTypeName='+meetingTypeName,
+                            maxmin: true,
+                            offset: 't',
+                            btnAlign: 'lc',
+                            yes: function () {
+                                return false;
+                            },
+                            btn2: function () {
+                                layer.close(editLayer);
+                            },
+                            success: function (layero, index) {
+                                //获取单页面的所有配置内容 传入compId
+                                // $("#compId", layero.find("iframe")[0].contentWindow.document).text(data['compId']);
+                            }
+                          });
+                          layer.full(editLayer);
+                          break;
+                      default:
+                          break;
+                  }
+                });
+            },
+            initRel:function(obj){
+                var motionType=obj.motionType;
+                common.fetchPost('catalog/tiolBillType/selectTiolBillTypePage', {billId: obj.motionType}, function (data) {
+                    if (data.success&&data.page.list.length>0) {
+                        if (data.page&&data.page.list&&data.page.list[0].tails&&data.page.list[0].tails.catalogName) {
+                            $(".isRel").show();
+                        }
+                    }
+                });
+            },
+            output:function(){
+                //前置审核
+                eventHandle.qzshTableInit();
+                //关联议案
+                eventHandle.glyaTableInit();
+                //议案执行
+                eventHandle.yazxTableInit();
+    // --------------------------------初始化--------------------------------
+            if (motionId) {//查看页面
+            	eventHandle.getMeetingTypeFlow(motionId); //获取所有会议类型议案
+                meetingTypeId = common.getQueryVariable('meetingTypeId'); //获取会议id
+                meetingTypeCode = common.getQueryVariable('meetingTypeCode'); //获取会议编码
+                meetingTypeName = common.getQueryVariable('meetingTypeName'); //获取会议名称
+                meetingIdForm = common.getQueryVariable('meetingId') || common.uuid('', 32);
+                $("#meetingTypeId").val(meetingTypeId);
+                $("#meetingTypeCode").val(meetingTypeCode);
+                $("#meetingTypeName").val(meetingTypeName);
+                $("#meetingId").val(meetingIdForm);
+                $("#formOperType").val(formOperType);
+                $('#mainTitle').text(meetingTypeName + '议案').show();
+                motionIdFlag = true;
+                // eventHandle.getMotiona(motionId);
+
+            }
+            // 事件监听
+               eventHandle.domEvent();
+            }
+        };
+        eventHandle.output();
+    });
+
+</script>
+
+<!--[if lt IE 9]>
+<script src=" ../../js/lib/html5.min.js"></script>
+<script src = "../../js/lib/respond.js" ></script>
+<![endif]-->
+</body>
+</html>

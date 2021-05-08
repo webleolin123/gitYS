@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>元数据查询</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../js/layui/css/layui.css"/>
+    <link href="../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script src="../../js/common/plugin.js"></script>
+</head>
+<body class="iframe-h">
+<div class="content-wrap">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+            <!-- layui tree-->
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>数据资源树</span><div class="columnSide"><i class="fa fa-toggle-left"></i></div></div>
+                <div class="layui-card-body">
+                    <ul class="eleTree ele4" id="leftTree" lay-filter="leftTree">
+                        <li>
+                            <i class="fa fa-bar-chart"></i>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
+            <div class="layui-tab layui-tab-card">
+                <ul class="layui-tab-title">
+                    <li class="layui-this">表结构</li>
+                    <li>表数据</li>
+                </ul>
+                <div class="layui-tab-content">
+                    <div class="layui-tab-item layui-show">
+                        <!--<div class="layui-collapse white-bg">
+                            <div class="layui-colla-item">
+                                <h2 class="layui-colla-title white-bg">查询条件</h2>
+                                <div class="layui-colla-content">
+                                    &lt;!&ndash;layui-form-pane&ndash;&gt;
+                                    <form class="layui-form layui-form-pane">
+                                        <div class="layui-row layui-col-space15">
+                                            <div class="layui-col-md6">
+                                                <div class="layui-form-item">
+                                                    <label class="layui-form-label">字段名称</label>
+                                                    <div class="layui-input-block">
+                                                        <input type="text" name="qColumnName" placeholder="请输入" autocomplete="off" class="layui-input">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <div class="layui-input-block">
+                                                <button class="layui-btn" lay-submit lay-filter="structTableFormSearch"><i class="fa fa-search"></i>查询</button>
+                                                <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>-->
+                        <div class="layui-card" style="margin-top: 10px">
+                            <div class="layui-card-header">
+                                <span id="description"></span>
+                            </div>
+                            <div class="layui-card-body">
+                                <table id="structTable" lay-filter="structTable"></table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-tab-item">
+                        <!--<div class="layui-collapse white-bg">
+                            <div class="layui-colla-item">
+                                <h2 class="layui-colla-title white-bg">查询条件</h2>
+                                <div class="layui-colla-content">
+                                    &lt;!&ndash;layui-form-pane&ndash;&gt;
+                                    <form class="layui-form layui-form-pane">
+                                        <div class="layui-row layui-col-space15">
+                                            <div class="layui-col-md6">
+                                                <div class="layui-form-item">
+                                                    <label class="layui-form-label">表编码</label>
+                                                    <div class="layui-input-block">
+                                                        <input type="text" name="qchTableCode" placeholder="请输入" autocomplete="off" class="layui-input">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <div class="layui-input-block">
+                                                <button class="layui-btn" lay-submit lay-filter="dataTableFormSearch"><i class="fa fa-search"></i>查询</button>
+                                                <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>-->
+                        <div class="layui-card" style="margin-top: 10px">
+                            <div class="layui-card-body">
+                                <table id="dataTable" lay-filter="dataTable"></table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script src="./../../js/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).extend({
+    }).use(['layer','table','form','laytpl','common','element','eleTree',],function () {
+        var table=layui.table;
+        var form=layui.form;
+        var common=layui.common;
+        var element = layui.element;
+        var tree = layui.eleTree;
+        element.init();
+        var baseUrl='../../../';
+
+        common.themeSet();
+        var eleTreeId;
+        var tableId;
+        var curDsId = null;
+        var tableName = null;
+        var eventHandle = {
+            treeInit:function () {
+                formatTree($("#leftTree"));
+                var treeData = [{"id":"-1", "name":"DataSource", "type":"root", "label":"DataSource", disabled: true}];
+                eleTreeId = tree.render({
+                    elem: '#leftTree',
+                    data: treeData,
+                    lazy: true,
+                    highlightCurrent: true,
+                    showCheckbox: false,
+                    load: function(data, callback) {
+                        if(data.type == 'root'){
+                            common.fetchPost('sysmgr/datasource/validDataSource/', {}, function (res) {
+                                if(res.success && res.list){
+                                    var myArray = [];
+                                    for ( var i = 0; i <res.list.length; i++){
+                                        myArray.push({"id":res.list[i].dsId, "type":"dataSource", "name":res.list[i].dsName, "label":res.list[i].dsName, disabled: true});
+                                    }
+                                    callback(myArray);
+                                }
+                            }, function(res){
+                                callback([]);
+                            });
+                        }
+                        else if(data.type == 'dataSource'){
+                            common.fetchGet('sysmgr/catalogueTable/selectTableOfDataSource?dsId='+data.id, function (res) {
+                                if(res.success && res.list){
+                                    var myArray = [];
+                                    for ( var i = 0; i <res.list.length; i++){
+                                        myArray.push({"id":res.list[i].tablename, "isLeaf":"1", "type":"table", "comments":res.list[i].comments, "extendAttr":data.id, "dsId":data.id, "name":res.list[i].tablename, "label":res.list[i].tablename});
+                                    }
+                                    callback(myArray);
+                                }
+                                //data.name = data.name+" ...连接成功";
+                                //eleTreeId.updateKeySelf(data.id, data);
+                                $("#leftTree").find("[data-id='"+data.id+"']").children("div.eleTree-node-content").children("span.eleTree-node-content-label").css("color","green");
+                            }, function(res){
+                                if(res.resultCode=='CONNECT_DATASOURCE_ERROR'){
+                                    //data.name = data.name+" ...连接失败";
+                                    //eleTreeId.updateKeySelf(data.id, data);
+                                    $("#leftTree").find("[data-id='"+data.id+"']").children("div.eleTree-node-content").children("span.eleTree-node-content-label").css("color","red");
+                                }
+                                callback([]);
+                            });
+                        }
+                    }
+                });
+                tree.on("nodeClick(leftTree)", function(obj) {
+                    if(obj.data.currentData.type == 'root'){
+                        curDsId = null;
+                    }
+                    else if(obj.data.currentData.type == 'dataSource'){
+                        curDsId = obj.data.currentData.id;
+                    }
+                    else if(obj.data.currentData.type == 'table'){
+                        curDsId = obj.data.currentData.dsId;
+                        tableName = obj.data.currentData.id;
+                        //查询表的列数据
+                        var layerLoader = common.layerLoader();
+                        common.fetchGet('sysmgr/catalogueTable/selectColumnOfTable?dsId='+curDsId+'&tableName='+tableName, function (res) {
+                            layer.close(layerLoader);
+                            if(res.success && res.list){
+                                $('#description').text(obj.data.currentData.id + (obj.data.currentData.comments? ("："+obj.data.currentData.comments): ""));
+                                //初始化表结构table
+                                eventHandle.structTableInit(res.list);
+
+                                //初始化表数据table
+                                var columns = [];
+                                columns.push({"type":"numbers", "title":"No."});
+                                for ( var i = 0; i <res.list.length; i++){
+                                    //columns.push({"field":deCodeUnderlined(res.list[i].columnname), "title":res.list[i].columnname, "width":"120"});
+                                    columns.push({"field":res.list[i].columnname, "title":res.list[i].columnname, "width":"120"});
+                                }
+                                eventHandle.dataTableInit(curDsId, tableName, columns);
+                            }
+                        }, function(res){
+                            layer.close(layerLoader);
+                            layer.alert(res.resultMessage);
+                        });
+                    }
+                });
+            },
+            dataTableInit: function (dsId, tableName, columns) {
+                table.render(common.tableInitParams({
+                    elem: '#dataTable',
+                    height: 'full-200',
+                    url: baseUrl + 'sysmgr/catalogueTable/pageQueryTableRowsOfDs',
+                    toolbar: '#tableToolBar',
+                    where: {"dsId":dsId, "tableName":tableName},
+                    cols: [columns],
+                }));
+            },
+            dataTableReload:function (dsId, tableName, params) {
+                if(!params) params={};
+                table.reload('dataTable',{
+                    url: baseUrl+'sysmgr/catalogueTable/pageQueryTableRowsOfDs',
+                    page:{
+                        curr:1
+                    },
+                    where:params
+                });
+            },
+            dataTableFormInit: function(){
+                form.on('submit(dataTableFormSearch)',function (obj) {
+                    //表格重载
+                    eventHandle.dataTableReload();
+                    return false;
+                });
+            },
+            structTableInit: function (data) {
+                table.render(common.tableInitParams({
+                    elem: '#structTable',
+                    height: 'full-200',
+                    data:data,
+                    cols:[
+                        [
+                            {"type":"numbers", "title":"序号"},
+                            {"field":"primarykey", "title":"主键", templet: function(rowData) {
+                                    return rowData['primarykey']==1? '是':'否';
+                            }},
+                            {"field":"columnname", "title":"列名", "width":240},
+                            {"field":"datatype", "title":"数据类型", "width":120},
+                            {"field":"datalength", "title":"数据长度"},
+                            {"field":"scale", "title":"小数长度"},
+                            {"field":"defaultvalue", "title":"默认值"},
+                            {"field":"nullable", "title":"是否必填", templet: function(rowData) {
+                                    return rowData['nullable']==1? '否':'是';
+                            }},
+                            {"field":"uniquekey", "title":"是否唯一", templet: function(rowData) {
+                                    return rowData['uniquekey']==1? '是':'否';
+                                }},
+                            {"field":"comment", "title":"备注"}
+                        ]
+                    ],
+                    page: false,
+                    limit: data.length
+                }));
+            }
+        };
+         //初始化树
+        eventHandle.treeInit();
+        common.columnSide();
+
+        function deCodeUnderlined(str){
+            var sb = "";
+            var splitArr = str.split("_");
+            for(var i=0 ;i<splitArr.length ;i++){
+                if(i == 0){
+                    sb += splitArr[0].toLowerCase();
+                }
+                else{
+                    sb += toUpperCaseFirstOne(splitArr[i].toLowerCase());
+                }
+            }
+            return sb;
+        }
+
+        // 首字母转大写
+        function toUpperCaseFirstOne(s) {
+            return s.charAt(0).toUpperCase() + s.substring(1);
+        }
+
+        function formatTree(obj){
+            var cacluHeight = $(document).height() - $("#mainMenuTab").height() - $(".layui-card-header").height() - 77;
+            $(obj).css({
+                "height": cacluHeight + "px",
+                "overflow-y": "auto"
+            });
+        }
+    });
+</script>
+<!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

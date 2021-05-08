@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>流程取消</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../js/layui/css/layui.css"/>
+    <link href="../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script src="../../js/common/plugin.js"></script>
+
+</head>
+<style>
+    .content{
+        height:100%;
+        width:100%;
+        position:fixed;
+        background: white;
+    }
+    .white-bg {
+        background: white;
+    }
+
+    .iframe-h {
+        height: 100%;
+    }
+
+    .content-wrap {
+        padding: 10px;
+    }
+
+    .red {
+        color: red;
+        padding-left: 5px;
+    }
+
+    .hide {
+        display: none;
+    }
+
+    .layui-form-pane .layui-form-label{
+        width: 150px;
+    }
+
+    .layui-form-pane .layui-input-block{
+        margin-left: 150px;
+    }
+</style>
+
+<body>
+<!--添加按钮中的弹框-->
+<div class="cancelLayer">
+    <div class="cancelWorkItem">
+        <div style="padding: 15px 20px;overflow-y:auto;overflow-x:hidden">
+            <div class="layui-card-body" style="padding-top: 0">
+                <table id="cancelWorkItemTable"  lay-filter="cancelWorkItemTable" ></table>
+                <script type="text/html" id="tableToolBar">
+                    <div class="layui-btn-container">
+                        <button class="layui-btn layui-btn-sm" lay-event="cancel" permission-btn="cancelButton">
+                                <i class="icon iconfont icon-button-hh-1"></i> 撤办
+                        </button>
+                    </div>
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="./../../js/layui/layui.js"></script>
+<script>
+    var tranStates;
+
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).extend({
+        flowEngine: 'common/flowEngine'
+    }).use(['layer','flowEngine','table','laytpl','common','element'], function () {
+        var common = layui.common;
+        var element = layui.element;
+        var table=layui.table;
+        var flowEngine = layui.flowEngine;
+        element.init();
+        var layerLoader = null;
+        var baseUrl = '../../../';
+        common.themeSet();
+        var cancelJson = null;
+        var eventHandler={
+            //初始化表单
+            initForm:function(obj){
+                var flowparam = {
+                    piid:parent.parentEnt.processInstanceid,
+                    userinfo:parent.parentEnt.userId,
+                    username:parent.parentEnt.userName,
+                    companyid:parent.parentEnt.caApplyUnitid
+                };
+
+                flowEngine.init(flowparam);
+                flowEngine.querycancelsubmit(function(data){
+
+                    // cancelJson = data.object.resultMsg;
+                    // eventHandler.combine(cancelJson);
+                    // return false;
+                    if(data.success){
+                        var dataArr = [];
+                        if(data.object.errorCode === "0"){
+                            dataArr = eventHandler.parseData(data.object.resultMsg);
+                        }
+                        table.render(common.tableInitParams({
+                                elem: '#cancelWorkItemTable',
+                                data:dataArr,
+                                toolbar:'#tableToolBar',
+                                height:450,
+                                text: {
+                                    none: '暂无可撤办的待办'
+                                },
+                                cols: [
+                                    [
+                                        {type:'checkbox'},
+                                        {field: 'formerstatename', width:150, title: '提交环节名称',sort: true},
+                                        {field: 'statename', title: '撤办环节名称',sort: true},
+                                        {field: 'text', width:100, title: '办理人',sort: true}
+                                    ]
+                                ],
+                                done: function(){
+
+                                }
+                            }));
+                    }else{
+                        layer.msg(data.resultMessage)                    }
+                });//加载撤办人员
+
+            },
+            parseData:function(data){
+                var dataList = []
+                for(var x=0;x<data.length;x++){
+                    var dataObj = data[x];
+                    var activities = dataObj.activities;
+                    for(var i=0;i<activities.length;i++){
+                        var activitie = activities[i]
+                        var workitems = activitie.workitems;
+                        for(var j=0;j<workitems.length;j++){
+                            var workitem = workitems[j]
+                            var cancelitem = {
+                                formerstatename: dataObj.formerstatename,
+                                formeruserid: dataObj.formeruserid,
+                                wiid: workitem.wiid,
+                                text: workitem.text,
+                                value: workitem.value,
+                                statename: activitie.statename,
+                                aiid: activitie.aiid,
+                                sid: activitie.sid,
+                                formeruserorgid: dataObj.formeruserorgid,
+                                formeraiid: dataObj.formeraiid,
+                                formersid: dataObj.formersid
+                            }
+                            dataList.push(cancelitem);
+                        }
+                    }
+                }
+                return dataList;
+            },
+            combine:function(dataList){
+                if(dataList.length <1) return;
+                var formeractivitys = [];
+                var formeractivityArray = {};
+                for (var i = 0, j = dataList.length; i < j; i++) {
+                    var temp = dataList[i];
+                    var key = temp.formerstatename + "@" + temp.formeruserid + "@" + temp.formeruserorgid + "@" + temp.formeraiid + "@" + temp.formersid;
+                    if (formeractivityArray[key]) {
+                        formeractivityArray[key].push(temp);
+                    } else {
+                        formeractivityArray[key] = new Array();
+                        formeractivityArray[key].push(temp);
+                    }
+                }
+                for (var a in formeractivityArray) {
+                    var fact = {};
+                    var formeractivityObjArr = a.split('@');
+                    fact.aiid =  formeractivityObjArr[3];
+                    fact.statename =  formeractivityObjArr[0];
+                    fact.sid = formeractivityObjArr[4];
+                    fact.userid = formeractivityObjArr[1];
+                    fact.userogrid = formeractivityObjArr[2];
+                    fact.activities = new Array();
+
+                    var formeractivity = formeractivityArray[a];
+                    var activityArray = {};
+                    for (var o = 0; o < formeractivity.length; o++) {
+                        var tempf = formeractivity[o];
+                        var tempkey = tempf.aiid + '@' + tempf.sid + '@' + tempf.statename;
+                        if (activityArray[tempkey]) {
+                            activityArray[tempkey].push(tempf);
+                        } else {
+                            activityArray[tempkey] = new Array();
+                            activityArray[tempkey].push(tempf);
+                        }
+                    }
+
+                    for (var m in activityArray) {
+                        var act = {};
+                        var activityObjArr = m.split('@');
+                        act.aiid = activityObjArr[0];
+                        act.statename = activityObjArr[2];
+                        act.sid = activityObjArr[1];
+                        act.workitems = new Array();
+                        var activity = activityArray[m];
+                        for (var j = 0;j < activity.length; j++) {
+                            var wis = activity[j];
+                            var workitem = {};
+                            workitem.wiid = wis.wiid;
+                            var us = {};
+                            us.value = wis.value;
+                            us.text = wis.text;
+                            workitem.user = us;
+                            act.workitems.push(workitem);
+                        }
+                        fact.activities.push(act);
+                    }
+                    formeractivitys.push(fact);
+                }
+                return formeractivitys;
+            }
+        }
+
+        table.on('toolbar(cancelWorkItemTable)',function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch(obj.event){
+                case 'cancel':
+                    //点击添加按钮
+                    if(checkStatus.data.length>0){
+                        layer.confirm('确定撤办选中待办?', {icon: 3, title:'提示',offset: '150px'}, function(index){
+                            layerLoader =common.layerLoader();
+                            var formeractivitys = eventHandler.combine(checkStatus.data);
+                            var flowparam = {
+                                piid:parent.parentEnt.processInstanceid,
+                                userinfo:parent.parentEnt.userId,
+                                username:parent.parentEnt.userName,
+                                companyid:parent.parentEnt.caApplyUnitid,
+                                catalogueId: parent.parentEnt.catalogueId,
+                                businessId:parent.parentEnt.caId
+                            }
+                            var param = {
+                                requesttype: 'cancelstatesubmitrequest',
+                                piinfo:flowparam,
+                                formerActivitys: formeractivitys
+                            }
+                            flowEngine.init(flowparam);
+                            flowEngine.cancelStateSubmit(param,function(){
+                                parent.layer.closeAll()
+                            });
+
+                        })
+                    }else{
+                        layer.msg('请选择需要撤办的待办!');
+                    }
+                    break;
+            }
+        });
+
+        eventHandler.initForm();
+    });
+
+
+</script>
+</body>
+</html>

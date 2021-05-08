@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>参数配置</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../js/layui/css/layui.css"/>
+    <link href="../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script charset="utf-8" src="../../js/common/plugin.js"></script>
+    <style>
+        .white-bg{
+            background: white;
+        }
+        .iframe-h{
+            height: 100%;
+        }
+        .content-wrap{
+            padding: 10px;
+        }
+        .red{
+            color: red;
+            padding-left: 5px;
+        }
+        .hide{
+            display: none;
+        }
+        .upload{
+            margin-top: 15px;
+            margin-left: 20%;
+        }
+        .adapt{
+            margin-top: 15px;
+            margin-left: 30%;
+        }
+    </style>
+</head>
+<body class="iframe-h">
+<div>
+    <div class="content-wrap">
+        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+            <form action="" class="layui-form layui-form-pane" lay-filter="cnfigForm">
+                <input type="hidden" name="sysHost" id="sysHost" value="0" lay-verify="sysHostRule" autocomplete="off" class="layui-input">
+                <input type="hidden" name="sysUser" id="sysUser" value="0" lay-verify="sysUserRule" autocomplete="off" class="layui-input">
+                <input type="hidden" name="sysPwd" id="sysPwd" value="0" lay-verify="sysPwdRule" autocomplete="off" class="layui-input">
+                <input type="hidden" name="sysPort" id="sysPort" value="0" lay-verify="sysPortRule" autocomplete="off" class="layui-input">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><b class="red">*</b>上传路径</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="tmpUploadpath" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><b class="red">*</b>部署路径</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="deploymentPath" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item adapt">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit lay-filter="formSavue"><i class="layui-icon">&#xe605;</i>提交</button>
+                        <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                    </div>
+
+                </div>
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="./../../js/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).extend({
+    }).use(['form','common','element'],function () {
+        var form = layui.form;
+        var common = layui.common;
+        var element = layui.element;
+        element.init();
+
+        common.themeSet();
+        //监听 表单提交
+        form.on('submit(formSavue)', function(data) {
+            var parma = {
+                sysHost: data.field.sysHost,
+                sysPwd: data.field.sysPwd,
+                sysPort: data.field.sysPort,
+                tmpUploadpath: data.field.tmpUploadpath,
+                deploymentPath: data.field.deploymentPath,
+            };
+            common.fetchPut('sysmgr/sysUpgrade/saveSysUpgradeInfo', parma, function (res) {
+                if (res) {
+                    if (res != 'success') {
+                        layer.msg("升级参数保存失败！", {icon: 5});
+                        return false;
+                    } else {
+                        layer.msg("升级参数保存成功！", {icon: 6});
+                    }
+                }
+            });
+            return false;
+        });
+
+
+        //初始化表格
+
+        common.fetchGet('sysmgr/sysUpgrade/selectSysUpgrade',function (res) {
+            var result =res;
+            initForm(result);
+            function initForm(data){
+                if(data!=undefined&&data!=null&&data.sysHost!=undefined&&data.sysHost!=null&&data.sysHost!=""){
+                    setForm(data);
+                }else{
+                    newForm();
+                    numberInit();
+                }
+            }
+            function setForm(data){
+                //表单初始赋值
+                form.val('cnfigForm', {
+                    "sysHost":data.sysHost,
+                    "sysUser":data.sysUser,
+                    "sysPwd":data.sysPwd,
+                    "sysPort":data.sysPort,
+                    "tmpUploadpath":data.tmpUploadpath,
+                    "deploymentPath":data.deploymentPath
+                })
+            }
+            function newForm(){
+                form.val('cnfigForm', {
+                    "sysHost":'',
+                    "sysUser":'',
+                    "sysPwd":'',
+                    "sysPort":'',
+                    "tmpUploadpath":'',
+                    "deploymentPath":''
+                })
+            }
+            function numberInit(){
+                form.val('cnfigForm', {
+                })
+            }
+
+            form.render();
+
+        });
+        common.buttonLimit();
+
+
+    });
+</script>
+
+<!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

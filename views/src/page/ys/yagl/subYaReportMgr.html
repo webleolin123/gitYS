@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html  class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>议案列表-下级上报</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../../js/layui/css/layui.css"/>
+    <link href="../../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../../js/lib/jquery.1.12.3.js"></script>
+</head>
+
+<style>
+    .layui-layer-btn-c {
+        margin-top: -20px;
+    }
+    span#reportNums {
+        font-weight:900;
+        font-size:18px;
+    }
+     span#reportNums i{
+         height:20px;
+         vertical-align:-2px;
+     }
+     .eleTree.ele5,
+        .eleTree.ele6{
+            height: auto;
+            width: 100%;
+            display: none;
+            position: absolute;
+            top:100%;
+            background-color: #fff;
+            z-index: 10000;
+            border: 1px solid #ccc;
+        }
+</style>
+<body class="iframe-h">
+
+<div class="content-wrap">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+            <!-- layui tree-->
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom">
+                    <span><i></i>企业层级</span>
+                </div>
+                <div class="layui-card-body">
+                    
+                    <div class="layuiTree eleTree ele4" id="leftTree" lay-filter="leftTree"
+                        style="overflow-y: auto;margin-top: 10px"></div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs10 layui-col-sm10 layui-col-xs10">
+            <div class="layui-card">
+                <div class="layui-card-header layui-card-header-custom"><span><i></i>上报列表<b class="columnToggle"><i class="fa fa-toggle-left"></i></b></span></div>
+                <div class="layui-card-body">
+                    <form action="" class="layui-form layui-form-pane">
+                        <div class="layui-row layui-col-space10">
+                            <div class="layui-col-md4">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">议案名称</label>
+                                    <div class="layui-input-block">
+                                        <input autocomplete="off" class="layui-input" name="motionName" placeholder="请输入"
+                                                type="text">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">会议日期</label>
+                                        <div class="layui-input-block">
+                                            <input class="layui-input" name="meetingTime" placeholder="请选择" type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                            <div class="toggle-area layui-col-space10">
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">上报日期</label>
+                                        <div class="layui-input-block">
+                                            <input class="layui-input" name="reportTime" placeholder="请选择" type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="" style="text-align: center;">
+                                    <div class="layui-input-inline" style="padding-left: 20px">
+                                        <button name="searchSubmit" class="layui-btn  " lay-submit="" lay-filter="formSearch" ><i class="fa fa-search"></i>查询</button>
+                                        <button name="reset" lay-filter="reset" type="reset" class="layui-btn layui-btn-primary  "><i class="fa fa-eraser"></i>重置</button>
+                                        <a class="toggle-btn">
+                                        <span>展开</span><i class="fa fa-angle-up"></i></a>
+                                    </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="layui-card" style="margin-top: -13px">
+                    <div class="layui-card-body">
+                        <table id="tabelSubMeetingReport" lay-filter="tabelSubMeetingReport" style="margin-top:5px;"></table>
+                        <script type="text/html" id="tableToolBar">
+                            <div class="layui-btn-container">
+                                <button class="layui-btn layui-btn-sm" permission-btn="" lay-event="check">
+                                    <i class="fa fa-eye"></i>检查
+                                </button>
+                                <div class="tableDes" style="font-size: 14px;margin-top: -5px">
+                                    <div style="display: inline-block">
+                                        <span>议案报送情况：</span>
+                                        <span>
+                                            <b class="primary" name="entName">XXXXX企业</b>
+                                            已上会议案<b class="primary" name="stacNum">X</b>个,
+                                            其中已报送<b class="primary" name="bsNum">X</b>个,
+                                            (
+                                                报送国资委<b class="primary" name="bsGZWNum">X</b>个,
+                                                占已报送的<b class="primary" name="bsGZRate">0.0%</b>
+                                            )。
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </script>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="./../../../js/layui/layui.js"></script>
+<script src="../../../js/lib/echarts-4.1.0.min.js" charset="utf-8"></script>
+<script src="../../../js/lib/echartTheme.js" charset="utf-8"></script>
+<script>
+
+    layui.config({
+        base: '../../../../src/js/',
+        version: new Date().getTime()
+    }).extend({
+        custom:'common/custom'
+    }).use(['layer', 'eleTree', 'table', 'form', 'laytpl', 'element', 'custom', 'laydate', 'util'], function () {
+        var table=layui.table;
+        var form=layui.form;
+        var common=layui.common;
+        var element = layui.element;
+        var tree = layui.eleTree;
+        var laydate = layui.laydate;
+        var util = layui.util;
+        var el6;
+        var fileIframe;
+        element.init();
+        var baseUrl='../../../../';
+        var sysEnterpriseTreeUrl = "sysmgr/sysEnterprise/selectSysEnterpriseOrganPostTreeAllList?treeType=enterpriseTree";
+        //分页查询参数
+        var param = {seId: common.getUserInfo().seId};
+        var selectTreeNode = {}
+        var eleTreeId = null;
+
+        common.themeSet();
+        common.toggleArea($('.toggle-btn'),$('.toggle-area'));
+        var userInfo = common.getUserInfo();
+        var pageUrl = baseUrl + 'motionmgr/motiona/selectMotionReportPage';
+
+
+        var eventHandle={
+            formatTree:function(){
+                var cacluHeight = $(document).height() - $("#mainMenuTab").height() - $(".layui-card-header").height() - 80;
+                $("#leftTree").css({
+                    "height": cacluHeight + "px",
+                    "overflow-y": "auto"
+                });
+            },
+            treeInit: function () {
+                eventHandle.formatTree();
+                common.fetchGet(sysEnterpriseTreeUrl, function (res) {
+                        //树信息的导入
+                        if (res.success && res.list) {
+                            eleTreeId = tree.render({
+                                elem: '#leftTree',
+                                data: res.list,
+                                checkOnClickNode: true,
+                                highlightCurrent: true,    // 是否高亮当前选中节点，默认值是 false。
+                                expandOnClickNode: false,    // 是否在点击节点的时候展开或者收缩节点， 默认值为 true，如果为 false，则只有点箭头图标的时候才会展开或者收缩节点。
+                                showCheckbox: false,
+                                lazy: true,
+                                load: function (data, callback) {
+                                	eventHandle.tableCountInit(data);
+                                    eventHandle.treeReload(data, callback);
+                                }
+                            });
+                            $('#leftTree').find('.eleTree-node-content-icon').eq(0).trigger('click');
+                            tree.on("nodeClick(leftTree)", function (obj) {
+                                obj.node.select();
+                                var curTreeNode = obj.data.currentData;
+                                param.seId = curTreeNode.id;
+                                eventHandle.tableCountInit(curTreeNode);
+                                eventHandle.tableReload();
+                            });
+                        } else {
+                            //不存在数据时的显示
+                        }
+                    }, function () { });
+            },
+            treeReload: function (data, callback) {
+                common.fetchGet(sysEnterpriseTreeUrl + '&id=' + data.id + '&extendAttr=' + data.extendAttr, function (res) {
+                    if (res.success && res.list) {
+                        callback(res.list)
+                    }
+                }, function () {
+                    callback([])
+                });
+            },
+            tableCountInit: function (node) {
+            	common.fetchPost('motionmgr/motiona/selectMotionReportCount?seId='+node.id, {
+                }, function (res) {
+                    var defaultObj={
+                        "motionCount": 0,
+                        "reportCount": 0,
+                        "per": "0.0%",
+                        "gzwCount": 0
+                    };
+                    var data = res.object || defaultObj;
+                    $('[name=entName]').html(node.name);
+                    //已上会议案个数
+                    $('[name=stacNum]').html(data.motionCount);
+                    //已上报
+                    $('[name=bsNum]').html(data.reportCount);
+                    //上报国资委
+                    $('[name=bsGZWNum]').html(data.gzwCount);
+                    //占已上报百分比
+                    $('[name=bsGZRate]').html(data.per);
+                },function(err){
+                    layer.msg('已上会议案上报情况获取失败:'+err.resultMessage);
+                    return false;
+                });
+             
+            },
+            tableInit:function(){
+                table.render(common.tableInitParams({
+                    elem: '#tabelSubMeetingReport',
+                    height: 'full-172',
+                    method:'post',
+                    url: pageUrl,
+                    cols: [
+                        [
+                            {type: 'checkbox', LAY_CHECKED: false},
+                            {type: 'numbers',align:'center', title: '序号', width: 60},
+                            {field: 'motionName', title: '议案名称',minWidth:100},
+                            {field: 'soName',align:'center', title: '提出部门',width:100},
+                            {field: 'tails.meetingName', title: '会议名称', minWidth:120, templet: function (rowData) {
+                            	if (rowData.tails.meetingName) { return rowData.tails.meetingName; } else { return '-'; }
+                            }},
+                            {field: 'tails.meetingTime', title: '会议日期', align: 'center',minWidth:120, templet: function (rowData) {
+                            	if (rowData.tails.meetingTime) { return rowData.tails.meetingTime; } else { return '-'; }
+                            }},
+                            {field: 'reportDatetime',align:'center', title: '报送日期',width:120, templet: function (rowData) {
+                            	if (rowData.tails.reportDatetime) { return rowData.tails.reportDatetime; } else { return '-'; }
+                            }},
+                           {field: 'uploadStatus',align:'center', title: '已报国资委',width:120,
+                               templet: function (rowData) {
+                                   if(rowData['uploadStatus'] == 2){
+                                       return '<span class="green">是</span>';
+                                   }if(rowData['uploadStatus'] == 6){
+                                       return '<span class="green3">作废</span>';
+                                   }else{
+                                       return '<span class="red">否</span>';
+                                   }
+                               }
+                           },
+                            {field: '', align:'center',title: '操作', fixed: 'right',width: 120,templet:function(rowData){
+                                return '<a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="viewMeeting">查看</a>'
+                            }}
+                        ]
+                    ],
+                    toolbar:'#tableToolBar',
+                }));
+            },
+            tableReload:function(){
+                table.reload('tabelSubMeetingReport',{
+                    url: pageUrl,
+                    method:'post',
+                    where:param
+                });
+            },
+            output:function(){
+                eventHandle.treeInit();
+            //查询条件 
+                // 下级上报日期
+                laydate.render({
+                    elem: 'input[name=reportTime]',
+                    type: 'date',
+                    range:'至',
+                    trigger: 'click'
+                });
+                // 会议日期
+                laydate.render({
+                    elem: 'input[name=meetingTime]',
+                    type: 'date',
+                    range:'至',
+                    trigger: 'click'
+                });
+            // 表格渲染
+                eventHandle.tableInit();
+            }
+        }
+        eventHandle.output();
+        //table监听事件
+        table.on('toolbar(tabelSubMeetingReport)',function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch(obj.event){
+                case 'check':
+                    if (checkStatus.data.length > 0) {
+                        layer.confirm('确定检查选中列?', {icon: 3, title: '提示', offset: '150px'}, function (index) {
+                            var motionIds = [];
+
+                            for (var i = 0; i < checkStatus.data.length; i++) {
+                                motionIds.push(checkStatus.data[i]['motionId']);
+                            }
+                            var layerLoader = common.layerLoader();
+                            common.fetchPost("motionmgr/motiona/checkMotionByIds", { motionIds: motionIds }, function () {
+                                layer.close(layerLoader);
+                                eventHandle.tableReload();
+                                layer.msg('检查成功');
+                            }, function () {
+                                layer.close(layerLoader);
+                            });
+
+                            layer.close(index);
+                        });
+                    } else {
+                        layer.msg('请选择检查列')
+                    }
+                    break;
+            }
+        });
+
+        table.on('tool(tabelSubMeetingReport)',function (obj) {
+            var data = obj.data;
+            switch(obj.event){
+                case 'viewMeeting':
+                    //打开会议详情
+                    var viewMeeting = top.layer.open({
+                        title: ['查看'],
+                        type: 2,
+                        content: baseUrl + 'src/page/ys/yagl/yaListReportedView.html?motionId=' 
+                            + data.motionId + "&meetingTypeName=" + data.meetingTypeName+
+                            '&statusType='+data.statusType,
+                        maxmin: true
+                    });
+                    top.layer.full(viewMeeting);
+                    break;
+                default:break;
+            }
+        });
+
+        form.on('submit(formSearch)',function (obj) {
+        	param.reportTime=obj.field.reportTime;
+        	param.meetingTime = obj.field.meetingTime;
+        	param.motionName= obj.field.motionName;
+            eventHandle.tableReload();
+            return false;
+        });
+        common.columnToggle();
+    });
+
+
+</script>
+
+<!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

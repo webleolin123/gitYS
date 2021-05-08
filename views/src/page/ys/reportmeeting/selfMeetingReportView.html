@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>上报预览</title>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link href="../../../js/layui/css/layui.css" rel="stylesheet"/>
+    <link href="../../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <link href="../../../js/lib/layui-step/step.css" rel="stylesheet">
+    <script src="../../../js/lib/jquery.1.12.3.js"></script>
+    <style>
+        .layui-table-view .layui-table {
+            width:100%;
+        }
+        .layui-table-box .layui-table-main{
+            height:auto!important;
+        }
+
+        .layui-carousel > [carousel-item] {
+            overflow-y: auto !important;
+        }
+    </style>
+</head>
+
+<body class="iframe-h">
+<div class="add9" style="display: none">
+        <div style="padding: 10px">
+            <div class="layui-row layui-col-space10">
+                <div class="layui-col-xs12">
+                    <div class="custom-title">上级单位</div>
+                        <ul class="eleTree ele4 unitTree" lay-filter="unitTree"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body" style="padding-top: 40px;">
+            <div style="width: 650px; margin: 0 auto;text-align: center">
+                    <h2 id="reportMeetingName"></h2>
+                    <div style="line-height: 40px" id="fillInfo"></div>
+            </div>
+            <div class="layui-carousel" id="stepForm" lay-filter="stepForm" style="margin: 0 auto;">
+                <div carousel-item>
+                    <div>
+                        <div style="padding: 10px;width: 290px;margin: auto">
+                            <div class="layui-row layui-col-space10">
+                                    <span style="display: block">
+                                            <input type="hidden" name="reportSeId" id="reportSeId">
+                                            <input type="hidden" name="reportSeName" id="reportSeName">
+                                            <i></i>本次上报上级单位:<b class="primary" id="reportSeNameText"></b>
+                                            <button class="layui-btn" id="customCellBtn"
+                                                    style="display: inline-block;margin-left: 20px"
+                                                    type="button" permission-btn="selfReportCompany" >自定义
+                                            </button>
+                                        </span>
+                                <div style="margin: 10px auto">
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <form class="layui-form"
+                              style="margin: 0 auto;max-width: 460px;text-align: center">
+                            <div class="layui-form-item" style="text-align: center">
+                                <div class="layui-input-block">
+                                    <button class="layui-btn" lay-filter="formStep" lay-submit>
+                                        &emsp;下一步&emsp;
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div>
+                        <div style="padding: 10px;margin: auto">
+                            <div class="layui-row layui-col-space10">
+                                <div class="layui-col-xs12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header layui-card-header-custom">
+                                            <span><i></i>会议资料
+                                            </span>
+                                        </div>
+                                        <div class="layui-card-body">
+                                            <table id="tableMeetingFile" lay-filter="tableMeetingFile"></table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header layui-card-header-custom">
+                                    <span><i></i>议题清单
+                                    </span>
+                                        </div>
+                                        <div class="layui-card-body">
+                                            <table id="tableSubjectList" lay-filter="tableSubjectList"></table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header layui-card-header-custom">
+                                    <span><i></i>议题资料
+                                    </span>
+                                        </div>
+                                        <div class="layui-card-body">
+                                            <table id="tableSubjectFile" lay-filter="tableSubjectFile"></table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs12" style="background: white">
+                                    <form class="layui-form" style="margin: 0 auto;max-width: 460px;">
+                                        <div class="layui-form-item">
+                                            <div class="layui-input-block">
+                                                <button class="layui-btn layui-btn-primary pre" type="button">上一步
+                                                </button>
+                                                <button class="layui-btn" lay-filter="formStep2" lay-submit>
+                                                    &emsp;下一步
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div>
+                        <div style="padding: 0 20px 0;width: 650px;margin: 0 auto">
+                            <div class="custom-title">本次上报校验结果</div>
+                            <div style="line-height: 40px">未发现异常情况</div>
+                        </div>
+                        <form class="layui-form" style="margin: 0 auto;max-width: 460px;padding-top: 40px;">
+
+                            <div class="layui-form-item">
+                                <div class="layui-input-block">
+                                    <button class="layui-btn layui-btn-primary pre" type="button">上一步</button>
+                                    <button class="layui-btn" lay-filter="formStep2" lay-submit>
+                                        &emsp;下一步
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div style="background: white">
+                        <div style="padding: 10px">
+                            <iframe border="0" class="" frameborder="0" height="600px" id="meetingInfoIFrame"
+                                    width="100%"></iframe>
+                        </div>
+                        <form class="layui-form" style="margin: 0 auto;max-width: 460px;">
+
+                            <div class="layui-form-item">
+                                <div class="layui-input-block">
+                                    <button class="layui-btn layui-btn-primary pre" type="button">上一步</button>
+                                    <button class="layui-btn" lay-filter="formStep3" lay-submit>
+                                        &emsp;确认上报&emsp;
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script id="tableOper33" type="text/html">
+        <a class="layui-btn layui-btn-xs layui-btn-primary" lay-event="oper1">查看</a>
+    </script>
+    <script id="tableOper44" type="text/html">
+        <a class="layui-btn layui-btn-xs layui-btn-primary" lay-event="oper1">查看</a>
+    </script>
+    <script id="tableOper22" type="text/html">
+        <a class="layui-btn layui-btn-xs layui-btn-primary" lay-event="oper2">查看</a>
+    </script>
+    <script id="tableOper11" type="text/html">
+        <a class="layui-btn layui-btn-xs layui-btn-primary" lay-event="oper1">异常查看</a>
+        <a class="layui-btn layui-btn-xs layui-btn-primary" lay-event="oper2">议题查看</a>
+    </script>
+</div>
+<script type="text/html" id="switchTpl">
+    <!-- 这里的 checked 的状态只是演示 -->
+    <input type="checkbox" name="index8" value="{{d.index8}}" lay-skin="switch" lay-text="是|否" lay-filter="index8" {{ d.index8 == '0' ? '' :'checked' }}>
+</script>
+<script src="./../../../js/layui/layui.js"></script>
+<script charset="utf-8" src="../../../js/lib/echarts-4.1.0.min.js"></script>
+<script charset="utf-8" src="../../../js/lib/echartTheme.js"></script>
+<script charset="utf-8" src="../../../js/lib/layui-step/step.js"></script>
+<script>
+
+    layui.config({
+        base: '../../../../src/js/',
+        version: new Date().getTime()
+    }).extend({
+        custom: 'common/custom',
+        step: 'lib/layui-step/step'
+    }).use(['layer', 'eleTree', 'table', 'step', 'form', 'laytpl', 'element', 'custom', 'laydate', 'util'], function () {
+        var table = layui.table;
+        var form = layui.form;
+        var common = layui.common;
+        var element = layui.element;
+        var tree = layui.eleTree;
+        var laydate = layui.laydate;
+        var util = layui.util;
+        var step = layui.step;
+        var baseUrl = '../../../../';
+        var fileIframe;
+        step.render({
+            elem: '#stepForm',
+            filter: 'stepForm',
+            width: '100%', //设置容器宽度
+            stepWidth: '750px',
+            height: '800px',
+            stepItems: [{
+                title: '确认上报单位'
+            }, {
+                title: '确认上报信息'
+            }, {
+                title: '上报校验'
+            }, {
+                title: '确认上报'
+            }]
+        });
+
+        common.themeSet();
+        element.init();
+        var meetingId = getUrlParam("id");
+        var meetingTypeId;
+        var userInfo = common.getUserInfo();
+        $("#meetingInfoIFrame")[0].src = "../../ys/hygl/hyReportLook.html?meetingId=" + meetingId;
+        var getReportCompany = baseUrl + 'reportmgr/tiolReportRule/queryTiolReportRuleBySeId';
+        var getParentCompany = baseUrl + 'sysmgr/sysEnterprise/findfParentInfoBySeId';
+        var getMeetingInfoById = baseUrl + 'meetingmgr/tiolMeeting/selectTiolMeetingById?id=';
+        var getRuleModeUrl = baseUrl + "reportmgr/tiolAuditRule/queryTiolAuditRuleByTarget";
+        var reportMeetingUrl = baseUrl + 'meetingmgr/reportMeeting/reportMeetingInfo';
+        common.fetchPost(getMeetingInfoById,{meetingId:meetingId},function(res){
+            if(res.success) {
+                meeting = res.object;
+                $("#reportMeetingName").html(meeting.meetingName);
+                $("#fillInfo").html('填报单位：' + meeting.seName + ' 填报时间：' + meeting.ggCreateDatetime);
+                meetingTypeId = meeting.meetingTypeId;
+            }else{
+                layer.msg("获取会议信息失败!");
+            }
+        },function(res){
+            layer.msg("获取会议信息失败!");
+        });
+
+        var meetingFileTypeMap={};
+        var meetingFileTypeList=[];
+        common.fetchGet('sysmgr/dicts/selectDictListByPcode?dictPCode=materialType', function (data) {
+            if (data && data.list && data.list.length > 0) {
+                meetingFileTypeList =data.list;
+                $.map(data.list, function (item) {
+                    meetingFileTypeMap[item.sdCode] = item;
+                });
+            }
+        });
+        common.fetchGet(getReportCompany + "?seId=" + userInfo.seId,function(res){
+            if(res.success) {
+                reportRule = res.object;
+                if(reportRule){
+                    $("#reportSeId").val(reportRule.superSeId);
+                    $("#reportSeName").val(reportRule.superSeName);
+                    $("#reportSeNameText").html(reportRule.superSeName);
+                }else{
+                    common.fetchGet(getParentCompany + "?seId=" + userInfo.seId,function(res){
+                        if(res.success) {
+                            sysEnt = res.object;
+                            if(sysEnt){
+                                if (sysEnt.seId==-1) {
+                                    $("#customCellBtn").hide();
+                                }
+                                $("#reportSeId").val(sysEnt.seId);
+                                $("#reportSeName").val(sysEnt.seName);
+                                $("#reportSeNameText").html(sysEnt.seName);
+                            }else{
+                            }
+                        }else{
+                            layer.msg("获取上级单位信息失败!");
+                        }
+                    },function(res){
+                        layer.msg("获取上级单位信息失败!");
+                    });
+                }
+            }else{
+                layer.msg("获取上报单位信息失败!");
+            }
+        },function(res){
+            layer.msg("获取上报单位信息失败!");
+        });
+
+        form.on('submit(formStep)', function (data) {
+            step.next('#stepForm');
+            return false;
+        });
+
+        form.on('submit(formStep2)', function (data) {
+            step.next('#stepForm');
+            return false;
+        });
+        form.on('submit(formStep3)', function (data) {
+
+            var index = parent.layer.getFrameIndex(window.name);
+            var waitSeId = $("#reportSeId").val();
+            var waitSeName = $("#reportSeName").val();
+            var param = {
+                meetingId:meetingId,
+                waitSeId: waitSeId,
+                waitSeName:waitSeName
+            }
+            getRuleModeUrl += "?type=MEETING&ruleType=REPORT&subType=" + meetingTypeId;
+            common.fetchGet(getRuleModeUrl,function(res){
+                if(res.success) {
+                    ruleMode = res.object;
+                    var msgText = "上报请求成功,会议将进入本单位会议审核模块，审核通过后自动上报至上级单位!"
+                    if(ruleMode){
+                        param.auditMode = ruleMode.auditRuleMode;
+                    }else{
+                        param.auditMode = 0;
+                    }
+                    // param.auditMode = 1;
+                    if(param.auditMode == 0 ){
+                        msgText = "上报成功，该会议已上报至上级单位!"
+                    }
+                    var meetingCheckStatus = table.checkStatus('tableMeetingFileReport');
+                    var meetingFiIds = [];
+                    for(var i=0;i < meetingCheckStatus.data.length;i++){
+                        var obj = meetingCheckStatus.data[i];
+                        meetingFiIds.push(obj.fiId);
+                    }
+                    param.meetingFiIds = meetingFiIds;
+                    var subjectCheckStatus = table.checkStatus('tableSubjectListReport');
+                    var meeetingSubjectIds = [];
+                    for(var i=0;i < subjectCheckStatus.data.length;i++){
+                        var obj = subjectCheckStatus.data[i];
+                        meeetingSubjectIds.push(obj.subjectId);
+                    }
+                    param.meeetingSubjectIds = meeetingSubjectIds;
+                    var subjectFileCheckStatus = table.checkStatus('tableSubjectFileReport');
+                    var subjectFiIds = [];
+                    for(var i=0;i < subjectFileCheckStatus.data.length;i++){
+                        var obj = subjectFileCheckStatus.data[i];
+                        var fileObj = {};
+                        fileObj.subjectId = obj.subjectId;
+                        fileObj.fiId = obj.fiId;
+                        subjectFiIds.push(fileObj);
+                    }
+                    param.subjectFiIds = subjectFiIds;
+
+                    common.fetchPost(reportMeetingUrl,param,function(res){
+                            if(res.success) {
+                                var layercheck4 = layer.confirm(msgText, {
+                                    btn: ['<i class="fa fa-check-circle"></i>确定'] //按钮
+                                    }, function(){
+                                        $(parent.window.document).find("#refresh").click();
+                                        layer.close(layercheck4);
+                                        parent.layer.close(index);
+                                    });
+                            }
+                        },function(res){
+                            layer.msg("操作失败:" + res.resultMessage);
+                        });
+                }else{
+                    layer.msg("操作失败:" + res.resultMessage);
+                }
+            },function(res){
+                if(res.resultMessage){
+                    layer.msg("操作失败:" + res.resultMessage);
+                }else{
+                    layer.msg("操作失败,请联系管理员-code-502");
+                }
+
+            })
+
+            return false;
+
+
+            // var index = parent.layer.getFrameIndex(window.name);
+            // parent.layer.close(index);
+            // return false;
+        });
+
+        $('.pre').click(function () {
+            step.pre('#stepForm');
+        });
+
+        $('.next').click(function () {
+            step.next('#stepForm');
+        });
+        eventHandle = {
+            downloadFile:function(fileId){
+                if(!fileIframe){
+                    fileIframe = document.createElement("iframe");
+                    document.body.appendChild(fileIframe);
+                    fileIframe.style.display = "none";
+                }
+                var src = baseUrl + "dfsmgr/file/filesDownload?fid=" + fileId;
+                fileIframe.src = src
+            }
+        }
+
+        table.render(common.tableInitParams({
+            elem: $('#tableMeetingFile'),
+            id:'tableMeetingFileReport',
+            height: '250px',
+            url: baseUrl + 'dfsmgr/file/getFileByResId?id='+meetingId,
+            cols: [
+                [
+                    {type: 'checkbox', LAY_CHECKED: false},
+                    {type: "numbers", title: "序号", width: 60},
+                    {field: 'fiName', title: '文件名称', width: '30%'},
+                    {field: 'fiFileType', title: '资料类型',sort:true,templet:function (rowData) {
+                        if(meetingFileTypeMap[rowData['fiFileType']]!=null&&meetingFileTypeMap[rowData['fiFileType']]!=undefined){
+                            return meetingFileTypeMap[rowData['fiFileType']]['sdName'];
+                        }else{
+                            return '其他';
+                        }
+                    }},
+                    {field: 'fiUploadTime', title: '创建时间'},
+                    {field: 'ggMemo', title: '备注'},
+                    {field: '', title: '操作', width: 80, fixed: 'right',templet:function(rowData){
+                        return '<a class="layui-btn layui-btn-xs layui-btn-primary" lay-event="downloadFile">下载</a>'
+                    }}
+                ]
+            ],
+            page: false,
+            done:function(res){
+                var tableData  = res.data;
+                var selectUrl = baseUrl + 'meetingmgr/reportMeeting/queryReportMeetingFileSelectInfoList?meetingId='+ meetingId
+                common.fetchGet(selectUrl,function(selectres){
+                    if(!selectres.success){
+                        return ;
+                    }
+
+                    for(var i=0;i< tableData.length;i++){
+                        for (var j = 0; j < selectres.list.length; j++) {
+                            //数据id和要勾选的id相同时checkbox选中
+                            if(tableData[i].fiId == selectres.list[j].fiId)
+                            {
+                                //这里才是真正的有效勾选
+                                tableData[i]["LAY_CHECKED"]='true';
+                                //找到对应数据改变勾选样式，呈现出选中效果
+                                var index= tableData[i]['LAY_TABLE_INDEX'];
+                                $('div[lay-id=tableMeetingFileReport] tr[data-index=' + index + '] input[type="checkbox"]').prop('checked', true)
+                                $('div[lay-id=tableMeetingFileReport] tr[data-index=' + index + '] input[type="checkbox"]').next().addClass('layui-form-checked');
+                            }
+                        }
+                    }
+                });
+            }
+        }));
+        table.render(common.tableInitParams({
+            elem: $('#tableSubjectList'),
+            id: 'tableSubjectListReport',
+            height: '250px',
+            url: baseUrl + 'meetingmgr/tiolSubject/selectTiolSubjectPage',
+            where:{
+                pageNum : 1,
+                pareSize : 10,
+                curr:1,
+                meetingId:meetingId
+            },
+            cols: [
+                [
+                    {type: 'checkbox', LAY_CHECKED: false},
+                    {type: 'numbers', title: '序号', width: 60},
+                    {field: 'subjectName', title: '议题名称', width: '30%'},
+                    {field: 'subjectTypeName', title: '议题类型'},
+                    {field: 'soName', title: '提出部门'},
+                    {field: 'reporter', title: '汇报人'},
+                    {field: 'ggUpdateDatetime', title: '创建时间',
+                    templet:function (rowData) {
+                        return util.toDateString(rowData.ggUpdateDatetime, 'yyyy-MM-dd');
+                        }
+                    },
+                    {field: '', title: '操作', width: 80,templet:function(rowData){
+                        return '<a class="layui-btn layui-btn-xs layui-btn-primary" lay-event="viewSubject">查看</a>'
+                    }}
+                ]
+            ],
+            page: true,
+            done:function(res){
+                var tableData  = res.data;
+                var selectUrl = baseUrl + 'meetingmgr/reportMeeting/queryReportSubjectSelectInfoList?meetingId='+ meetingId
+                common.fetchGet(selectUrl,function(selectres){
+                    if(!selectres.success){
+                        return ;
+                    }
+                    for(var i=0;i< tableData.length;i++){
+                        for (var j = 0; j < selectres.list.length; j++) {
+                            //数据id和要勾选的id相同时checkbox选中
+                            if(tableData[i].subjectId == selectres.list[j].subjectId)
+                            {
+                                //这里才是真正的有效勾选
+                                tableData[i]["LAY_CHECKED"]='true';
+                                //找到对应数据改变勾选样式，呈现出选中效果
+                                var index= tableData[i]['LAY_TABLE_INDEX'];
+                                $('div[lay-id=tableSubjectListReport] tr[data-index=' + index + '] input[type="checkbox"]').prop('checked', true)
+                                $('div[lay-id=tableSubjectListReport] tr[data-index=' + index + '] input[type="checkbox"]').next().addClass('layui-form-checked');
+                            }
+                        }
+                    }
+                });
+            }
+        }));
+
+        table.render(common.tableInitParams({
+            elem: $('#tableSubjectFile'),
+            id: 'tableSubjectFileReport',
+            height: '250px',
+            url: baseUrl + 'meetingmgr/tiolSubject/selectTiolSubjectFilePage',
+            where:{meetingId:meetingId},
+            cols: [
+                [
+                    {type: 'checkbox', LAY_CHECKED: false},
+                    {"type": "numbers", "title": "序号", width: 60},
+                    {field: 'subjectName', title: '议题名称', width: '30%'},
+                    {field: 'fiName', title: '文件名称'},
+                    {field: 'fiFileType', title: '资料类型',sort:true,templet:function (rowData) {
+                        var html='';
+                        switch(rowData['fiFileType']){ // 0 会议通知 1 会议纪要 2 会议记录
+                            case "NOTICE":html='会议通知';break;
+                            case "SUMMARY":html='会议纪要';break;
+                            case "RECORD":html='会议记录';break;
+                            case "RESOLUTION":html='会议决议';break;
+                            case "SUBJECT":html='议题材料';break;
+                            case "OPINION":html='听取意见';break;
+                            case "MOTION":html='议案材料';break;
+                            default:html='议案资料';break;
+                        }
+                        return html;
+                    }},
+                    {field: 'fiUploadTime', title: '上传时间'},
+                    {field: '', title: '操作', width: 80, fixed: 'right',templet:function(rowData){
+                        return '<a class="layui-btn layui-btn-xs layui-btn-primary" lay-event="downloadFile">下载</a>'
+                    }}
+                ]
+            ],
+            page: true,
+            done:function(res){
+                var tableData  = res.data;
+                var selectUrl = baseUrl + 'meetingmgr/reportMeeting/queryReportSubjectFileSelectInfoList?meetingId='+ meetingId
+                common.fetchGet(selectUrl,function(selectres){
+                    if(!selectres.success){
+                        return ;
+                    }
+                    for(var i=0;i< tableData.length;i++){
+                        for (var j = 0; j < selectres.list.length; j++) {
+                            //数据id和要勾选的id相同时checkbox选中
+                            if(tableData[i].fiId == selectres.list[j].fiId)
+                            {
+                                //这里才是真正的有效勾选
+                                tableData[i]["LAY_CHECKED"]='true';
+                                //找到对应数据改变勾选样式，呈现出选中效果
+                                var index= tableData[i]['LAY_TABLE_INDEX'];
+                                $('div[lay-id=tableSubjectFileReport] tr[data-index=' + index + '] input[type="checkbox"]').prop('checked', true)
+                                $('div[lay-id=tableSubjectFileReport] tr[data-index=' + index + '] input[type="checkbox"]').next().addClass('layui-form-checked');
+                            }
+                        }
+                    }
+                });
+            }
+        }));
+        //自定义按钮点击触发
+        $('#customCellBtn').off('click').on('click', function () {
+            var index = layer.open({
+                title: '本次上报上级单位',
+                maxmin: false,
+                offset: '1px',
+                type: 1,//页面层
+                area: ['580px', '600px'],
+                shadeClose: false,
+                content: $('.add9').html(),
+                btn: ['保存', '<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭'],
+                btnAlign: 'c',
+                yes:function(){
+                    $("#reportSeId").val(treeCheckEnt.id);
+                    $("#reportSeName").val(treeCheckEnt.name);
+                    $("#reportSeNameText").html(treeCheckEnt.name);
+                    layer.close(index);
+                },
+                btn2:function(){
+                    treeCheckEnt = null;
+                },
+                success: function (obj) {
+                    var userInfo = JSON.parse(common.getCookie('userInfo'));
+                    var currEnterpriseId = userInfo.currEnterpriseVo.seId;
+                    var parent = $(obj.selector);
+                    tree.render({
+                        elem: parent.find('.unitTree'),
+                        defaultExpandAll: true,
+                        url: baseUrl+'sysmgr/sysEnterprise/selectSysEnterpriseTree?isAll=true',
+                        done: function(data){
+                            parent.find('.unitTree .eleTree-node-content').each(function () {
+                                $(this).click();
+                            });
+                        },
+                        load: function(data,callback) {
+                            common.fetchGet(baseUrl+'sysmgr/sysEnterprise/selectSysEnterpriseTree?id=' + data.id ,function (res) {
+                                if(res.success && res.list){
+                                    callback(res.list);
+                                }
+                            },function () {
+                                callback([])
+                            });
+                        },
+                        response: {// 对于后台数据重新定义名字
+                            dataName: "list"
+                        },
+                        showCheckbox: false,
+                        lazy: true,
+                    });
+                    tree.on("nodeClick(unitTree)",function(d) {
+                        treeCheckEnt = d.data.currentData;
+                    })
+                }
+            });
+        });
+
+        table.on('tool(tableSubjectList)', function (obj) {
+            switch (obj.event) {
+                case 'viewSubject':
+                    var viewSubject = top.layer.open({
+                        title: ['查看议题'],
+                        type: 2,
+                        content: baseUrl + 'src/page/ys/hygl/hyReportSuubjectLook.html?subjectId=' + obj.data.subjectId,
+                        maxmin: true,
+                        btn: ['<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭'],
+                        btnAlign: 'c',
+                        yes: function () {
+                            top.layer.close(viewSubject);
+                            return false;
+                        },
+                        success: function (layero, index) {
+                        }
+                    });
+                    top.layer.full(viewSubject);
+                    break;
+            }
+        });
+        table.on('tool(tableSubjectFile)', function (obj) {
+            switch (obj.event) {
+                case 'downloadFile':
+                    eventHandle.downloadFile(obj.data.fiId)
+                    break;
+            }
+        });
+        table.on('tool(tableMeetingFile)', function (obj) {
+            switch (obj.event) {
+                case 'downloadFile':
+                    eventHandle.downloadFile(obj.data.fiId)
+                    break;
+            }
+        });
+
+        setTimeout(function () {
+            $("#qxry-setting", $("iframe")[0].contentWindow.document).hide();
+            $(".layui-table-tool", $("iframe")[0].contentWindow.document).hide();
+            $(".edit1", $("iframe")[0].contentWindow.document).hide();
+            $(".edit2", $("iframe")[0].contentWindow.document).hide();
+            $("input", $("iframe")[0].contentWindow.document).attr('disabled', true);
+            $("select", $("iframe")[0].contentWindow.document).attr('disabled', true);
+        }, 500);
+    });
+
+    function getUrlParam(paraName) {
+    　　　　var url = document.location.toString();
+    　　　　var arrObj = url.split("?");
+    　　　　if (arrObj.length > 1) {
+    　　　　　　var arrPara = arrObj[1].split("&");
+    　　　　　　var arr;
+    　　　　　　for (var i = 0; i < arrPara.length; i++) {
+    　　　　　　　　arr = arrPara[i].split("=");
+    　　　　　　　　if (arr != null && arr[0] == paraName) {
+    　　　　　　　　　　return arr[1];
+    　　　　　　　　}
+    　　　　　　}
+    　　　　　　return "";
+    　　　　}else {
+    　　　　　　return "";
+    　　　　}
+    　　}
+
+
+</script>
+
+<!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

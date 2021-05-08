@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>事项目录统计</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link href="../../../js/layui/css/layui.css" rel="stylesheet"/>
+    <link href="../../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../../js/lib/jquery.1.12.3.js"></script>
+</head>
+
+<style>
+    .layui-table-cell {
+        height: auto;
+        line-height: 28px;
+        padding: 0 15px;
+        position: relative;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: normal;
+        box-sizing: border-box;
+    }
+
+    .layui-layer-btn-c {
+        margin-top: -20px;
+    }
+
+    #mergeTable th, #mergeTable td {
+        text-align: center;
+    }
+</style>
+<body class="iframe-h">
+<div class="add6" style="display: none">
+    <div style="padding: 10px">
+        <div class="layui-row layui-col-space10">
+            <div class="layui-col-xs5">
+                <div class="custom-title">上报单位</div>
+                <ul class="eleTree ele4 unitTree" lay-filter="unitTree"></ul>
+            </div>
+            <div class="layui-col-xs7">
+                <div class="custom-title">上报会议附件列表</div>
+                <table id="table-add63"></table>
+            </div>
+        </div>
+        <div class="layui-row layui-col-space10">
+            <div class="layui-col-xs5">
+                <div class="custom-title">上报议题列表</div>
+                <table id="table-add61" lay-filter="table-add61"></table>
+            </div>
+            <div class="layui-col-xs7">
+                <div class="custom-title">上报议题附件列表</div>
+                <table id="table-add62"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="edit22" style="display: none">
+    <div style="padding: 10px">
+        <div class="layui-row layui-col-space10">
+            <div class="layui-col-xs6">
+                <div class="custom-title">上报单位过程</div>
+                <table id="table-edit2"></table>
+            </div>
+            <div class="layui-col-xs6">
+                <div class="custom-title">上报会议附件列表</div>
+                <table id="table-edit21"></table>
+            </div>
+        </div>
+        <div class="layui-row layui-col-space10">
+            <div class="layui-col-xs6">
+                <div class="custom-title">上报议题列表</div>
+                <table id="table-edit22" lay-filter="table-edit22"></table>
+            </div>
+            <div class="layui-col-xs6">
+                <div class="custom-title">上报议题附件列表</div>
+                <table id="table-edit23"></table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="add9" style="display: none">
+    <div style="padding: 10px">
+        <div class="layui-row layui-col-space10">
+
+            <div class="layui-col-xs9">
+                <div class="custom-title">分发议题列表</div>
+                <table id="table-add91" lay-filter="table-add91"></table>
+            </div>
+            <div class="layui-col-xs3">
+                <div class="custom-title">分发部门人员</div>
+                <ul class="eleTree ele4 treeadd9" lay-filter="treeadd9"></ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="oper1" style="display: none">
+    <div class="padding-10 white-bg">
+        <form action="" class="layui-form form-theme-table">
+            <div class="layui-row layui-col-space10">
+                <div class="layui-col-md12">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">企业名称</label>
+                        <div class="layui-input-block">
+                            <input class="layui-input" disabled name="title" placeholder="请输入时间" type="text" value="集团">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md12">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">会议名称</label>
+                        <div class="layui-input-block">
+                            <input class="layui-input" disabled name="title" placeholder="请输入时间" type="text"
+                                   value="会议111">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md12">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">议题名称</label>
+                        <div class="layui-input-block">
+                            <input class="layui-input" disabled name="title" placeholder="请输入时间" type="text"
+                                   value="111">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md12">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">异常类型</label>
+                        <div class="layui-input-block">
+                            <input class="layui-input" disabled name="title" placeholder="请输入时间" type="text"
+                                   value="未经合法审查">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md12">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">异常生成时间</label>
+                        <div class="layui-input-block">
+                            <input class="layui-input" disabled name="ycsj" type="text"
+                                   value="2019-03-12 00:00:00">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md12">
+                    <div class="layui-form-item layui-form-text">
+                        <label class="layui-form-label">异常原因</label>
+                        <div class="layui-input-block">
+                            <textarea class="layui-textarea" disabled>
+                                法律审核异常法律审核异常法律审核异常法律审核异常法律审核异常法律审核异常法律审核异常法律审核异常
+                            </textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md12">
+                    <div class="layui-form-item layui-form-text">
+                        <label class="layui-form-label">异常信息</label>
+                        <div class="layui-input-block">
+                            <textarea class="layui-textarea" disabled>
+                                法律审核异常法律审核异常法律审核异常法律审核异常法律审核异常法律审核异常法律审核异常法律审核异常
+                            </textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md12">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">是否确认</label>
+                        <div class="layui-input-block">
+                            <input class="layui-input" disabled name="title" type="text" value="是">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md12">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">异常校验单位</label>
+                        <div class="layui-input-block">
+                            <input class="layui-input" disabled name="title" type="text" value="XX单位">
+                        </div>
+                    </div>
+                </div>
+                <!--<div class=" " style="text-align: center;margin-bottom: 5px">-->
+                <!--<div class="layui-btn layui-btn-primary"><i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>关闭</div>-->
+                <!--</div>-->
+            </div>
+        </form>
+    </div>
+</div>
+<div class="oper2" style="display: none">
+    <div class="layui-card" style="margin-top: 10px">
+        <div class="layui-card-header layui-card-header-custom">
+            <span><i></i>议题清单</span>
+        </div>
+        <div class="layui-card-body">
+            <table id="ytList" lay-filter="ytList"></table>
+        </div>
+    </div>
+</div>
+<script id="tableOper11" type="text/html">
+    <a class="layui-btn layui-btn-xs layui-btn-primary" lay-event="oper1">异常查看</a>
+    <a class="layui-btn layui-btn-xs layui-btn-primary" lay-event="oper2">议题查看</a>
+</script>
+<div class="content-wrap">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs3" style="position: absolute;left: 0;top:2px;width: 250px;z-index: 1">
+
+            <div class="layui-card moduleBorderTop">
+                <!--<div class="layui-card-header layui-card-header-custom">-->
+                <!--<span><i></i>企业层级</span>-->
+                <!--</div>-->
+                <div class="header-custom">
+                    <i></i>企业层级
+                </div>
+                <div class="layui-card-body">
+                    <!--<div class="searchBar">-->
+                    <!--&lt;!&ndash;<input class="layui-input" id="keySearch" placeholder="请输入关键字"&ndash;&gt;-->
+                    <!--&lt;!&ndash;style="display: inline-block" type="text">&ndash;&gt;-->
+
+
+                    <!--<span class="icon-btn" id="btnSearch" title="搜索"><i class="fa fa-search"></i></span>-->
+                    <!--</div>-->
+                    <!-- <div class="searchInput">
+                        <i class=" layui-icon layui-icon-search"></i>
+                        <input autocomplete="off" class="layui-input " id="searchTree" placeholder="请输入关键字" type="text">
+                    </div> -->
+                    <div class="layuiTree eleTree ele4" id="leftTree" lay-filter="leftTree"
+                         style="overflow-y: auto;margin-top: 10px"></div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="padding-left: 250px;z-index: 0;">
+            <div class="layui-card">
+                <div class="mainTitle">-</div>
+                <div class="layui-card-body" id="mainContainerHeight" style="padding-top: 0">
+                    <table class="layui-table item-table" id="mergeTable" lay-filter="mergeTable">
+                        <thead>
+                        <tr>
+                            <th colspan="4">事项目录</th>
+                            <!--<th>事项目录编码</th>-->
+                            <th colspan="2">事项名称</th>
+                            <th>关联议题数量</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="./../../../js/layui/layui.js"></script>
+<script charset="utf-8" src="../../../js/lib/echarts-4.1.0.min.js"></script>
+<script charset="utf-8" src="../../../js/lib/echartTheme.js"></script>
+<script>
+    layui.config({
+        base: '../../../../src/js/',
+        version: new Date().getTime()
+    }).extend({
+        tableSpan: 'lib/tableSpan'
+    }).use(['common', 'tableSpan', 'eleTree'], function () {
+        var common = layui.common;
+        var tableSpan = layui.tableSpan;
+        var tree = layui.eleTree;
+        common.themeSet();
+        var baseUrl = '../../../../';
+
+        common.fetchGet('sysmgr/sysEnterprise/selectAllDescendantNodeFromRootNode?treeType=enterpriseTree', function (res) {
+            var leftTree = tree.render({
+                showLine: true,
+                elem: '#leftTree',
+                "expandOnClickNode": false,
+                data: common.arrayToTreeJson(res.list || [], "id", "pid", "children"),
+                defaultExpandAll: true,
+                request: {
+                    name: "title",
+                    key: "id",
+                    children: "children",
+                    checked: "checked",
+                    disabled: "disabled",
+                    isLeaf: "isLeaf",
+                    extendAttr: "extendAttr"
+                },
+                lazy: false,
+                response: {// 对于后台数据重新定义名字
+                    dataName: "list"
+                },
+                searchNodeMethod: function (value, data) {
+                    if (!value) return true;
+
+                    return data.title.indexOf(value) !== -1;
+                }
+            });
+
+            $("#searchTree").on("change", function () {
+                leftTree.search($.trim($(this).val()));
+            })
+
+        }, false, false);
+
+
+
+        tree.on("nodeClick(leftTree)", function (obj) {
+            $('.mainTitle').text(obj.data.currentData.name);
+            tableRender(obj.data.currentData.id);
+        });
+
+        var itemListMap = {};
+
+        function tableRender(seId) {
+            // 表格数据渲染
+            var html = '';
+            itemListMap = {};
+            common.fetchGet('catalog/tiolCatalog/selectTiolCatalogByCount?seId=' + seId, function (res) {
+                var resData = res.list;
+                //事项目录名称
+
+                var list = [];
+                if (resData.length > 0) {
+                    $.map(resData, function (item) {
+                        if (item.isChecked === '1') {
+                            if (item.itemList && item.itemList.length > 0) {
+                                $.map(item.itemList, function (item1) {
+                                    itemListMap[item1.itemId] = item1;
+                                    list.push({
+                                        name1: item.name1,
+                                        name2: item.name2,
+                                        name3: item.name3,
+                                        catalogCode: item.catalogCode,
+                                        itemName: item1.itemName,
+                                        itemId: item1.itemId,
+                                        itemCode: item1.itemCode,
+                                        subjectCount: (item1.subjectCount !== null) ? item1.subjectCount : '-',
+                                    })
+                                });
+                            } else {
+                                list.push({
+                                    name1: item.name1,
+                                    name2: item.name2,
+                                    name3: item.name3,
+                                    catalogCode: item.catalogCode,
+                                    itemName: '-',
+                                    subjectCount: 0,
+                                })
+                            }
+                        }
+
+                    })
+                }
+
+
+                for (var i = 0; i < list.length; i++) {
+                    html += '<tr>';
+                    html += '<td>' + list[i]['name1'] + '</td>';
+                    html += '<td>' + list[i]['name2'] + '</td>';
+                    html += '<td>' + list[i]['name3'] + '</td>';
+                    html += '<td>' + list[i]['catalogCode'] + '</td>';
+                    html += '<td ><div itemId="' + list[i]['itemId'] + '"  class="itemToolTip a-link">' + list[i]['itemName'] + '</div></td>';
+                    html += '<td>' + (list[i]['itemCode'] ? list[i]['itemCode'] : '-') + '</td>';
+                    html += '<td>' + list[i]['subjectCount'] + '</td>';
+                    html += '</tr>';
+                }
+
+                $('#mergeTable tbody').empty().html(html);
+                for (var i = 0; i < resData.length; i++) {
+                    if (i <= 3) {
+                        tableSpan.table_rowspan('#mergeTable', i + 1);
+                    }
+                }
+
+            }, function (e) {
+
+            });
+        }
+
+        //数据默认加载第一条
+        // $('.mainTitle').text(common.getUserInfo().seName);
+        // tableRender(common.getUserInfo().seId);
+        //默认点击第一条
+
+        $('#leftTree').find('.eleTree-node-content-label').eq(0).trigger('click');
+
+
+        var x = -15;
+        var y = 22;
+        $(document).on('mouseover', '.itemToolTip', function (e) {
+            var currentDta = itemListMap[$(this).attr('itemId')];
+            if (currentDta) {
+                var tooltip = "<div id='titleTooltip' style='padding: 10px'>" +
+                    "<div style='text-align: left'>事项名称：" + currentDta.itemName + "</div>" +
+                    "<div style='text-align: left'>事项编码：" + currentDta.itemCode + "</div>" +
+                    "<div style='text-align: left'>事项目录编码：" + (currentDta.itemCode.split('-')[0]) + "</div>" +
+                    "<div style='text-align: left'>会议决策顺序：" + (currentDta.meetingProce ? currentDta.meetingProce : '-') + "</div>" +
+                    "<div style='text-align: left'>经法律审核：" + (currentDta.legalFlag === "1" ? "是" : "否") + "</div>" +
+                    "</div>";
+
+                $("body").append(tooltip); //追加到文档中
+                $("#titleTooltip").css({"top": (e.pageY + y) + "px", "left": (e.pageX + x) + "px"}).show();     //设置X Y坐标， 并且显示
+            }
+        }).on('mouseout', '.itemToolTip', function (e) {
+            $("#titleTooltip").remove(); //移除
+        }).on('mousemove', '.itemToolTip', function (e) {
+            $("#titleTooltip").css({"top": (e.pageY + y) + "px", "left": (e.pageX + x) + "px"});
+        });
+        $(document).on('click', '.itemToolTip', function () {
+            common.openNewWrap({
+                url: '/src/page/ys/itemMgr/itemDetail.html?itemId=' + $(this).attr('itemId'),
+                title: '事项明细'
+            });
+        });
+
+        $('#leftTree').css({'height': $(document).height() - 160 + 'px'});
+        $('#mainContainerHeight').css({'min-height': $(document).height() - 120 + 'px'});
+    });
+
+</script>
+
+<!--[if lt IE 9]>
+<script src="../../../js/lib/html5.min.js"></script>
+<script src="../../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

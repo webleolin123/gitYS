@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>接口详情</title>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+    <link href="../../js/layui/css/layui.css" rel="stylesheet"/>
+    <link href="../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script charset="utf-8" src="../../js/common/plugin.js"></script>
+
+</head>
+<body class="iframe-h">
+
+<div class="content-wrap portDetailPage white-bg" style="min-height: 94%">
+    <input id="portData" style="display: none" type="text">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+            <div class="layui-card">
+                <div class="portDetailHead">
+                    <div class="iconBox">
+                        <i class="fa fa-id-card"></i>
+                    </div>
+                    <div class="headText">
+                        <span class="span1">-</span>
+                        <span class="span2">-</span>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin-top: 20px">
+                <ul class="layui-tab-title">
+                    <li class="layui-this">API文档</li>
+                    <li>错误码参照</li>
+                </ul>
+                <div class="layui-tab-content">
+                    <div class="layui-tab-item layui-show">
+                        <div class=" layui-col-space15 bg-white">
+                            <!-- <div class="layui-col-xs2">
+                                 <ul class="eleTree ele4 apiTree" lay-filter="apiTree"></ul>
+                             </div>-->
+                            <div class="layui-col-xs12">
+                                <div class="layui-col-xs12">
+                                    <div class="custom-detail">
+                                        <ul class="clearFix portDetailBox">
+                                            <li>
+                                                <span class="span1">接口地址:</span>
+                                                <span class="span2 data1">-</span>
+                                            </li>
+                                            <li>
+                                                <span class="span1">返回格式：</span>
+                                                <span class="span2 data2">-</span>
+                                            </li>
+                                            <li>
+                                                <span class="span1">请求方法：</span>
+                                                <span class="span2 data3">-</span>
+                                            </li>
+                                            <li>
+                                                <span class="span1">请求实例：</span>
+                                                <span class="span2 data4">-</span>
+                                            </li>
+                                            <!-- <li>
+                                                 <span class="span1">接口备注：</span>
+                                                 <span class="span2 data5">通过传递IP地址查询所属地区，数据来源网络公开整理，仅供参考。</span>
+                                             </li>-->
+                                        </ul>
+                                        <!--<button class="layui-btn layui-btn-lg" style="margin: 10px 0 30px">API测试工具-->
+                                        <!--</button>-->
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header layui-card-header-custom">
+                                            <span><i></i>请求参数说明：</span></div>
+                                        <div class="layui-card-body">
+                                            <table class="layui-table" id="paramTable">
+                                                <thead>
+                                                <tr>
+                                                    <th>名称</th>
+                                                    <th>必填</th>
+                                                    <th>类型</th>
+                                                    <th>说明</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <!--<tr>
+                                                    <td>ip</td>
+                                                    <td>是</td>
+                                                    <td>string</td>
+                                                    <td>需要查询的IP地址</td>
+                                                </tr>-->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header layui-card-header-custom">
+                                            <span><i></i>返回参数说明：</span></div>
+                                        <div class="layui-card-body">
+                                            <table class="layui-table">
+                                                <colgroup>
+                                                    <col width="150">
+                                                    <col width="200">
+                                                    <col>
+                                                </colgroup>
+                                                <thead>
+                                                <tr>
+                                                    <th>名称</th>
+                                                    <th>类型</th>
+                                                    <th>说明</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr>
+                                                    <td>resultCode</td>
+                                                    <td>int</td>
+                                                    <td>返回码</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>resultMessage</td>
+                                                    <td>string</td>
+                                                    <td> 成功信息</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>list</td>
+                                                    <td>array</td>
+                                                    <td>返回数据</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>page</td>
+                                                    <td>string</td>
+                                                    <td>-</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>object</td>
+                                                    <td>object</td>
+                                                    <td>-</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>success</td>
+                                                    <td>boolean</td>
+                                                    <td>是否成功</td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header layui-card-header-custom">
+                                            <span><i></i>JSON返回示例：</span></div>
+                                        <div class="layui-card-body">
+                                                <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+                                                        <ul class="layui-tab-title">
+                                                            <li class="layui-this">成功示例</li>
+                                                            <li>失败示例</li>
+                                                        </ul>
+                                                        <div class="layui-tab-content">
+                                                            <div class="layui-tab-item layui-show">
+                                                                <pre class="layui-code">
+                                                                <textarea class="layui-textarea successSample" cols="30" name="successSample" rows="10">
+{
+"resultCode": "0",
+"resultMessage": "成功",
+"list": null,
+"page": null,
+"object": {},
+"success": true
+}
+                                                                </textarea>
+                                                            </pre>
+                                                            </div>
+                                                            <div class="layui-tab-item" style="margin: 0 auto">
+                                                                    <pre class="layui-code">
+                                                                            <textarea class="layui-textarea failSample" cols="30" name="failSample" rows="10">
+{
+"resultCode": "-1",
+"resultMessage": "失败",
+"list": null,
+"page": null,
+"object": {},
+"success": false
+}
+                                                                            </textarea>
+                                                                        </pre>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-tab-item">
+                        <div class=" layui-col-space15 bg-white">
+                            <div class="layui-col-xs12">
+                                <div class="layui-col-xs12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header layui-card-header-custom"><span><i></i>服务级错误码参照(error_code)：</span>
+                                        </div>
+                                        <div class="layui-card-body">
+                                            <table class="layui-table" id="errorTable">
+                                                <thead>
+                                                <tr>
+                                                    <th>错误码</th>
+                                                    <th>说明</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <!--<tr>-->
+                                                <!--<td>200101</td>-->
+                                                <!--<td>关键字不能为空</td>-->
+                                                <!--</tr>-->
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs12">
+                                    <div class="layui-card">
+                                        <div class="layui-card-header layui-card-header-custom">
+                                            <span><i></i>系统级错误码参照：</span></div>
+                                        <div class="layui-card-body">
+                                            <table class="layui-table" id="sysErrorTable">
+                                                <thead>
+                                                <tr>
+                                                    <th>错误码</th>
+                                                    <th>说明</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="./../../js/layui/layui.js"></script>
+<script charset="utf-8" src="../../js/lib/echarts-4.1.0.min.js"></script>
+<script charset="utf-8" src="../../js/lib/echartTheme.js"></script>
+<script>
+
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).extend({
+        custom: 'common/custom'
+    }).use(['layer', 'eleTree', 'element', 'table', 'common', 'form', 'jquery'], function () {
+        var common = layui.common;
+        var tree = layui.eleTree;
+        common.themeSet();
+        var detailDta;
+        //数据导入
+        setTimeout(function () {
+            detailDta = $('#portData').val();
+            common.fetchGet('intfmgr/outer/info/' + detailDta, function (res) {
+                if (res.object) {
+                    var data = res.object;
+                    //基本信息填写
+                    $('.portDetailHead').find('.span1').text(data.intfInfo.intfName ? data.intfInfo.intfName : '-');
+                    $('.portDetailHead').find('.span2').text(data.intfInfo.intfDesc ? data.intfInfo.intfDesc : '-');
+                    var index=data.intfInfo.retireUrl.indexOf('?');
+                    var requestUrl='';
+                    if(index!=-1){
+                        requestUrl = data.intfInfo.retireUrl.substring(0, data.intfInfo.retireUrl.lastIndexOf('?'));
+                    }
+                    else{
+                        requestUrl=data.intfInfo.retireUrl;
+                    }
+                    $('.portDetailBox').find('.data1').text(requestUrl ? requestUrl : '-');
+                    $('.portDetailBox').find('.data2').text(data.intfInfo.returnType ? data.intfInfo.returnType : '-');
+                    $('.portDetailBox').find('.data3').text(data.intfInfo.intfMethod ? data.intfInfo.intfMethod : '-');
+                    $('.portDetailBox').find('.data4').text(data.intfInfo.retireUrl ? data.intfInfo.retireUrl : '-');
+
+                    //请求参数
+                    var html = '';
+                    if (data.intfParams && data.intfParams.length > 0) {
+                        $.map(data.intfParams, function (item, index) {
+                            if (item.paramKey) {
+                                html += '<tr>' +
+                                    '<td>' + item.paramKey + '</td>' +
+                                    '<td>是</td>' +
+                                    '<td>string</td>' +
+                                    '<td>' + (item.intfDesc ? item.intfDesc : '-') + '</td>' +
+                                    '</tr>'
+                            } else if (item.requestParam) {
+                                try {
+                                    var pa = JSON.parse(item.requestParam);
+                                    for (var item in pa) {
+                                        html += '<tr>' +
+                                            '<td>' + item + '</td>' +
+                                            '<td>否</td>' +
+                                            '<td>string</td>' +
+                                            '<td>-</td>' +
+                                            '</tr>'
+                                    }
+                                } catch (e) {
+
+                                }
+
+                            }
+                        });
+                    }
+                    else if(data.intfParams.length==0||data.intfParams==null){
+                        html+='<tr><td colspan="4" style="text-align:center">暂无数据</td></tr>';
+                    }
+                    $('#paramTable tbody').empty().html(html);
+
+                    // JSON 返回示例
+                    var html2='';
+                    if(data.intfInfo){
+                        $('.successSample').val(data.intfInfo.successSample);
+                        $('.failSample').val(data.intfInfo.failSample);
+                    }
+
+
+                    //错误码(系统级，服务级)
+                    var html1 = '';
+                    var str1 = '';
+                    if (data.intfResultCodes && data.intfResultCodes.length > 0) {
+                        $.map(data.intfResultCodes, function (item, index) {
+                            if (item.codeType === 'error') {
+                                html1 += '<tr>' +
+                                    '<td>' + item.resultCode + '</td>' +
+                                    '<td>'+item.codeDesc+'</td>' +
+                                    '</tr>'
+                            }
+                            else{
+                                str1 += '<tr>' +
+                                    '<td>' + item.resultCode + '</td>' +
+                                    '<td>'+item.codeDesc+'</td>' +
+                                    '</tr>'
+                            }
+                        });
+                    }
+                    $('#errorTable tbody').empty().html(html1);
+                    $('#sysErrorTable tbody').empty().html(str1);
+
+
+                }
+            })
+
+        }, 200);
+
+
+        /*tree.render({
+            elem: $('.apiTree'),
+            data: [{'name': '根据IP查询接口1'}, {'name': '根据IP查询接口2'}, {'name': '根据IP查询接口2'}, {'name': '根据IP查询接口2'}, {'name': '根据IP查询接口2'}, {'name': '根据IP查询接口2'}, {'name': '根据IP查询接口2'}, {'name': '根据IP查询接口2'}],
+            showCheckbox: false,
+            lazy: false,
+            done: function (data) {
+
+            },
+        });*/
+    });
+
+</script>
+
+<!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

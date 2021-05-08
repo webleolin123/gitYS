@@ -1,0 +1,21 @@
+.Grid{
+	border-collapse:collapse
+}
+.Grid td{
+	white-space:nowrap; 
+	text-overflow:ellipsis; 
+	overflow:hidden; 
+}
+.Grid thead{
+	background-color:#E1F1FF;
+	height:24px;
+	font-weight:bold;
+}
+.Grid tbody tr td{
+	/*height:25px;*/
+	border-bottom:1px solid #D7EBFF;
+}
+
+.Grid .trOver{
+	background-color:#F1F8FF;
+}

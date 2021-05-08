@@ -1,0 +1,28 @@
+.jsfw_WebEdit{
+	border:1px solid #BBBBBB;
+}
+
+.jsfw_WebEdit_Dialog{
+}
+
+.jsfw_WebEdit_Dialog input{
+	border:1px solid gray;
+}
+.jsfw_WebEdit_Dialog .CheckBox{
+	border:none;
+}
+
+.jsfw_WebEdit_Dialog .Button{
+	border:1px solid #999999;
+	background-image: url(dialog_button.gif);
+	background-repeat: repeat-x;
+	BACKGROUND-POSITION:0% 0%;
+	height:22px;
+}
+
+.jsfw_WebEdit_Dialog *{
+	font-size:9pt;
+	font-family: "����", Verdana, Arial, Helvetica, sans-serif;
+}
+
+.jsfw_WebEdit_Dialog form{margin:0px}

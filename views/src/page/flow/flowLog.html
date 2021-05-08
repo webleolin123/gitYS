@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>流程记录</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link rel="stylesheet" href="../../js/layui/css/layui.css"/>
+    <link href="../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script src="../../js/common/plugin.js"></script>
+
+    <style>
+        .adapt {
+            margin-top: 20px;
+            margin-left: 20%;
+        }
+    </style>
+</head>
+<body>
+    <div class="content-wrap">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-body" style="padding-top: 0">
+                        <table id="flowLogTable" lay-filter="flowLogTable"></table>
+                        <script type="text/html" id="tableToolBar">
+                            <div class="layui-btn-container">
+                                <button class="layui-btn layui-btn-sm add-btn" lay-event="flowGraphic">
+                                    <i class="icon iconfont icon-DEZJ-renwushuliang"></i> 流程跟踪图
+                                </button>
+                            </div>
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./../../js/layui/layui.js"></script>
+    <script>
+
+        layui.config({
+            base: '../../../src/js/',
+            version: new Date().getTime()
+        }).extend({
+        }).use(['layer','table','form','laytpl','element','common'],function () {
+            var table=layui.table;
+            var form=layui.form;
+            var common=layui.common;
+            var element = layui.element;
+            element.init();
+            var baseUrl='../../../';
+            common.themeSet();
+            var pageInitialParam = {
+                pageNum : 1,
+                pareSize : 10,
+                curr:1
+            };
+
+            var piid = parent.parentEnt.piid;
+            var flowLogPageUrl = baseUrl + 'flowEngine/engineQuery/getFlowInfoByPiid?piid=' + parent.parentEnt.piid;
+
+            var eventHandle={
+                tableReload:function () {
+                    table.reload('flowLogTable',{
+                        url: flowLogPageUrl,
+                        contentType: 'application/json',
+                        method:'get',
+                        page:pageInitialParam
+                    });
+                    common.buttonLimit(currentMenuSmId);
+                },
+            };
+
+            common.fetchGet(flowLogPageUrl,function(res){
+                table.render(common.tableInitParams({
+                    elem: '#flowLogTable',
+                    data:res.list,
+                    toolbar: '#tableToolBar',
+                    height:445,
+                    cols: [
+                        [
+                            {type:'checkbox'},
+                            {"type":"numbers", "title":"序号"},
+                            {field: 'statename', title: '流程环节', width:'21%',sort:true},
+                            {field: 'starttime', title: '开始时间', width:'21%', sort: true},
+                            {field: 'endtime', title: '结束时间', width:'21%',sort:true},
+                            {field: 'username', title: '办理人', sort: true,
+                                templet: function(rowData) {
+                                    if(rowData['endtime']){
+                                        return rowData['username'];
+                                    }else{
+                                        return '<span style="color:red">' + rowData['username'] + '(待办)</span>';
+                                    }
+                                }
+                            }
+                        ]
+                    ]
+                }));
+            },null)
+
+            table.on('toolbar(flowLogTable)',function (obj) {
+                switch(obj.event){
+                    case 'flowGraphic':
+                        var index_flowLog = parent.layer.open({
+                            offset: '10px',
+                            title: '流程撤办',
+                            maxmin: false,
+                            type: 2,//页面层
+                            area: ['1000px', '650px'],//高度自适应
+                            shadeClose: false,
+                            content: '../flow/flowGraphic.html?piid=' + piid//加载该区域的html
+                        });
+                        break;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

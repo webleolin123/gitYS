@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html class="iframe-h">
+
+<head>
+    <meta charset="UTF-8">
+    <title>议案管理-被退回</title>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="icon" type="image/x-icon">
+    <link class="favicon" href="./../../../images/ico/favicon.ico" rel="bookmark" type="image/x-icon">
+    <link href="../../../js/layui/css/layui.css" rel="stylesheet" />
+    <link href="../../../css/public.css?v1.01" rel="stylesheet" />
+    <link href="../../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <script src="../../../js/lib/jquery.1.12.3.js"></script>
+    <style>
+        .eleTree.ele5,
+        .eleTree.ele6 {
+            height: auto;
+            width: 100%;
+            display: none;
+            position: absolute;
+            top: 100%;
+            background-color: #fff;
+            z-index: 10000;
+            border: 1px solid #ccc;
+        }
+
+        .shqkTab {
+            display: inline-block;
+            border: 1px solid gray;
+            background: #ffff;
+            padding: 0 5px;
+            margin: 0 5px;
+            height: 26px;
+            line-height: 26px;
+            color: black;
+            opacity: 0.3;
+        }
+
+        .isYsh {
+            opacity: 1;
+        }
+
+        a.layui-layer-ico.layui-layer-max {
+            display: none;
+        }
+
+        a.layui-layer-ico.layui-layer-max.layui-layer-maxmin {
+            display: inline-block !important;
+        }
+    </style>
+</head>
+
+<body class="iframe-h">
+    <div class="content-wrap">
+        <!-- 页面刷新按钮 -->
+        <div id="refresh" style="display: none"></div>
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <div class="layui-card white-bg">
+                    <div class="layui-card-header layui-card-header-custom"><span><i></i>被退回列表</span></div>
+                    <div class="layui-card-body">
+                        <!--layui-form-pane-->
+                        <form action="" class="layui-form layui-form-pane">
+                            <div class="layui-row layui-col-space10">
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">议案名称</label>
+                                        <div class="layui-input-block">
+                                            <input autocomplete="off" class="layui-input" name="motionName"
+                                                placeholder="请输入" type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">退回部门</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="backOrgName" placeholder="请选择" readonly=""
+                                                autocomplete="off" class="layui-input hyinput">
+                                            <input type="hidden" name="backOrgId">
+                                            <div class="eleTree ele5" lay-filter="data5"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="toggle-area layui-col-space10">
+                                    <div class="layui-col-md4">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">退回日期</label>
+                                            <div class="layui-input-block">
+                                                <input class="layui-input" name="backDate" placeholder="请选择"
+                                                    type="text">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class=" " style="text-align: center;margin-bottom: 5px">
+                                    <button class="layui-btn" lay-filter="formSearch" lay-submit><i class="fa fa-search"></i>查询</button>
+                                    <button class="layui-btn layui-btn-primary" id="resetBtn" name="reset"><i class="fa fa-eraser"></i>重置</button>
+                                    <a class="toggle-btn">
+                                        <span>展开</span>
+                                        <i class="fa fa-angle-up"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="layui-card">
+                    <div class="layui-card-body" style="padding-top: 0">
+                        <table id="table1" lay-filter="table1"></table>
+                        <script id="tableToolBar" type="text/html">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-sm" lay-event="submit" permission-btn="motionReturnAdd">
+                                <i class="layui-icon">&#xe605;</i> 提交
+                            </button>
+                            <button class="layui-btn layui-btn-sm layui-btn-warm" lay-event="delete" permission-btn="motionReturnDel">
+                                <i class="layui-icon">&#xe640;</i> 删除
+                            </button>
+                        </div>
+                    </script>
+
+                        <script id="tableOper" type="text/html">
+                        <a class="layui-btn layui-btn-xs" lay-event="edit" permission-btn="motionReturnEdit">编辑</a>
+                        <a class="layui-btn layui-btn-xs layui-btn-warm" permission-btn="motionReturnView" lay-event="check">查看</a>
+                    </script>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--被退回情况-->
+    <script type="text/html" id="returnDtailsForm">
+    <div  class="returnDtailsForm">
+        <div class="layui-card-body">
+            <div class="layui-card" id="bjxq">
+                <div class="layui-card-header layui-card-header-custom">
+                    <span><i></i>退回情况
+                        <b class="zsBga"></b>
+                    </span>
+                </div>
+                <div class="layui-card-body">
+                    <div class="layui-row layui-col-space15">
+                        <div class="layui-col-md12">
+                            <table id="thTable" lay-filter="thTable"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+    <script src="./../../../js/layui/layui.js"></script>
+    <script>
+
+        layui.config({
+            base: '../../../src/js/',
+            version: new Date().getTime()
+        }).use(['layer', 'table', 'form', 'laytpl', 'common', 'element', 'laydate', 'eleTree'], function () {
+            var table = layui.table;
+            var form = layui.form;
+            var common = layui.common;
+            var element = layui.element;
+            var laydate = layui.laydate;
+            var tree = layui.eleTree;
+            var util = layui.util;
+            element.init();
+            var baseUrl = '../../../../';
+
+            common.themeSet();
+            common.toggleArea($('.toggle-btn'), $('.toggle-area'));
+            common.columnSide();
+            var eventHandle = {
+                domEvent: function () {
+                    //table 监听提交，删除
+                    table.on('toolbar(table1)', function (obj) {
+                        var checkStatus = table.checkStatus(obj.config.id);
+                        switch (obj.event) {
+                            case 'delete'://删除
+                                if (checkStatus.data.length > 0) {
+                                    layer.confirm('确定删除选中列?', { icon: 3, title: '提示', offset: '150px' }, function (index) {
+                                        var motionIdArr = [];
+
+                                        for (var i = 0; i < checkStatus.data.length; i++) {
+                                            motionIdArr.push(checkStatus.data[i]['motionId'])
+                                        }
+                                        var layerLoader = common.layerLoader();
+                                        common.fetchPost('motionmgr/motiona/del', { motionIds: motionIdArr }, function (data) {
+                                            layer.close(layerLoader);
+                                            table.reload('table1', {
+                                            });
+                                            layer.msg('删除成功');
+                                        }, function (data) {
+                                            layer.close(layerLoader);
+                                        });
+
+                                        layer.close(index);
+                                    });
+                                } else {
+                                    layer.msg('请选择删除列')
+                                }
+                                break;
+                            case 'submit'://提交
+                                if (checkStatus.data.length > 0) {
+                                    layer.confirm('确定提交选中列?', { icon: 3, title: '提示', offset: '150px' }, function (index) {
+                                        var motionIdArr = [];
+                                        var motionIdArrLegalReview = [];//存放需要经过法律审核的议案id，传给后端用来校验是否上传前置审核材料
+                                        $.map(checkStatus.data, function (item, index) {
+                                            motionIdArr.push(item.motionId);
+                                            var motionType = item['motionType'];//议案类别id
+                                            //筛选出选中的议案所属议案类别需要法律审核的议案id
+                                            common.fetchPost('catalog/tiolBillType/selectTiolBillTypeList', { billId: motionType }, function (data) {
+                                                if (data.success && data.list.length > 0) {
+                                                    if (data.list[0].legalReview == '1') {
+                                                        motionIdArrLegalReview.push(item.motionId);
+                                                    }
+                                                }
+                                            }, function (err) { });
+                                        })
+                                        var layerLoader = common.layerLoader();
+                                        setTimeout(function () {
+                                            common.fetchPost('motionmgr/motiona/submitMotionByIds', { motionIds: motionIdArr, motionIdsLegalReview: motionIdArrLegalReview }, function (data) {
+                                                if (data.success) {
+                                                    layer.close(layerLoader);
+                                                    table.reload('table1', {
+                                                    });
+                                                    layer.msg('提交成功');
+                                                } else {
+                                                    layer.close(layerLoader);
+                                                    layer.alert(data.resultMessage || '提交失败');
+                                                }
+
+                                            }, function (data) {
+                                                layer.close(layerLoader);
+                                            });
+                                        }, 500)
+                                        layer.close(index);
+                                    });
+                                } else {
+                                    layer.msg('请选择要提交的列');
+                                }
+                                break;
+                            default: break
+                        }
+                    });
+
+                    //table 监听编辑，查看
+                    table.on('tool(table1)', function (obj) {
+                        var data = obj.data;
+                        switch (obj.event) {
+                            case 'edit'://编辑
+                                var editLayer = layer.open({
+                                    title: ['编辑'],
+                                    type: 2,
+                                    content: './yaReturnEdit.html?motionId=' + data.motionId + '&meetingTypeId=' +
+                                        data.meetingTypeId + '&meetingTypeName=' + data.meetingTypeName + '&meetingTypeCode=' +
+                                        data.meetingTypeCode + '&meetingId=' + data.meetingId,
+                                    maxmin: true,
+                                    offset: 't',
+                                    btnAlign: 'lc',
+                                    end:function(){
+                                        eventHandle.tableReload();
+                                    }
+                                });
+                                layer.full(editLayer);
+                                break;
+                            case 'check'://查看
+                                var thLayer = layer.open({
+                                    offset: '10px',
+                                    title: '查看',
+                                    maxmin: false,
+                                    type: 1,//页面层
+                                    area: ['90%', '80%'],//高度自适应
+                                    zIndex: 980,
+                                    // area: ['580px'],//高度自适应
+                                    shadeClose: false,
+                                    btn: ['<i class="fa fa-check-circle"></i>确定', '<i class="icon iconfont icon-button-cha-2" style="margin-right: 3px"></i>取消'],
+                                    btnAlign: 'c',
+                                    yes: function () {
+                                        // $("[lay-filter='formSubjectEdit']").click();
+                                        layer.close(thLayer);
+                                    },
+                                    btn2: function () {
+                                        layer.close(thLayer);
+                                    },
+                                    content: $('#returnDtailsForm').html(),//加载该区域的html
+                                    success: function (obj) {
+                                        table.render(common.tableInitParams({//表决情况表
+                                            elem: $(obj.selector).find('#thTable'),
+                                            id: "#thTable",
+                                            url: baseUrl + 'motionmgr/motiona/selectBackRecordPage',
+                                            where: {
+                                                motionId: data.motionId
+                                            },
+                                            method: 'post',
+                                            height: false,
+                                            defaultToolbar: [],
+                                            cols: [[
+                                                { type: 'numbers', align: 'center', title: '序号', width: 80 },
+                                                {
+                                                    field: 'auditOrgName', align: 'center', minWidth: 120, title: '退回操作部门',
+                                                    templet: function (rowData) {
+                                                        return rowData["auditOrgName"] ? rowData["auditOrgName"] : '-';
+                                                    }
+                                                },
+                                                {
+                                                    field: 'auditSuName', align: 'center', minWidth: 120, title: '退回操作人',
+                                                    templet: function (rowData) {
+                                                        return rowData["auditSuName"] ? rowData["auditSuName"] : '-';
+                                                    }
+                                                },
+                                                {
+                                                    field: 'auditOpnion', align: 'center', minWidth: 120, title: '退回意见',
+                                                    templet: function (rowData) {
+                                                        return rowData["auditOpnion"] ? rowData["auditOpnion"] : '-';
+                                                    }
+                                                },
+                                                {
+                                                    field: 'auditDatetime', align: 'center', width: 120, title: '退回时间',
+                                                    templet: function (rowData) {
+                                                        return rowData["auditDatetime"] ? (common.timestampToTime(rowData["auditDatetime"])) : '-';
+                                                    }
+                                                }
+                                            ]]
+                                        }));
+                                    }
+                                });
+                                break;
+                            default:
+                                break;
+                        }
+                    });
+                    //刷新列表
+                    $('#refresh').off('click').on('click', function () {
+                        eventHandle.tableInit();
+                    })
+                    //查询
+                    form.on('submit(formSearch)', function (obj) {
+                        var params = obj.field;
+                        //表格重载
+                        eventHandle.tableReload(params);
+                        return false;
+                    });
+                    //重置
+                    $('#resetBtn').off('click').on('click', function () {
+                        $('[name=motionName]').val('');//议案名称
+                        $('[name=backOrgName]').val('');//退回部门名称
+                        $('[name=backOrgId]').val('');//退回部门Id
+                        $('[name=backDate]').val('');//退回日期
+                        form.render('select');
+                        return false
+                    });
+                },
+                tableInit: function () {//被退回列表
+                    table.render(common.tableInitParams({
+                        elem: '#table1',
+                        url: baseUrl + 'motionmgr/motiona/selectMotionBackPage',
+                        method: 'post',
+                        height: 'full-170',
+                        toolbar: '#tableToolBar',
+                        cols: [
+                            [
+                                { type: 'checkbox' },
+                                { type: 'numbers', align: 'center', title: '序号' },
+                                { field: 'motionName', title: '议案名称', minWidth: 150 },
+                                { field: 'motionTypeName', align: 'center', title: '议案类别', width: 150 },
+                                {
+                                    field: 'meetingTypeName', align: 'center', title: '拟上会类型', width: 150,
+                                    templet: function (rowData) {
+                                        return rowData["meetingTypeName"] ? rowData["meetingTypeName"] : '-';
+                                    }
+                                },
+                                {
+                                    field: 'tails.backOrgName', align: 'center', title: '退回操作部门', width: 150,
+                                    templet: function (rowData) {
+                                        return rowData["tails"]["backOrgName"] ? rowData["tails"]["backOrgName"] : '-';
+                                    }
+                                },
+                                {
+                                    field: 'tails.backdate', align: 'center', title: '退回日期', width: 120,
+                                    templet: function (rowData) {
+                                        return rowData["tails"]["backdate"] ? rowData["tails"]["backdate"] : '-';
+                                    }
+                                },
+                                { field: '', title: '操作', align: 'center', width: 120, toolbar: '#tableOper', fixed: 'right' },
+                            ]
+                        ],
+                        done: function () {
+                            common.buttonLimit();
+                        }
+                    }));
+                },
+                tableReload: function (params) {
+                    params = params || {},
+                        table.reload('table1', {
+                            url: baseUrl + 'motionmgr/motiona/selectMotionBackPage',
+                            method: 'post',
+                            where: params,
+                            page: 1
+                        });
+                },
+                initRender: function () {
+                    //退回日期
+                    laydate.render({
+                        elem: 'input[name=backDate]',
+                        type: 'date',
+                        range: true,
+                        format: 'yyyy-MM-dd', //可任意组合
+                        trigger: 'click'
+                    });
+                    // 提出部门
+                    var el5, el6;
+                    if (!el5) {
+                        common.fetchPost('sysmgr/sysOrgan/selectSysOrganTreeBySeId', {}, function (data) {
+                            if (data.success) {
+                                el5 = tree.render({
+                                    elem: '.ele5',
+                                    data: data.list,
+                                    defaultExpandAll: true,
+                                    expandOnClickNode: false,
+                                    highlightCurrent: true
+                                });
+                            } else {
+                                layer.msg('查询部门树失败');
+                            }
+
+                        }, function () {
+                            layer.msg('查询部门树失败');//失败后提示
+                        });
+                    }
+                    $("[name='backOrgName']").on("click", function (e) {
+                        e.stopPropagation();
+
+                        $(".ele5").toggle();
+                    });
+                    tree.on("nodeClick(data5)", function (d) {
+                        $("[name='backOrgName']").val(d.data.parentData.data.id != d.data.currentData.id ? (d.data.parentData.data.name + '-' + d.data.currentData.name) : d.data.currentData.name);
+                        $("[name='backOrgId']").val(d.data.currentData.id);
+                        $(".ele5").hide();
+                    });
+                    $(document).on("click", function () {
+                        $(".ele5").hide();
+                        $(".ele6").hide();
+                    });
+
+                },
+                output: function () {
+                    //初始化加载
+                    eventHandle.initRender();
+                    //被退回列表
+                    eventHandle.tableInit();
+                    // 事件监听
+                    eventHandle.domEvent();
+                }
+            }
+            eventHandle.output();
+            common.buttonLimit();
+        });
+
+    </script>
+
+    <!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+
+</html>

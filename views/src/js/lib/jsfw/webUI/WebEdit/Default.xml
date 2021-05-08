@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root showText="false">
+	<!--<root showText="是否只显示文本，默认true(本属性仅Toolbar有效)">-->
+	<item text="粗体" icon="$jsfwPath/webUI/WebEdit/Icon/bold.gif" exInfo="fmt_bold"/>
+	<item text="斜体" icon="$jsfwPath/webUI/WebEdit/Icon/italic.gif" exInfo="fmt_italic"/>
+	<item text="下划线" icon="$jsfwPath/webUI/WebEdit/Icon/underline.gif" exInfo="fmt_underline"/>
+	<item text="中划线" icon="$jsfwPath/webUI/WebEdit/Icon/strikethrough.gif" exInfo="fmt_strikethrough"/>
+	<item text=""/>
+	<item text="左对齐" icon="$jsfwPath/webUI/WebEdit/Icon/justifyleft.gif" exInfo="fmt_justifyleft"/>
+	<item text="居中对齐" icon="$jsfwPath/webUI/WebEdit/Icon/justifycenter.gif" exInfo="fmt_justifycenter"/>
+	<item text="右对齐" icon="$jsfwPath/webUI/WebEdit/Icon/justifyright.gif" exInfo="fmt_justifyright"/>
+	<item text="两端对齐" icon="$jsfwPath/webUI/WebEdit/Icon/justifyfull.gif" exInfo="fmt_justifyfull"/>
+	<item text=""/>
+	<item text="编号" icon="$jsfwPath/webUI/WebEdit/Icon/insertorderedlist.gif" exInfo="fmt_insertorderedlist"/>
+	<item text="项目符号" icon="$jsfwPath/webUI/WebEdit/Icon/insertunorderedlist.gif" exInfo="fmt_insertunorderedlist"/>
+	<item text="增加缩进量" icon="$jsfwPath/webUI/WebEdit/Icon/indent.gif" exInfo="fmt_indent"/>
+	<item text="减少缩进量" icon="$jsfwPath/webUI/WebEdit/Icon/outdent.gif" exInfo="fmt_outdent"/>
+	<item text=""/>
+	<item text="字体" icon="$jsfwPath/webUI/WebEdit/Icon/fontname.gif" exInfo="">
+		<item text="宋体" exInfo="fmt_fontname,宋体"/>
+		<item text="黑体" exInfo="fmt_fontname,黑体"/>
+		<item text="楷体_GB2312" exInfo="fmt_fontname,楷体_GB2312"/>
+		<item text="仿宋_GB2312" exInfo="fmt_fontname,仿宋_GB2312"/>
+		<item text="隶书" exInfo="fmt_fontname,隶书"/>
+		<item text="幼圆" exInfo="fmt_fontname,幼圆"/>
+		<item text=""/>
+		<item text="Arial" exInfo="fmt_fontname,Arial"/>
+		<item text="Arial Black" exInfo="fmt_fontname,Arial Black"/>
+		<item text="System" exInfo="fmt_fontname,System"/>
+		<item text="Fixedsys" exInfo="fmt_fontname,Fixedsys"/>
+	</item>
+	<item text="字号" icon="$jsfwPath/webUI/WebEdit/Icon/fontsize.gif" exInfo="">
+		<item text="1 ( 8pt)" exInfo="fmt_fontsize,1"/>
+		<item text="2 (10pt)" exInfo="fmt_fontsize,2"/>
+		<item text="3 (12pt)" exInfo="fmt_fontsize,3"/>
+		<item text="4 (14pt)" exInfo="fmt_fontsize,4"/>
+		<item text="5 (18pt)" exInfo="fmt_fontsize,5"/>
+		<item text="6 (24pt)" exInfo="fmt_fontsize,6"/>
+		<item text="7 (36pt)" exInfo="fmt_fontsize,7"/>
+	</item>
+	<item text="字体前景色" icon="$jsfwPath/webUI/WebEdit/Icon/forecolor.gif" exInfo="">
+		<item id="foreColor" text=" " exInfo=""/>
+	</item>
+	<item text="字体背景色" icon="$jsfwPath/webUI/WebEdit/Icon/backcolor.gif" exInfo="">
+		<item id="backColor" text=" " exInfo=""/>
+	</item>
+	<!--<item text=""/>
+	<item text="撤销" icon="$jsfwPath/webUI/WebEdit/Icon/undo.gif" exInfo="fmt_undo"/>
+	<item text="恢复" icon="$jsfwPath/webUI/WebEdit/Icon/redo.gif" exInfo="fmt_redo"/>
+	<item text=""/>
+	<item text="查找/替换" icon="$jsfwPath/webUI/WebEdit/Icon/findreplace.gif" exInfo="fud_findReplace,350,180"/>
+	<item text="清除格式" icon="$jsfwPath/webUI/WebEdit/Icon/removeformat.gif" exInfo="fmt_RemoveFormat"/>-->
+	<item text=""/>
+	<item text="表情" icon="$jsfwPath/webUI/WebEdit/Emot/emPopo.gif" exInfo="">
+		<item id="emot_0" text=" " exInfo="Popo,42,19" exInfoDesc="(本属性无意义只为说明)exInfo参数说明:目录名称,表情个数,图片宽度"/>
+	</item>
+	<item text="表情" icon="$jsfwPath/webUI/WebEdit/Emot/emOnion.gif" exInfo="">
+		<item id="emot_1" text=" " exInfo="Onion,68,50"/>
+	</item>
+	<item text="插入或修改链接" icon="$jsfwPath/webUI/WebEdit/Icon/createlink.gif" exInfo="fud_createLink,380,200"/>
+	<item text="取消链接" icon="$jsfwPath/webUI/WebEdit/Icon/unlink.gif" exInfo="fmt_unlink"/>
+	<item text="插入或修改图片" icon="$jsfwPath/webUI/WebEdit/Icon/image.gif" exInfo="fud_insertImage,380,260"/>
+
+	<!--<item text="表格" id="table" icon="$jsfwPath/webUI/WebEdit/Icon/tableInsert.gif" exInfo="">
+		<item text="插入表格..." id="tableInsert" icon="$jsfwPath/webUI/WebEdit/Icon/tableInsert.gif" exInfo="fud_tableInsert"/>
+		<item text="表格属性..." id="tableProperty" icon1="$jsfwPath/webUI/WebEdit/Icon/tableInsert.gif" exInfo="fud_tableProperty"/>
+		<item text=""/>
+		<item text="单元格属性..." id="tableCellProperty" icon1="$jsfwPath/webUI/WebEdit/Icon/image.gif" exInfo="fud_tableCellProperty"/>
+		<item text="拆分单元格..." id="tableCellSplit" icon1="$jsfwPath/webUI/WebEdit/Icon/image.gif" exInfo="fud_tableCellSplit"/>
+		<item text=""/>
+		<item text="表格行属性..." id="tableRowProperty" icon1="$jsfwPath/webUI/WebEdit/Icon/image.gif" exInfo="fud_tableRowProperty"/>
+		<item text="插入行（在上方）" id="TableRowInsertAbove" icon1="$jsfwPath/webUI/WebEdit/Icon/image.gif" exInfo="fut_TableRowInsertAbove"/>
+		<item text="插入行（在下方）" id="TableRowInsertBelow" icon1="$jsfwPath/webUI/WebEdit/Icon/image.gif" exInfo="fut_TableRowInsertBelow"/>
+		<item text="合并行（向下方）" id="TableRowMerge" icon1="$jsfwPath/webUI/WebEdit/Icon/image.gif" exInfo="fut_TableRowMerge"/>
+		<item text="拆分行" id="TableRowSplit" icon1="$jsfwPath/webUI/WebEdit/Icon/image.gif" exInfo="fut_TableRowSplit"/>
+		<item text="删除行" id="TableRowDelete" icon1="$jsfwPath/webUI/WebEdit/Icon/image.gif" exInfo="fut_TableRowDelete"/>
+		<item text=""/>
+		<item text="插入列（在左侧）" id="TableColInsertLeft" icon1="$jsfwPath/webUI/WebEdit/Icon/image.gif" exInfo="fut_TableColInsertLeft"/>
+		<item text="插入列（在右侧）" id="TableColInsertRight" icon1="$jsfwPath/webUI/WebEdit/Icon/image.gif" exInfo="fut_TableColInsertRight"/>
+		<item text="合并列（向右侧）" id="TableColMerge" icon1="$jsfwPath/webUI/WebEdit/Icon/image.gif" exInfo="fut_TableColMerge"/>
+		<item text="拆分列" id="TableColSplit" icon1="$jsfwPath/webUI/WebEdit/Icon/image.gif" exInfo="fut_TableColSplit"/>
+		<item text="删除列" id="TableColDelete" icon1="$jsfwPath/webUI/WebEdit/Icon/image.gif" exInfo="fut_TableColDelete"/>
+	</item>-->
+	<!--<item text=""/>
+	<item text="剪切" icon="$jsfwPath/webUI/WebEdit/Icon/cut.gif" exInfo="fun_cut"/>
+	<item text="复制" icon="$jsfwPath/webUI/WebEdit/Icon/copy.gif" exInfo="fun_copy"/>
+	<item text="粘贴" icon="$jsfwPath/webUI/WebEdit/Icon/paste.gif" exInfo="fun_paste"/>
+	<item text="纯文本粘贴" icon="$jsfwPath/webUI/WebEdit/Icon/pastetext.gif" exInfo="fun_pasteText"/>
+	<item text="从Word中粘贴" icon="$jsfwPath/webUI/WebEdit/Icon/pasteword.gif" exInfo="fun_pasteWord"/>-->
+
+
+</root>

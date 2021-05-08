@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html  class="iframe-h">
+<head>
+    <meta charset="UTF-8">
+    <title>通用属性配置</title>
+    <meta content="webkit" name="renderer"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <link href="../../css/public.css?v1.01" rel="stylesheet"/>
+    <link href="../../js/lib/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="../../js/lib/jquery.1.12.3.js"></script>
+    <script src="../../js/common/plugin.js"></script>
+
+    <style>
+        .treeAdd{
+            margin-left: 50px;
+        }
+        .adapt{
+            margin-top: 20px;
+            margin-left:20%;
+        }
+    </style>
+</head>
+<div class="userLayer hide">
+    <div style="padding: 15px 20px">
+        <form class="layui-form layui-form-pane" lay-filter="addForm">
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>属性名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="pName" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>属性值</label>
+                <div class="layui-input-block">
+                    <input type="text" name="pValue" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>属性类型</label>
+                <div class="layui-input-block">
+                    <select>
+                        <option name="pType" value="">请选择</option>
+                        <option name="pType" value="">字符串</option>
+                        <option name="pType" value="">数值</option>
+                        <option name="pType" value="">对象</option>
+                        <option name="pType" value="">数组</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><b class="red">*</b>属性值类型</label>
+                <div class="layui-input-block">
+                    <select>
+                        <option name="pType" value="">请选择</option>
+                        <option name="pType" value="">字符串</option>
+                        <option name="pType" value="">数值</option>
+                        <option name="pType" value="">对象</option>
+                        <option name="pType" value="">数组</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">属性中文名</label>
+                <div class="layui-input-block">
+                    <input type="text" name=""  placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item adapt">
+                <div class="layui-input-block">
+                    <button class="layui-btn " lay-submit lay-filter="formSavue"><i class="layui-icon">&#xe605;</i>提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
+<body class="iframe-h">
+<div class="content-wrap">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+            <!-- layui tree-->
+            <div class="layui-card">
+                <div class="layui-card-header">通用属性配置树
+                    <button class="layui-btn layui-btn-xs treeAdd"  id="treeAdd">
+                        <i class="layui-icon">&#xe654;</i>
+                    </button>
+                </div>
+                <div class="layui-card-body">
+                    <ul id="leftTree" class="layuiTree"></ul>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs8 layui-col-sm8 layui-col-md8">
+            <form class="layui-form layui-form-pane" lay-filter="saveForm">
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><b class="red">*</b>属性名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="pName" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><b class="red">*</b>属性值</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="pValue" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><b class="red">*</b>属性类型</label>
+                    <div class="layui-input-block">
+                        <select>
+                            <option name="pType" value="">请选择</option>
+                            <option name="pType" value="">字符串</option>
+                            <option name="pType" value="">数值</option>
+                            <option name="pType" value="">对象</option>
+                            <option name="pType" value="">数组</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><b class="red">*</b>属性值类型</label>
+                    <div class="layui-input-block">
+                        <select>
+                            <option name="pType" value="">请选择</option>
+                            <option name="pType" value="">字符串</option>
+                            <option name="pType" value="">数值</option>
+                            <option name="pType" value="">对象</option>
+                            <option name="pType" value="">数组</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">属性中文名</label>
+                    <div class="layui-input-block">
+                        <input type="text" name=""  placeholder="请输入" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item adapt">
+                    <div class="layui-input-block">
+                        <button class="layui-btn " lay-submit lay-filter="formSavue"><i class="layui-icon">&#xe605;</i>提交</button>
+                        <button type="reset" class="layui-btn layui-btn-primary"><i class="fa fa-eraser"></i>重置</button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="./../../js/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../src/js/',
+        version: new Date().getTime()
+    }).extend({
+        eleTree: 'lib/eleTree',
+        common: 'common/common'
+    }).use(['form','common','eleTree'],function () {
+        var form = layui.form;
+        var common = layui.common;
+        var eleTree = layui.eleTree;
+        common.themeSet();
+        $("#treeAdd").click(function () {
+            layer.open({
+                offset: '10px',
+                title:'新增属性',
+                // maxmin: false,
+                type: 5,//页面层
+                area: ['580px'],//高度自适应
+                shadeClose: false,
+                content: $('.userLayer').html(),//加载该区域的html
+                success:function (obj) {
+                    //初始化表格
+                    form.render('select');
+                }
+            });
+        });
+        //初始化树
+        common.fetchGet('', function (res) {
+            //树信息的导入
+            if (res.success && res.list) {
+                eleTreeId = tree.render({
+                    elem: '#leftTree',
+                    data: res.list,
+                    showCheckbox: false,
+                    lazy: true,
+                    load: function (data, callback) {
+                        common.fetchGet('', function (res) {
+                            if (res.success && res.list) {
+                                callback(res.list)
+                            }
+                        }, function () {
+                            callback([])
+                        });
+                    }
+                });
+            } else {
+                //不存在数据时的显示
+            }
+        }, function () {
+        });
+
+        form.render();
+
+
+        //监听 表单提交
+        form.on('submit(formSavue)', function(data) {
+            var parma = {
+            };
+            common.fetchPut('', parma, function (res) {
+                if (res) {
+                    if (res != 'success') {
+                        layer.msg("保存失败！", {icon: 5});
+                        return false;
+                    } else {
+                        layer.msg("保存成功！", {icon: 6});
+                    }
+                }
+            });
+            return false;
+        });
+    });
+</script>
+<!--[if lt IE 9]>
+<script src="../../js/lib/html5.min.js"></script>
+<script src="../../js/lib/respond.js"></script>
+<![endif]-->
+</body>
+</html>

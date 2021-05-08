@@ -1,0 +1,107 @@
+div.splitBar{
+	width:4px;
+	background-image: url('framekeybk.gif');
+	background-repeat:repeat-y;
+}
+
+.jsfw_DockPanel_Title{
+	padding-left:5px;
+/*	background-color:#EEEEEE;
+	background-image: url('Title_BG.gif');*/
+	height:23px;
+}
+.jsfw_DockPanel_SysBtn{
+/*	background-color:#EEEEEE;
+	background-image: url('Title_BG.gif');*/
+	height:23px;
+	width:30px;
+	text-align:right;
+}
+.jsfw_DockPanel_SysBtn img{
+	cursor:hand;
+}
+
+.jsfw_DockPanel{
+}
+
+.jsfw_DockPanel_Float{
+	background-color:white;
+/*	border-left:1px solid #3D5B95;
+	border-right:1px solid #3D5B95;
+	border-bottom:1px solid #3D5B95;*/
+}
+/**************************************/
+.jsfw_DockPanel .jsfw_DockPanel_TD_0_0{width:0px;}
+.jsfw_DockPanel .jsfw_DockPanel_TD_0_1{
+	padding-left:5px;
+	background-color:#EEEEEE;
+	background-image: url('Title_BG.gif');
+	height:25px;
+}
+.jsfw_DockPanel .jsfw_DockPanel_TD_0_2{width:0px;}
+.jsfw_DockPanel .jsfw_DockPanel_TD_1_0{width:0px;}
+.jsfw_DockPanel .jsfw_DockPanel_TD_1_1{
+	border-bottom:1px solid #7D90B5;
+}
+.jsfw_DockPanel .jsfw_DockPanel_TD_1_2{width:0px;}
+.jsfw_DockPanel .jsfw_DockPanel_TD_2_0{width:0px;height:0px;}
+.jsfw_DockPanel .jsfw_DockPanel_TD_2_1{height:0px;}
+.jsfw_DockPanel .jsfw_DockPanel_TD_2_2{width:0px;height:0px;}
+/**************************************/
+.jsfw_DockPanel_Float .jsfw_DockPanel_TD_0_0{
+	width:4px;
+	height:27px;
+	background-image: url('Dialog_LT.gif');
+	background-repeat: no-repeat;
+	BACKGROUND-POSITION:0% 0%;
+}
+.jsfw_DockPanel_Float .jsfw_DockPanel_TD_0_1{
+	height:27px;
+	background-image: url('Dialog_T.gif');
+	background-repeat: repeat-x;
+	BACKGROUND-POSITION:0% 0%;
+}
+.jsfw_DockPanel_Float .jsfw_DockPanel_TD_0_2{
+	width:4px;
+	height:27px;
+	background-image: url('Dialog_RT.gif');
+	background-repeat: no-repeat;
+	BACKGROUND-POSITION:0% 0%;
+}
+.jsfw_DockPanel_Float .jsfw_DockPanel_TD_1_0{
+	width:4px;
+	background-image: url('Dialog_L.gif');
+	background-repeat: repeat-y;
+	BACKGROUND-POSITION:0% 0%;
+}
+.jsfw_DockPanel_Float .jsfw_DockPanel_TD_1_1{
+	background-color:white;
+}
+.jsfw_DockPanel_Float .jsfw_DockPanel_TD_1_2{
+	width:4px;
+	background-image: url('Dialog_R.gif');
+	background-repeat: repeat-y;
+	BACKGROUND-POSITION:0% 0%;
+}
+.jsfw_DockPanel_Float .jsfw_DockPanel_TD_2_0{
+	width:4px;
+	height:4px;
+	background-image: url('Dialog_LB.gif');
+	background-repeat: no-repeat;
+	BACKGROUND-POSITION:0% 0%;
+}
+.jsfw_DockPanel_Float .jsfw_DockPanel_TD_2_1{
+	height:4px;
+	background-image: url('Dialog_B.gif');
+	background-repeat: repeat-x;
+	BACKGROUND-POSITION:0% 0%;
+}
+.jsfw_DockPanel_Float .jsfw_DockPanel_TD_2_2{
+	width:4px;
+	height:4px;
+	background-image: url('Dialog_RB.gif');
+	background-repeat: no-repeat;
+	BACKGROUND-POSITION:0% 0%;
+}
+/**************************************/
+
